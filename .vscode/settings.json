@@ -1,0 +1,18 @@
+{
+    "python.defaultInterpreterPath": "${workspaceFolder}/server/.venv/Scripts/python.exe",
+    "python.analysis.extraPaths": [
+        "${workspaceFolder}/server",
+        "${workspaceFolder}/server/app"
+    ],
+    "python.analysis.venvPath": "${workspaceFolder}/server",
+    "python.analysis.venv": ".venv",
+    "[python]": {
+        "editor.defaultFormatter": "ms-python.black-formatter"
+    },
+    "json.schemas": [
+        {
+            "fileMatch": ["/.vscode/launch.json"],
+            "url": "vscode://schemas/launch"
+        }
+    ]
+}

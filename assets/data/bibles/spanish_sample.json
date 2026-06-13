@@ -1,0 +1,30 @@
+[
+    {
+        "bookId": "genesis",
+        "book": "Génesis",
+        "chapter": 1,
+        "verse": 1,
+        "text": "En el principio creó Dios los cielos y la tierra."
+    },
+    {
+        "bookId": "john",
+        "book": "Juan",
+        "chapter": 1,
+        "verse": 1,
+        "text": "En el principio era el Verbo, y el Verbo era con Dios, y el Verbo era Dios."
+    },
+    {
+        "bookId": "john",
+        "book": "Juan",
+        "chapter": 3,
+        "verse": 16,
+        "text": "Porque de tal manera amó Dios al mundo, que ha dado a su Hijo unigénito."
+    },
+    {
+        "bookId": "psalms",
+        "book": "Salmos",
+        "chapter": 23,
+        "verse": 1,
+        "text": "Jehová es mi pastor; nada me faltará."
+    }
+]

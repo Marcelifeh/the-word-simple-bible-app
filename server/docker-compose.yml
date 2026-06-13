@@ -1,0 +1,29 @@
+services:
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: bible
+      POSTGRES_USER: bible
+      POSTGRES_PASSWORD: bible
+    ports:
+      - "5433:5432"
+    volumes:
+      - bible_db:/var/lib/postgresql/data
+
+  api:
+    build:
+      context: .
+    environment:
+      DATABASE_URL: postgresql+psycopg://bible:bible@db:5432/bible
+      # Optional (OpenAI-compatible) AI generation settings:
+      # LLM_BASE_URL: https://api.openai.com/v1
+      # LLM_API_KEY: your_key
+      # LLM_MODEL: gpt-4o-mini
+      # COMMENTARY_PROMPT_STYLE: simple
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+
+volumes:
+  bible_db:

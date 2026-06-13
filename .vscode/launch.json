@@ -1,0 +1,27 @@
+{
+    // The "dart" type is provided by the Flutter VS Code extension (Dart-Code.flutter).
+    // VS Code's built-in schema validator may warn "use node instead" — this is a false
+    // positive and can be safely ignored. The launch configs below are correct.
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Simple Bible App (Debug)",
+            "request": "launch",
+            "type": "dart",
+            "program": "lib/main.dart",
+            "args": [
+                "--dart-define-from-file=.env"
+            ]
+        },
+        {
+            "name": "Simple Bible App (Release APK)",
+            "request": "launch",
+            "type": "dart",
+            "program": "lib/main.dart",
+            "args": [
+                "--release",
+                "--dart-define-from-file=.env"
+            ]
+        }
+    ]
+}

@@ -1,0 +1,563 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "flutter build web",
+			"type": "shell",
+			"command": "flutter",
+			"args": [
+				"build",
+				"web"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Run API (uvicorn)",
+			"type": "shell",
+			"command": "C:\\Users\\hp\\The_word_simple_bible_app\\server\\.venv\\Scripts\\python.exe",
+			"args": [
+				"-m",
+				"uvicorn",
+				"app.main:app",
+				"--app-dir",
+				"C:\\Users\\hp\\The_word_simple_bible_app\\server",
+				"--host",
+				"127.0.0.1",
+				"--port",
+				"8000",
+				"--log-level",
+				"info"
+			],
+			"isBackground": true,
+			"problemMatcher": []
+		},
+		{
+			"label": "Run API (LAN 8000)",
+			"type": "shell",
+			"command": "C:\\Users\\hp\\The_word_simple_bible_app\\server\\.venv\\Scripts\\python.exe",
+			"args": [
+				"-m",
+				"uvicorn",
+				"app.main:app",
+				"--app-dir",
+				"C:\\Users\\hp\\The_word_simple_bible_app\\server",
+				"--host",
+				"0.0.0.0",
+				"--port",
+				"8000",
+				"--log-level",
+				"info"
+			],
+			"isBackground": true,
+			"problemMatcher": []
+		},
+		{
+			"label": "Fill missing commentaries",
+			"type": "shell",
+			"command": "C:\\Users\\hp\\The_word_simple_bible_app\\server\\.venv\\Scripts\\python.exe",
+			"args": [
+				"tools\\fill_missing_commentary.py"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Run API (8000)",
+			"type": "shell",
+			"command": "C:\\Users\\hp\\The_word_simple_bible_app\\server\\.venv\\Scripts\\python.exe",
+			"args": [
+				"-m",
+				"uvicorn",
+				"app.main:app",
+				"--app-dir",
+				"C:\\Users\\hp\\The_word_simple_bible_app\\server",
+				"--host",
+				"127.0.0.1",
+				"--port",
+				"8000",
+				"--log-level",
+				"warning"
+			],
+			"isBackground": true,
+			"problemMatcher": []
+		},
+		{
+			"label": "Fill missing commentaries (3 calls)",
+			"type": "shell",
+			"command": "C:\\Users\\hp\\The_word_simple_bible_app\\server\\.venv\\Scripts\\python.exe",
+			"args": [
+				"tools\\fill_missing_commentary.py"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Export commentary assets (offline, simple)",
+			"type": "shell",
+			"command": "C:\\Users\\hp\\The_word_simple_bible_app\\server\\.venv\\Scripts\\python.exe",
+			"args": [
+				"tools\\export_commentary_assets.py",
+				"--style",
+				"simple",
+				"--out-root",
+				"assets\\data\\commentary"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Generate pubspec assets (bible + commentary)",
+			"type": "shell",
+			"command": "C:\\Users\\hp\\The_word_simple_bible_app\\server\\.venv\\Scripts\\python.exe",
+			"args": [
+				"tools\\generate_pubspec_assets.py"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "flutter pub get",
+			"type": "shell",
+			"command": "flutter",
+			"args": [
+				"pub",
+				"get"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Prep offline APK assets",
+			"type": "shell",
+			"command": "pwsh",
+			"args": [
+				"-NoProfile",
+				"-Command",
+				"Write-Host 'Prepping offline assets: export commentary -> regenerate pubspec assets -> flutter pub get'"
+			],
+			"dependsOn": [
+				"Export commentary assets (offline, simple)",
+				"Generate pubspec assets (bible + commentary)",
+				"flutter pub get"
+			],
+			"dependsOrder": "sequence",
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Run API (uvicorn 8000)",
+			"type": "shell",
+			"command": "C:\\Users\\hp\\The_word_simple_bible_app\\server\\.venv\\Scripts\\python.exe",
+			"args": [
+				"-m",
+				"uvicorn",
+				"app.main:app",
+				"--app-dir",
+				"C:\\Users\\hp\\The_word_simple_bible_app\\server",
+				"--host",
+				"127.0.0.1",
+				"--port",
+				"8000",
+				"--log-level",
+				"warning"
+			],
+			"isBackground": true,
+			"problemMatcher": []
+		},
+		{
+			"label": "Who owns port 8000",
+			"type": "shell",
+			"command": "pwsh",
+			"args": [
+				"-NoProfile",
+				"-Command",
+				"Get-NetTCPConnection -LocalPort 8000 -ErrorAction SilentlyContinue | Select-Object LocalAddress,LocalPort,State,OwningProcess | Format-Table -AutoSize"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "API health (8000)",
+			"type": "shell",
+			"command": "pwsh",
+			"args": [
+				"-NoProfile",
+				"-Command",
+				"curl.exe -sS http://127.0.0.1:8000/health"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "API health (LAN 8000)",
+			"type": "shell",
+			"command": "pwsh",
+			"args": [
+				"-NoProfile",
+				"-Command",
+				"curl.exe -sS http://192.168.1.147:8000/health"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "API chapter + commentary smoke (8000)",
+			"type": "shell",
+			"command": "pwsh",
+			"args": [
+				"-NoProfile",
+				"-Command",
+				"$c = Invoke-RestMethod \"http://192.168.1.147:8000/chapter?translation=kjv&bookId=romans&chapter=8\"; $v=$c.verses[0]; Write-Host \"chapter_first_verse: $($v.bookId) $($v.chapter):$($v.verse)\"; $body = @{ translation='kjv'; bookId='romans'; chapter=8; verse=1; style='simple' } | ConvertTo-Json -Compress; $resp = Invoke-RestMethod -Method Post -Uri \"http://192.168.1.147:8000/commentary/ensure\" -ContentType \"application/json\" -Body $body; Write-Host \"commentary_stored=$($resp.stored)\""
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "API chapter + commentary smoke (8000) v2",
+			"type": "shell",
+			"command": "pwsh",
+			"args": [
+				"-NoProfile",
+				"-Command",
+				"$c = Invoke-RestMethod \"http://127.0.0.1:8000/chapter?translation=kjv&bookId=romans&chapter=8\"; $v=$c.verses[0]; Write-Host \"chapter_first_verse: $($v.bookId) $($v.chapter):$($v.verse)\"; $body = @{ translation='kjv'; bookId='romans'; chapter=8; verse=1; style='simple' } | ConvertTo-Json -Compress; $resp = Invoke-RestMethod -Method Post -Uri \"http://127.0.0.1:8000/commentary/ensure\" -ContentType \"application/json\" -Body $body; Write-Host \"commentary_stored=$($resp.stored)\""
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "API chapter + commentary smoke (LAN 8000)",
+			"type": "shell",
+			"command": "pwsh",
+			"args": [
+				"-NoProfile",
+				"-Command",
+				"$ip = $env:LAN_IP; if (-not $ip) { $ip = \"192.168.1.147\" }; $base = \\"http://$ip:8000\\"; $c = Invoke-RestMethod \\\"$base/chapter?translation=kjv&bookId=romans&chapter=8\\\"; $v=$c.verses[0]; Write-Host \\\"chapter_first_verse: $($v.bookId) $($v.chapter):$($v.verse)\\\"; $body = @{ translation=\\"kjv\\"; bookId=\\"romans\\"; chapter=8; verse=1; style=\\"simple\\" } | ConvertTo-Json -Compress; $resp = Invoke-RestMethod -Method Post -Uri \\\"$base/commentary/ensure\\\" -ContentType \\\"application/json\\\" -Body $body; Write-Host \\\"commentary_stored=$($resp.stored)\\\""
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "API smoke test (curl)",
+			"type": "shell",
+			"command": "pwsh",
+			"args": [
+				"-NoProfile",
+				"-Command",
+				"curl.exe -sS \"http://127.0.0.1:8000/chapter?translation=kjv&bookId=romans&chapter=8\" | Select-Object -First 1; curl.exe -sS -X POST \"http://127.0.0.1:8000/commentary/ensure\" -H \"Content-Type: application/json\" -d '{\"translation\":\"kjv\",\"bookId\":\"romans\",\"chapter\":8,\"verse\":1,\"style\":\"simple\"}'"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "API smoke test (PowerShell)",
+			"type": "shell",
+			"command": "pwsh",
+			"args": [
+				"-NoProfile",
+				"-Command",
+				"$chapter = Invoke-RestMethod \"http://127.0.0.1:8000/chapter?translation=kjv&bookId=romans&chapter=8\"; $first=$chapter.verses[0]; \"chapter_first_verse=$($first.bookId) $($first.chapter):$($first.verse)\"; $body = '{\"translation\":\"kjv\",\"bookId\":\"romans\",\"chapter\":8,\"verse\":1,\"style\":\"simple\"}'; $resp = Invoke-RestMethod -Method Post -Uri \"http://127.0.0.1:8000/commentary/ensure\" -ContentType \"application/json\" -Body $body; \"commentary_stored=$($resp.stored)\""
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "API smoke test (python)",
+			"type": "shell",
+			"command": "C:\\Users\\hp\\The_word_simple_bible_app\\server\\.venv\\Scripts\\python.exe",
+			"args": [
+				"-c",
+				"import json,urllib.request; base='http://127.0.0.1:8000';\nwith urllib.request.urlopen(base+'/health') as r: print('health', r.status, r.read().decode());\nwith urllib.request.urlopen(base+'/chapter?translation=kjv&bookId=romans&chapter=8') as r: data=json.loads(r.read().decode()); print('chapter_first_verse', data['verses'][0]['bookId'], f\"{data['verses'][0]['chapter']}:{data['verses'][0]['verse']}\");\npayload={'translation':'kjv','bookId':'romans','chapter':8,'verse':1,'style':'simple'};\nreq=urllib.request.Request(base+'/commentary/ensure', data=json.dumps(payload).encode('utf-8'), headers={'Content-Type':'application/json'}, method='POST');\nwith urllib.request.urlopen(req) as r: out=json.loads(r.read().decode()); print('commentary_stored', out.get('stored'));"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "API smoke test (file)",
+			"type": "shell",
+			"command": "C:\\Users\\hp\\The_word_simple_bible_app\\server\\.venv\\Scripts\\python.exe",
+			"args": [
+				"tools\\api_smoke_test.py"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Run Flutter Web (API mode)",
+			"type": "shell",
+			"command": "flutter",
+			"args": [
+				"run",
+				"-d",
+				"chrome",
+				"--dart-define=BIBLE_API_URL=http://127.0.0.1:8000",
+				"--dart-define=COMMENTARY_API_URL=http://127.0.0.1:8000"
+			],
+			"isBackground": true,
+			"problemMatcher": []
+		},
+		{
+			"label": "Flutter run Chrome (API mode, verbose)",
+			"type": "shell",
+			"command": "flutter",
+			"args": [
+				"run",
+				"-d",
+				"chrome",
+				"--dart-define=BIBLE_API_URL=http://127.0.0.1:8000",
+				"--dart-define=COMMENTARY_API_URL=http://127.0.0.1:8000",
+				"-v"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Flutter run Chrome (API mode, verbose again)",
+			"type": "shell",
+			"command": "flutter",
+			"args": [
+				"run",
+				"-d",
+				"chrome",
+				"--dart-define=BIBLE_API_URL=http://127.0.0.1:8000",
+				"--dart-define=COMMENTARY_API_URL=http://127.0.0.1:8000",
+				"-v"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Flutter devices",
+			"type": "shell",
+			"command": "flutter",
+			"args": [
+				"devices"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Run Flutter Chrome (API mode, fixed port)",
+			"type": "shell",
+			"command": "flutter",
+			"args": [
+				"run",
+				"-d",
+				"chrome",
+				"--web-hostname=127.0.0.1",
+				"--web-port",
+				"5005",
+				"--dart-define=BIBLE_API_URL=http://127.0.0.1:8000",
+				"--dart-define=COMMENTARY_API_URL=http://127.0.0.1:8000"
+			],
+			"isBackground": true,
+			"problemMatcher": []
+		},
+		{
+			"label": "flutter build apk (release)",
+			"type": "shell",
+			"command": "pwsh",
+			"args": [
+				"-NoProfile",
+				"-File",
+				"tools\\build_split_apk.ps1"
+			],
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "build"
+		},
+		{
+			"label": "flutter devices (diagnose)",
+			"type": "shell",
+			"command": "flutter",
+			"args": [
+				"devices"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "flutter doctor -v (diagnose)",
+			"type": "shell",
+			"command": "flutter",
+			"args": [
+				"doctor",
+				"-v"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "adb devices",
+			"type": "shell",
+			"command": "adb",
+			"args": [
+				"devices",
+				"-l"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "adb devices (full path)",
+			"type": "shell",
+			"command": "C:\\Users\\hp\\AppData\\Local\\Android\\Sdk\\platform-tools\\adb.exe",
+			"args": [
+				"devices",
+				"-l"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "flutter build apk (release) v2",
+			"type": "shell",
+			"command": "pwsh",
+			"args": [
+				"-NoProfile",
+				"-File",
+				"tools\\build_split_apk.ps1"
+			],
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "build"
+		},
+		{
+			"label": "flutter build apk (release, full offline assets)",
+			"type": "shell",
+			"command": "pwsh",
+			"args": [
+				"-NoProfile",
+				"-File",
+				"tools\\build_split_apk.ps1"
+			],
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "build"
+		},
+		{
+			"label": "flutter build apk (release, OFFLINE APK)",
+			"type": "shell",
+			"command": "pwsh",
+			"args": [
+				"-NoProfile",
+				"-File",
+				"tools\\build_split_apk.ps1"
+			],
+			"dependsOn": [
+				"Prep offline APK assets"
+			],
+			"dependsOrder": "sequence",
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "build"
+		},
+		{
+			"label": "flutter build apk (release, commentary fix)",
+			"type": "shell",
+			"command": "pwsh",
+			"args": [
+				"-NoProfile",
+				"-File",
+				"tools\\build_split_apk.ps1"
+			],
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "build"
+		},
+		{
+			"label": "flutter build apk (release, verbose)",
+			"type": "shell",
+			"command": "pwsh",
+			"args": [
+				"-NoProfile",
+				"-File",
+				"tools\\build_split_apk.ps1",
+				"-VerboseBuild"
+			],
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "build"
+		},
+		{
+			"label": "flutter analyze",
+			"type": "shell",
+			"command": "flutter",
+			"args": [
+				"analyze"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "flutter analyze (post commentary fix)",
+			"type": "shell",
+			"command": "flutter",
+			"args": [
+				"analyze"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "flutter build apk (release, commentary fixed)",
+			"type": "shell",
+			"command": "pwsh",
+			"args": [
+				"-NoProfile",
+				"-File",
+				"tools\\build_split_apk.ps1"
+			],
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "build"
+		},
+		{
+			"label": "flutter build apk (release, commentary v2)",
+			"type": "shell",
+			"command": "pwsh",
+			"args": [
+				"-NoProfile",
+				"-File",
+				"tools\\build_split_apk.ps1"
+			],
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "build"
+		},
+		{
+			"label": "flutter build apk (release, LAN API 192.168.1.147)",
+			"type": "shell",
+			"command": "pwsh",
+			"args": [
+				"-NoProfile",
+				"-File",
+				"tools\\build_split_apk.ps1",
+				"-BibleApiUrl",
+				"http://192.168.1.147:8000",
+				"-CommentaryApiUrl",
+				"http://192.168.1.147:8000"
+			],
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "build"
+		},
+		{
+			"label": "flutter build apk (release, Hotspot API 192.168.137.1)",
+			"type": "shell",
+			"command": "pwsh",
+			"args": [
+				"-NoProfile",
+				"-File",
+				"tools\\build_split_apk.ps1",
+				"-BibleApiUrl",
+				"http://192.168.137.1:8000",
+				"-CommentaryApiUrl",
+				"http://192.168.137.1:8000"
+			],
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "build"
+		}
+	]
+}

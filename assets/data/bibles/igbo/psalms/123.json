@@ -1,0 +1,23 @@
+{
+  "bookId": "psalms",
+  "book": "Abụ Ọma",
+  "chapter": 123,
+  "verses": [
+    {
+      "verse": 1,
+      "text": "Ana m eweli anya m abụọ elu ile gị, gị onye ocheeze ya dị nʼeluigwe."
+    },
+    {
+      "verse": 2,
+      "text": "Dịka ohu si elekwasị nna ya ukwu anya ya, na dịka ohu nwanyị na-eje ozi si elekwasị nne ya ukwu anya, ịnata ozi ọ ga-eje, otu a ka anyị si na-elekwasị Onyenwe anyị bụ Chineke anyị anya, ruo mgbe ọ ga-emere anyị ebere."
+    },
+    {
+      "verse": 3,
+      "text": "Meere anyị ebere, O Onyenwe anyị, meere anyị ebere, nʼihi na anyị abụrụla ndị a na-akọcha akọcha."
+    },
+    {
+      "verse": 4,
+      "text": "Nʼihi na nnagide anyị na-anagide ịchị ọchị ndị nganga, na ileda anya ndị mpako adịla ukwuu."
+    }
+  ]
+}

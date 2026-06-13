@@ -1,0 +1,13 @@
+{
+  "name": "the-word-simple-bible-app",
+  "version": "1.0.0",
+  "description": "Flutter Bible Application with FastAPI backend",
+  "scripts": {
+    "dev": "flutter run --dart-define-from-file=.env",
+    "dev:web": "flutter run -d chrome --web-renderer html --dart-define-from-file=.env",
+    "build": "flutter build apk --release --dart-define-from-file=.env",
+    "build:web": "flutter build web --web-renderer html --dart-define-from-file=.env",
+    "build:apk": "flutter build apk --release --dart-define-from-file=.env",
+    "server:dev": "cd server && .\\.venv\\Scripts\\python.exe -m uvicorn app.main:app --host 127.0.0.1 --port 8000"
+  }
+}
