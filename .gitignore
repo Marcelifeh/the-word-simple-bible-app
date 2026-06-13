@@ -33,6 +33,12 @@ migrate_working_dir/
 /build/
 /coverage/
 
+# Python virtual environments
+.venv/
+venv/
+server/.venv/
+server/venv/
+
 # Local secrets
 .env
 server/app/.env
@@ -47,3 +53,7 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# Native build caches
+android/.gradle/
+ios/Pods/
