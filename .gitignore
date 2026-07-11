@@ -42,6 +42,8 @@ server/venv/
 # Local secrets
 .env
 server/app/.env
+.env.*
+!.env.example
 
 # Symbolication related
 app.*.symbols
@@ -57,3 +59,14 @@ app.*.map.json
 # Native build caches
 android/.gradle/
 ios/Pods/
+
+# Recordings, temporary uploads, and model caches
+*.m4a
+*.mp4
+*.wav
+*.webm
+*.mp3
+server/tmp/
+server/uploads/
+server/models/
+server/.cache/

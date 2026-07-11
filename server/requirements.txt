@@ -8,5 +8,7 @@ alembic==1.14.0
 python-dotenv==1.0.1
 httpx==0.27.2
 python-multipart==0.0.20
-faster-whisper==1.1.1
+# Optional. Enable only on a host with enough memory/CPU, then set
+# SERMON_TRANSCRIPTION_ENABLED=true.
+# faster-whisper==1.1.1
 requests==2.32.5

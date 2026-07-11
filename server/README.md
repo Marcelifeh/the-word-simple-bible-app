@@ -71,7 +71,8 @@ Equivalent direct command:
 
 ## 2) Run migrations (optional but recommended)
 
-For MVP the API also runs `create_all()` at startup, but migrations are included.
+The API does not modify the schema during application startup. Run Alembic
+before starting Uvicorn; the Render start command does this automatically.
 
 ```powershell
 cd server

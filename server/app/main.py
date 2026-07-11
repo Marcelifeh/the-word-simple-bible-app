@@ -8,11 +8,11 @@ from sqlalchemy.exc import IntegrityError
 import httpx
 import re
 
-from .db import SessionLocal, engine
+from .db import SessionLocal
 from .db import get_database_url
 from .llm import generate_commentary
 from .audio import generate_verse_audio, STATIC_DIR
-from .models import Base, Commentary, Verse
+from .models import Commentary, Verse
 from .routes import sermon
 import logging
 
@@ -30,7 +30,7 @@ from .schemas import (
 )
 from fastapi.responses import FileResponse
 
-app = FastAPI(title="Simple Bible API")
+app = FastAPI(title="The Word App API", version="1.0.0")
 app.include_router(sermon.router)
 
 # Allow Flutter Web (and other local dev clients) to call this API.
@@ -165,9 +165,14 @@ def db_session():
         db.close()
 
 
+@app.get("/")
+async def root() -> dict[str, str]:
+    return {"name": "The Word App API", "status": "online"}
+
+
 @app.get("/health")
-def health():
-    return {"ok": True}
+async def health() -> dict[str, str]:
+    return {"status": "healthy"}
 
 
 @app.get("/debug/info")
@@ -231,17 +236,6 @@ def debug_info(db=Depends(db_session)):
         "web_romans7_count_by_bookname": int(romans7),
         "web_psalm23_count_by_bookname": int(psalm23),
     }
-
-
-@app.on_event("startup")
-def _startup():
-    # Minimal "migration" for MVP. For production use Alembic.
-    Base.metadata.create_all(bind=engine)
-    with engine.begin() as conn:
-        conn.exec_driver_sql(
-            "ALTER TABLE commentary ADD COLUMN IF NOT EXISTS language VARCHAR(16) NOT NULL DEFAULT 'english'"
-        )
-        conn.exec_driver_sql("ALTER TABLE commentary ADD COLUMN IF NOT EXISTS payload_json TEXT")
 
 
 @app.get("/verse", response_model=VerseOut)

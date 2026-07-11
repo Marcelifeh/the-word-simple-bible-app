@@ -8,11 +8,22 @@ from functools import lru_cache
 from fastapi import APIRouter, File, HTTPException, UploadFile
 from pydantic import BaseModel
 
+from app.services.sermon_text_cleaner import clean_sermon_transcript
+
 router = APIRouter(prefix="/sermon", tags=["sermon"])
+
+TRANSCRIPTION_ENABLED = (
+    os.getenv("SERMON_TRANSCRIPTION_ENABLED", "false").lower() == "true"
+)
 
 
 class SermonSummaryRequest(BaseModel):
     transcript: str
+
+
+class SermonOutlineRequest(BaseModel):
+    transcript: str
+    insight: dict | None = None
 
 
 @lru_cache(maxsize=1)
@@ -33,6 +44,15 @@ def _whisper_model():
 
 @router.post("/transcribe")
 async def transcribe_sermon(file: UploadFile = File(...)):
+    if not TRANSCRIPTION_ENABLED:
+        raise HTTPException(
+            status_code=503,
+            detail=(
+                "Cloud transcription is temporarily unavailable. "
+                "The recording remains saved on your device."
+            ),
+        )
+
     suffix = os.path.splitext(file.filename or "sermon.m4a")[1] or ".m4a"
 
     with tempfile.NamedTemporaryFile(delete=False, suffix=suffix) as tmp:
@@ -56,16 +76,18 @@ async def transcribe_sermon(file: UploadFile = File(...)):
         try:
             segments_iter, info = model.transcribe(
                 tmp_path,
-                beam_size=5,
+                language="en",
+                beam_size=1,
                 vad_filter=True,
                 vad_parameters={"min_silence_duration_ms": 500},
+                condition_on_previous_text=False,
             )
         except Exception as exc:
             raise HTTPException(
                 status_code=500,
                 detail="Sermon audio could not be transcribed.",
             ) from exc
-        segments = [
+        raw_segments = [
             {
                 "start": round(segment.start, 2),
                 "end": round(segment.end, 2),
@@ -74,10 +96,19 @@ async def transcribe_sermon(file: UploadFile = File(...)):
             for segment in segments_iter
             if segment.text.strip()
         ]
-        transcript = " ".join(segment["text"] for segment in segments).strip()
+        raw_transcript = " ".join(segment["text"] for segment in raw_segments).strip()
+        segments = [
+            {
+                **segment,
+                "text": clean_sermon_transcript(segment["text"]),
+            }
+            for segment in raw_segments
+        ]
+        transcript = clean_sermon_transcript(raw_transcript)
 
         return {
             "transcript": transcript,
+            "rawTranscript": raw_transcript,
             "language": info.language or "unknown",
             "duration": round(info.duration or 0, 2),
             "segments": segments,
@@ -90,7 +121,7 @@ async def transcribe_sermon(file: UploadFile = File(...)):
 
 @router.post("/summary")
 async def summarize_sermon(payload: SermonSummaryRequest):
-    transcript = payload.transcript.strip()
+    transcript = clean_sermon_transcript(payload.transcript.strip())
 
     if not transcript:
         return {
@@ -106,6 +137,147 @@ async def summarize_sermon(payload: SermonSummaryRequest):
         "status": "ok",
     }
 
+@router.post("/outline")
+async def generate_sermon_outline(payload: SermonOutlineRequest):
+    transcript = clean_sermon_transcript(payload.transcript.strip())
+
+    if not transcript:
+        return {
+            "outline": None,
+            "error": "Transcript is empty.",
+        }
+
+    return {
+        "outline": _build_sermon_outline(transcript, payload.insight or {}),
+        "status": "ok",
+    }
+
+
+def _string_list(value: object) -> list[str]:
+    if not isinstance(value, list):
+        return []
+    return [str(item).strip() for item in value if str(item).strip()]
+
+def _build_sermon_outline(transcript: str, insight: dict[str, object]) -> dict[str, object]:
+    sentences = _sentences(transcript)
+    scriptures = _unique_strings(
+        [*_scripture_references(transcript), *_string_list(insight.get("scripturesMentioned"))]
+    )
+    ranked = _ranked_sentences(sentences, limit=8)
+    points = _outline_points_from(ranked or sentences)
+    title = _outline_title_from(transcript, sentences, scriptures, insight)
+    main_theme = _main_theme_from(sentences)
+    prayer_points = _string_list(insight.get("prayerPoints"))
+
+    return {
+        "title": title,
+        "mainText": scriptures[0] if scriptures else "",
+        "introduction": _outline_introduction_from(sentences, main_theme),
+        "mainPoints": points,
+        "supportingScriptures": scriptures,
+        "lifeApplication": _life_application_from(sentences, _string_list(insight.get("actionSteps"))),
+        "conclusion": _outline_conclusion_from(sentences, main_theme),
+        "closingPrayer": _closing_prayer_from(sentences, prayer_points, main_theme),
+    }
+
+
+def _outline_title_from(
+    transcript: str,
+    sentences: list[str],
+    scriptures: list[str],
+    insight: dict[str, object],
+) -> str:
+    insight_title = str(insight.get("title") or "").strip()
+    if insight_title and _text_mentions(transcript, insight_title):
+        return insight_title
+    if scriptures:
+        return f"Sermon Outline on {scriptures[0]}"
+    if sentences:
+        words = re.sub(r"[^A-Za-z0-9 ,'-]", "", sentences[0]).split()
+        if words:
+            return " ".join(words[:10])
+    return "Sermon Outline"
+
+
+def _outline_introduction_from(sentences: list[str], main_theme: str) -> str:
+    if sentences:
+        opener = sentences[0].rstrip(".!?") + "."
+        if len(opener) <= 260:
+            return opener
+    return main_theme
+
+
+def _outline_points_from(sentences: list[str]) -> list[str]:
+    points = []
+    for sentence in sentences:
+        cleaned = sentence.rstrip(".!?").strip()
+        if len(cleaned) < 18:
+            continue
+        points.append(cleaned + ".")
+        if len(points) == 5:
+            break
+    return points or ["Review the transcript and identify the main truth emphasized in the message."]
+
+
+def _life_application_from(sentences: list[str], action_steps: list[str]) -> str:
+    if action_steps:
+        return action_steps[0]
+    application_sentences = [
+        sentence.rstrip(".!?") + "."
+        for sentence in sentences
+        if re.search(
+            r"\b(apply|application|respond|obedience|obey|live|practice|today|week|change|repent|trust)\b",
+            sentence,
+            re.I,
+        )
+    ]
+    if application_sentences:
+        return application_sentences[0]
+    if sentences:
+        return f"Respond personally to this truth from the sermon: {sentences[-1].rstrip('.!?')}."
+    return "Respond to the message with one clear step of faith and obedience."
+
+
+def _outline_conclusion_from(sentences: list[str], main_theme: str) -> str:
+    if len(sentences) >= 2:
+        return sentences[-1].rstrip(".!?") + "."
+    return main_theme
+
+
+def _closing_prayer_from(
+    sentences: list[str], prayer_points: list[str], main_theme: str
+) -> str:
+    if prayer_points:
+        return prayer_points[0]
+    prayer_sentences = [
+        sentence.rstrip(".!?") + "."
+        for sentence in sentences
+        if re.search(r"\b(pray|prayer|lord|father|spirit|help us|amen)\b", sentence, re.I)
+    ]
+    if prayer_sentences:
+        return prayer_sentences[0]
+    return f"Lord, help us receive and live out this truth: {main_theme}"
+
+
+def _text_mentions(text: str, phrase: str) -> bool:
+    words = [word.lower() for word in re.findall(r"[A-Za-z0-9]+", phrase) if len(word) > 3]
+    if not words:
+        return False
+    lower = text.lower()
+    matches = sum(1 for word in words if word in lower)
+    return matches >= max(1, min(3, len(words)))
+
+
+def _unique_strings(values: list[str]) -> list[str]:
+    output = []
+    seen = set()
+    for value in values:
+        cleaned = re.sub(r"\s+", " ", value).strip()
+        key = cleaned.lower()
+        if cleaned and key not in seen:
+            output.append(cleaned)
+            seen.add(key)
+    return output[:20]
 
 def _build_sermon_intelligence(transcript: str) -> dict[str, object]:
     sentences = _sentences(transcript)
