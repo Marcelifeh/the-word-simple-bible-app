@@ -15,6 +15,7 @@ import '../../data/favorites/favorites_repository.dart';
 import '../../data/search/search_index_repository.dart';
 import '../../data/search/smart_offline_search_repository.dart';
 import '../../features/notes/repository/notes_repository.dart';
+import '../../features/devotional/model/devotional_model.dart';
 import '../../features/sermon_notes/repository/sermon_draft_repository.dart';
 import '../../features/sermon_notes/repository/sermon_note_repository.dart';
 import '../../features/tracts/repository/user_tract_repository.dart';
@@ -50,6 +51,14 @@ class LastReadRef {
 
   /// True when the stored version matches the current schema.
   bool get isValid => version == _kCurrentVersion;
+}
+
+enum DevotionalResumeStage {
+  reading,
+  audio,
+  reflection,
+  prayer,
+  journal,
 }
 
 class AppState extends ChangeNotifier {
@@ -89,6 +98,10 @@ class AppState extends ChangeNotifier {
   double fontScale = 1.0;
   Color primarySeed = Colors.indigo;
   LastReadRef? lastReadRef;
+  DevotionalModel? _currentDevotional;
+  DateTime? _currentDevotionalDate;
+  DateTime? _currentDevotionalLastOpenedAt;
+  DevotionalResumeStage _currentDevotionalStage = DevotionalResumeStage.reading;
   final Map<String, DateTime> _devotionalReadHistory = {};
   final Map<String, double> _devotionalProgressByDate = {};
   final Map<String, String> _readingPlanLastOpenedPassagesByDate = {};
@@ -96,6 +109,14 @@ class AppState extends ChangeNotifier {
 
   Map<String, DateTime> get devotionalReadHistory =>
       Map<String, DateTime>.unmodifiable(_devotionalReadHistory);
+
+  DevotionalModel? get currentDevotional => _currentDevotional;
+
+  DateTime? get currentDevotionalDate => _currentDevotionalDate;
+
+  DateTime? get currentDevotionalLastOpenedAt => _currentDevotionalLastOpenedAt;
+
+  DevotionalResumeStage get currentDevotionalStage => _currentDevotionalStage;
 
   double devotionalProgressForDate(DateTime date) {
     final value = _devotionalProgressByDate[_dateKey(date)] ?? 0.0;
@@ -148,13 +169,26 @@ class AppState extends ChangeNotifier {
     _saveSetting('lastReadVerse', ref.verse);
   }
 
-  void markDevotionalRead(String devotionalId, {DateTime? readAt}) {
+  void markDevotionalRead(
+    String devotionalId, {
+    DateTime? readAt,
+    DateTime? activeDate,
+  }) {
     final effectiveReadAt = readAt ?? DateTime.now();
+    final currentChanged = _setCurrentDevotionalById(
+      devotionalId,
+      activeDate: activeDate ?? effectiveReadAt,
+      lastOpenedAt: effectiveReadAt,
+      notify: false,
+    );
     final changed = _markDevotionalReadInternal(
       devotionalId,
       effectiveReadAt,
     );
     if (!changed) {
+      if (currentChanged) {
+        notifyListeners();
+      }
       return;
     }
 
@@ -167,13 +201,22 @@ class AppState extends ChangeNotifier {
     required double progress,
   }) {
     final effectiveDate = activeDate ?? DateTime.now();
-    final dateKey = _dateKey(effectiveDate);
     final normalizedProgress = progress.clamp(0.0, 1.0);
+    final currentChanged = _setCurrentDevotionalById(
+      devotionalId,
+      activeDate: effectiveDate,
+      stage: _stageForDevotionalProgress(normalizedProgress),
+      notify: false,
+    );
+    final dateKey = _dateKey(effectiveDate);
     final previousProgress = _devotionalProgressByDate[dateKey] ?? 0.0;
     final shouldUpgrade = normalizedProgress >= 1.0 ||
         normalizedProgress > previousProgress + 0.0001;
 
     if (!shouldUpgrade) {
+      if (currentChanged) {
+        notifyListeners();
+      }
       return;
     }
 
@@ -213,6 +256,85 @@ class AppState extends ChangeNotifier {
       ),
     );
     return true;
+  }
+
+  void setCurrentDevotional(
+    DevotionalModel devotional, {
+    DateTime? activeDate,
+    DateTime? lastOpenedAt,
+    DevotionalResumeStage? stage,
+  }) {
+    final normalizedDate = activeDate == null ? null : _dateOnly(activeDate);
+    final effectiveLastOpenedAt = lastOpenedAt ?? DateTime.now();
+    final effectiveStage = stage ?? _currentDevotionalStage;
+    if (_currentDevotional?.id == devotional.id &&
+        _currentDevotionalDate == normalizedDate &&
+        _currentDevotionalLastOpenedAt == effectiveLastOpenedAt &&
+        _currentDevotionalStage == effectiveStage) {
+      return;
+    }
+
+    _currentDevotional = devotional;
+    _currentDevotionalDate = normalizedDate;
+    _currentDevotionalLastOpenedAt = effectiveLastOpenedAt;
+    _currentDevotionalStage = effectiveStage;
+    _persistCurrentDevotional();
+    notifyListeners();
+  }
+
+  void clearCurrentDevotional() {
+    if (_currentDevotional == null &&
+        _currentDevotionalDate == null &&
+        _currentDevotionalLastOpenedAt == null &&
+        _currentDevotionalStage == DevotionalResumeStage.reading) {
+      return;
+    }
+
+    _currentDevotional = null;
+    _currentDevotionalDate = null;
+    _currentDevotionalLastOpenedAt = null;
+    _currentDevotionalStage = DevotionalResumeStage.reading;
+    _clearPersistedCurrentDevotional();
+    notifyListeners();
+  }
+
+  bool _setCurrentDevotionalById(
+    String devotionalId, {
+    DateTime? activeDate,
+    DateTime? lastOpenedAt,
+    DevotionalResumeStage? stage,
+    required bool notify,
+  }) {
+    final devotional = devotionalService.getById(devotionalId);
+    if (devotional == null) return false;
+
+    final normalizedDate = activeDate == null ? null : _dateOnly(activeDate);
+    final effectiveLastOpenedAt =
+        lastOpenedAt ?? _currentDevotionalLastOpenedAt ?? DateTime.now();
+    final effectiveStage = stage ?? _currentDevotionalStage;
+    if (_currentDevotional?.id == devotional.id &&
+        _currentDevotionalDate == normalizedDate &&
+        _currentDevotionalLastOpenedAt == effectiveLastOpenedAt &&
+        _currentDevotionalStage == effectiveStage) {
+      return false;
+    }
+
+    _currentDevotional = devotional;
+    _currentDevotionalDate = normalizedDate;
+    _currentDevotionalLastOpenedAt = effectiveLastOpenedAt;
+    _currentDevotionalStage = effectiveStage;
+    _persistCurrentDevotional();
+    if (notify) {
+      notifyListeners();
+    }
+    return true;
+  }
+
+  void setCurrentDevotionalStage(DevotionalResumeStage stage) {
+    if (_currentDevotionalStage == stage) return;
+    _currentDevotionalStage = stage;
+    _persistCurrentDevotional();
+    notifyListeners();
   }
 
   Future<void> markReadingPlanPassageOpened(
@@ -493,8 +615,95 @@ class AppState extends ChangeNotifier {
       }
     }
 
+    _initializeCurrentDevotional();
+
     // Notify listeners after loading all settings
     notifyListeners();
+  }
+
+  void _initializeCurrentDevotional() {
+    final today = _dateOnly(DateTime.now());
+    final box = _settingsBox;
+    final savedId = box?.get('currentDevotionalId') as String?;
+    final savedDevotional =
+        savedId == null ? null : devotionalService.getById(savedId);
+
+    if (savedDevotional != null) {
+      _currentDevotional = savedDevotional;
+      _currentDevotionalDate =
+          _parseDateOnly(box?.get('currentDevotionalDate') as String?) ?? today;
+      _currentDevotionalLastOpenedAt =
+          _parseDateTime(box?.get('currentDevotionalLastOpenedAt') as String?);
+      _currentDevotionalStage = _parseDevotionalResumeStage(
+        box?.get('currentDevotionalResumeStage') as String?,
+      );
+      return;
+    }
+
+    _currentDevotional = devotionalService.getTodaysDevotional(now: today);
+    _currentDevotionalDate = today;
+    _currentDevotionalLastOpenedAt = null;
+    _currentDevotionalStage = DevotionalResumeStage.reading;
+  }
+
+  DateTime _dateOnly(DateTime value) {
+    return DateTime(value.year, value.month, value.day);
+  }
+
+  DateTime? _parseDateOnly(String? value) {
+    final parsed = _parseDateTime(value);
+    if (parsed == null) return null;
+    return _dateOnly(parsed);
+  }
+
+  DateTime? _parseDateTime(String? value) {
+    if (value == null || value.trim().isEmpty) return null;
+    return DateTime.tryParse(value);
+  }
+
+  DevotionalResumeStage _parseDevotionalResumeStage(String? value) {
+    if (value == null || value.trim().isEmpty) {
+      return DevotionalResumeStage.reading;
+    }
+    return DevotionalResumeStage.values.firstWhere(
+      (stage) => stage.name == value,
+      orElse: () => DevotionalResumeStage.reading,
+    );
+  }
+
+  DevotionalResumeStage _stageForDevotionalProgress(double progress) {
+    if (progress >= 0.999) return DevotionalResumeStage.journal;
+    if (progress >= 0.82) return DevotionalResumeStage.prayer;
+    if (progress >= 0.58) return DevotionalResumeStage.reflection;
+    return DevotionalResumeStage.reading;
+  }
+
+  void _persistCurrentDevotional() {
+    final devotional = _currentDevotional;
+    if (devotional == null) {
+      _clearPersistedCurrentDevotional();
+      return;
+    }
+    _saveSetting('currentDevotionalId', devotional.id);
+    _saveSetting(
+      'currentDevotionalDate',
+      _currentDevotionalDate?.toIso8601String(),
+    );
+    _saveSetting(
+      'currentDevotionalLastOpenedAt',
+      _currentDevotionalLastOpenedAt?.toIso8601String(),
+    );
+    _saveSetting(
+      'currentDevotionalResumeStage',
+      _currentDevotionalStage.name,
+    );
+  }
+
+  void _clearPersistedCurrentDevotional() {
+    _deleteSetting('currentDevotionalId');
+    _deleteSetting('currentDevotionalDate');
+    _deleteSetting('currentDevotionalLastOpenedAt');
+    _deleteSetting('currentDevotionalResumeStage');
   }
 
   String _dateKey(DateTime value) {
@@ -526,7 +735,15 @@ class AppState extends ChangeNotifier {
   }
 
   Future<void> _saveSetting(String key, dynamic value) async {
+    if (value == null) {
+      await _settingsBox?.delete(key);
+      return;
+    }
     await _settingsBox?.put(key, value);
+  }
+
+  Future<void> _deleteSetting(String key) async {
+    await _settingsBox?.delete(key);
   }
 
   BibleRepository _buildBibleRepo() {

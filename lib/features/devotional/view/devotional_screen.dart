@@ -39,6 +39,13 @@ class _DevotionalScreenState extends State<DevotionalScreen> {
           _today = _service.getTodaysDevotional();
           _timeLeft = _service.timeUntilNextDevotional;
         });
+        if (!mounted) return;
+        final now = DateTime.now();
+        AppScope.of(context).setCurrentDevotional(
+          _today,
+          activeDate: DateTime(now.year, now.month, now.day),
+          stage: DevotionalResumeStage.reading,
+        );
       } else {
         setState(() => _timeLeft = newLeft);
       }
@@ -49,6 +56,36 @@ class _DevotionalScreenState extends State<DevotionalScreen> {
   void dispose() {
     _ticker?.cancel();
     super.dispose();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final now = DateTime.now();
+    AppScope.of(context).setCurrentDevotional(
+      _today,
+      activeDate: DateTime(now.year, now.month, now.day),
+      stage: DevotionalResumeStage.reading,
+    );
+  }
+
+  Future<void> _openDevotional(
+    DevotionalModel devotional, {
+    required DateTime activeDate,
+  }) async {
+    AppScope.of(context).setCurrentDevotional(
+      devotional,
+      activeDate: activeDate,
+      stage: DevotionalResumeStage.reading,
+    );
+    await AppRouter.push(
+      context,
+      DevotionalDetailScreen(
+        devotional: devotional,
+        activeDate: activeDate,
+      ),
+      transition: AppTransitionType.devotional,
+    );
   }
 
   String _pad(int n) => n.toString().padLeft(2, '0');
@@ -125,23 +162,15 @@ class _DevotionalScreenState extends State<DevotionalScreen> {
                 hasStartedToday: hasStartedToday,
                 hasCompletedToday: hasCompletedToday,
                 missedDevotional: missedDevotional,
-                onTap: () => AppRouter.push(
-                  context,
-                  DevotionalDetailScreen(
-                    devotional: _today,
-                    activeDate: normalizedToday,
-                  ),
-                  transition: AppTransitionType.devotional,
+                onTap: () => _openDevotional(
+                  _today,
+                  activeDate: normalizedToday,
                 ),
                 onCatchUpTap: missedDevotional == null
                     ? null
-                    : () => AppRouter.push(
-                          context,
-                          DevotionalDetailScreen(
-                            devotional: missedDevotional.devotional,
-                            activeDate: missedDevotional.date,
-                          ),
-                          transition: AppTransitionType.devotional,
+                    : () => _openDevotional(
+                          missedDevotional.devotional,
+                          activeDate: missedDevotional.date,
                         ),
               ),
             ),

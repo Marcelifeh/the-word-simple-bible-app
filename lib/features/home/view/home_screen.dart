@@ -268,11 +268,16 @@ class _HomeScreenState extends State<HomeScreen> {
     ];
   }
 
-  void _openDevotional(
+  Future<void> _openDevotional(
     DevotionalModel devotional, {
     required DateTime activeDate,
-  }) {
-    AppRouter.push(
+  }) async {
+    AppScope.of(context).setCurrentDevotional(
+      devotional,
+      activeDate: activeDate,
+      stage: DevotionalResumeStage.reading,
+    );
+    await AppRouter.push(
       context,
       DevotionalDetailScreen(
         devotional: devotional,
@@ -281,6 +286,8 @@ class _HomeScreenState extends State<HomeScreen> {
       rootNavigator: true,
       transition: AppTransitionType.devotional,
     );
+    if (!mounted) return;
+    await _loadWeeklyStats();
   }
 
   Future<void> _openDevotionalHistory() async {
@@ -295,6 +302,14 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _openAudioDevotional(DevotionalModel devotional) {
+    final state = AppScope.of(context);
+    state.setCurrentDevotional(
+      devotional,
+      activeDate: state.currentDevotional?.id == devotional.id
+          ? state.currentDevotionalDate
+          : _todayOnly,
+      stage: DevotionalResumeStage.audio,
+    );
     AppRouter.push(
       context,
       DevotionalPlayerScreen(devotional: devotional),
@@ -555,21 +570,13 @@ class _HomeScreenState extends State<HomeScreen> {
     );
     final readingPlanIndicator =
         _readingPlanIndicator(state, readingPlanService);
-    final lastReadDevotional =
-        devotionalHistory.isEmpty ? null : devotionalHistory.first;
-    final lastReadAt = lastReadDevotional == null
-        ? null
-        : state.devotionalReadHistory[lastReadDevotional.id];
-    final continueDevotional = lastReadDevotional ?? todayDevotional;
-    final continueDate = lastReadAt ?? _todayOnly;
-    final continueProgress = lastReadAt == null
-        ? 0.0
-        : state.devotionalProgressForDate(continueDate);
-    final showContinueDevotional = lastReadDevotional != null &&
-        lastReadAt != null &&
-        lastReadDevotional.id != todayDevotional.id &&
-        continueProgress > 0 &&
-        continueProgress < 0.999;
+    final continueDevotional = state.currentDevotional ?? todayDevotional;
+    final continueDate = state.currentDevotionalDate ?? _todayOnly;
+    final continueProgress = state.devotionalProgressForDate(continueDate);
+    final showContinueDevotional =
+        continueDevotional.id != todayDevotional.id &&
+            continueProgress > 0 &&
+            continueProgress < 0.999;
     final todayEncouragement = _todayEncouragement;
     return Scaffold(
       body: SafeArea(
@@ -626,6 +633,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 readingDay: todayReadingDay,
                 devotional: continueDevotional,
                 devotionalProgress: continueProgress,
+                isContinuingDevotional:
+                    continueProgress > 0 && continueProgress < 0.999,
                 onOpenReading: () => _openTodayCombinedReading(todayReading),
                 onOpenVerse: _openDailyVerse,
                 onOpenDevotional: () => _openDevotional(
@@ -1224,6 +1233,7 @@ class _SpiritualDashboardPager extends StatelessWidget {
     required this.readingDay,
     required this.devotional,
     required this.devotionalProgress,
+    required this.isContinuingDevotional,
     required this.onOpenReading,
     required this.onOpenVerse,
     required this.onOpenDevotional,
@@ -1239,6 +1249,7 @@ class _SpiritualDashboardPager extends StatelessWidget {
   final int readingDay;
   final DevotionalModel devotional;
   final double devotionalProgress;
+  final bool isContinuingDevotional;
   final VoidCallback onOpenReading;
   final VoidCallback onOpenVerse;
   final VoidCallback onOpenDevotional;
@@ -1277,6 +1288,7 @@ class _SpiritualDashboardPager extends StatelessWidget {
                 child: _DevotionalDashboardCard(
                   devotional: devotional,
                   progress: devotionalProgress,
+                  isContinuing: isContinuingDevotional,
                   onTap: onOpenDevotional,
                 ),
               ),
@@ -1509,11 +1521,13 @@ class _DevotionalDashboardCard extends StatelessWidget {
   const _DevotionalDashboardCard({
     required this.devotional,
     required this.progress,
+    required this.isContinuing,
     required this.onTap,
   });
 
   final DevotionalModel devotional;
   final double progress;
+  final bool isContinuing;
   final VoidCallback onTap;
 
   @override
@@ -1521,7 +1535,6 @@ class _DevotionalDashboardCard extends StatelessWidget {
     const accent = Color(0xFF6366F1);
     final theme = Theme.of(context);
     final normalizedProgress = progress.clamp(0.0, 1.0).toDouble();
-    final isContinuing = normalizedProgress > 0 && normalizedProgress < 0.999;
     final progressPercent = (normalizedProgress * 100).round();
 
     return _DashboardCardShell(
@@ -1536,7 +1549,7 @@ class _DevotionalDashboardCard extends StatelessWidget {
         children: [
           _DashboardEyebrow(
             icon: Icons.history_edu_rounded,
-            label: 'LOGOS DEVOTIONAL',
+            label: isContinuing ? 'CONTINUE REFLECTION' : 'TODAY\'S DEVOTIONAL',
             accent: accent,
           ),
           const SizedBox(height: 16),
@@ -1552,7 +1565,7 @@ class _DevotionalDashboardCard extends StatelessWidget {
           ),
           const Spacer(),
           _DashboardLink(
-            label: 'Continue Reflection',
+            label: isContinuing ? 'Continue Reflection' : 'Start Devotional',
             color: accent,
             onTap: onTap,
           ),

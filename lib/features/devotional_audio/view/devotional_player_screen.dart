@@ -40,6 +40,13 @@ class _DevotionalPlayerScreenState extends State<DevotionalPlayerScreen> {
     if (!_initialized) {
       SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);
       final state = AppScope.of(context);
+      state.setCurrentDevotional(
+        widget.devotional,
+        activeDate: state.currentDevotional?.id == widget.devotional.id
+            ? state.currentDevotionalDate
+            : DateTime.now(),
+        stage: DevotionalResumeStage.audio,
+      );
       _audioService = DevotionalAudioService(state.narrationController);
       _audioService.startDevotional(widget.devotional);
       _audioService.addListener(_onServiceChange);
@@ -50,6 +57,11 @@ class _DevotionalPlayerScreenState extends State<DevotionalPlayerScreen> {
   void _onServiceChange() {
     if (!mounted) return;
     final session = _audioService.session;
+    if (session != null) {
+      AppScope.of(context).setCurrentDevotionalStage(
+        _resumeStageForAudioStage(session.currentStage),
+      );
+    }
     if (session != null && session.currentStage == DevotionalStage.journal) {
       Navigator.pushReplacement(
         context,
@@ -73,6 +85,17 @@ class _DevotionalPlayerScreenState extends State<DevotionalPlayerScreen> {
   List<Color> _gradientForStage(DevotionalStage stage) =>
       _stageGradients[stage] ??
       [const Color(0xFF1E1E2C), const Color(0xFF1E1E2C)];
+
+  DevotionalResumeStage _resumeStageForAudioStage(DevotionalStage stage) {
+    return switch (stage) {
+      DevotionalStage.reflection => DevotionalResumeStage.reflection,
+      DevotionalStage.prayer => DevotionalResumeStage.prayer,
+      DevotionalStage.journal ||
+      DevotionalStage.completed =>
+        DevotionalResumeStage.journal,
+      _ => DevotionalResumeStage.audio,
+    };
+  }
 
   @override
   Widget build(BuildContext context) {

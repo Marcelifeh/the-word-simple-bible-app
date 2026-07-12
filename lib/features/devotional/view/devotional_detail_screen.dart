@@ -7,7 +7,6 @@ import 'package:share_plus/share_plus.dart';
 import '../../../shared/state/app_state.dart';
 import '../../devotional_audio/view/devotional_player_screen.dart';
 
-
 import '../../devotional/model/devotional_model.dart';
 import '../../devotional/model/devotional_journal_entry.dart';
 import '../../notes/model/verse_note.dart';
@@ -66,7 +65,10 @@ class _DevotionalDetailScreenState extends State<DevotionalDetailScreen> {
     }
     if (_didMarkAsRead) return;
     _didMarkAsRead = true;
-    AppScope.of(context).markDevotionalRead(widget.devotional.id);
+    AppScope.of(context).markDevotionalRead(
+      widget.devotional.id,
+      activeDate: _activeDate,
+    );
   }
 
   @override
@@ -183,7 +185,8 @@ https://play.google.com/store/apps/details?id=com.theword.simplebible''';
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (_) => DevotionalPlayerScreen(devotional: widget.devotional),
+              builder: (_) =>
+                  DevotionalPlayerScreen(devotional: widget.devotional),
             ),
           );
         },
@@ -425,7 +428,8 @@ class _ReflectionQuestionState extends State<_ReflectionQuestion> {
           borderRadius: BorderRadius.circular(14),
           color: _open
               ? amber.withValues(alpha: 0.07)
-              : theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.45),
+              : theme.colorScheme.surfaceContainerHighest
+                  .withValues(alpha: 0.45),
           border: Border.all(
             color: _open
                 ? amber.withValues(alpha: 0.35)

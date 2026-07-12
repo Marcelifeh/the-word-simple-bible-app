@@ -26,6 +26,22 @@ class DevotionalHistoryScreen extends StatelessWidget {
     );
     final today = service.getTodaysDevotional();
 
+    void openDevotional(DevotionalModel devotional, DateTime? activeDate) {
+      state.setCurrentDevotional(
+        devotional,
+        activeDate: activeDate,
+        stage: DevotionalResumeStage.reading,
+      );
+      AppRouter.push(
+        context,
+        DevotionalDetailScreen(
+          devotional: devotional,
+          activeDate: activeDate,
+        ),
+        transition: AppTransitionType.devotional,
+      );
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Devotional History'),
@@ -53,13 +69,9 @@ class DevotionalHistoryScreen extends StatelessWidget {
                   devotional: entry.value,
                   readAt: state.devotionalReadHistory[entry.value.id],
                   isToday: entry.value.id == today.id,
-                  onTap: () => AppRouter.push(
-                    context,
-                    DevotionalDetailScreen(
-                      devotional: entry.value,
-                      activeDate: state.devotionalReadHistory[entry.value.id],
-                    ),
-                    transition: AppTransitionType.devotional,
+                  onTap: () => openDevotional(
+                    entry.value,
+                    state.devotionalReadHistory[entry.value.id],
                   ),
                 ),
               ),
