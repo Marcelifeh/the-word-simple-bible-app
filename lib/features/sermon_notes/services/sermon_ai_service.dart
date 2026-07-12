@@ -1,8 +1,11 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 
+import '../../../core/utils/env.dart';
 import '../model/sermon_note.dart';
+import '../model/sermon_outline.dart';
 import 'sermon_audio_multipart_file.dart';
 
 class SermonTranscriptionResult {
@@ -29,15 +32,30 @@ class SermonSummaryResult {
   final SermonInsight insight;
 }
 
-class SermonAiService {
-  const SermonAiService({
-    required this.baseUrl,
-  });
+class SermonApiException implements Exception {
+  const SermonApiException(this.message);
 
-  final String baseUrl;
+  final String message;
+
+  @override
+  String toString() => message;
+}
+
+class SermonCloudUnavailableException extends SermonApiException {
+  const SermonCloudUnavailableException(super.message);
+}
+
+class SermonAiService {
+  SermonAiService({
+    http.Client? client,
+  }) : _client = client ?? http.Client();
+
+  final http.Client _client;
+
+  static const Duration _requestTimeout = Duration(seconds: 90);
 
   Future<SermonTranscriptionResult> transcribeAudio(String audioPath) async {
-    final uri = Uri.parse(_join('/sermon/transcribe'));
+    final uri = Env.apiUri('/sermon/transcribe');
     late final http.StreamedResponse response;
     late final String body;
 
@@ -47,14 +65,26 @@ class SermonAiService {
       response = await request.send();
       body = await response.stream.bytesToString();
     } catch (e) {
-      throw Exception(
-        'Could not reach sermon transcription server at $uri. '
-        'Start the backend on port 8000 or pass SERMON_API_URL. ($e)',
+      throw const SermonCloudUnavailableException(
+        'Cloud services are temporarily unavailable. '
+        'Your notes and recordings remain saved on this device.',
       );
     }
 
     if (response.statusCode < 200 || response.statusCode >= 300) {
-      throw Exception('Failed to transcribe sermon: $body');
+      if (response.statusCode == 503) {
+        throw const SermonCloudUnavailableException(
+          'Cloud transcription is not enabled on the current server plan. '
+          'Your recording remains saved safely on this device.',
+        );
+      }
+      throw SermonApiException(
+        _errorDetail(
+          body,
+          fallbackMessage:
+              'AI processing is temporarily unavailable. Please try again later.',
+        ),
+      );
     }
 
     final decoded = jsonDecode(body);
@@ -68,17 +98,19 @@ class SermonAiService {
   }
 
   Future<SermonSummaryResult> generateSummary(String transcript) async {
-    final uri = Uri.parse(_join('/sermon/summary'));
+    final response = await _client
+        .post(
+          Env.apiUri('/sermon/summary'),
+          headers: {'Content-Type': 'application/json'},
+          body: jsonEncode({'transcript': transcript}),
+        )
+        .timeout(_requestTimeout);
 
-    final response = await http.post(
-      uri,
-      headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({'transcript': transcript}),
+    _throwIfFailed(
+      response,
+      fallbackMessage:
+          'AI processing is temporarily unavailable. Please try again later.',
     );
-
-    if (response.statusCode < 200 || response.statusCode >= 300) {
-      throw Exception('Failed to summarize sermon: ${response.body}');
-    }
 
     final decoded = jsonDecode(response.body);
     if (decoded is! Map) {
@@ -98,11 +130,79 @@ class SermonAiService {
     );
   }
 
-  String _join(String path) {
-    final root = baseUrl.endsWith('/')
-        ? baseUrl.substring(0, baseUrl.length - 1)
-        : baseUrl;
-    return '$root$path';
+  Future<SermonOutline> generateOutline({
+    required String transcript,
+    SermonInsight? insight,
+  }) async {
+    final response = await _client
+        .post(
+          Env.apiUri('/sermon/outline'),
+          headers: {'Content-Type': 'application/json'},
+          body: jsonEncode({
+            'transcript': transcript,
+            'insight': insight?.toJson(),
+          }),
+        )
+        .timeout(_requestTimeout);
+
+    _throwIfFailed(
+      response,
+      fallbackMessage:
+          'AI processing is temporarily unavailable. Please try again later.',
+    );
+
+    final decoded = jsonDecode(response.body);
+    if (decoded is! Map || decoded['outline'] is! Map) {
+      throw Exception('Invalid sermon outline response.');
+    }
+
+    return SermonOutline.fromJson(
+      (decoded['outline'] as Map).cast<String, dynamic>(),
+    );
+  }
+
+  void _throwIfFailed(
+    http.Response response, {
+    required String fallbackMessage,
+  }) {
+    if (response.statusCode >= 200 && response.statusCode < 300) return;
+
+    final message = _errorDetail(
+      response.body,
+      fallbackMessage: fallbackMessage,
+    );
+
+    if (response.statusCode == 503) {
+      throw SermonCloudUnavailableException(
+        message.isEmpty
+            ? 'Cloud services are temporarily unavailable. '
+                'Your notes and recordings remain saved on this device.'
+            : message,
+      );
+    }
+
+    throw SermonApiException(message);
+  }
+
+  String _errorDetail(
+    String body, {
+    required String fallbackMessage,
+  }) {
+    if (body.isNotEmpty) {
+      try {
+        final decoded = jsonDecode(body);
+        if (decoded is Map && decoded['detail'] != null) {
+          return decoded['detail'].toString();
+        }
+      } catch (_) {
+        // Use the generic message below.
+      }
+    }
+    return fallbackMessage;
+  }
+
+  void dispose() {
+    _client.close();
   }
 
   Duration? _durationFromSeconds(Object? value) {

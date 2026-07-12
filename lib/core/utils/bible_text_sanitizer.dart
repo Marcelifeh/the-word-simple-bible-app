@@ -12,7 +12,8 @@ class BibleTextSanitizer {
     s = s.replaceAll(RegExp(r'\\x\s+.*?\\x\*', dotAll: true), ' ');
 
     // Remove generic USFM tags and WordLink markers (\w ... \w*).
-    s = s.replaceAll(RegExp(r'\\[+\-]?[a-zA-Z0-9*]+'), ' ');
+    // Some converted sources include spaces inside markers, such as "\ +w".
+    s = s.replaceAll(RegExp(r'\\\s*[+\-]?\s*[a-zA-Z0-9*]+'), ' ');
 
     // Remove strong attributes when present (mostly a USFM conversion artifact).
     s = s.replaceAll(RegExp(r'\|strong="[^"]*"'), '');

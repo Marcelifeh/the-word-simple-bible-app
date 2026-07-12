@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import os
 from fastapi import Depends, FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy import func, select
@@ -34,11 +35,21 @@ app = FastAPI(title="The Word App API", version="1.0.0")
 app.include_router(sermon.router)
 
 # Allow Flutter Web (and other local dev clients) to call this API.
-# In production, restrict this to your real origins.
+allowed_origins = [
+    "http://localhost:3000",
+    "http://localhost:5000",
+    "http://localhost:8080",
+    "http://localhost:57117",
+]
+
+production_web_origin = os.getenv("WEB_APP_ORIGIN")
+if production_web_origin:
+    allowed_origins.append(production_web_origin)
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=False,
+    allow_origins=allowed_origins,
+    allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )

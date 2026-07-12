@@ -1,0 +1,42 @@
+[
+  {
+    "bookId": "psalms",
+    "bookName": "Psalms",
+    "chapter": 23,
+    "verse": 1,
+    "tag": "Peace",
+    "commentary": "God’s care is personal and constant. This promise reminds you that the Lord is not distant; He leads, provides, and restores the heart that trusts Him."
+  },
+  {
+    "bookId": "isaiah",
+    "bookName": "Isaiah",
+    "chapter": 41,
+    "verse": 10,
+    "tag": "Strength",
+    "commentary": "God does not only tell you not to fear; He promises His presence, help, and strength. Your confidence rests in who holds you, not in what surrounds you."
+  },
+  {
+    "bookId": "1_john",
+    "bookName": "1 John",
+    "chapter": 1,
+    "verse": 9,
+    "tag": "Forgiveness",
+    "commentary": "This promise reveals God’s faithfulness to cleanse the repentant heart. Confession is not rejection; it is the doorway back into fellowship and mercy."
+  },
+  {
+    "bookId": "philippians",
+    "bookName": "Philippians",
+    "chapter": 4,
+    "verse": 7,
+    "tag": "Peace",
+    "commentary": "God’s peace does more than calm emotions; it guards the heart and mind. This promise reminds you that prayer brings your inner life under divine protection."
+  },
+  {
+    "bookId": "ephesians",
+    "bookName": "Ephesians",
+    "chapter": 3,
+    "verse": 20,
+    "tag": "Faith",
+    "commentary": "God’s power is not limited by your request or imagination. This promise calls you to trust that He is able to work beyond what you can see."
+  }
+]

@@ -59,11 +59,12 @@ class _ReadingPlanScreenState extends State<ReadingPlanScreen> {
           TextButton.icon(
             onPressed: planCompleted
                 ? null
-                : () {
-                    state.markReadingPlanCompleted(
+                : () async {
+                    await state.markReadingPlanCompleted(
                       completedAt: _selectedDate,
                       passages: plan.passages,
                     );
+                    if (!context.mounted) return;
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         content: Text(
@@ -200,8 +201,8 @@ class _ReadingPlanScreenState extends State<ReadingPlanScreen> {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         IconButton(
-                          onPressed: () {
-                            state.markReadingPlanPassageCompleted(
+                          onPressed: () async {
+                            await state.markReadingPlanPassageCompleted(
                               p,
                               completedAt: _selectedDate,
                               completed: !isCompleted,
@@ -216,11 +217,12 @@ class _ReadingPlanScreenState extends State<ReadingPlanScreen> {
                         const Icon(Icons.arrow_forward_ios, size: 16),
                       ],
                     ),
-                    onTap: () {
-                      state.markReadingPlanPassageOpened(
+                    onTap: () async {
+                      await state.markReadingPlanPassageOpened(
                         p,
                         openedAt: _selectedDate,
                       );
+                      if (!context.mounted) return;
                       final match =
                           RegExp(r'^(.*?) (\d+)(?:-(\d+))?$').firstMatch(p);
                       if (match == null) return;
@@ -284,6 +286,7 @@ class _ReadingPlanScreenState extends State<ReadingPlanScreen> {
     final picked = await showModalBottomSheet<DateTime>(
       context: context,
       isScrollControlled: true,
+      useRootNavigator: true,
       showDragHandle: true,
       builder: (context) {
         return _ReadingPlanJumpSheet(
@@ -345,157 +348,164 @@ class _ReadingPlanJumpSheetState extends State<_ReadingPlanJumpSheet> {
     final monthStart = DateTime(_selectedYear, _selectedMonth, 1);
     final dayCount = DateUtils.getDaysInMonth(_selectedYear, _selectedMonth);
     final now = DateTime.now();
+    final mediaQuery = MediaQuery.of(context);
+    final maxSheetHeight = mediaQuery.size.height * 0.86;
 
     return SafeArea(
-      child: Padding(
-        padding: EdgeInsets.only(
-          left: 20,
-          right: 20,
-          top: 8,
-          bottom: MediaQuery.of(context).viewInsets.bottom + 20,
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Jump To A Reading Day',
-              style: theme.textTheme.titleLarge?.copyWith(
-                fontWeight: FontWeight.w800,
-              ),
-            ),
-            const SizedBox(height: 6),
-            Text(
-              'Choose a month and day to reopen a missed reading quickly.',
-              style: theme.textTheme.bodyMedium?.copyWith(
-                color: theme.colorScheme.onSurfaceVariant,
-              ),
-            ),
-            const SizedBox(height: 16),
-            Row(
-              children: [
-                IconButton(
-                  onPressed: _selectedYear > widget.minYear
-                      ? () => setState(() => _selectedYear -= 1)
-                      : null,
-                  icon: const Icon(Icons.chevron_left_rounded),
+      top: false,
+      child: ConstrainedBox(
+        constraints: BoxConstraints(maxHeight: maxSheetHeight),
+        child: SingleChildScrollView(
+          padding: EdgeInsets.only(
+            left: 20,
+            right: 20,
+            top: 8,
+            bottom: mediaQuery.viewInsets.bottom + 24,
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Jump To A Reading Day',
+                style: theme.textTheme.titleLarge?.copyWith(
+                  fontWeight: FontWeight.w800,
                 ),
-                Expanded(
-                  child: Center(
-                    child: Text(
-                      '$_selectedYear',
-                      style: theme.textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.w700,
+              ),
+              const SizedBox(height: 6),
+              Text(
+                'Choose a month and day to reopen a missed reading quickly.',
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  color: theme.colorScheme.onSurfaceVariant,
+                ),
+              ),
+              const SizedBox(height: 16),
+              Row(
+                children: [
+                  IconButton(
+                    onPressed: _selectedYear > widget.minYear
+                        ? () => setState(() => _selectedYear -= 1)
+                        : null,
+                    icon: const Icon(Icons.chevron_left_rounded),
+                  ),
+                  Expanded(
+                    child: Center(
+                      child: Text(
+                        '$_selectedYear',
+                        style: theme.textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.w700,
+                        ),
                       ),
                     ),
                   ),
-                ),
-                IconButton(
-                  onPressed: _selectedYear < widget.maxYear
-                      ? () => setState(() => _selectedYear += 1)
-                      : null,
-                  icon: const Icon(Icons.chevron_right_rounded),
-                ),
-              ],
-            ),
-            const SizedBox(height: 12),
-            Wrap(
-              spacing: 8,
-              runSpacing: 8,
-              children: List<Widget>.generate(12, (index) {
-                final month = index + 1;
-                final label = MaterialLocalizations.of(context)
-                    .formatMonthYear(DateTime(_selectedYear, month))
-                    .split(' ')
-                    .first;
-                return ChoiceChip(
-                  label: Text(label),
-                  selected: _selectedMonth == month,
-                  onSelected: (_) => setState(() => _selectedMonth = month),
-                );
-              }),
-            ),
-            const SizedBox(height: 16),
-            Text(
-              MaterialLocalizations.of(context).formatMonthYear(monthStart),
-              style: theme.textTheme.titleSmall?.copyWith(
-                fontWeight: FontWeight.w700,
+                  IconButton(
+                    onPressed: _selectedYear < widget.maxYear
+                        ? () => setState(() => _selectedYear += 1)
+                        : null,
+                    icon: const Icon(Icons.chevron_right_rounded),
+                  ),
+                ],
               ),
-            ),
-            const SizedBox(height: 10),
-            SizedBox(
-              height: 240,
-              child: GridView.builder(
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 7,
-                  mainAxisSpacing: 8,
-                  crossAxisSpacing: 8,
+              const SizedBox(height: 12),
+              Wrap(
+                spacing: 8,
+                runSpacing: 8,
+                children: List<Widget>.generate(12, (index) {
+                  final month = index + 1;
+                  final label = MaterialLocalizations.of(context)
+                      .formatMonthYear(DateTime(_selectedYear, month))
+                      .split(' ')
+                      .first;
+                  return ChoiceChip(
+                    label: Text(label),
+                    selected: _selectedMonth == month,
+                    onSelected: (_) => setState(() => _selectedMonth = month),
+                  );
+                }),
+              ),
+              const SizedBox(height: 16),
+              Text(
+                MaterialLocalizations.of(context).formatMonthYear(monthStart),
+                style: theme.textTheme.titleSmall?.copyWith(
+                  fontWeight: FontWeight.w700,
                 ),
-                itemCount: dayCount,
-                itemBuilder: (context, index) {
-                  final day = index + 1;
-                  final date = DateTime(_selectedYear, _selectedMonth, day);
-                  final isSelected =
-                      DateUtils.isSameDay(date, widget.initialDate);
-                  final isToday = DateUtils.isSameDay(date, now);
+              ),
+              const SizedBox(height: 10),
+              SizedBox(
+                height: 240,
+                child: GridView.builder(
+                  physics: const NeverScrollableScrollPhysics(),
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 7,
+                    mainAxisSpacing: 8,
+                    crossAxisSpacing: 8,
+                  ),
+                  itemCount: dayCount,
+                  itemBuilder: (context, index) {
+                    final day = index + 1;
+                    final date = DateTime(_selectedYear, _selectedMonth, day);
+                    final isSelected =
+                        DateUtils.isSameDay(date, widget.initialDate);
+                    final isToday = DateUtils.isSameDay(date, now);
 
-                  return InkWell(
-                    borderRadius: BorderRadius.circular(14),
-                    onTap: () => Navigator.of(context).pop(date),
-                    child: Ink(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(14),
-                        color: isSelected
-                            ? theme.colorScheme.primary
-                            : isToday
-                                ? theme.colorScheme.primary
-                                    .withValues(alpha: 0.10)
-                                : theme.colorScheme.surfaceContainerHigh,
-                        border: Border.all(
+                    return InkWell(
+                      borderRadius: BorderRadius.circular(14),
+                      onTap: () => Navigator.of(context).pop(date),
+                      child: Ink(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(14),
                           color: isSelected
                               ? theme.colorScheme.primary
                               : isToday
                                   ? theme.colorScheme.primary
-                                      .withValues(alpha: 0.35)
-                                  : theme.colorScheme.outlineVariant,
-                        ),
-                      ),
-                      child: Center(
-                        child: Text(
-                          '$day',
-                          style: theme.textTheme.labelLarge?.copyWith(
-                            fontWeight: FontWeight.w700,
+                                      .withValues(alpha: 0.10)
+                                  : theme.colorScheme.surfaceContainerHigh,
+                          border: Border.all(
                             color: isSelected
-                                ? theme.colorScheme.onPrimary
-                                : theme.colorScheme.onSurface,
+                                ? theme.colorScheme.primary
+                                : isToday
+                                    ? theme.colorScheme.primary
+                                        .withValues(alpha: 0.35)
+                                    : theme.colorScheme.outlineVariant,
+                          ),
+                        ),
+                        child: Center(
+                          child: Text(
+                            '$day',
+                            style: theme.textTheme.labelLarge?.copyWith(
+                              fontWeight: FontWeight.w700,
+                              color: isSelected
+                                  ? theme.colorScheme.onPrimary
+                                  : theme.colorScheme.onSurface,
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  );
-                },
+                    );
+                  },
+                ),
               ),
-            ),
-            const SizedBox(height: 12),
-            Row(
-              children: [
-                Expanded(
-                  child: OutlinedButton.icon(
-                    onPressed: () async {
-                      await widget.onOpenCalendar();
-                    },
-                    icon: const Icon(Icons.edit_calendar_rounded),
-                    label: const Text('Open Calendar Picker'),
+              const SizedBox(height: 12),
+              Row(
+                children: [
+                  Expanded(
+                    child: OutlinedButton.icon(
+                      onPressed: () async {
+                        await widget.onOpenCalendar();
+                      },
+                      icon: const Icon(Icons.edit_calendar_rounded),
+                      label: const Text('Open Calendar Picker'),
+                    ),
                   ),
-                ),
-                const SizedBox(width: 10),
-                TextButton(
-                  onPressed: () => Navigator.of(context).pop(),
-                  child: const Text('Close'),
-                ),
-              ],
-            ),
-          ],
+                  const SizedBox(width: 10),
+                  TextButton(
+                    onPressed: () => Navigator.of(context).pop(),
+                    child: const Text('Close'),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );

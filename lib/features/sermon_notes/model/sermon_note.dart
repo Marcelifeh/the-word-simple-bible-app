@@ -1,4 +1,7 @@
+import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
+
+import 'sermon_outline.dart';
 
 class LinkedScripture {
   final String rawText;
@@ -147,6 +150,7 @@ class SermonNote {
   String title;
   String preacher;
   String content;
+  TextAlign textAlign;
   String? audioPath;
   Duration? audioDuration;
   int? audioSizeBytes;
@@ -155,6 +159,7 @@ class SermonNote {
   String? transcript;
   String? summary;
   SermonInsight? insight;
+  SermonOutline? outline;
   List<SermonTranscriptSegment> transcriptSegments;
   List<SermonTimestampedNote> timestampedNotes;
   DateTime date;
@@ -165,6 +170,7 @@ class SermonNote {
     this.title = '',
     this.preacher = '',
     this.content = '',
+    this.textAlign = TextAlign.left,
     this.audioPath,
     this.audioDuration,
     this.audioSizeBytes,
@@ -173,6 +179,7 @@ class SermonNote {
     this.transcript,
     this.summary,
     this.insight,
+    this.outline,
     List<SermonTranscriptSegment>? transcriptSegments,
     List<SermonTimestampedNote>? timestampedNotes,
     DateTime? date,
@@ -188,6 +195,7 @@ class SermonNote {
         'title': title,
         'preacher': preacher,
         'content': content,
+        'textAlign': textAlign.name,
         'audioPath': audioPath,
         'audioDurationMs': audioDuration?.inMilliseconds,
         'audioSizeBytes': audioSizeBytes,
@@ -196,6 +204,7 @@ class SermonNote {
         'transcript': transcript,
         'summary': summary,
         'insight': insight?.toJson(),
+        'outline': outline?.toJson(),
         'transcriptSegments':
             transcriptSegments.map((segment) => segment.toJson()).toList(),
         'timestampedNotes':
@@ -208,6 +217,7 @@ class SermonNote {
     String? title,
     String? preacher,
     String? content,
+    TextAlign? textAlign,
     String? audioPath,
     Duration? audioDuration,
     int? audioSizeBytes,
@@ -216,6 +226,10 @@ class SermonNote {
     String? transcript,
     String? summary,
     SermonInsight? insight,
+    SermonOutline? outline,
+    bool clearSummary = false,
+    bool clearInsight = false,
+    bool clearOutline = false,
     List<SermonTranscriptSegment>? transcriptSegments,
     List<SermonTimestampedNote>? timestampedNotes,
     DateTime? date,
@@ -226,14 +240,16 @@ class SermonNote {
       title: title ?? this.title,
       preacher: preacher ?? this.preacher,
       content: content ?? this.content,
+      textAlign: textAlign ?? _safeTextAlign(this.textAlign),
       audioPath: audioPath ?? this.audioPath,
       audioDuration: audioDuration ?? this.audioDuration,
       audioSizeBytes: audioSizeBytes ?? this.audioSizeBytes,
       audioMimeType: audioMimeType ?? this.audioMimeType,
       recordedAt: recordedAt ?? this.recordedAt,
       transcript: transcript ?? this.transcript,
-      summary: summary ?? this.summary,
-      insight: insight ?? this.insight,
+      summary: clearSummary ? null : summary ?? this.summary,
+      insight: clearInsight ? null : insight ?? this.insight,
+      outline: clearOutline ? null : outline ?? this.outline,
       transcriptSegments: transcriptSegments ??
           List<SermonTranscriptSegment>.from(this.transcriptSegments),
       timestampedNotes: timestampedNotes ??
@@ -247,12 +263,14 @@ class SermonNote {
     final rawTimestampedNotes = json['timestampedNotes'];
     final rawTranscriptSegments = json['transcriptSegments'];
     final rawInsight = json['insight'];
+    final rawOutline = json['outline'];
     final audioDurationMs = json['audioDurationMs'];
     return SermonNote(
       id: json['id'] as String,
       title: json['title'] as String? ?? '',
       preacher: json['preacher'] as String? ?? '',
       content: json['content'] as String? ?? '',
+      textAlign: _textAlignFromJson(json['textAlign']),
       audioPath: json['audioPath'] as String?,
       audioDuration: audioDurationMs is int
           ? Duration(milliseconds: audioDurationMs)
@@ -264,6 +282,9 @@ class SermonNote {
       summary: json['summary'] as String?,
       insight: rawInsight is Map
           ? SermonInsight.fromJson(rawInsight.cast<String, dynamic>())
+          : null,
+      outline: rawOutline is Map
+          ? SermonOutline.fromJson(rawOutline.cast<String, dynamic>())
           : null,
       transcriptSegments: rawTranscriptSegments is List
           ? rawTranscriptSegments
@@ -290,4 +311,16 @@ class SermonNote {
           DateTime.now(),
     );
   }
+}
+
+TextAlign _safeTextAlign(Object? value) {
+  return value is TextAlign ? value : TextAlign.left;
+}
+
+TextAlign _textAlignFromJson(Object? value) {
+  final name = value as String? ?? 'left';
+  return TextAlign.values.firstWhere(
+    (align) => align.name == name,
+    orElse: () => TextAlign.left,
+  );
 }

@@ -13,7 +13,9 @@ import '../../../data/bible/book_catalog.dart';
 import '../../../domain/entities/verse.dart';
 import '../../../domain/entities/bible_translation.dart';
 import '../../bible/view/reading_screen.dart';
+import '../../reading_plan/model/daily_plan_passage.dart';
 import '../../reading_plan/reading_plan_service.dart';
+import '../../reading_plan/view/daily_plan_reader_screen.dart';
 import '../../reading_plan/view/reading_plan_screen.dart';
 import '../../notes/model/verse_note.dart';
 import '../../sermon_notes/model/sermon_note.dart';
@@ -525,8 +527,7 @@ class _DailyVerseInsightSection extends StatelessWidget {
                           }
 
                           final value = snapshot.data;
-                          final apiConfigured =
-                              (Env.commentaryApiUrl ?? Env.bibleApiUrl) != null;
+                          final apiConfigured = Env.commentaryApiUrl != null;
                           final text = (value != null &&
                                   value.trim().isNotEmpty)
                               ? value
@@ -567,6 +568,7 @@ class _DailyReadingPlanSection extends StatelessWidget {
     final state = AppScope.of(context);
     final primaryPassage =
         plan.passages.isNotEmpty ? plan.passages.first : null;
+    final dailyPlanPassages = _dailyPlanPassages();
     final extraPassages = plan.passages.length > 1
         ? plan.passages.skip(1).toList()
         : const <String>[];
@@ -725,18 +727,16 @@ class _DailyReadingPlanSection extends StatelessWidget {
             children: [
               Expanded(
                 child: FilledButton.icon(
-                  onPressed: primaryPassage == null
+                  onPressed: dailyPlanPassages.isEmpty
                       ? null
-                      : () => _openPassage(context, primaryPassage),
+                      : () => _openTodayReading(context, dailyPlanPassages),
                   icon: Icon(
                     completedToday
                         ? Icons.replay_rounded
                         : Icons.play_arrow_rounded,
                   ),
                   label: Text(
-                    completedToday
-                        ? 'Reopen Today\'s Reading'
-                        : 'Start Today\'s Reading',
+                    'Read All Today\'s Passages',
                   ),
                 ),
               ),
@@ -744,8 +744,11 @@ class _DailyReadingPlanSection extends StatelessWidget {
               OutlinedButton.icon(
                 onPressed: completedToday
                     ? null
-                    : () {
-                        state.markReadingPlanCompleted(passages: plan.passages);
+                    : () async {
+                        await state.markReadingPlanCompleted(
+                          passages: plan.passages,
+                        );
+                        if (!context.mounted) return;
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
                             content: Text(
@@ -776,12 +779,79 @@ class _DailyReadingPlanSection extends StatelessWidget {
     );
   }
 
-  void _openPassage(BuildContext context, String passage) {
+  List<DailyPlanPassage> _dailyPlanPassages() {
+    final parsed = <DailyPlanPassage>[];
+    for (final passage in plan.passages) {
+      parsed.addAll(_parsePlanPassage(passage));
+    }
+    return parsed;
+  }
+
+  List<DailyPlanPassage> _parsePlanPassage(String passage) {
+    final match = RegExp(r'^(.*?)\s+(\d+)(?:\s*[-–]\s*(\d+))?$')
+        .firstMatch(passage.trim());
+    if (match == null) return const <DailyPlanPassage>[];
+
+    final bookName = match.group(1)?.trim() ?? '';
+    final startChapter = int.tryParse(match.group(2) ?? '') ?? 1;
+    final endChapter = int.tryParse(match.group(3) ?? '') ?? startChapter;
+    final matches = BookCatalog.books
+        .where(
+          (candidate) => candidate.name.toLowerCase() == bookName.toLowerCase(),
+        )
+        .toList(growable: false);
+    if (matches.isEmpty) return const <DailyPlanPassage>[];
+
+    final book = matches.first;
+    final firstChapter = startChapter <= endChapter ? startChapter : endChapter;
+    final lastChapter = startChapter <= endChapter ? endChapter : startChapter;
+    final boundedFirstChapter =
+        firstChapter.clamp(1, book.chapterCount).toInt();
+    final boundedLastChapter = lastChapter.clamp(1, book.chapterCount).toInt();
+
+    return [
+      for (var chapter = boundedFirstChapter;
+          chapter <= boundedLastChapter;
+          chapter++)
+        DailyPlanPassage(
+          bookId: book.id,
+          bookName: book.name,
+          chapter: chapter,
+        ),
+    ];
+  }
+
+  Future<void> _openTodayReading(
+    BuildContext context,
+    List<DailyPlanPassage> passages,
+  ) async {
+    if (passages.isEmpty) return;
+    final state = AppScope.of(context);
+    if (plan.passages.isNotEmpty) {
+      await state.markReadingPlanPassageOpened(plan.passages.first);
+    }
+    if (!context.mounted) return;
+
+    AppRouter.push(
+      context,
+      DailyPlanReaderScreen(
+        passages: passages,
+        translation: state.translation,
+        onMarkComplete: () async {
+          await state.markReadingPlanCompleted(passages: plan.passages);
+        },
+      ),
+      transition: AppTransitionType.slideRight,
+    );
+  }
+
+  Future<void> _openPassage(BuildContext context, String passage) async {
     final state = AppScope.of(context);
     final match = RegExp(r'^(.*?) (\d+)(?:-(\d+))?$').firstMatch(passage);
     if (match == null) return;
 
-    state.markReadingPlanPassageOpened(passage);
+    await state.markReadingPlanPassageOpened(passage);
+    if (!context.mounted) return;
 
     final bookName = match.group(1)?.trim() ?? '';
     final chapter = int.tryParse(match.group(2) ?? '1') ?? 1;
@@ -796,10 +866,13 @@ class _DailyReadingPlanSection extends StatelessWidget {
     );
   }
 
-  void _togglePassageCompletion(BuildContext context, String passage) {
+  Future<void> _togglePassageCompletion(
+    BuildContext context,
+    String passage,
+  ) async {
     final state = AppScope.of(context);
     final completed = state.isReadingPlanPassageCompletedToday(passage);
-    state.markReadingPlanPassageCompleted(
+    await state.markReadingPlanPassageCompleted(
       passage,
       completed: !completed,
     );

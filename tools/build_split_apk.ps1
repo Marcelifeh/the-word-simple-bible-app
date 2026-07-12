@@ -23,6 +23,8 @@ if ($CommentaryApiUrl) {
     $arguments += "--dart-define=COMMENTARY_API_URL=$CommentaryApiUrl"
 }
 
-Write-Host ('Running: flutter ' + ($arguments -join ' '))
 & flutter @arguments
 exit $LASTEXITCODE
+
+
+

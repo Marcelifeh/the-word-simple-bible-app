@@ -10,6 +10,8 @@ import '../../../domain/entities/bible_translation.dart';
 import '../../../domain/entities/book.dart';
 import '../../../domain/entities/verse.dart';
 import '../../../data/bible/book_catalog.dart';
+import '../../../shared/bible/bible_text.dart';
+import '../../../shared/bible/bible_translation_dropdown.dart';
 import '../../../shared/state/app_state.dart';
 import '../../../shared/widgets/verse_insight_panel.dart';
 import '../../notes/model/verse_note.dart';
@@ -31,10 +33,12 @@ class NarratableChapter implements NarratableContent {
       NarrationSegment(
           id: 'intro',
           text: '${book.name} chapter $chapter',
+          reference: '${book.name} $chapter',
           pauseAfter: const Duration(seconds: 1)),
       ...verses.map((v) => NarrationSegment(
           id: v.ref.verse.toString(),
-          text: v.text,
+          text: BibleTextSanitizer.clean(v.text),
+          reference: '${book.name} $chapter:${v.ref.verse}',
           pauseAfter: const Duration(milliseconds: 500)))
     ];
   }
@@ -103,6 +107,20 @@ class _ReaderMotionProfile {
   }
 }
 
+class _ChapterLoadResult {
+  const _ChapterLoadResult({
+    required this.verses,
+    required this.requestedTranslation,
+    required this.effectiveTranslation,
+  });
+
+  final List<Verse> verses;
+  final BibleTranslation requestedTranslation;
+  final BibleTranslation effectiveTranslation;
+
+  bool get usedFallback => requestedTranslation != effectiveTranslation;
+}
+
 class _ReadingScreenState extends State<ReadingScreen> {
   late int _currentChapter;
   late Book _currentBook;
@@ -111,7 +129,8 @@ class _ReadingScreenState extends State<ReadingScreen> {
   bool _didScroll = false;
 
   // Caching the future to prevent re-fetching on theme changes
-  Future<List<Verse>>? _chapterFuture;
+  Future<_ChapterLoadResult>? _chapterFuture;
+  _ChapterLoadResult? _currentLoadResult;
   int? _lastChapter;
   BibleTranslation? _lastTranslation;
   String? _lastBookId;
@@ -124,6 +143,7 @@ class _ReadingScreenState extends State<ReadingScreen> {
   int? _focusedVerseNumber;
   int _focusHighlightToken = 0;
   bool _hasRequestedInitialNoteEditor = false;
+  bool _showFallbackBanner = true;
 
   _ReaderMotionMode get _motionMode => _isNarratingCurrentChapter()
       ? _ReaderMotionMode.immersive
@@ -192,6 +212,8 @@ class _ReadingScreenState extends State<ReadingScreen> {
       _chapterFuture = null;
       _autoNarrateNextChapter = false; // Reset on manual navigation
       _focusedVerseNumber = null;
+      _currentLoadResult = null;
+      _showFallbackBanner = true;
       _resetReaderAnchors();
       _jumpToTopSoon();
       // Stop narration if active when changing chapter
@@ -302,20 +324,26 @@ class _ReadingScreenState extends State<ReadingScreen> {
       _lastTranslation = state.translation;
       _lastBookId = _currentBook.id;
       _lastChapter = _currentChapter;
+      _showFallbackBanner = true;
 
       _chapterFuture = _loadChapterWithFallback(state);
     }
 
     return Scaffold(
-      body: FutureBuilder<List<Verse>>(
+      body: FutureBuilder<_ChapterLoadResult>(
         future: _chapterFuture,
         builder: (context, snapshot) {
           try {
             if (snapshot.hasData) {
-              _currentVerses = snapshot.data;
+              _currentLoadResult = snapshot.data;
+              _currentVerses = snapshot.data!.verses;
             }
 
-            final verses = snapshot.data ?? _currentVerses ?? const <Verse>[];
+            final loadResult = snapshot.data ?? _currentLoadResult;
+            final verses =
+                loadResult?.verses ?? _currentVerses ?? const <Verse>[];
+            final effectiveTranslation =
+                loadResult?.effectiveTranslation ?? state.translation;
             final hasVerses = verses.isNotEmpty;
             final isWaiting =
                 snapshot.connectionState == ConnectionState.waiting;
@@ -351,15 +379,12 @@ class _ReadingScreenState extends State<ReadingScreen> {
                                 ?.copyWith(color: Colors.grey),
                           ),
                           const SizedBox(height: 24),
-                          ElevatedButton.icon(
-                            onPressed: () {
-                              setState(() {
-                                _chapterFuture =
-                                    _loadChapterWithFallback(state);
-                              });
-                            },
-                            icon: const Icon(Icons.refresh),
-                            label: const Text('Retry'),
+                          _ReaderRecoveryActions(
+                            onSwitchToEnglish: () =>
+                                _switchToEnglishFallback(state),
+                            onChooseTranslation: () =>
+                                _showTranslationChooser(context, state),
+                            onRetry: () => _retryChapterLoad(state),
                           ),
                         ],
                       ),
@@ -383,19 +408,20 @@ class _ReadingScreenState extends State<ReadingScreen> {
                 );
               }
 
-              final offlineOnly = Env.bibleApiUrl == null;
-              final message = offlineOnly
-                  ? 'This chapter isn\'t bundled offline for ${state.translation.label}.\n\nAdd the chapter assets or run with an API.'
-                  : 'No verses found for this chapter in ${state.translation.label}.\n\nIf you\'re using the API, check the server has this translation/book/chapter.';
               return _buildReaderScrollView(
                 context,
                 state,
                 slivers: [
                   _buildStateSliver(
                     context,
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Text(message, textAlign: TextAlign.center),
+                    child: _MissingChapterRecovery(
+                      translation: state.translation,
+                      bookName: _currentBook.name,
+                      chapter: _currentChapter,
+                      onSwitchToEnglish: () => _switchToEnglishFallback(state),
+                      onChooseTranslation: () =>
+                          _showTranslationChooser(context, state),
+                      onRetry: () => _retryChapterLoad(state),
                     ),
                   ),
                 ],
@@ -453,8 +479,8 @@ class _ReadingScreenState extends State<ReadingScreen> {
             }
 
             final chapterViewKey = verses.isNotEmpty
-                ? '${verses.first.ref.canonicalId}-${verses.length}'
-                : '${_currentBook.id}-$_currentChapter-${state.translation.id}';
+                ? '${verses.first.ref.canonicalId}-${verses.length}-${effectiveTranslation.id}'
+                : '${_currentBook.id}-$_currentChapter-${effectiveTranslation.id}';
 
             return _buildReaderScrollView(
               context,
@@ -463,6 +489,18 @@ class _ReadingScreenState extends State<ReadingScreen> {
                 if (isWaiting)
                   const SliverToBoxAdapter(
                     child: LinearProgressIndicator(minHeight: 2),
+                  ),
+                if (loadResult != null &&
+                    loadResult.usedFallback &&
+                    _showFallbackBanner)
+                  SliverToBoxAdapter(
+                    child: _TranslationFallbackBanner(
+                      requestedTranslation: loadResult.requestedTranslation,
+                      effectiveTranslation: loadResult.effectiveTranslation,
+                      onDismiss: () {
+                        setState(() => _showFallbackBanner = false);
+                      },
+                    ),
                   ),
                 SliverPadding(
                   padding: const EdgeInsets.only(top: 4, bottom: 24),
@@ -481,6 +519,7 @@ class _ReadingScreenState extends State<ReadingScreen> {
                               key: _keyForVerse(verse.ref.verse),
                               verse: verse,
                               bookName: widget.book.name,
+                              translation: effectiveTranslation,
                               motionProfile: _motionProfile,
                               glowToken: _focusedVerseNumber == verse.ref.verse
                                   ? _focusHighlightToken
@@ -560,42 +599,22 @@ class _ReadingScreenState extends State<ReadingScreen> {
               color: foregroundColor,
             ),
           ),
-          DropdownButtonHideUnderline(
-            child: DropdownButton<BibleTranslation>(
-              value: state.translation,
-              isDense: true,
-              style: Theme.of(context)
-                  .textTheme
-                  .bodySmall
-                  ?.copyWith(fontSize: 11, color: foregroundColor),
-              icon: Icon(
-                Icons.arrow_drop_down,
-                size: 16,
-                color: foregroundColor,
-              ),
-              onChanged: (t) {
-                if (t == null) return;
-                if (t.isLicensed) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                        content: Text('${t.label} requires licensed data.')),
-                  );
-                  return;
-                }
-                state.setTranslation(t);
-              },
-              items: BibleTranslation.values
-                  .map(
-                    (t) => DropdownMenuItem(
-                      value: t,
-                      child: Text(
-                        t.label,
-                        style: TextStyle(color: foregroundColor),
-                      ),
-                    ),
-                  )
-                  .toList(growable: false),
+          BibleTranslationDropdown(
+            translation: state.translation,
+            foregroundColor: foregroundColor,
+            textStyle: theme.textTheme.bodySmall?.copyWith(
+              fontSize: 11,
+              color: foregroundColor,
             ),
+            onChanged: (t) {
+              if (t.isLicensed) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('${t.label} requires licensed data.')),
+                );
+                return;
+              }
+              state.setTranslation(t);
+            },
           ),
         ],
       ),
@@ -626,57 +645,169 @@ class _ReadingScreenState extends State<ReadingScreen> {
     );
   }
 
-  Future<List<Verse>> _loadChapterWithFallback(AppState state) async {
-    try {
-      final verses = await state.bibleRepo.loadChapter(
-          translation: state.translation,
-          bookId: _currentBook.id,
-          chapter: _currentChapter);
-      if (verses.isNotEmpty) {
+  void _retryChapterLoad(AppState state) {
+    setState(() {
+      _chapterFuture = _loadChapterWithFallback(state);
+      _currentLoadResult = null;
+      _showFallbackBanner = true;
+    });
+  }
+
+  void _switchToEnglishFallback(AppState state) {
+    state.setTranslation(BibleTranslation.web);
+    setState(() {
+      _chapterFuture = null;
+      _currentLoadResult = null;
+      _showFallbackBanner = true;
+    });
+  }
+
+  Future<void> _showTranslationChooser(
+    BuildContext context,
+    AppState state,
+  ) async {
+    final selected = await showModalBottomSheet<BibleTranslation>(
+      context: context,
+      showDragHandle: true,
+      builder: (context) {
+        return SafeArea(
+          child: ListView(
+            shrinkWrap: true,
+            children: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(20, 8, 20, 10),
+                child: Text(
+                  'Choose Translation',
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.w800,
+                      ),
+                ),
+              ),
+              for (final translation in BibleTranslation.values)
+                ListTile(
+                  enabled: !translation.isLicensed,
+                  title: Text(translation.label),
+                  subtitle: translation.isLicensed
+                      ? const Text('Licensed data required')
+                      : null,
+                  trailing: translation == state.translation
+                      ? const Icon(Icons.check_rounded)
+                      : null,
+                  onTap: translation.isLicensed
+                      ? null
+                      : () => Navigator.of(context).pop(translation),
+                ),
+            ],
+          ),
+        );
+      },
+    );
+
+    if (selected == null || !mounted) return;
+    state.setTranslation(selected);
+    setState(() {
+      _chapterFuture = null;
+      _currentLoadResult = null;
+      _showFallbackBanner = true;
+    });
+  }
+
+  Future<_ChapterLoadResult> _loadChapterWithFallback(AppState state) async {
+    final requestedTranslation = state.translation;
+    final translationOrder = _chapterTranslationOrder(requestedTranslation);
+
+    for (final candidate in translationOrder) {
+      final verses = await _loadChapterForTranslation(state, candidate);
+      if (_hasReadableVerses(verses)) {
         state.setLastRead(LastReadRef(
           bookId: _currentBook.id,
           bookName: _currentBook.name,
           chapter: _currentChapter,
-          verse:
-              1, // Defaulting to verse 1, could be enhanced with ItemPositionsListener later
+          verse: 1,
         ));
-        _preloadNextChapter(state);
-        return verses;
+        _preloadNextChapter(state, translation: candidate);
+        return _ChapterLoadResult(
+          verses: verses,
+          requestedTranslation: requestedTranslation,
+          effectiveTranslation: candidate,
+        );
       }
 
-      // Fallback if primary returned empty (e.g. API missing data)
-      debugPrint('Primary repo returned empty, trying fallback asset repo...');
-      return await state.assetBibleRepo.loadChapter(
-          translation: state.translation,
-          bookId: _currentBook.id,
-          chapter: _currentChapter);
-    } catch (e) {
-      debugPrint('Primary repo failed ($e), trying fallback asset repo...');
-      try {
-        // Fallback if primary threw exception (e.g. network error)
-        final fallbackVerses = await state.assetBibleRepo.loadChapter(
-            translation: state.translation,
-            bookId: _currentBook.id,
-            chapter: _currentChapter);
-        if (fallbackVerses.isNotEmpty) {
-          state.setLastRead(LastReadRef(
-            bookId: _currentBook.id,
-            bookName: _currentBook.name,
-            chapter: _currentChapter,
-            verse: 1,
-          ));
-          _preloadNextChapter(state);
-          return fallbackVerses;
-        }
-      } catch (e2) {
-        debugPrint('Asset fallback failed: $e2');
+      if (candidate == requestedTranslation) {
+        debugPrint(
+          'ReadingScreen: ${requestedTranslation.label} missing '
+          '${_currentBook.name} $_currentChapter; trying English fallback.',
+        );
       }
-
-      rethrow; // Rethrow original error if we can't handle it
     }
+
+    return _ChapterLoadResult(
+      verses: const <Verse>[],
+      requestedTranslation: requestedTranslation,
+      effectiveTranslation: requestedTranslation,
+    );
   }
 
-  void _preloadNextChapter(AppState state) {
+  List<BibleTranslation> _chapterTranslationOrder(
+    BibleTranslation requestedTranslation,
+  ) {
+    return [
+      requestedTranslation,
+      if (requestedTranslation != BibleTranslation.web) BibleTranslation.web,
+      if (requestedTranslation != BibleTranslation.kjv) BibleTranslation.kjv,
+    ];
+  }
+
+  Future<List<Verse>> _loadChapterForTranslation(
+    AppState state,
+    BibleTranslation translation,
+  ) async {
+    try {
+      final verses = await state.bibleRepo.loadChapter(
+        translation: translation,
+        bookId: _currentBook.id,
+        chapter: _currentChapter,
+      );
+      if (_hasReadableVerses(verses)) return verses;
+    } catch (e) {
+      debugPrint(
+        'ReadingScreen: primary repo failed for ${translation.label} '
+        '${_currentBook.name} $_currentChapter: $e',
+      );
+    }
+
+    if (identical(state.bibleRepo, state.assetBibleRepo)) {
+      return const <Verse>[];
+    }
+
+    try {
+      final verses = await state.assetBibleRepo.loadChapter(
+        translation: translation,
+        bookId: _currentBook.id,
+        chapter: _currentChapter,
+      );
+      if (_hasReadableVerses(verses)) return verses;
+    } catch (e) {
+      debugPrint(
+        'ReadingScreen: asset repo failed for ${translation.label} '
+        '${_currentBook.name} $_currentChapter: $e',
+      );
+    }
+
+    return const <Verse>[];
+  }
+
+  bool _hasReadableVerses(List<Verse> verses) {
+    return verses.any((verse) {
+      final text = BibleTextSanitizer.clean(verse.text).trim();
+      return text.isNotEmpty && !verse.isFallback;
+    });
+  }
+
+  void _preloadNextChapter(
+    AppState state, {
+    required BibleTranslation translation,
+  }) {
     if (_hasNextChapter()) {
       Future.microtask(() {
         int nextCh = _currentChapter + 1;
@@ -690,10 +821,11 @@ class _ReadingScreenState extends State<ReadingScreen> {
         }
         // Guard: skip if the assetRepo already has it cached
         final nextPath =
-            'assets/data/bibles/${state.translation.id}/$nBookId/$nextCh.json';
+            'assets/data/bibles/${translation.id}/$nBookId/$nextCh.json';
         if (!state.assetBibleRepo.isChapterCached(nextPath)) {
           unawaited(_preloadChapterWithFallback(
             state,
+            translation: translation,
             bookId: nBookId,
             chapter: nextCh,
           ));
@@ -704,12 +836,13 @@ class _ReadingScreenState extends State<ReadingScreen> {
 
   Future<void> _preloadChapterWithFallback(
     AppState state, {
+    required BibleTranslation translation,
     required String bookId,
     required int chapter,
   }) async {
     try {
       final verses = await state.bibleRepo.loadChapter(
-        translation: state.translation,
+        translation: translation,
         bookId: bookId,
         chapter: chapter,
       );
@@ -722,7 +855,7 @@ class _ReadingScreenState extends State<ReadingScreen> {
 
     try {
       await state.assetBibleRepo.loadChapter(
-        translation: state.translation,
+        translation: translation,
         bookId: bookId,
         chapter: chapter,
       );
@@ -760,6 +893,8 @@ class _ReadingScreenState extends State<ReadingScreen> {
       }
       _didScroll = false;
       _chapterFuture = null;
+      _currentLoadResult = null;
+      _showFallbackBanner = true;
       _focusedVerseNumber = null;
       _resetReaderAnchors();
       _jumpToTopSoon();
@@ -779,6 +914,8 @@ class _ReadingScreenState extends State<ReadingScreen> {
       }
       _didScroll = false;
       _chapterFuture = null;
+      _currentLoadResult = null;
+      _showFallbackBanner = true;
       _focusedVerseNumber = null;
       _resetReaderAnchors();
       _jumpToTopSoon();
@@ -820,6 +957,169 @@ const List<Color> _noteColors = [
   Color(0xFF93C5FD),
   Color(0xFFF9A8D4),
 ];
+
+class _TranslationFallbackBanner extends StatelessWidget {
+  const _TranslationFallbackBanner({
+    required this.requestedTranslation,
+    required this.effectiveTranslation,
+    required this.onDismiss,
+  });
+
+  final BibleTranslation requestedTranslation;
+  final BibleTranslation effectiveTranslation;
+  final VoidCallback onDismiss;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colors = theme.colorScheme;
+
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 12, 16, 4),
+      child: Container(
+        padding: const EdgeInsets.fromLTRB(12, 10, 8, 10),
+        decoration: BoxDecoration(
+          color: colors.tertiaryContainer.withValues(alpha: 0.72),
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(
+            color: colors.tertiary.withValues(alpha: 0.24),
+          ),
+        ),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Icon(
+              Icons.warning_amber_rounded,
+              size: 20,
+              color: colors.onTertiaryContainer,
+            ),
+            const SizedBox(width: 10),
+            Expanded(
+              child: Text(
+                '${requestedTranslation.label} is unavailable for this '
+                'chapter. Showing ${effectiveTranslation.label} instead.',
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: colors.onTertiaryContainer,
+                  fontWeight: FontWeight.w700,
+                  height: 1.25,
+                ),
+              ),
+            ),
+            IconButton(
+              visualDensity: VisualDensity.compact,
+              iconSize: 18,
+              tooltip: 'Dismiss',
+              onPressed: onDismiss,
+              icon: Icon(
+                Icons.close_rounded,
+                color: colors.onTertiaryContainer,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _MissingChapterRecovery extends StatelessWidget {
+  const _MissingChapterRecovery({
+    required this.translation,
+    required this.bookName,
+    required this.chapter,
+    required this.onSwitchToEnglish,
+    required this.onChooseTranslation,
+    required this.onRetry,
+  });
+
+  final BibleTranslation translation;
+  final String bookName;
+  final int chapter;
+  final VoidCallback onSwitchToEnglish;
+  final VoidCallback onChooseTranslation;
+  final VoidCallback onRetry;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colors = theme.colorScheme;
+
+    return Padding(
+      padding: const EdgeInsets.all(24),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            Icons.menu_book_outlined,
+            size: 46,
+            color: colors.primary,
+          ),
+          const SizedBox(height: 16),
+          Text(
+            '${translation.label} is not available for $bookName $chapter yet.',
+            textAlign: TextAlign.center,
+            style: theme.textTheme.titleMedium?.copyWith(
+              fontWeight: FontWeight.w800,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            'Choose another translation or switch to English to keep reading.',
+            textAlign: TextAlign.center,
+            style: theme.textTheme.bodyMedium?.copyWith(
+              color: colors.onSurfaceVariant,
+              height: 1.35,
+            ),
+          ),
+          const SizedBox(height: 22),
+          _ReaderRecoveryActions(
+            onSwitchToEnglish: onSwitchToEnglish,
+            onChooseTranslation: onChooseTranslation,
+            onRetry: onRetry,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _ReaderRecoveryActions extends StatelessWidget {
+  const _ReaderRecoveryActions({
+    required this.onSwitchToEnglish,
+    required this.onChooseTranslation,
+    required this.onRetry,
+  });
+
+  final VoidCallback onSwitchToEnglish;
+  final VoidCallback onChooseTranslation;
+  final VoidCallback onRetry;
+
+  @override
+  Widget build(BuildContext context) {
+    return Wrap(
+      alignment: WrapAlignment.center,
+      spacing: 10,
+      runSpacing: 10,
+      children: [
+        FilledButton.icon(
+          onPressed: onSwitchToEnglish,
+          icon: const Icon(Icons.translate_rounded),
+          label: const Text('Switch to English'),
+        ),
+        OutlinedButton.icon(
+          onPressed: onChooseTranslation,
+          icon: const Icon(Icons.language_rounded),
+          label: const Text('Choose Translation'),
+        ),
+        TextButton.icon(
+          onPressed: onRetry,
+          icon: const Icon(Icons.refresh_rounded),
+          label: const Text('Retry'),
+        ),
+      ],
+    );
+  }
+}
 
 void _showVerseNoteDialog(
   BuildContext context, {
@@ -924,12 +1224,14 @@ class _VerseTile extends StatefulWidget {
     super.key,
     required this.verse,
     required this.bookName,
+    required this.translation,
     required this.motionProfile,
     this.glowToken,
   });
 
   final Verse verse;
   final String bookName;
+  final BibleTranslation translation;
   final _ReaderMotionProfile motionProfile;
   final int? glowToken;
 
@@ -988,7 +1290,7 @@ class _VerseTileState extends State<_VerseTile> {
     setState(() => loading = true);
     try {
       final text = await state.commentaryRepo.getOrGenerateAndStore(
-        translation: state.translation,
+        translation: widget.translation,
         ref: widget.verse.ref,
         verseText: widget.verse.text,
         bookName: widget.bookName,
@@ -1023,33 +1325,11 @@ class _VerseTileState extends State<_VerseTile> {
     final state = AppScope.of(context);
     final ref = widget.verse.ref;
     final verseText = BibleTextSanitizer.clean(widget.verse.text);
-    final verseLabel = '${ref.verse}';
-    final verseLabelStyle = Theme.of(context).textTheme.titleLarge?.copyWith(
-          color: Colors.amber,
-          fontSize: (Theme.of(context).textTheme.titleLarge?.fontSize ?? 22) *
-              state.fontScale,
-          fontWeight: FontWeight.bold,
-          height: 1.2,
-        );
-    final isFallback = widget.verse.isFallback;
-    final verseTextStyle = Theme.of(context).textTheme.titleLarge?.copyWith(
-          fontSize: (Theme.of(context).textTheme.titleLarge?.fontSize ?? 22) *
-              state.fontScale,
-          fontWeight: isFallback ? FontWeight.normal : FontWeight.w500,
-          fontStyle: isFallback ? FontStyle.italic : FontStyle.normal,
-          color: isFallback ? Colors.grey : null,
-          height: 1.35,
-        );
-    final explanationTextStyle =
-        Theme.of(context).textTheme.bodyLarge?.copyWith(
-              fontSize:
-                  (Theme.of(context).textTheme.bodyLarge?.fontSize ?? 16) *
-                      state.fontScale,
-            );
-
-    // Spacing for the verse number inside Text.rich
-    const double numberWidth = 38.0;
-    const double gapWidth = 4.0;
+    final readingStyles = BibleReadingTextStyles.of(
+      context,
+      state,
+      isFallback: widget.verse.isFallback,
+    );
 
     final note = state.notesRepo.get(ref.canonicalId);
 
@@ -1067,7 +1347,7 @@ class _VerseTileState extends State<_VerseTile> {
             child: AnimatedContainer(
               duration: const Duration(milliseconds: 600),
               curve: Curves.easeOut,
-              padding: const EdgeInsets.fromLTRB(8, 8, 8, 4),
+              padding: BibleReadingTextStyles.verseTilePadding,
               decoration: BoxDecoration(
                 color: _focused
                     ? const Color(0xFF6C63FF)
@@ -1087,28 +1367,12 @@ class _VerseTileState extends State<_VerseTile> {
                 children: [
                   Padding(
                     // Leave space so the overlay arrow doesn't cover the text.
-                    padding: const EdgeInsets.only(bottom: 12),
-                    child: Text.rich(
-                      TextSpan(
-                        children: [
-                          WidgetSpan(
-                            baseline: TextBaseline.alphabetic,
-                            alignment: PlaceholderAlignment.baseline,
-                            child: SizedBox(
-                              width: numberWidth + gapWidth,
-                              child: Text(
-                                verseLabel,
-                                style: verseLabelStyle,
-                              ),
-                            ),
-                          ),
-                          TextSpan(
-                            text: verseText,
-                            style: verseTextStyle,
-                          ),
-                        ],
-                      ),
-                      textAlign: TextAlign.justify,
+                    padding: const EdgeInsets.only(
+                      bottom: BibleReadingTextStyles.expandIndicatorClearance,
+                    ),
+                    child: BibleVerseText(
+                      verse: widget.verse,
+                      styles: readingStyles,
                     ),
                   ),
                   Positioned(
@@ -1144,7 +1408,7 @@ class _VerseTileState extends State<_VerseTile> {
             alignment: Alignment.topCenter,
             child: expanded
                 ? Padding(
-                    padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+                    padding: BibleReadingTextStyles.expandedInsightPadding,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -1154,12 +1418,11 @@ class _VerseTileState extends State<_VerseTile> {
                             rawText: (explanation != null &&
                                     explanation!.trim().isNotEmpty)
                                 ? explanation!
-                                : ((Env.commentaryApiUrl ?? Env.bibleApiUrl) ==
-                                        null
+                                : (Env.commentaryApiUrl == null
                                     ? 'Understanding: No verse insight is bundled offline for this verse.'
                                     : 'Understanding: No verse insight available right now. Check the commentary API connection.'),
                             accentColor: Theme.of(context).colorScheme.primary,
-                            baseTextStyle: explanationTextStyle,
+                            baseTextStyle: readingStyles.commentaryTextStyle,
                           ),
                         const SizedBox(height: 12),
                         Row(
@@ -1167,7 +1430,7 @@ class _VerseTileState extends State<_VerseTile> {
                             IconButton(
                               tooltip: 'Save',
                               icon: Icon(state.favoritesRepo.isFavorite(
-                                      translation: state.translation, ref: ref)
+                                      translation: widget.translation, ref: ref)
                                   ? Icons.star
                                   : Icons.star_border),
                               onPressed: () async {
@@ -1175,7 +1438,7 @@ class _VerseTileState extends State<_VerseTile> {
                                     '${widget.bookName} ${ref.chapter}:${ref.verse}';
                                 try {
                                   await state.favoritesRepo.toggle(
-                                      translation: state.translation,
+                                      translation: widget.translation,
                                       ref: ref,
                                       display: display);
                                   await AppHaptics.favoriteToggled();
@@ -1200,7 +1463,8 @@ class _VerseTileState extends State<_VerseTile> {
                               onPressed: () async {
                                 try {
                                   final url = await state.audioService
-                                      .getVerseAudioUrl(state.translation, ref);
+                                      .getVerseAudioUrl(
+                                          widget.translation, ref);
                                   if (url == null) {
                                     if (!context.mounted) return;
                                     ScaffoldMessenger.of(context).showSnackBar(

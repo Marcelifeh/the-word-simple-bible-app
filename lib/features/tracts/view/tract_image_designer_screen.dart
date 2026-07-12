@@ -38,6 +38,9 @@ class TractImageDesignerScreen extends StatefulWidget {
 class _TractImageDesignerScreenState extends State<TractImageDesignerScreen> {
   final _screenshotController = ScreenshotController();
 
+  static const double _designCanvasWidth = 360.0;
+  static const double _exportPixelRatio = 3.0;
+
   // Customization state
   int _selectedThemeIndex = 0;
   TractLayoutMode _selectedLayout = TractLayoutMode.classic;
@@ -72,6 +75,53 @@ class _TractImageDesignerScreenState extends State<TractImageDesignerScreen> {
     _hookController.dispose();
     _invitationController.dispose();
     super.dispose();
+  }
+
+  double get _designCanvasHeight => _designCanvasWidth / _aspectRatio.ratio;
+
+  String get _canvasSignature =>
+      '${_selectedThemeIndex}_${_selectedLayout}_${_fontSize}_${_alignment}_'
+      '${_selectedPage}_${_aspectRatio}_${_textColumns}_${_autoFit}_'
+      '${_hookController.text}_${_invitationController.text}';
+
+  MediaQueryData get _fixedCanvasMediaQuery => MediaQueryData(
+        size: Size(_designCanvasWidth, _designCanvasHeight),
+        devicePixelRatio: 1.0,
+        textScaler: TextScaler.noScaling,
+      );
+
+  Widget _buildWordStudioCanvas(
+    TractShareTheme activeTheme, {
+    Key? key,
+  }) {
+    return KeyedSubtree(
+      key: key,
+      child: MediaQuery(
+        data: _fixedCanvasMediaQuery,
+        child: SizedBox(
+          width: _designCanvasWidth,
+          height: _designCanvasHeight,
+          child: TractCanvas(
+            title: widget.title,
+            body: widget.body,
+            scripture: widget.scripture,
+            scriptureRef: widget.scriptureRef,
+            hook: _hookController.text,
+            invitationText: _invitationController.text,
+            theme: activeTheme,
+            layoutMode: _selectedLayout,
+            fontSize: _fontSize,
+            textAlign: _alignment,
+            isExportMode: true,
+            isUserTract: widget.isUserTract,
+            selectedPage: _selectedPage,
+            aspectRatio: _aspectRatio,
+            textColumns: _textColumns,
+            autoFit: _autoFit,
+          ),
+        ),
+      ),
+    );
   }
 
   @override
@@ -110,32 +160,12 @@ class _TractImageDesignerScreenState extends State<TractImageDesignerScreen> {
                   child: _PreviewViewport(
                     child: FittedBox(
                       fit: BoxFit.contain,
-                      child: SizedBox(
-                        width: 360,
-                        child: AnimatedSwitcher(
-                          duration: const Duration(milliseconds: 350),
-                          switchInCurve: Curves.easeOut,
-                          child: TractCanvas(
-                            key: ValueKey(
-                              '${_selectedThemeIndex}_${_selectedLayout}_${_fontSize}_${_alignment}_${_selectedPage}_${_aspectRatio}_$_textColumns',
-                            ),
-                            title: widget.title,
-                            body: widget.body,
-                            scripture: widget.scripture,
-                            scriptureRef: widget.scriptureRef,
-                            hook: _hookController.text,
-                            invitationText: _invitationController.text,
-                            theme: activeTheme,
-                            layoutMode: _selectedLayout,
-                            fontSize: _fontSize,
-                            textAlign: _alignment,
-                            isExportMode: false,
-                            isUserTract: widget.isUserTract,
-                            selectedPage: _selectedPage,
-                            aspectRatio: _aspectRatio,
-                            textColumns: _textColumns,
-                            autoFit: _autoFit,
-                          ),
+                      child: AnimatedSwitcher(
+                        duration: const Duration(milliseconds: 350),
+                        switchInCurve: Curves.easeOut,
+                        child: _buildWordStudioCanvas(
+                          activeTheme,
+                          key: ValueKey(_canvasSignature),
                         ),
                       ),
                     ),
@@ -979,34 +1009,9 @@ class _TractImageDesignerScreenState extends State<TractImageDesignerScreen> {
     try {
       final activeTheme = tractThemes[_selectedThemeIndex];
 
-      // Canvas width in logical pixels for the chosen ratio
-      const double exportWidth = 1080.0;
-      final double exportHeight = exportWidth / _aspectRatio.ratio;
-
       final exportWidget = Material(
         color: Colors.transparent,
-        child: SizedBox(
-          width: exportWidth,
-          height: exportHeight,
-          child: TractCanvas(
-            title: widget.title,
-            body: widget.body,
-            scripture: widget.scripture,
-            scriptureRef: widget.scriptureRef,
-            hook: _hookController.text,
-            invitationText: _invitationController.text,
-            theme: activeTheme,
-            layoutMode: _selectedLayout,
-            fontSize: _fontSize,
-            textAlign: _alignment,
-            isExportMode: true,
-            isUserTract: widget.isUserTract,
-            selectedPage: _selectedPage,
-            aspectRatio: _aspectRatio,
-            textColumns: _textColumns,
-            autoFit: _autoFit,
-          ),
-        ),
+        child: _buildWordStudioCanvas(activeTheme),
       );
 
       // Fix for "View.of() context" crash on Flutter Web / multi-view:
@@ -1016,12 +1021,12 @@ class _TractImageDesignerScreenState extends State<TractImageDesignerScreen> {
         Directionality(
           textDirection: TextDirection.ltr,
           child: MediaQuery(
-            data: const MediaQueryData(devicePixelRatio: 1.0),
+            data: _fixedCanvasMediaQuery,
             child: exportWidget,
           ),
         ),
         delay: const Duration(milliseconds: 200),
-        pixelRatio: 3.0,
+        pixelRatio: _exportPixelRatio,
         context: context,
       );
 

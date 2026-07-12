@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:share_plus/share_plus.dart';
 
+import '../../../core/network/backend_health_service.dart';
 import '../../../core/navigation/app_router.dart' show AppRouter;
 import '../../../core/utils/env.dart';
 import '../../../data/bible/book_catalog.dart';
@@ -10,7 +11,10 @@ import '../../../shared/state/app_state.dart';
 import '../../bible/view/reading_screen.dart';
 import '../../notes/model/verse_note.dart';
 import '../model/sermon_note.dart';
+import '../model/sermon_outline.dart';
 import '../services/sermon_ai_service.dart';
+import '../services/sermon_document_export_service.dart';
+import '../services/sermon_document_file_saver.dart';
 import '../utils/scripture_parser.dart';
 import '../widgets/sermon_audio_player_card.dart';
 import '../widgets/timestamped_note_tile.dart';
@@ -28,25 +32,51 @@ class SermonReviewScreen extends StatefulWidget {
 }
 
 class _SermonReviewScreenState extends State<SermonReviewScreen> {
+  static const _cloudTranscriptionUnavailableMessage =
+      'Transcription requires cloud processing. Your recording is saved safely. Please try again when cloud transcription is available.';
+
   final GlobalKey<SermonAudioPlayerCardState> _audioKey =
       GlobalKey<SermonAudioPlayerCardState>();
   late SermonNote _note;
   bool _isTranscribing = false;
   bool _isSummarizing = false;
+  bool _isGeneratingOutline = false;
+  bool _isExportingDocument = false;
   String _transcriptSearchQuery = '';
 
-  SermonAiService get _sermonAiService =>
-      SermonAiService(baseUrl: _sermonApiRoot());
+  final SermonDocumentExportService _documentExportService =
+      const SermonDocumentExportService();
+
+  final BackendHealthService _backendHealthService = BackendHealthService();
+  final SermonAiService _sermonAiService = SermonAiService();
 
   @override
   void initState() {
     super.initState();
     _note = widget.note;
+    Future.microtask(_warmBackend);
+  }
+
+  @override
+  void dispose() {
+    _backendHealthService.dispose();
+    _sermonAiService.dispose();
+    super.dispose();
+  }
+
+  Future<void> _warmBackend() async {
+    await _backendHealthService.check();
   }
 
   Future<void> _generateTranscript() async {
     final path = _note.audioPath;
     if (path == null || path.isEmpty || _isTranscribing) return;
+    if (!_sermonCloudProcessingAvailable) {
+      _showCloudTranscriptionUnavailable();
+      return;
+    }
+    if (!await _ensureBackendAvailable()) return;
+    if (!mounted) return;
 
     final repository = AppScope.of(context).sermonNoteRepo;
     setState(() => _isTranscribing = true);
@@ -56,6 +86,9 @@ class _SermonReviewScreenState extends State<SermonReviewScreen> {
         transcript: result.transcript,
         transcriptSegments: result.segments,
         audioDuration: result.duration ?? _note.audioDuration,
+        clearSummary: true,
+        clearInsight: true,
+        clearOutline: true,
       );
       await repository.updateNote(updated);
       if (!mounted) return;
@@ -65,8 +98,10 @@ class _SermonReviewScreenState extends State<SermonReviewScreen> {
       );
     } catch (e) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Transcription failed: $e')),
+      _showCloudError(
+        e,
+        fallback:
+            'Cloud transcription is not available during the beta. Your recording remains safely stored on your device.',
       );
     } finally {
       if (mounted) {
@@ -78,12 +113,18 @@ class _SermonReviewScreenState extends State<SermonReviewScreen> {
   Future<void> _generateSummary() async {
     final transcript = _note.transcript?.trim();
     if (_isSummarizing) return;
+    if (!_sermonCloudProcessingAvailable) {
+      _showCloudTranscriptionUnavailable();
+      return;
+    }
     if (transcript == null || transcript.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Generate transcript first.')),
       );
       return;
     }
+    if (!await _ensureBackendAvailable()) return;
+    if (!mounted) return;
 
     final repository = AppScope.of(context).sermonNoteRepo;
     setState(() => _isSummarizing = true);
@@ -92,6 +133,7 @@ class _SermonReviewScreenState extends State<SermonReviewScreen> {
       final updated = _note.copyWith(
         summary: result.summary,
         insight: result.insight,
+        clearOutline: true,
       );
       await repository.updateNote(updated);
       if (!mounted) return;
@@ -101,12 +143,58 @@ class _SermonReviewScreenState extends State<SermonReviewScreen> {
       );
     } catch (e) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Summary failed: $e')),
+      _showCloudError(
+        e,
+        fallback:
+            'AI processing is temporarily unavailable. Please try again later.',
       );
     } finally {
       if (mounted) {
         setState(() => _isSummarizing = false);
+      }
+    }
+  }
+
+  Future<void> _generateOutline() async {
+    final transcript = _note.transcript?.trim();
+    if (_isGeneratingOutline) return;
+    if (!_sermonCloudProcessingAvailable) {
+      _showCloudTranscriptionUnavailable();
+      return;
+    }
+    if (transcript == null || transcript.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Generate transcript first.')),
+      );
+      return;
+    }
+    if (!await _ensureBackendAvailable()) return;
+    if (!mounted) return;
+
+    final repository = AppScope.of(context).sermonNoteRepo;
+    setState(() => _isGeneratingOutline = true);
+    try {
+      final outline = await _sermonAiService.generateOutline(
+        transcript: transcript,
+        insight: _note.insight,
+      );
+      final updated = _note.copyWith(outline: outline);
+      await repository.updateNote(updated);
+      if (!mounted) return;
+      setState(() => _note = updated);
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Preacher outline saved.')),
+      );
+    } catch (e) {
+      if (!mounted) return;
+      _showCloudError(
+        e,
+        fallback:
+            'AI processing is temporarily unavailable. Please try again later.',
+      );
+    } finally {
+      if (mounted) {
+        setState(() => _isGeneratingOutline = false);
       }
     }
   }
@@ -130,13 +218,122 @@ class _SermonReviewScreenState extends State<SermonReviewScreen> {
     );
   }
 
+  Future<void> _copyOutline() async {
+    final text = _note.outline?.toShareText();
+    if (text == null || text.trim().isEmpty) return;
+    await Clipboard.setData(ClipboardData(text: text));
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Preacher outline copied.')),
+    );
+  }
+
+  Future<void> _shareOutline() async {
+    final text = _note.outline?.toShareText();
+    if (text == null || text.trim().isEmpty) return;
+    await Share.share(
+      text,
+      subject: _note.outline?.title.trim().isNotEmpty ?? false
+          ? _note.outline!.title
+          : 'Preacher Outline',
+    );
+  }
+
+  Future<void> _exportPdf() async {
+    await _runDocumentExport(() async {
+      final file = await _documentExportService.buildPdf(_note);
+      await _shareDocumentFiles([file]);
+    });
+  }
+
+  Future<void> _exportDocx() async {
+    await _runDocumentExport(() async {
+      final file = _documentExportService.buildDocx(_note);
+      await _shareDocumentFiles([file]);
+    });
+  }
+
+  Future<void> _shareSermonDocument() async {
+    await _runDocumentExport(() async {
+      final files = await _buildSermonDocumentFiles();
+      await _shareDocumentFiles(files);
+    });
+  }
+
+  Future<void> _saveSermonDocument() async {
+    await _runDocumentExport(() async {
+      final files = await _buildSermonDocumentFiles();
+      try {
+        final paths = await saveSermonDocumentFiles(files);
+        if (!mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              paths.length == 1
+                  ? 'Sermon document saved to ${paths.first}'
+                  : 'Sermon documents saved to ${paths.first}',
+            ),
+          ),
+        );
+      } on UnsupportedError {
+        await _shareDocumentFiles(
+          files,
+          text:
+              'Choose Save to Files or your device storage to keep this sermon document.',
+        );
+      }
+    });
+  }
+
+  Future<void> _runDocumentExport(Future<void> Function() action) async {
+    if (_isExportingDocument) return;
+    setState(() => _isExportingDocument = true);
+    try {
+      await action();
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Document export failed: $e')),
+      );
+    } finally {
+      if (mounted) {
+        setState(() => _isExportingDocument = false);
+      }
+    }
+  }
+
+  Future<List<SermonDocumentFile>> _buildSermonDocumentFiles() async {
+    return [
+      await _documentExportService.buildPdf(_note),
+      _documentExportService.buildDocx(_note),
+    ];
+  }
+
+  Future<void> _shareDocumentFiles(
+    List<SermonDocumentFile> files, {
+    String? text,
+  }) async {
+    await Share.shareXFiles(
+      [
+        for (final file in files)
+          XFile.fromData(
+            file.bytes,
+            name: file.name,
+            mimeType: file.mimeType,
+          ),
+      ],
+      subject: _note.title.isEmpty ? 'Sermon Document' : _note.title,
+      text: text,
+    );
+  }
+
   void _saveInsightToJournal() {
     final text = _sermonInsightText();
     if (text.trim().isEmpty) return;
 
     final state = AppScope.of(context);
     final note = VerseNote(
-      verseId: 'sermon-insight-${_note.id}',
+      verseId: 'sermon-${_note.id}-insight',
       text: text,
       color: Theme.of(context).colorScheme.primary.toARGB32(),
       createdAt: DateTime.now(),
@@ -172,8 +369,21 @@ class _SermonReviewScreenState extends State<SermonReviewScreen> {
     final theme = Theme.of(context);
     final note = _note;
     final hasAudio = note.audioPath?.isNotEmpty ?? false;
+    final hasTranscript = note.transcript?.trim().isNotEmpty ?? false;
+    final sermonCloudAvailable = _sermonCloudProcessingAvailable;
+    final transcriptDisabledText = !hasAudio
+        ? 'No audio recording found. Record a sermon first to generate transcript.'
+        : _cloudTranscriptionUnavailableMessage;
+    final insightDisabledText = !hasAudio
+        ? 'No audio recording found. Record a sermon first to generate sermon insights.'
+        : !sermonCloudAvailable
+            ? _cloudTranscriptionUnavailableMessage
+            : 'Generate a transcript first to create sermon insights.';
+    final outlineDisabledText = !sermonCloudAvailable
+        ? _cloudTranscriptionUnavailableMessage
+        : 'Generate transcript first before creating a sermon outline.';
     final scriptures = ScriptureParser.extractScriptures(
-      '${note.content}\n${note.transcript ?? ''}',
+      _scriptureDetectionText(note),
     );
 
     return Scaffold(
@@ -266,12 +476,18 @@ class _SermonReviewScreenState extends State<SermonReviewScreen> {
             transcript: note.transcript,
             segments: note.transcriptSegments,
             searchQuery: _transcriptSearchQuery,
-            buttonText:
-                _isTranscribing ? 'Transcribing...' : 'Generate Transcript',
-            disabledText:
-                'No audio recording found. Record a sermon first to generate transcript.',
-            onPressed:
-                hasAudio && !_isTranscribing ? _generateTranscript : null,
+            hasAudio: hasAudio,
+            isTranscribing: _isTranscribing,
+            transcriptionAvailable: sermonCloudAvailable,
+            buttonText: _isTranscribing
+                ? 'Transcribing...'
+                : sermonCloudAvailable
+                    ? 'Generate Transcript'
+                    : 'Cloud Coming Soon',
+            disabledText: transcriptDisabledText,
+            onPressed: hasAudio && sermonCloudAvailable && !_isTranscribing
+                ? _generateTranscript
+                : null,
             onSeek: (position) => _audioKey.currentState?.seekTo(position),
             onSearchChanged: (value) {
               setState(() => _transcriptSearchQuery = value);
@@ -281,18 +497,18 @@ class _SermonReviewScreenState extends State<SermonReviewScreen> {
           _SermonInsightCard(
             insight: note.insight,
             fallbackSummary: note.summary,
+            isSummarizing: _isSummarizing,
             buttonText: _isSummarizing
                 ? 'Summarizing...'
                 : (note.insight?.hasContent ?? false) ||
                         (note.summary?.trim().isNotEmpty ?? false)
                     ? 'Regenerate Summary'
                     : 'Generate Summary',
-            disabledText: hasAudio
-                ? 'Generate a transcript first to create sermon insights.'
-                : 'No audio recording found. Record a sermon first to generate sermon insights.',
+            disabledText: insightDisabledText,
             onPressed: hasAudio &&
+                    sermonCloudAvailable &&
                     !_isSummarizing &&
-                    (note.transcript?.trim().isNotEmpty ?? false)
+                    hasTranscript
                 ? _generateSummary
                 : null,
             onCopy: (note.insight?.hasContent ?? false) ||
@@ -309,9 +525,57 @@ class _SermonReviewScreenState extends State<SermonReviewScreen> {
                 : null,
             onOpenScripture: _openScripture,
           ),
+          const SizedBox(height: 16),
+          _SermonOutlineCard(
+            outline: note.outline,
+            hasTranscript: hasTranscript,
+            disabledText: outlineDisabledText,
+            isGenerating: _isGeneratingOutline,
+            onGenerate:
+                hasTranscript && sermonCloudAvailable && !_isGeneratingOutline
+                    ? _generateOutline
+                    : null,
+            onCopy: note.outline?.hasContent ?? false ? _copyOutline : null,
+            onShare: note.outline?.hasContent ?? false ? _shareOutline : null,
+          ),
+          const SizedBox(height: 16),
+          _SermonDocumentExportCard(
+            isBusy: _isExportingDocument,
+            onExportPdf: _isExportingDocument ? null : _exportPdf,
+            onExportDocx: _isExportingDocument ? null : _exportDocx,
+            onSaveToDevice: _isExportingDocument ? null : _saveSermonDocument,
+            onShareDocument: _isExportingDocument ? null : _shareSermonDocument,
+          ),
         ],
       ),
     );
+  }
+
+  String _scriptureDetectionText(SermonNote note) {
+    final buffer = StringBuffer()
+      ..writeln(note.content)
+      ..writeln(note.transcript ?? '')
+      ..writeln(note.summary ?? '');
+
+    final insight = note.insight;
+    if (insight != null) {
+      buffer
+        ..writeln(insight.mainTheme)
+        ..writeln(insight.shortDevotional);
+      for (final scripture in insight.scripturesMentioned) {
+        buffer.writeln(scripture);
+      }
+    }
+
+    final outline = note.outline;
+    if (outline != null) {
+      buffer.writeln(outline.mainText);
+      for (final scripture in outline.supportingScriptures) {
+        buffer.writeln(scripture);
+      }
+    }
+
+    return buffer.toString();
   }
 
   String _recordedLabel(SermonNote note) {
@@ -345,23 +609,41 @@ class _SermonReviewScreenState extends State<SermonReviewScreen> {
     return hours > 0 ? '$hours:$minutes:$seconds' : '$minutes:$seconds';
   }
 
-  String _sermonApiRoot() {
-    final explicit = Env.sermonApiUrl;
-    if (explicit != null) return _stripPath(explicit);
-    return 'http://localhost:8000';
+  bool get _sermonCloudProcessingAvailable {
+    final explicit = Env.sermonApiUrl.trim();
+    if (explicit.isEmpty) return false;
+
+    final uri = Uri.tryParse(explicit);
+    return uri != null && uri.hasScheme && uri.host.isNotEmpty;
   }
 
-  String _stripPath(String value) {
-    final uri = Uri.tryParse(value.trim());
-    if (uri == null || !uri.hasScheme || uri.host.isEmpty) {
-      return value.trim();
-    }
-    return Uri(
-      scheme: uri.scheme,
-      userInfo: uri.userInfo,
-      host: uri.host,
-      port: uri.hasPort ? uri.port : 0,
-    ).toString();
+  Future<bool> _ensureBackendAvailable() async {
+    final available = await _backendHealthService.check();
+    if (available || !mounted) return available;
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text(
+          'Cloud services are waking up. This may take up to a minute.',
+        ),
+      ),
+    );
+    return false;
+  }
+
+  void _showCloudTranscriptionUnavailable() {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text(_cloudTranscriptionUnavailableMessage)),
+    );
+  }
+
+  void _showCloudError(
+    Object error, {
+    required String fallback,
+  }) {
+    final message = error is SermonApiException ? error.message : fallback;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(message)),
+    );
   }
 
   String _sermonInsightText() {
@@ -411,6 +693,9 @@ class _TranscriptCard extends StatelessWidget {
     required this.transcript,
     required this.segments,
     required this.searchQuery,
+    required this.hasAudio,
+    required this.isTranscribing,
+    required this.transcriptionAvailable,
     required this.buttonText,
     required this.disabledText,
     required this.onPressed,
@@ -421,6 +706,9 @@ class _TranscriptCard extends StatelessWidget {
   final String? transcript;
   final List<SermonTranscriptSegment> segments;
   final String searchQuery;
+  final bool hasAudio;
+  final bool isTranscribing;
+  final bool transcriptionAvailable;
   final String buttonText;
   final String disabledText;
   final VoidCallback? onPressed;
@@ -480,9 +768,11 @@ class _TranscriptCard extends StatelessWidget {
               Text(
                 hasTranscript
                     ? transcript!.trim()
-                    : onPressed == null
-                        ? disabledText
-                        : 'No transcript yet. Generate a transcript from the sermon audio.',
+                    : isTranscribing
+                        ? 'Transcribing sermon audio. Please wait...'
+                        : hasAudio && transcriptionAvailable
+                            ? 'No transcript yet. Generate a transcript from the sermon audio.'
+                            : disabledText,
                 style: theme.textTheme.bodyMedium?.copyWith(
                   color:
                       hasTranscript ? null : theme.colorScheme.onSurfaceVariant,
@@ -549,10 +839,215 @@ class _TranscriptSegmentTile extends StatelessWidget {
   }
 }
 
+class _SermonDocumentExportCard extends StatelessWidget {
+  const _SermonDocumentExportCard({
+    required this.isBusy,
+    required this.onExportPdf,
+    required this.onExportDocx,
+    required this.onSaveToDevice,
+    required this.onShareDocument,
+  });
+
+  final bool isBusy;
+  final VoidCallback? onExportPdf;
+  final VoidCallback? onExportDocx;
+  final VoidCallback? onSaveToDevice;
+  final VoidCallback? onShareDocument;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return Card(
+      elevation: 0,
+      color: theme.colorScheme.surfaceContainerLow,
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const _CardHeader(
+              icon: Icons.description_outlined,
+              title: 'Sermon Document',
+            ),
+            const SizedBox(height: 12),
+            Text(
+              isBusy
+                  ? 'Preparing sermon document. Please wait...'
+                  : 'Export this sermon as a clean preaching document for teaching, sharing, or saving.',
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: theme.colorScheme.onSurfaceVariant,
+                height: 1.5,
+              ),
+            ),
+            const SizedBox(height: 14),
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              alignment: WrapAlignment.end,
+              children: [
+                FilledButton.tonalIcon(
+                  onPressed: onExportPdf,
+                  icon: const Icon(Icons.picture_as_pdf_outlined),
+                  label: Text(isBusy ? 'Preparing...' : 'Export as PDF'),
+                ),
+                FilledButton.tonalIcon(
+                  onPressed: onExportDocx,
+                  icon: const Icon(Icons.article_outlined),
+                  label: const Text('Export as DOCX'),
+                ),
+                TextButton.icon(
+                  onPressed: onSaveToDevice,
+                  icon: const Icon(Icons.download_outlined),
+                  label: const Text('Save to Device'),
+                ),
+                TextButton.icon(
+                  onPressed: onShareDocument,
+                  icon: const Icon(Icons.share),
+                  label: const Text('Share Sermon Document'),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _SermonOutlineCard extends StatelessWidget {
+  const _SermonOutlineCard({
+    required this.outline,
+    required this.hasTranscript,
+    required this.disabledText,
+    required this.isGenerating,
+    required this.onGenerate,
+    required this.onCopy,
+    required this.onShare,
+  });
+
+  final SermonOutline? outline;
+  final bool hasTranscript;
+  final String disabledText;
+  final bool isGenerating;
+  final VoidCallback? onGenerate;
+  final VoidCallback? onCopy;
+  final VoidCallback? onShare;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final hasOutline = outline?.hasContent ?? false;
+
+    return Card(
+      elevation: 0,
+      color: theme.colorScheme.surfaceContainerLow,
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const _CardHeader(
+              icon: Icons.format_list_numbered,
+              title: 'Preacher Outline',
+            ),
+            const SizedBox(height: 12),
+            if (hasOutline)
+              _OutlineSections(outline: outline!)
+            else
+              Text(
+                isGenerating
+                    ? 'Generating preacher outline. Please wait...'
+                    : onGenerate == null
+                        ? disabledText
+                        : 'Generate a preacher-friendly outline from this sermon.',
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  color: theme.colorScheme.onSurfaceVariant,
+                  height: 1.5,
+                ),
+              ),
+            const SizedBox(height: 14),
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              alignment: WrapAlignment.end,
+              children: [
+                TextButton.icon(
+                  onPressed: onCopy,
+                  icon: const Icon(Icons.copy),
+                  label: const Text('Copy Outline'),
+                ),
+                TextButton.icon(
+                  onPressed: onShare,
+                  icon: const Icon(Icons.share),
+                  label: const Text('Share Outline'),
+                ),
+                FilledButton.tonalIcon(
+                  onPressed: onGenerate,
+                  icon: const Icon(Icons.auto_awesome),
+                  label: Text(
+                    isGenerating
+                        ? 'Generating...'
+                        : hasOutline
+                            ? 'Regenerate Outline'
+                            : 'Generate Outline',
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _OutlineSections extends StatelessWidget {
+  const _OutlineSections({required this.outline});
+
+  final SermonOutline outline;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if (outline.title.trim().isNotEmpty)
+          _InsightTextSection(title: 'Title', text: outline.title),
+        if (outline.mainText.trim().isNotEmpty)
+          _InsightTextSection(title: 'Main Text', text: outline.mainText),
+        if (outline.introduction.trim().isNotEmpty)
+          _InsightTextSection(
+            title: 'Introduction',
+            text: outline.introduction,
+          ),
+        _InsightListSection(title: 'Main Points', items: outline.mainPoints),
+        _InsightListSection(
+          title: 'Supporting Scriptures',
+          items: outline.supportingScriptures,
+        ),
+        if (outline.lifeApplication.trim().isNotEmpty)
+          _InsightTextSection(
+            title: 'Life Application',
+            text: outline.lifeApplication,
+          ),
+        if (outline.conclusion.trim().isNotEmpty)
+          _InsightTextSection(title: 'Conclusion', text: outline.conclusion),
+        if (outline.closingPrayer.trim().isNotEmpty)
+          _InsightTextSection(
+            title: 'Closing Prayer',
+            text: outline.closingPrayer,
+          ),
+      ],
+    );
+  }
+}
+
 class _SermonInsightCard extends StatelessWidget {
   const _SermonInsightCard({
     required this.insight,
     required this.fallbackSummary,
+    required this.isSummarizing,
     required this.buttonText,
     required this.disabledText,
     required this.onPressed,
@@ -564,6 +1059,7 @@ class _SermonInsightCard extends StatelessWidget {
 
   final SermonInsight? insight;
   final String? fallbackSummary;
+  final bool isSummarizing;
   final String buttonText;
   final String disabledText;
   final VoidCallback? onPressed;
@@ -600,9 +1096,11 @@ class _SermonInsightCard extends StatelessWidget {
               Text(
                 hasSummary
                     ? fallbackSummary!.trim()
-                    : onPressed == null
-                        ? disabledText
-                        : 'No insights yet. Generate key lessons, scriptures, prayer points, and action steps.',
+                    : isSummarizing
+                        ? 'Generating sermon insights. Please wait...'
+                        : onPressed == null
+                            ? disabledText
+                            : 'No insights yet. Generate key lessons, scriptures, prayer points, and action steps.',
                 style: theme.textTheme.bodyMedium?.copyWith(
                   color: hasSummary ? null : theme.colorScheme.onSurfaceVariant,
                   height: 1.5,

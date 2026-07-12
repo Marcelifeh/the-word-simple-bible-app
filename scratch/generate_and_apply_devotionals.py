@@ -75,7 +75,15 @@ def wrap_text_to_dart(text, indent_spaces):
     for idx, wl in enumerate(wrapped_lines):
         wl_escaped = wl.replace('\\', '\\\\').replace("'", "\\'")
         is_last = (idx == len(wrapped_lines) - 1)
-        suffix = "" if is_last else "\\n"
+        next_wl = wrapped_lines[idx+1] if not is_last else None
+        
+        if is_last:
+            suffix = ""
+        elif wl == "" or next_wl == "":
+            suffix = "\\n"
+        else:
+            suffix = " "
+            
         dart_lines.append(f"{' ' * indent_spaces}'{wl_escaped}{suffix}'")
         
     return "\n".join(dart_lines)

@@ -10,9 +10,10 @@ class AppTheme {
   static const _secondaryAmber = Color(0xFFF59E0B);
   static const _fontFallbacks = <String>[
     'NotoSans',
+    'NotoSansSymbols2',
+    'NotoColorEmoji',
     'Segoe UI Emoji',
     'Apple Color Emoji',
-    'Noto Color Emoji',
   ];
 
   // ── Glass helpers ────────────────────────────────────────────────────────────
@@ -52,6 +53,7 @@ class AppTheme {
       useMaterial3: true,
       colorScheme: scheme,
       fontFamily: 'Poppins',
+      fontFamilyFallback: _fontFallbacks,
       textTheme: _textTheme(Colors.black87),
       pageTransitionsTheme: _transitions,
     );
@@ -71,6 +73,7 @@ class AppTheme {
       useMaterial3: true,
       colorScheme: scheme,
       fontFamily: 'Poppins',
+      fontFamilyFallback: _fontFallbacks,
       scaffoldBackgroundColor: _bgDark,
       textTheme: _textTheme(Colors.white),
       appBarTheme: const AppBarTheme(

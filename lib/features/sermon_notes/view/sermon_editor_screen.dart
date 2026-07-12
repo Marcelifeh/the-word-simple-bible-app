@@ -3,9 +3,9 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 import '../../../core/config/app_branding.dart';
-
 import '../../../core/navigation/app_router.dart' show AppRouter;
 import '../../../data/bible/book_catalog.dart';
+
 import '../../../shared/state/app_state.dart';
 import '../../bible/view/reading_screen.dart';
 import '../model/sermon_note.dart';
@@ -14,6 +14,7 @@ import '../repository/sermon_note_repository.dart';
 import '../services/sermon_audio_file_service.dart';
 import '../services/sermon_recording_service.dart';
 import '../utils/scripture_parser.dart';
+import '../widgets/sermon_note_preview.dart';
 
 class SermonEditorScreen extends StatefulWidget {
   final SermonNote? note;
@@ -26,37 +27,71 @@ class SermonEditorScreen extends StatefulWidget {
 }
 
 class _SermonEditorScreenState extends State<SermonEditorScreen> {
-  late TextEditingController _titleController;
-  late TextEditingController _preacherController;
-  late TextEditingController _contentController;
+  late final TextEditingController _titleController;
+  late final TextEditingController _preacherController;
+  late final _SermonContentController _contentController;
   late SermonNote _workingNote;
   final FocusNode _contentFocusNode = FocusNode();
 
   final ScrollController _inputScrollController = ScrollController();
-  final ScrollController _highlightScrollController = ScrollController();
   final SermonRecordingService _recordingService = SermonRecordingService();
   final SermonAudioFileService _audioFileService =
       const SermonAudioFileService();
   final AudioPlayer _audioPlayer = AudioPlayer();
-  Timer? _debounce;
   Timer? _draftAutosaveTimer;
   Timer? _recordingTimer;
-  bool _syncingScroll = false;
   bool _didBindRepositories = false;
   bool _didCheckDraft = false;
   bool _skipDraftPersistOnDispose = false;
   bool _isRecording = false;
   bool _isPlaybackReady = false;
   bool _isPlayingAudio = false;
+  bool _isDisposing = false;
+  bool _previewMode = false;
+  TextAlign? _textAlign;
   Duration _recordingElapsed = Duration.zero;
   Duration _playbackPosition = Duration.zero;
   DateTime? _recordingStartedAt;
   String? _loadedAudioPath;
   Future<void>? _repositoriesReadyFuture;
-  List<ResolvedScriptureMatch> _scriptureMatches = [];
+  ValueNotifier<List<ResolvedScriptureMatch>>? _scriptureMatchesNotifier;
+  ValueNotifier<bool>? _hasUnsavedChangesNotifier;
+  ValueNotifier<DateTime?>? _lastSavedAtNotifier;
   late AppState _appState;
   late SermonNoteRepository _noteRepository;
   late SermonDraftRepository _draftRepository;
+
+  ValueNotifier<List<ResolvedScriptureMatch>> get _scriptureMatchesListenable {
+    return _scriptureMatchesNotifier ??=
+        ValueNotifier(<ResolvedScriptureMatch>[]);
+  }
+
+  ValueNotifier<bool> get _hasUnsavedChangesListenable {
+    return _hasUnsavedChangesNotifier ??= ValueNotifier(false);
+  }
+
+  ValueNotifier<DateTime?> get _lastSavedAtListenable {
+    return _lastSavedAtNotifier ??= ValueNotifier<DateTime?>(null);
+  }
+
+  TextAlign get _activeTextAlign => _textAlign ?? TextAlign.left;
+
+  TextAlign _safeTextAlignFromNote(SermonNote note) {
+    final align = (note as dynamic).textAlign;
+    return align is TextAlign ? align : TextAlign.left;
+  }
+
+  String _removeMarkdownFormatting(String text) {
+    return text
+        .replaceAllMapped(
+          RegExp(r'\*\*(.*?)\*\*'),
+          (match) => match.group(1) ?? '',
+        )
+        .replaceAllMapped(
+          RegExp(r'\*(.*?)\*'),
+          (match) => match.group(1) ?? '',
+        );
+  }
 
   @override
   void initState() {
@@ -64,16 +99,18 @@ class _SermonEditorScreenState extends State<SermonEditorScreen> {
     _workingNote = widget.note ?? SermonNote();
     _titleController = TextEditingController(text: _workingNote.title);
     _preacherController = TextEditingController(text: _workingNote.preacher);
-    _contentController = TextEditingController(text: _workingNote.content);
-    _inputScrollController.addListener(_syncHighlightScroll);
+    _contentController = _SermonContentController(
+      text: _removeMarkdownFormatting(_workingNote.content),
+    );
+    _textAlign = _safeTextAlignFromNote(_workingNote);
     _audioPlayer.playerStateStream.listen(_handlePlayerState);
     _audioPlayer.positionStream.listen((position) {
       if (!mounted) return;
       setState(() => _playbackPosition = position);
     });
 
-    if (_workingNote.content.isNotEmpty) {
-      _parseContent(_workingNote.content);
+    if (_contentController.text.isNotEmpty) {
+      _parseContent(_contentController.text);
     }
   }
 
@@ -102,8 +139,7 @@ class _SermonEditorScreenState extends State<SermonEditorScreen> {
 
   @override
   void dispose() {
-    _inputScrollController.removeListener(_syncHighlightScroll);
-    _debounce?.cancel();
+    _isDisposing = true;
     _draftAutosaveTimer?.cancel();
     _recordingTimer?.cancel();
     if (_isRecording) {
@@ -117,9 +153,11 @@ class _SermonEditorScreenState extends State<SermonEditorScreen> {
     _titleController.dispose();
     _preacherController.dispose();
     _contentController.dispose();
+    _scriptureMatchesNotifier?.dispose();
+    _hasUnsavedChangesNotifier?.dispose();
+    _lastSavedAtNotifier?.dispose();
     _contentFocusNode.dispose();
     _inputScrollController.dispose();
-    _highlightScrollController.dispose();
     super.dispose();
   }
 
@@ -127,7 +165,8 @@ class _SermonEditorScreenState extends State<SermonEditorScreen> {
     _workingNote
       ..title = _titleController.text.trim()
       ..preacher = _preacherController.text.trim()
-      ..content = _contentController.text.trim()
+      ..content = _removeMarkdownFormatting(_contentController.text)
+      ..textAlign = _activeTextAlign
       ..audioPath = _workingNote.audioPath
       ..audioDuration = _workingNote.audioDuration
       ..audioSizeBytes = _workingNote.audioSizeBytes
@@ -141,7 +180,7 @@ class _SermonEditorScreenState extends State<SermonEditorScreen> {
   bool _hasMeaningfulContent(SermonNote note) {
     return note.title.isNotEmpty ||
         note.preacher.isNotEmpty ||
-        note.content.isNotEmpty ||
+        note.content.trim().isNotEmpty ||
         (note.audioPath?.isNotEmpty ?? false);
   }
 
@@ -155,13 +194,18 @@ class _SermonEditorScreenState extends State<SermonEditorScreen> {
     }
     _skipDraftPersistOnDispose = true;
     await _draftRepository.clearActiveDraft();
+    _markDraftSaved();
   }
 
-  void _scheduleDraftAutosave() {
+  void _scheduleDraftAutosave(
+      {Duration delay = const Duration(milliseconds: 800)}) {
     if (!_didBindRepositories) return;
+    if (!_hasUnsavedChangesListenable.value) {
+      _hasUnsavedChangesListenable.value = true;
+    }
     _draftAutosaveTimer?.cancel();
     _draftAutosaveTimer = Timer(
-      const Duration(seconds: 3),
+      delay,
       () => unawaited(_persistDraft(clearIfEmpty: true)),
     );
   }
@@ -173,9 +217,17 @@ class _SermonEditorScreenState extends State<SermonEditorScreen> {
       if (clearIfEmpty) {
         await _draftRepository.clearActiveDraft();
       }
+      _markDraftSaved();
       return;
     }
     await _draftRepository.saveActiveDraft(note);
+    _markDraftSaved();
+  }
+
+  void _markDraftSaved() {
+    if (_isDisposing) return;
+    _hasUnsavedChangesListenable.value = false;
+    _lastSavedAtListenable.value = DateTime.now();
   }
 
   Future<void> _maybeRestoreDraft() async {
@@ -236,8 +288,10 @@ class _SermonEditorScreenState extends State<SermonEditorScreen> {
       _workingNote = draft;
       _titleController.text = draft.title;
       _preacherController.text = draft.preacher;
-      _contentController.text = draft.content;
-      _parseContent(draft.content);
+      final cleanContent = _removeMarkdownFormatting(draft.content);
+      _contentController.text = cleanContent;
+      _textAlign = _safeTextAlignFromNote(draft);
+      _parseContent(cleanContent);
       setState(() {});
       return;
     }
@@ -246,16 +300,21 @@ class _SermonEditorScreenState extends State<SermonEditorScreen> {
   }
 
   void _onContentChanged(String text) {
-    setState(() {});
     _scheduleDraftAutosave();
-    if (_debounce?.isActive ?? false) _debounce!.cancel();
-    _debounce = Timer(const Duration(milliseconds: 500), () {
-      _parseContent(text);
-    });
+    // Keep the offsets used by highlighting and tap detection synchronized
+    // with the controller on every edit.
+    _parseContent(text);
   }
 
   void _onMetadataChanged(String _) {
     _scheduleDraftAutosave();
+  }
+
+  void _setTextAlign(TextAlign align) {
+    if (_activeTextAlign == align) return;
+    setState(() => _textAlign = align);
+    _scheduleDraftAutosave(delay: const Duration(milliseconds: 500));
+    _contentFocusNode.requestFocus();
   }
 
   Future<void> _toggleRecording() async {
@@ -405,6 +464,7 @@ class _SermonEditorScreenState extends State<SermonEditorScreen> {
       selection: TextSelection.collapsed(offset: nextOffset),
     );
     _workingNote.timestampedNotes.add(SermonTimestampedNote(offset: offset));
+    setState(() {});
     _onContentChanged(nextText);
     _contentFocusNode.requestFocus();
   }
@@ -466,107 +526,73 @@ class _SermonEditorScreenState extends State<SermonEditorScreen> {
   }
 
   void _parseContent(String text) {
-    setState(() {
-      _scriptureMatches = ScriptureParser.findMatches(text);
-    });
+    final matches = ScriptureParser.findMatches(text);
+    _scriptureMatchesListenable.value = matches;
+    _contentController.setScriptureMatches(matches);
   }
 
-  void _syncHighlightScroll() {
-    if (_syncingScroll || !_highlightScrollController.hasClients) {
-      return;
-    }
-
-    _syncingScroll = true;
-    final nextOffset = _inputScrollController.offset.clamp(
-      0.0,
-      _highlightScrollController.position.maxScrollExtent,
-    );
-    _highlightScrollController.jumpTo(nextOffset);
-    _syncingScroll = false;
-  }
-
-  void _openScripture(LinkedScripture link) {
+  void _openScripture(LinkedScripture scripture) {
     try {
-      final book = BookCatalog.books.firstWhere((b) => b.id == link.bookId);
-
+      final book = BookCatalog.byId(scripture.bookId);
       AppRouter.push(
         context,
         ReadingScreen(
           book: book,
-          chapter: link.chapter,
-          initialVerse: link.startVerse,
+          chapter: scripture.chapter,
+          initialVerse: scripture.startVerse,
         ),
       );
-    } catch (e) {
+    } catch (_) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Could not open scripture references.')),
+        SnackBar(
+          content: Text('Could not open ${scripture.displayTitle}.'),
+        ),
       );
     }
   }
 
-  void _handleContentTap({
-    required Offset localPosition,
-    required double maxWidth,
-    required ThemeData theme,
-    required TextStyle noteTextStyle,
-  }) {
-    final text = _contentController.text;
-    if (text.isEmpty) {
-      return;
-    }
+  void _maybeOpenScriptureAtCursor() {
+    Future.microtask(() {
+      if (!mounted) return;
+      final selection = _contentController.selection;
+      if (!selection.isValid || !selection.isCollapsed) return;
 
-    final painter = TextPainter(
-      text: _buildHighlightedText(theme, noteTextStyle),
-      textDirection: TextDirection.ltr,
-      textScaler: MediaQuery.textScalerOf(context),
-      maxLines: null,
-    )..layout(maxWidth: maxWidth);
+      final scripture = _scriptureAtTextOffset(selection.baseOffset);
+      if (scripture == null) return;
 
-    final contentOffset = Offset(
-      localPosition.dx,
-      localPosition.dy + _highlightScrollController.offset,
-    );
+      _openScripture(scripture);
+    });
+  }
 
-    ResolvedScriptureMatch? tappedMatch;
-    final textLen = text.length;
-    for (final match in _scriptureMatches) {
-      if (match.start < 0 || match.start >= textLen) continue;
-      var start = match.start;
-      var end = match.end;
-      if (end > textLen) end = textLen;
-      if (end <= start) continue;
+  LinkedScripture? _scriptureAtTextOffset(int offset) {
+    return ScriptureParser.matchAtOffset(
+      _scriptureMatchesListenable.value,
+      offset,
+    )?.scripture;
+  }
 
-      final selection = TextSelection(baseOffset: start, extentOffset: end);
-      List<TextBox> boxes;
-      try {
-        boxes = painter.getBoxesForSelection(selection);
-      } catch (_) {
-        continue;
-      }
-
-      if (boxes.any((box) => box.toRect().inflate(6).contains(contentOffset))) {
-        tappedMatch = match;
-        break;
-      }
-    }
-
-    if (tappedMatch != null) {
-      _openScripture(tappedMatch.scripture);
+  void _togglePreviewMode() {
+    setState(() => _previewMode = !_previewMode);
+    if (!_previewMode) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) _contentFocusNode.requestFocus();
+      });
     }
   }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final noteTextStyle = theme.textTheme.bodyLarge?.copyWith(
-          height: 1.65,
-          color: theme.colorScheme.onSurface,
-        ) ??
-        TextStyle(
-          fontSize: 16,
-          height: 1.65,
-          color: theme.colorScheme.onSurface,
-        );
+    final noteTextStyle = TextStyle(
+      fontSize: 16,
+      height: 1.45,
+      color: theme.colorScheme.onSurface,
+    );
+    const noteStrutStyle = StrutStyle(
+      fontSize: 16,
+      height: 1.45,
+      forceStrutHeight: true,
+    );
 
     return PopScope(
       canPop: !_isRecording,
@@ -653,83 +679,63 @@ class _SermonEditorScreenState extends State<SermonEditorScreen> {
                         ),
                         const Divider(),
                         _buildSermonIntelligencePanel(theme),
+                        _buildFormattingToolbar(theme),
                       ],
                     ),
                   ),
                   Expanded(
                     child: Padding(
                       padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
-                      child: NotificationListener<ScrollNotification>(
-                        onNotification: (notification) {
-                          if (notification.metrics.axis == Axis.vertical) {
-                            _syncHighlightScroll();
-                          }
-                          return false;
-                        },
-                        child: LayoutBuilder(
-                          builder: (context, constraints) {
-                            return Stack(
-                              children: [
-                                TextField(
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
+                          color: theme.colorScheme.surfaceContainerHighest
+                              .withValues(alpha: 0.22),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(16),
+                          child: _previewMode
+                              ? SermonNotePreview(
                                   controller: _contentController,
+                                  matchesListenable:
+                                      _scriptureMatchesListenable,
+                                  textAlign: _activeTextAlign,
+                                  textStyle: noteTextStyle,
+                                  strutStyle: noteStrutStyle,
+                                  textScaler: MediaQuery.textScalerOf(context),
+                                  onOpenScripture: _openScripture,
+                                )
+                              : TextField(
+                                  controller: _contentController,
+                                  textAlign: _activeTextAlign,
                                   focusNode: _contentFocusNode,
                                   onChanged: _onContentChanged,
+                                  onTap: _maybeOpenScriptureAtCursor,
                                   scrollController: _inputScrollController,
-                                  style: noteTextStyle.copyWith(
-                                    color: Colors.transparent,
-                                  ),
+                                  style: noteTextStyle,
+                                  strutStyle: noteStrutStyle,
                                   cursorColor: theme.colorScheme.primary,
+                                  minLines: null,
                                   maxLines: null,
                                   expands: true,
                                   keyboardType: TextInputType.multiline,
+                                  textInputAction: TextInputAction.newline,
                                   textAlignVertical: TextAlignVertical.top,
+                                  scrollPadding:
+                                      const EdgeInsets.only(bottom: 160),
                                   decoration: InputDecoration.collapsed(
                                     hintText:
-                                        'Take notes here... Type "John 3:16" to auto-highlight scripture references.',
+                                        'Take notes here... Type "John 3:16" to auto-detect scripture references.',
                                     hintStyle: noteTextStyle.copyWith(
                                       color: theme.colorScheme.onSurfaceVariant,
                                     ),
                                   ),
                                 ),
-                                Positioned.fill(
-                                  child: IgnorePointer(
-                                    child: SingleChildScrollView(
-                                      controller: _highlightScrollController,
-                                      child: ConstrainedBox(
-                                        constraints: BoxConstraints(
-                                          minHeight: constraints.maxHeight,
-                                        ),
-                                        child: RichText(
-                                          textScaler:
-                                              MediaQuery.textScalerOf(context),
-                                          text: _buildHighlightedText(
-                                            theme,
-                                            noteTextStyle,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                Positioned.fill(
-                                  child: Listener(
-                                    behavior: HitTestBehavior.translucent,
-                                    onPointerUp: (event) => _handleContentTap(
-                                      localPosition: event.localPosition,
-                                      maxWidth: constraints.maxWidth,
-                                      theme: theme,
-                                      noteTextStyle: noteTextStyle,
-                                    ),
-                                    child: const SizedBox.expand(),
-                                  ),
-                                ),
-                              ],
-                            );
-                          },
                         ),
                       ),
                     ),
                   ),
+                  _buildTimestampBar(theme),
                 ],
               ),
             );
@@ -739,64 +745,80 @@ class _SermonEditorScreenState extends State<SermonEditorScreen> {
     );
   }
 
-  TextSpan _buildHighlightedText(ThemeData theme, TextStyle baseStyle) {
-    final text = _contentController.text;
-    if (text.isEmpty) {
-      return TextSpan(text: '', style: baseStyle);
-    }
-
-    if (_scriptureMatches.isEmpty) {
-      return TextSpan(text: text, style: baseStyle);
-    }
-
-    final children = <InlineSpan>[];
-    var currentIndex = 0;
-
-    final matches = List<ResolvedScriptureMatch>.from(_scriptureMatches)
-      ..sort((a, b) => a.start.compareTo(b.start));
-
-    for (final match in matches) {
-      if (match.start < 0) continue;
-      if (match.start >= text.length) continue;
-
-      var start = match.start;
-      var end = match.end;
-      if (end > text.length) end = text.length;
-      if (end <= start) continue;
-
-      if (start > currentIndex) {
-        children.add(
-          TextSpan(
-            text: text.substring(currentIndex, start),
-            style: baseStyle,
-          ),
-        );
-      }
-
-      children.add(
-        TextSpan(
-          text: text.substring(start, end),
-          style: baseStyle.copyWith(
-            color: theme.colorScheme.primary,
-            fontWeight: FontWeight.w700,
-            backgroundColor:
-                theme.colorScheme.primaryContainer.withValues(alpha: 0.65),
-          ),
+  Widget _buildFormattingToolbar(ThemeData theme) {
+    final activeColor = theme.colorScheme.primary;
+    return Container(
+      margin: const EdgeInsets.only(top: 8, bottom: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+      decoration: BoxDecoration(
+        color:
+            theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.18),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: theme.colorScheme.outlineVariant.withValues(alpha: 0.35),
         ),
-      );
-      currentIndex = end;
-    }
+      ),
+      child: Row(
+        children: [
+          IconButton(
+            tooltip: 'Align left',
+            icon: const Icon(Icons.format_align_left),
+            color: _activeTextAlign == TextAlign.left ? activeColor : null,
+            onPressed: () => _setTextAlign(TextAlign.left),
+          ),
+          IconButton(
+            tooltip: 'Center',
+            icon: const Icon(Icons.format_align_center),
+            color: _activeTextAlign == TextAlign.center ? activeColor : null,
+            onPressed: () => _setTextAlign(TextAlign.center),
+          ),
+          IconButton(
+            tooltip: 'Justify',
+            icon: const Icon(Icons.format_align_justify),
+            color: _activeTextAlign == TextAlign.justify ? activeColor : null,
+            onPressed: () => _setTextAlign(TextAlign.justify),
+          ),
+          IconButton(
+            tooltip: _previewMode ? 'Edit notes' : 'Preview notes',
+            icon: Icon(_previewMode ? Icons.edit : Icons.visibility),
+            color: _previewMode ? activeColor : null,
+            onPressed: _togglePreviewMode,
+          ),
+          const SizedBox(width: 4),
+          Flexible(
+            child: Align(
+              alignment: Alignment.centerRight,
+              child: ValueListenableBuilder<bool>(
+                valueListenable: _hasUnsavedChangesListenable,
+                builder: (context, hasUnsavedChanges, _) {
+                  return ValueListenableBuilder<DateTime?>(
+                    valueListenable: _lastSavedAtListenable,
+                    builder: (context, lastSavedAt, __) {
+                      return Text(
+                        hasUnsavedChanges
+                            ? 'Saving...'
+                            : _formatSavedStatus(lastSavedAt),
+                        overflow: TextOverflow.ellipsis,
+                        style: theme.textTheme.labelSmall?.copyWith(
+                          color: theme.colorScheme.onSurfaceVariant,
+                        ),
+                      );
+                    },
+                  );
+                },
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 
-    if (currentIndex < text.length) {
-      children.add(
-        TextSpan(
-          text: text.substring(currentIndex),
-          style: baseStyle,
-        ),
-      );
-    }
-
-    return TextSpan(style: baseStyle, children: children);
+  String _formatSavedStatus(DateTime? savedAt) {
+    if (savedAt == null) return 'Saved';
+    final hour = savedAt.hour.toString().padLeft(2, '0');
+    final minute = savedAt.minute.toString().padLeft(2, '0');
+    return 'Saved $hour:$minute';
   }
 
   Widget _buildSermonIntelligencePanel(ThemeData theme) {
@@ -837,26 +859,39 @@ class _SermonEditorScreenState extends State<SermonEditorScreen> {
                 ),
             ],
           ),
-          if (_workingNote.timestampedNotes.isNotEmpty) ...[
-            const SizedBox(height: 8),
-            SizedBox(
-              height: 36,
-              child: ListView.separated(
-                scrollDirection: Axis.horizontal,
-                itemCount: _workingNote.timestampedNotes.length,
-                separatorBuilder: (_, __) => const SizedBox(width: 8),
-                itemBuilder: (context, index) {
-                  final note = _workingNote.timestampedNotes[index];
-                  return ActionChip(
-                    avatar: const Icon(Icons.schedule, size: 16),
-                    label: Text(_formatDuration(note.offset)),
-                    onPressed: hasAudio ? () => _seekToTimestamp(note) : null,
-                  );
-                },
-              ),
-            ),
-          ],
         ],
+      ),
+    );
+  }
+
+  Widget _buildTimestampBar(ThemeData theme) {
+    if (_workingNote.timestampedNotes.isEmpty) {
+      return const SizedBox.shrink();
+    }
+
+    final hasAudio = _workingNote.audioPath?.isNotEmpty ?? false;
+    return SafeArea(
+      top: false,
+      child: SizedBox(
+        height: 56,
+        child: ListView.separated(
+          padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+          scrollDirection: Axis.horizontal,
+          itemCount: _workingNote.timestampedNotes.length,
+          separatorBuilder: (_, __) => const SizedBox(width: 8),
+          itemBuilder: (context, index) {
+            final note = _workingNote.timestampedNotes[index];
+            return ActionChip(
+              avatar: const Icon(Icons.schedule, size: 16),
+              label: Text(_formatDuration(note.offset)),
+              onPressed: hasAudio ? () => _seekToTimestamp(note) : null,
+              backgroundColor:
+                  theme.colorScheme.surfaceContainerHighest.withValues(
+                alpha: 0.65,
+              ),
+            );
+          },
+        ),
       ),
     );
   }
@@ -866,6 +901,80 @@ class _SermonEditorScreenState extends State<SermonEditorScreen> {
     final minutes = (totalSeconds ~/ 60).toString().padLeft(2, '0');
     final seconds = (totalSeconds % 60).toString().padLeft(2, '0');
     return '$minutes:$seconds';
+  }
+}
+
+class _SermonContentController extends TextEditingController {
+  _SermonContentController({super.text});
+
+  List<ResolvedScriptureMatch> _scriptureMatches =
+      const <ResolvedScriptureMatch>[];
+
+  void setScriptureMatches(List<ResolvedScriptureMatch> matches) {
+    _scriptureMatches = List<ResolvedScriptureMatch>.from(matches);
+    notifyListeners();
+  }
+
+  @override
+  TextSpan buildTextSpan({
+    required BuildContext context,
+    TextStyle? style,
+    required bool withComposing,
+  }) {
+    final baseStyle = style ?? const TextStyle();
+    final currentText = text;
+    if (currentText.isEmpty || _scriptureMatches.isEmpty) {
+      return TextSpan(text: currentText, style: baseStyle);
+    }
+
+    final spans = <InlineSpan>[];
+    var currentIndex = 0;
+    final sortedMatches = List<ResolvedScriptureMatch>.from(_scriptureMatches)
+      ..sort((a, b) => a.start.compareTo(b.start));
+
+    for (final match in sortedMatches) {
+      if (match.start < currentIndex || match.start >= currentText.length) {
+        continue;
+      }
+
+      var start = match.start;
+      var end = match.end;
+      if (end > currentText.length) end = currentText.length;
+      if (end <= start) continue;
+
+      if (start > currentIndex) {
+        spans.add(
+          TextSpan(
+            text: currentText.substring(currentIndex, start),
+            style: baseStyle,
+          ),
+        );
+      }
+
+      spans.add(
+        TextSpan(
+          text: currentText.substring(start, end),
+          style: baseStyle.copyWith(
+            color: const Color(0xFFFFD166),
+            backgroundColor: const Color(0x332A9D8F),
+            fontWeight: FontWeight.normal,
+            fontStyle: FontStyle.normal,
+          ),
+        ),
+      );
+      currentIndex = end;
+    }
+
+    if (currentIndex < currentText.length) {
+      spans.add(
+        TextSpan(
+          text: currentText.substring(currentIndex),
+          style: baseStyle,
+        ),
+      );
+    }
+
+    return TextSpan(style: baseStyle, children: spans);
   }
 }
 

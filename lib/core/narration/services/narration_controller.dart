@@ -257,7 +257,7 @@ class NarrationController extends ChangeNotifier {
     }
     _emitEvent(NarrationEventType.segmentChanged, segmentId: segment.id);
     await _cacheService.getAudioPath(segment.id);
-    await _narrationService.speak(segment.text);
+    await _narrationService.speak(segment.speechText);
   }
 
   Future<void> pause() async {
@@ -285,6 +285,30 @@ class NarrationController extends ChangeNotifier {
     );
     _sync();
     notifyListeners();
+  }
+
+  Future<void> skipRelativeSegment(int delta) async {
+    final session = _currentSession;
+    if (session == null || session.segments.isEmpty) {
+      return;
+    }
+
+    final targetIndex = (session.currentIndex + delta)
+        .clamp(0, session.segments.length - 1)
+        .toInt();
+    await _stopUnderlyingSpeech();
+    final nextSession = session.copyWith(
+      currentIndex: targetIndex,
+      status: NarrationStatus.loading,
+      progress: _sessionProgress(
+        session.copyWith(currentIndex: targetIndex),
+        segmentProgress: 0,
+      ),
+    );
+    _currentSession = nextSession;
+    _sync();
+    notifyListeners();
+    await _playCurrentSegment();
   }
 
   Future<void> _stopUnderlyingSpeech() async {

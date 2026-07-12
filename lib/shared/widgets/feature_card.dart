@@ -34,6 +34,12 @@ class _FeatureCardState extends State<FeatureCard> {
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
     final isLight = theme.brightness == Brightness.light;
+    final width = MediaQuery.sizeOf(context).width;
+    final isCompact = width < 390;
+    final titleSize = isCompact ? 15.5 : 17.0;
+    final subtitleSize = isCompact ? 11.5 : 12.5;
+    final iconBoxSize = isCompact ? 46.0 : 52.0;
+    final iconSize = isCompact ? 22.0 : 25.0;
     final startColor = isLight
         ? Color.alphaBlend(
             widget.color.withValues(alpha: _pressed ? 0.24 : 0.18),
@@ -52,19 +58,21 @@ class _FeatureCardState extends State<FeatureCard> {
     final shadowColor = isLight
         ? widget.color.withValues(alpha: _pressed ? 0.18 : 0.10)
         : widget.color.withValues(alpha: _pressed ? 0.26 : 0.12);
-    final iconBubbleColor = isLight
-        ? widget.color.withValues(alpha: _pressed ? 0.20 : 0.14)
-        : widget.color.withValues(alpha: _pressed ? 0.26 : 0.20);
-    final iconBorderColor = isLight
-        ? widget.color.withValues(alpha: _pressed ? 0.48 : 0.34)
-        : widget.color.withValues(alpha: _pressed ? 0.65 : 0.5);
+    final iconBubbleColor =
+        widget.color.withValues(alpha: _pressed ? 0.22 : 0.16);
     final titleStyle = theme.textTheme.titleMedium?.copyWith(
-      color: isLight ? scheme.onSurface : null,
-      fontWeight: FontWeight.w700,
+      color: isLight ? scheme.onSurface : Colors.white,
+      fontSize: titleSize,
+      fontWeight: FontWeight.w800,
+      height: 1.0,
     );
-    final subtitleStyle = theme.textTheme.bodyMedium?.copyWith(
-      color: isLight ? scheme.onSurfaceVariant : null,
+    final subtitleStyle = theme.textTheme.bodySmall?.copyWith(
+      color: isLight
+          ? scheme.onSurfaceVariant
+          : Colors.white.withValues(alpha: 0.68),
+      fontSize: subtitleSize,
       fontWeight: isLight ? FontWeight.w500 : null,
+      height: 1.1,
     );
 
     return GestureDetector(
@@ -79,7 +87,10 @@ class _FeatureCardState extends State<FeatureCard> {
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 180),
           curve: Curves.easeOutCubic,
-          padding: const EdgeInsets.all(16),
+          padding: EdgeInsets.symmetric(
+            horizontal: isCompact ? 12 : 16,
+            vertical: isCompact ? 14 : 16,
+          ),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(18),
             gradient: LinearGradient(
@@ -108,19 +119,19 @@ class _FeatureCardState extends State<FeatureCard> {
                     AnimatedContainer(
                       duration: const Duration(milliseconds: 180),
                       curve: Curves.easeOutCubic,
-                      width: 48,
-                      height: 48,
+                      width: iconBoxSize,
+                      height: iconBoxSize,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         color: iconBubbleColor,
-                        border: Border.all(
-                          color: iconBorderColor,
-                          width: 1.5,
-                        ),
                       ),
-                      child: Icon(widget.icon, color: widget.color, size: 22),
+                      child: Icon(
+                        widget.icon,
+                        color: widget.color,
+                        size: iconSize,
+                      ),
                     ),
-                    const SizedBox(width: 14),
+                    const SizedBox(width: 12),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -129,20 +140,32 @@ class _FeatureCardState extends State<FeatureCard> {
                           Text(
                             widget.title,
                             style: titleStyle,
-                            maxLines: 1,
+                            maxLines: 2,
+                            softWrap: true,
                             overflow: TextOverflow.ellipsis,
                           ),
-                          const SizedBox(height: 2),
+                          const SizedBox(height: 5),
                           Text(
                             widget.subtitle,
                             style: subtitleStyle,
-                            maxLines: 1,
+                            maxLines: 2,
+                            softWrap: true,
                             overflow: TextOverflow.ellipsis,
                           ),
                         ],
                       ),
                     ),
-                    if (widget.trailing != null) widget.trailing!,
+                    const SizedBox(width: 4),
+                    if (widget.trailing != null)
+                      widget.trailing!
+                    else
+                      Icon(
+                        Icons.chevron_right_rounded,
+                        size: 20,
+                        color: isLight
+                            ? scheme.onSurfaceVariant.withValues(alpha: 0.55)
+                            : Colors.white.withValues(alpha: 0.55),
+                      ),
                   ],
                 ),
               ),

@@ -86,11 +86,10 @@ class CommentaryRepository {
     }
 
     // Step 3: Try to generate via API (will store under the effective language).
-    final apiUrl = (Env.commentaryApiUrl ?? Env.bibleApiUrl);
+    final apiUrl = Env.commentaryApiUrl;
     if (apiUrl == null) return null;
 
     final generated = await _generateFromApi(
-      baseUrl: apiUrl,
       translation: effective,
       ref: ref,
     );
@@ -124,7 +123,7 @@ class CommentaryRepository {
     final key = _boxKey(translation: effectiveTranslation, ref: ref);
     final legacyKey = '${effectiveTranslation.name}:${ref.key}';
 
-    final apiConfigured = (Env.commentaryApiUrl ?? Env.bibleApiUrl) != null;
+    final apiConfigured = Env.commentaryApiUrl != null;
 
     final cached = box.get(key);
     if (cached is String && cached.trim().isNotEmpty) {
@@ -230,18 +229,11 @@ class CommentaryRepository {
   }
 
   Future<String?> _generateFromApi({
-    required String baseUrl,
     required BibleTranslation translation,
     required VerseRef ref,
   }) async {
     try {
-      final base = Uri.parse(baseUrl);
-      final uri = base.path.endsWith('/commentary/ensure')
-          ? base
-          : base.replace(
-              path:
-                  '${base.path.endsWith('/') ? base.path.substring(0, base.path.length - 1) : base.path}/commentary/ensure',
-            );
+      final uri = Env.apiUri('/commentary/ensure');
       final res = await http.post(
         uri,
         headers: {'content-type': 'application/json'},

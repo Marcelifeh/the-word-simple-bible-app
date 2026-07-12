@@ -215,19 +215,22 @@ class AppState extends ChangeNotifier {
     return true;
   }
 
-  void markReadingPlanPassageOpened(String passage, {DateTime? openedAt}) {
+  Future<void> markReadingPlanPassageOpened(
+    String passage, {
+    DateTime? openedAt,
+  }) async {
     final effectiveDate = openedAt ?? DateTime.now();
     final dateKey = _dateKey(effectiveDate);
     _readingPlanLastOpenedPassagesByDate[dateKey] = passage;
-    _persistReadingPlanProgress();
+    await _persistReadingPlanProgress();
     notifyListeners();
   }
 
-  void markReadingPlanPassageCompleted(
+  Future<void> markReadingPlanPassageCompleted(
     String passage, {
     DateTime? completedAt,
     bool completed = true,
-  }) {
+  }) async {
     final effectiveDate = completedAt ?? DateTime.now();
     final dateKey = _dateKey(effectiveDate);
     final completedPassages = _readingPlanCompletedPassagesByDate.putIfAbsent(
@@ -244,14 +247,14 @@ class AppState extends ChangeNotifier {
       }
     }
 
-    _persistReadingPlanProgress();
+    await _persistReadingPlanProgress();
     notifyListeners();
   }
 
-  void markReadingPlanCompleted({
+  Future<void> markReadingPlanCompleted({
     DateTime? completedAt,
     Iterable<String>? passages,
-  }) {
+  }) async {
     final effectiveDate = completedAt ?? DateTime.now();
     final dateKey = _dateKey(effectiveDate);
 
@@ -264,7 +267,7 @@ class AppState extends ChangeNotifier {
       }
     }
 
-    _persistReadingPlanProgress();
+    await _persistReadingPlanProgress();
     notifyListeners();
   }
 
@@ -500,12 +503,12 @@ class AppState extends ChangeNotifier {
     return '${value.year}-$month-$day';
   }
 
-  void _persistReadingPlanProgress() {
-    _saveSetting(
+  Future<void> _persistReadingPlanProgress() async {
+    await _saveSetting(
       'readingPlanLastOpenedByDate',
       jsonEncode(_readingPlanLastOpenedPassagesByDate),
     );
-    _saveSetting(
+    await _saveSetting(
       'readingPlanCompletedPassagesByDate',
       jsonEncode(
         _readingPlanCompletedPassagesByDate.map(
@@ -523,7 +526,7 @@ class AppState extends ChangeNotifier {
   }
 
   Future<void> _saveSetting(String key, dynamic value) async {
-    _settingsBox?.put(key, value);
+    await _settingsBox?.put(key, value);
   }
 
   BibleRepository _buildBibleRepo() {

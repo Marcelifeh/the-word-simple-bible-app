@@ -15,9 +15,8 @@ class RemoteAudioBibleService implements AudioBibleService {
     if (apiUrl == null) return null;
 
     try {
-      final uri = Uri.parse(apiUrl);
       final res = await http.post(
-        uri,
+        Env.apiUri('/audio'),
         headers: {'content-type': 'application/json'},
         body: jsonEncode({
           'translation': translation.id,

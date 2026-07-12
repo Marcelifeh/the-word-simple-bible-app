@@ -26,7 +26,7 @@ dependencies:
 
   # Audio playback (for remote generated audio URLs)
   just_audio: ^0.10.5
-  record: ^5.1.2
+  record: 6.1.0
   scrollable_positioned_list: ^0.3.5
   share_plus: ^10.0.0
   screenshot: ^3.0.0
@@ -35,6 +35,8 @@ dependencies:
   video_player: ^2.6.1
   flutter_tts: ^4.2.5
   web: ^1.1.1
+  pdf: ^3.8.4
+  archive: ^3.6.1
 
 dev_dependencies:
   flutter_test:
@@ -445,16 +447,219 @@ flutter:
     - assets/data/bibles/yoruba/song_of_songs/
     - assets/data/bibles/yoruba/titus/
     - assets/data/bibles/yoruba/zechariah/
+    - assets/data/bibles/kjv/1_john/
+    - assets/data/bibles/kjv/1_kings/
+    - assets/data/bibles/kjv/1_peter/
+    - assets/data/bibles/kjv/1_samuel/
+    - assets/data/bibles/kjv/1_thessalonians/
+    - assets/data/bibles/kjv/1_timothy/
+    - assets/data/bibles/kjv/2_chronicles/
+    - assets/data/bibles/kjv/2_corinthians/
+    - assets/data/bibles/kjv/2_john/
+    - assets/data/bibles/kjv/2_kings/
+    - assets/data/bibles/kjv/2_peter/
+    - assets/data/bibles/kjv/2_samuel/
+    - assets/data/bibles/kjv/2_thessalonians/
+    - assets/data/bibles/kjv/2_timothy/
+    - assets/data/bibles/kjv/3_john/
+    - assets/data/bibles/kjv/acts/
+    - assets/data/bibles/kjv/amos/
+    - assets/data/bibles/kjv/colossians/
+    - assets/data/bibles/kjv/daniel/
+    - assets/data/bibles/kjv/deuteronomy/
+    - assets/data/bibles/kjv/ecclesiastes/
+    - assets/data/bibles/kjv/ephesians/
+    - assets/data/bibles/kjv/esther/
+    - assets/data/bibles/kjv/exodus/
+    - assets/data/bibles/kjv/ezekiel/
+    - assets/data/bibles/kjv/ezra/
+    - assets/data/bibles/kjv/galatians/
+    - assets/data/bibles/kjv/genesis/
+    - assets/data/bibles/kjv/habakkuk/
+    - assets/data/bibles/kjv/haggai/
+    - assets/data/bibles/kjv/hebrews/
+    - assets/data/bibles/kjv/hosea/
+    - assets/data/bibles/kjv/isaiah/
+    - assets/data/bibles/kjv/james/
+    - assets/data/bibles/kjv/jeremiah/
+    - assets/data/bibles/kjv/job/
+    - assets/data/bibles/kjv/joel/
+    - assets/data/bibles/kjv/john/
+    - assets/data/bibles/kjv/jonah/
+    - assets/data/bibles/kjv/joshua/
+    - assets/data/bibles/kjv/jude/
+    - assets/data/bibles/kjv/judges/
+    - assets/data/bibles/kjv/lamentations/
+    - assets/data/bibles/kjv/leviticus/
+    - assets/data/bibles/kjv/luke/
+    - assets/data/bibles/kjv/malachi/
+    - assets/data/bibles/kjv/mark/
+    - assets/data/bibles/kjv/matthew/
+    - assets/data/bibles/kjv/micah/
+    - assets/data/bibles/kjv/nahum/
+    - assets/data/bibles/kjv/nehemiah/
+    - assets/data/bibles/kjv/numbers/
+    - assets/data/bibles/kjv/obadiah/
+    - assets/data/bibles/kjv/philemon/
+    - assets/data/bibles/kjv/philippians/
+    - assets/data/bibles/kjv/proverbs/
+    - assets/data/bibles/kjv/psalms/
+    - assets/data/bibles/kjv/revelation/
+    - assets/data/bibles/kjv/romans/
+    - assets/data/bibles/kjv/ruth/
+    - assets/data/bibles/kjv/song_of_songs/
+    - assets/data/bibles/kjv/titus/
+    - assets/data/bibles/kjv/zechariah/
+    - assets/data/bibles/kjv/zephaniah/
+    - assets/data/bibles/web/1chronicles/
+    - assets/data/bibles/web/1corinthians/
+    - assets/data/bibles/web/1john/
+    - assets/data/bibles/web/1kings/
+    - assets/data/bibles/web/1peter/
+    - assets/data/bibles/web/1samuel/
+    - assets/data/bibles/web/1thessalonians/
+    - assets/data/bibles/web/1timothy/
+    - assets/data/bibles/web/2chronicles/
+    - assets/data/bibles/web/2corinthians/
+    - assets/data/bibles/web/2john/
+    - assets/data/bibles/web/2kings/
+    - assets/data/bibles/web/2peter/
+    - assets/data/bibles/web/2samuel/
+    - assets/data/bibles/web/2thessalonians/
+    - assets/data/bibles/web/2timothy/
+    - assets/data/bibles/web/3john/
+    - assets/data/bibles/web/acts/
+    - assets/data/bibles/web/amos/
+    - assets/data/bibles/web/colossians/
+    - assets/data/bibles/web/daniel/
+    - assets/data/bibles/web/deuteronomy/
+    - assets/data/bibles/web/ecclesiastes/
+    - assets/data/bibles/web/ephesians/
+    - assets/data/bibles/web/esther/
+    - assets/data/bibles/web/exodus/
+    - assets/data/bibles/web/ezekiel/
+    - assets/data/bibles/web/ezra/
+    - assets/data/bibles/web/galatians/
+    - assets/data/bibles/web/genesis/
+    - assets/data/bibles/web/habakkuk/
+    - assets/data/bibles/web/haggai/
+    - assets/data/bibles/web/hebrews/
+    - assets/data/bibles/web/hosea/
+    - assets/data/bibles/web/isaiah/
+    - assets/data/bibles/web/james/
+    - assets/data/bibles/web/jeremiah/
+    - assets/data/bibles/web/job/
+    - assets/data/bibles/web/joel/
+    - assets/data/bibles/web/john/
+    - assets/data/bibles/web/jonah/
+    - assets/data/bibles/web/joshua/
+    - assets/data/bibles/web/jude/
+    - assets/data/bibles/web/judges/
+    - assets/data/bibles/web/lamentations/
+    - assets/data/bibles/web/leviticus/
+    - assets/data/bibles/web/luke/
+    - assets/data/bibles/web/malachi/
+    - assets/data/bibles/web/mark/
+    - assets/data/bibles/web/matthew/
+    - assets/data/bibles/web/micah/
+    - assets/data/bibles/web/nahum/
+    - assets/data/bibles/web/nehemiah/
+    - assets/data/bibles/web/numbers/
+    - assets/data/bibles/web/obadiah/
+    - assets/data/bibles/web/philemon/
+    - assets/data/bibles/web/philippians/
+    - assets/data/bibles/web/proverbs/
+    - assets/data/bibles/web/psalms/
+    - assets/data/bibles/web/revelation/
+    - assets/data/bibles/web/romans/
+    - assets/data/bibles/web/ruth/
+    - assets/data/bibles/web/songofsolomon/
+    - assets/data/bibles/web/titus/
+    - assets/data/bibles/web/zechariah/
+    - assets/data/bibles/web/zephaniah/
+    - assets/data/bibles/yoruba/1_chronicles/
+    - assets/data/bibles/yoruba/1_corinthians/
+    - assets/data/bibles/yoruba/1_john/
+    - assets/data/bibles/yoruba/1_kings/
+    - assets/data/bibles/yoruba/1_peter/
+    - assets/data/bibles/yoruba/1_samuel/
+    - assets/data/bibles/yoruba/1_thessalonians/
+    - assets/data/bibles/yoruba/1_timothy/
+    - assets/data/bibles/yoruba/2_chronicles/
+    - assets/data/bibles/yoruba/2_corinthians/
+    - assets/data/bibles/yoruba/2_john/
+    - assets/data/bibles/yoruba/2_kings/
+    - assets/data/bibles/yoruba/2_peter/
+    - assets/data/bibles/yoruba/2_samuel/
+    - assets/data/bibles/yoruba/2_thessalonians/
+    - assets/data/bibles/yoruba/2_timothy/
+    - assets/data/bibles/yoruba/3_john/
+    - assets/data/bibles/yoruba/acts/
+    - assets/data/bibles/yoruba/amos/
+    - assets/data/bibles/yoruba/colossians/
+    - assets/data/bibles/yoruba/daniel/
+    - assets/data/bibles/yoruba/deuteronomy/
+    - assets/data/bibles/yoruba/ecclesiastes/
+    - assets/data/bibles/yoruba/ephesians/
+    - assets/data/bibles/yoruba/esther/
+    - assets/data/bibles/yoruba/exodus/
+    - assets/data/bibles/yoruba/ezekiel/
+    - assets/data/bibles/yoruba/ezra/
+    - assets/data/bibles/yoruba/galatians/
+    - assets/data/bibles/yoruba/genesis/
+    - assets/data/bibles/yoruba/habakkuk/
+    - assets/data/bibles/yoruba/haggai/
+    - assets/data/bibles/yoruba/hebrews/
+    - assets/data/bibles/yoruba/hosea/
+    - assets/data/bibles/yoruba/isaiah/
+    - assets/data/bibles/yoruba/james/
+    - assets/data/bibles/yoruba/jeremiah/
+    - assets/data/bibles/yoruba/job/
+    - assets/data/bibles/yoruba/joel/
+    - assets/data/bibles/yoruba/john/
+    - assets/data/bibles/yoruba/jonah/
+    - assets/data/bibles/yoruba/joshua/
+    - assets/data/bibles/yoruba/jude/
+    - assets/data/bibles/yoruba/judges/
+    - assets/data/bibles/yoruba/lamentations/
+    - assets/data/bibles/yoruba/leviticus/
+    - assets/data/bibles/yoruba/luke/
+    - assets/data/bibles/yoruba/malachi/
+    - assets/data/bibles/yoruba/mark/
+    - assets/data/bibles/yoruba/matthew/
+    - assets/data/bibles/yoruba/micah/
+    - assets/data/bibles/yoruba/nahum/
+    - assets/data/bibles/yoruba/nehemiah/
+    - assets/data/bibles/yoruba/numbers/
+    - assets/data/bibles/yoruba/obadiah/
+    - assets/data/bibles/yoruba/philemon/
+    - assets/data/bibles/yoruba/philippians/
+    - assets/data/bibles/yoruba/proverbs/
+    - assets/data/bibles/yoruba/psalms/
+    - assets/data/bibles/yoruba/revelation/
+    - assets/data/bibles/yoruba/romans/
+    - assets/data/bibles/yoruba/ruth/
+    - assets/data/bibles/yoruba/song_of_songs/
+    - assets/data/bibles/yoruba/titus/
+    - assets/data/bibles/yoruba/zechariah/
     - assets/data/bibles/yoruba/zephaniah/
     # END GENERATED BIBLE ASSETS
 
     - assets/data/bibles/
     - assets/data/commentary/
+    - assets/data/daily/
+    - assets/data/daily/promise_verses.json
     - assets/images/
   fonts:
     - family: NotoSans
       fonts:
         - asset: assets/fonts/NotoSans-VariableFont_wdth,wght.ttf
+    - family: NotoSansSymbols2
+      fonts:
+        - asset: assets/fonts/noto/NotoSansSymbols2-Regular.ttf
+    - family: NotoColorEmoji
+      fonts:
+        - asset: assets/fonts/noto/NotoColorEmoji-Regular.ttf
     - family: Poppins
       fonts:
         - asset: assets/fonts/Poppins/Poppins-Regular.ttf
@@ -471,3 +676,5 @@ flutter_icons:
   android: true
   ios: true
   image_path: assets/images/the_word_logo_full.png
+
+
