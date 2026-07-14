@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../shared/widgets/reading_text_scale.dart';
 import '../model/promise_verse.dart';
 
 class PromiseVerseScreen extends StatelessWidget {
@@ -22,19 +23,20 @@ class PromiseVerseScreen extends StatelessWidget {
           Row(
             children: [
               Expanded(
-                child: Text(
-                  promise.reference,
-                  style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                        fontWeight: FontWeight.w900,
-                        color: const Color(0xFF8B5CF6),
-                      ),
+                child: ReadingTextScale(
+                  child: Text(
+                    promise.reference,
+                    style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                          fontWeight: FontWeight.w900,
+                          color: const Color(0xFF8B5CF6),
+                        ),
+                  ),
                 ),
               ),
               _PromiseTagLarge(tag: promise.tag),
             ],
           ),
           const SizedBox(height: 24),
-
           Container(
             padding: const EdgeInsets.all(24),
             decoration: BoxDecoration(
@@ -49,31 +51,35 @@ class PromiseVerseScreen extends StatelessWidget {
                 color: Color(0x558B5CF6),
               ),
             ),
+            child: ReadingTextScale(
+              child: Text(
+                '"${promise.text}"',
+                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                      height: 1.45,
+                      fontStyle: FontStyle.italic,
+                      fontWeight: FontWeight.w800,
+                    ),
+              ),
+            ),
+          ),
+          const SizedBox(height: 24),
+          ReadingTextScale(
             child: Text(
-              '"${promise.text}"',
-              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                    height: 1.45,
-                    fontStyle: FontStyle.italic,
-                    fontWeight: FontWeight.w800,
+              'Promise Insight',
+              style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                    fontWeight: FontWeight.w900,
                   ),
             ),
           ),
-
-          const SizedBox(height: 24),
-
-          Text(
-            'Promise Insight',
-            style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                  fontWeight: FontWeight.w900,
-                ),
-          ),
           const SizedBox(height: 10),
-          Text(
-            promise.commentary,
-            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                  height: 1.65,
-                  color: Colors.white.withValues(alpha: 0.82),
-                ),
+          ReadingTextScale(
+            child: Text(
+              promise.commentary,
+              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                    height: 1.65,
+                    color: Colors.white.withValues(alpha: 0.82),
+                  ),
+            ),
           ),
         ],
       ),

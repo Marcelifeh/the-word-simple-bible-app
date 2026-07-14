@@ -4,6 +4,7 @@ import 'package:share_plus/share_plus.dart';
 import '../../../core/utils/app_haptics.dart';
 import '../../../shared/state/app_state.dart';
 import '../../../shared/widgets/spiritual_section.dart';
+import '../../../shared/widgets/reading_text_scale.dart';
 import '../model/user_tract.dart';
 import '../tract_sharer.dart';
 import 'tract_image_designer_screen.dart';
@@ -70,10 +71,12 @@ class UserTractDetailScreen extends StatelessWidget {
             const SizedBox(height: 12),
 
             // ── Title ─────────────────────────────────────────────────────
-            Text(
-              tract.title,
-              style: theme.textTheme.headlineMedium?.copyWith(
-                fontWeight: FontWeight.bold,
+            ReadingTextScale(
+              child: Text(
+                tract.title,
+                style: theme.textTheme.headlineMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
             const SizedBox(height: 6),
@@ -84,16 +87,18 @@ class UserTractDetailScreen extends StatelessWidget {
             const Divider(height: 32),
 
             // ── Message body ──────────────────────────────────────────────
-            SpiritualSection(
-              title: 'Your Message',
-              body: tract.message,
-              icon: '🕊',
-              accentColor: cs.primary,
-              titleStyle: theme.textTheme.titleSmall?.copyWith(
-                color: cs.primary,
-                fontWeight: FontWeight.w700,
+            ReadingTextScale(
+              child: SpiritualSection(
+                title: 'Your Message',
+                body: tract.message,
+                icon: '🕊',
+                accentColor: cs.primary,
+                titleStyle: theme.textTheme.titleSmall?.copyWith(
+                  color: cs.primary,
+                  fontWeight: FontWeight.w700,
+                ),
+                bodyStyle: theme.textTheme.bodyLarge?.copyWith(height: 1.6),
               ),
-              bodyStyle: theme.textTheme.bodyLarge?.copyWith(height: 1.6),
             ),
             const SizedBox(height: 40),
 

@@ -583,13 +583,14 @@ class _SermonEditorScreenState extends State<SermonEditorScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final readingScale = AppScope.of(context).fontScale;
     final noteTextStyle = TextStyle(
-      fontSize: 16,
+      fontSize: 16 * readingScale,
       height: 1.45,
       color: theme.colorScheme.onSurface,
     );
-    const noteStrutStyle = StrutStyle(
-      fontSize: 16,
+    final noteStrutStyle = StrutStyle(
+      fontSize: 16 * readingScale,
       height: 1.45,
       forceStrutHeight: true,
     );
@@ -702,7 +703,7 @@ class _SermonEditorScreenState extends State<SermonEditorScreen> {
                                   textAlign: _activeTextAlign,
                                   textStyle: noteTextStyle,
                                   strutStyle: noteStrutStyle,
-                                  textScaler: MediaQuery.textScalerOf(context),
+                                  textScaler: TextScaler.noScaling,
                                   onOpenScripture: _openScripture,
                                 )
                               : TextField(

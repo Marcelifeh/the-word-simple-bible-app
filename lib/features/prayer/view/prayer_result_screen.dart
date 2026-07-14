@@ -3,6 +3,7 @@ import 'package:share_plus/share_plus.dart';
 
 import '../../../shared/state/app_state.dart';
 import '../../../shared/widgets/spiritual_section.dart';
+import '../../../shared/widgets/reading_text_scale.dart';
 import '../../notes/model/verse_note.dart';
 import '../model/prayer_model.dart';
 import '../../../shared/widgets/branding_widgets.dart';
@@ -25,21 +26,25 @@ class PrayerResultScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Text(
-                prayer.reference,
-                style: const TextStyle(
-                  color: Colors.amber,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16,
+              ReadingTextScale(
+                child: Text(
+                  prayer.reference,
+                  style: const TextStyle(
+                    color: Colors.amber,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                  ),
                 ),
               ),
               const SizedBox(height: 12),
-              Text(
-                '"${prayer.verse}"',
-                style: const TextStyle(
-                  fontSize: 18,
-                  fontStyle: FontStyle.italic,
-                  height: 1.4,
+              ReadingTextScale(
+                child: Text(
+                  '"${prayer.verse}"',
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontStyle: FontStyle.italic,
+                    height: 1.4,
+                  ),
                 ),
               ),
               const SizedBox(height: 24),
@@ -50,11 +55,13 @@ class PrayerResultScreen extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        prayer.prayer,
-                        style: const TextStyle(
-                          fontSize: 18,
-                          height: 1.5,
+                      ReadingTextScale(
+                        child: Text(
+                          prayer.prayer,
+                          style: const TextStyle(
+                            fontSize: 18,
+                            height: 1.5,
+                          ),
                         ),
                       ),
                       const SizedBox(height: 32),
@@ -72,19 +79,22 @@ class PrayerResultScreen extends StatelessWidget {
                                   .primary
                                   .withValues(alpha: 0.3)),
                         ),
-                        child: SpiritualSection(
-                          title: 'Reflection',
-                          body: prayer.reflection,
-                          icon: '🌱',
-                          accentColor: Theme.of(context).colorScheme.primary,
-                          titleStyle: Theme.of(context)
-                              .textTheme
-                              .titleSmall
-                              ?.copyWith(
-                                fontWeight: FontWeight.bold,
-                                color: Theme.of(context).colorScheme.primary,
-                              ),
-                          bodyStyle: const TextStyle(fontSize: 15, height: 1.4),
+                        child: ReadingTextScale(
+                          child: SpiritualSection(
+                            title: 'Reflection',
+                            body: prayer.reflection,
+                            icon: '🌱',
+                            accentColor: Theme.of(context).colorScheme.primary,
+                            titleStyle: Theme.of(context)
+                                .textTheme
+                                .titleSmall
+                                ?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                  color: Theme.of(context).colorScheme.primary,
+                                ),
+                            bodyStyle:
+                                const TextStyle(fontSize: 15, height: 1.4),
+                          ),
                         ),
                       ),
                     ],

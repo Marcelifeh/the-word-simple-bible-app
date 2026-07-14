@@ -25,15 +25,6 @@ class SimpleBibleApp extends StatelessWidget {
           themeMode: state.themeMode,
           home: SplashScreen(nextScreen: MainShell()),
           onGenerateRoute: AppRouter.onGenerateRoute,
-          builder: (context, child) {
-            final data = MediaQuery.of(context);
-            return MediaQuery(
-              data: data.copyWith(
-                textScaler: TextScaler.linear(state.fontScale),
-              ),
-              child: child!,
-            );
-          },
         );
       },
     );

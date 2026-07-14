@@ -8,6 +8,7 @@ import '../../../core/navigation/app_router.dart' show AppRouter;
 import '../../../core/utils/env.dart';
 import '../../../data/bible/book_catalog.dart';
 import '../../../shared/state/app_state.dart';
+import '../../../shared/widgets/reading_text_scale.dart';
 import '../../bible/view/reading_screen.dart';
 import '../../notes/model/verse_note.dart';
 import '../model/sermon_note.dart';
@@ -478,71 +479,77 @@ class _SermonReviewScreenState extends State<SermonReviewScreen> {
               ],
             ),
           const SizedBox(height: 24),
-          _TranscriptCard(
-            transcript: note.transcript,
-            segments: note.transcriptSegments,
-            searchQuery: _transcriptSearchQuery,
-            hasAudio: hasAudio,
-            isTranscribing: _isTranscribing,
-            transcriptionAvailable: transcriptionAvailable,
-            buttonText: _isTranscribing
-                ? 'Transcribing...'
-                : transcriptionAvailable
-                    ? 'Generate Transcript'
-                    : 'Unavailable in Beta',
-            disabledText: transcriptDisabledText,
-            onPressed: hasAudio && transcriptionAvailable && !_isTranscribing
-                ? _generateTranscript
-                : null,
-            onSeek: (position) => _audioKey.currentState?.seekTo(position),
-            onSearchChanged: (value) {
-              setState(() => _transcriptSearchQuery = value);
-            },
+          ReadingTextScale(
+            child: _TranscriptCard(
+              transcript: note.transcript,
+              segments: note.transcriptSegments,
+              searchQuery: _transcriptSearchQuery,
+              hasAudio: hasAudio,
+              isTranscribing: _isTranscribing,
+              transcriptionAvailable: transcriptionAvailable,
+              buttonText: _isTranscribing
+                  ? 'Transcribing...'
+                  : transcriptionAvailable
+                      ? 'Generate Transcript'
+                      : 'Unavailable in Beta',
+              disabledText: transcriptDisabledText,
+              onPressed: hasAudio && transcriptionAvailable && !_isTranscribing
+                  ? _generateTranscript
+                  : null,
+              onSeek: (position) => _audioKey.currentState?.seekTo(position),
+              onSearchChanged: (value) {
+                setState(() => _transcriptSearchQuery = value);
+              },
+            ),
           ),
           const SizedBox(height: 16),
-          _SermonInsightCard(
-            insight: note.insight,
-            fallbackSummary: note.summary,
-            isSummarizing: _isSummarizing,
-            buttonText: _isSummarizing
-                ? 'Summarizing...'
-                : (note.insight?.hasContent ?? false) ||
-                        (note.summary?.trim().isNotEmpty ?? false)
-                    ? 'Regenerate Summary'
-                    : 'Generate Summary',
-            disabledText: insightDisabledText,
-            onPressed: hasAudio &&
-                    sermonCloudAvailable &&
-                    !_isSummarizing &&
-                    hasTranscript
-                ? _generateSummary
-                : null,
-            onCopy: (note.insight?.hasContent ?? false) ||
-                    (note.summary?.trim().isNotEmpty ?? false)
-                ? _copyInsight
-                : null,
-            onShare: (note.insight?.hasContent ?? false) ||
-                    (note.summary?.trim().isNotEmpty ?? false)
-                ? _shareInsight
-                : null,
-            onSaveToJournal: (note.insight?.hasContent ?? false) ||
-                    (note.summary?.trim().isNotEmpty ?? false)
-                ? _saveInsightToJournal
-                : null,
-            onOpenScripture: _openScripture,
+          ReadingTextScale(
+            child: _SermonInsightCard(
+              insight: note.insight,
+              fallbackSummary: note.summary,
+              isSummarizing: _isSummarizing,
+              buttonText: _isSummarizing
+                  ? 'Summarizing...'
+                  : (note.insight?.hasContent ?? false) ||
+                          (note.summary?.trim().isNotEmpty ?? false)
+                      ? 'Regenerate Summary'
+                      : 'Generate Summary',
+              disabledText: insightDisabledText,
+              onPressed: hasAudio &&
+                      sermonCloudAvailable &&
+                      !_isSummarizing &&
+                      hasTranscript
+                  ? _generateSummary
+                  : null,
+              onCopy: (note.insight?.hasContent ?? false) ||
+                      (note.summary?.trim().isNotEmpty ?? false)
+                  ? _copyInsight
+                  : null,
+              onShare: (note.insight?.hasContent ?? false) ||
+                      (note.summary?.trim().isNotEmpty ?? false)
+                  ? _shareInsight
+                  : null,
+              onSaveToJournal: (note.insight?.hasContent ?? false) ||
+                      (note.summary?.trim().isNotEmpty ?? false)
+                  ? _saveInsightToJournal
+                  : null,
+              onOpenScripture: _openScripture,
+            ),
           ),
           const SizedBox(height: 16),
-          _SermonOutlineCard(
-            outline: note.outline,
-            hasTranscript: hasTranscript,
-            disabledText: outlineDisabledText,
-            isGenerating: _isGeneratingOutline,
-            onGenerate:
-                hasTranscript && sermonCloudAvailable && !_isGeneratingOutline
-                    ? _generateOutline
-                    : null,
-            onCopy: note.outline?.hasContent ?? false ? _copyOutline : null,
-            onShare: note.outline?.hasContent ?? false ? _shareOutline : null,
+          ReadingTextScale(
+            child: _SermonOutlineCard(
+              outline: note.outline,
+              hasTranscript: hasTranscript,
+              disabledText: outlineDisabledText,
+              isGenerating: _isGeneratingOutline,
+              onGenerate:
+                  hasTranscript && sermonCloudAvailable && !_isGeneratingOutline
+                      ? _generateOutline
+                      : null,
+              onCopy: note.outline?.hasContent ?? false ? _copyOutline : null,
+              onShare: note.outline?.hasContent ?? false ? _shareOutline : null,
+            ),
           ),
           const SizedBox(height: 16),
           _SermonDocumentExportCard(

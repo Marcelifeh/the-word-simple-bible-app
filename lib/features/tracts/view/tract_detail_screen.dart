@@ -4,6 +4,7 @@ import 'package:share_plus/share_plus.dart';
 import '../../../core/utils/app_haptics.dart';
 import '../../../shared/widgets/spiritual_section.dart';
 import '../../../shared/state/app_state.dart';
+import '../../../shared/widgets/reading_text_scale.dart';
 import '../../../core/narration/models/narration_state.dart';
 import '../../../core/narration/widgets/narration_fab.dart';
 import '../tract_model.dart';
@@ -24,16 +25,17 @@ class _TractDetailScreenState extends State<TractDetailScreen> {
   Widget build(BuildContext context) {
     final colors = widget.tract.gradientColors.map((v) => Color(v)).toList();
     final scheme = Theme.of(context).colorScheme;
+    final readingScale = AppScope.of(context).fontScale;
 
     return Scaffold(
       floatingActionButton: NarrationFab(
         controller: AppScope.of(context).narrationController,
         onPlay: () {
           AppScope.of(context).narrationController.playContent(
-            widget.tract,
-            id: 'tract_${widget.tract.id}',
-            sourceType: NarrationSourceType.tract,
-          );
+                widget.tract,
+                id: 'tract_${widget.tract.id}',
+                sourceType: NarrationSourceType.tract,
+              );
         },
       ),
       body: CustomScrollView(
@@ -81,7 +83,7 @@ class _TractDetailScreenState extends State<TractDetailScreen> {
                         Text(
                           widget.tract.hook,
                           style: TextStyle(
-                            fontSize: 12,
+                            fontSize: 12 * readingScale,
                             color: Colors.white.withValues(alpha: 0.80),
                             fontStyle: FontStyle.italic,
                           ),
@@ -89,8 +91,8 @@ class _TractDetailScreenState extends State<TractDetailScreen> {
                         const SizedBox(height: 4),
                         Text(
                           widget.tract.title,
-                          style: const TextStyle(
-                            fontSize: 26,
+                          style: TextStyle(
+                            fontSize: 26 * readingScale,
                             fontWeight: FontWeight.bold,
                             color: Colors.white,
                           ),
@@ -98,7 +100,7 @@ class _TractDetailScreenState extends State<TractDetailScreen> {
                         Text(
                           widget.tract.summary,
                           style: TextStyle(
-                            fontSize: 13,
+                            fontSize: 13 * readingScale,
                             color: Colors.white.withValues(alpha: 0.85),
                           ),
                         ),
@@ -129,36 +131,38 @@ class _TractDetailScreenState extends State<TractDetailScreen> {
                     width: 1,
                   ),
                 ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SpiritualSection(
-                      title: 'Key Verse',
-                      body: widget.tract.keyVerse,
-                      icon: '📖',
-                      accentColor: colors.first,
-                      titleStyle:
-                          Theme.of(context).textTheme.titleSmall?.copyWith(
-                                color: colors.first,
-                                fontWeight: FontWeight.w700,
-                              ),
-                      bodyStyle: TextStyle(
-                        fontSize: 15,
-                        fontStyle: FontStyle.italic,
-                        color: scheme.onSurface,
-                        height: 1.6,
+                child: ReadingTextScale(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SpiritualSection(
+                        title: 'Key Verse',
+                        body: widget.tract.keyVerse,
+                        icon: '📖',
+                        accentColor: colors.first,
+                        titleStyle:
+                            Theme.of(context).textTheme.titleSmall?.copyWith(
+                                  color: colors.first,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                        bodyStyle: TextStyle(
+                          fontSize: 15,
+                          fontStyle: FontStyle.italic,
+                          color: scheme.onSurface,
+                          height: 1.6,
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: 10),
-                    Text(
-                      '— ${widget.tract.keyVerseRef}',
-                      style: TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w600,
-                        color: colors.first,
+                      const SizedBox(height: 10),
+                      Text(
+                        '— ${widget.tract.keyVerseRef}',
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w600,
+                          color: colors.first,
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -168,12 +172,14 @@ class _TractDetailScreenState extends State<TractDetailScreen> {
           SliverToBoxAdapter(
             child: Padding(
               padding: const EdgeInsets.fromLTRB(20, 24, 20, 32),
-              child: Text(
-                widget.tract.body,
-                style: TextStyle(
-                  fontSize: 15,
-                  height: 1.75,
-                  color: scheme.onSurface.withValues(alpha: 0.88),
+              child: ReadingTextScale(
+                child: Text(
+                  widget.tract.body,
+                  style: TextStyle(
+                    fontSize: 15,
+                    height: 1.75,
+                    color: scheme.onSurface.withValues(alpha: 0.88),
+                  ),
                 ),
               ),
             ),

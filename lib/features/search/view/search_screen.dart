@@ -12,6 +12,7 @@ import '../../../domain/entities/verse.dart';
 import '../../../domain/entities/verse_ref.dart';
 import '../../../core/utils/env.dart';
 import '../../../shared/state/app_state.dart';
+import '../../../shared/widgets/reading_text_scale.dart';
 import '../../bible/view/reading_screen.dart';
 
 class SearchScreen extends StatefulWidget {
@@ -80,20 +81,23 @@ class _SearchScreenState extends State<SearchScreen> {
                   final v = results[index];
                   final label = '${v.book} ${v.ref.chapter}:${v.ref.verse}';
                   final cleanedText = BibleTextSanitizer.clean(v.text);
+                  final referenceSize = (14 * state.fontScale).clamp(14, 18);
                   return ListTile(
                     title: Text(
                       label,
-                      style: const TextStyle(
+                      style: TextStyle(
                         color: Colors.amber,
                         fontWeight: FontWeight.bold,
-                        fontSize: 14,
+                        fontSize: referenceSize.toDouble(),
                       ),
                     ),
-                    subtitle: Text(
-                      cleanedText,
-                      style: Theme.of(context).textTheme.bodyMedium,
-                      maxLines: 3,
-                      overflow: TextOverflow.ellipsis,
+                    subtitle: ReadingTextScale(
+                      child: Text(
+                        cleanedText,
+                        style: Theme.of(context).textTheme.bodyMedium,
+                        maxLines: 3,
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     ),
                     trailing: const Icon(Icons.arrow_forward_ios, size: 14),
                     isThreeLine: true,

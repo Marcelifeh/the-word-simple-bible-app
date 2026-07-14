@@ -69,10 +69,21 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ),
           const Divider(),
           ListTile(
-            title: const Text('Text Size'),
+            title: const Text('Reading Text Size'),
             subtitle: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                Text(
+                  'Adjusts Bible passages, devotionals, commentaries, sermon notes, and other reading content. The Home screen and navigation remain fixed for the best layout.',
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: Theme.of(context)
+                            .colorScheme
+                            .onSurface
+                            .withValues(alpha: 0.68),
+                        height: 1.45,
+                      ),
+                ),
+                const SizedBox(height: 8),
                 Slider(
                   min: 0.85,
                   max: 1.5,

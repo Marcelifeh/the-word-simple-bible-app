@@ -579,155 +579,161 @@ class _HomeScreenState extends State<HomeScreen> {
             continueProgress < 0.999;
     final todayEncouragement = _todayEncouragement;
     return Scaffold(
-      body: SafeArea(
-        child: ListView(
-          padding: const EdgeInsets.fromLTRB(20, 18, 20, 120),
-          children: [
-            _HomeReveal(
-              index: 0,
-              child: _HomeHeader(
-                title: _greetingTitle(),
-                subtitle: _greetingSubtitle(),
-                onSettingsTap: () => AppRouter.pushNamed(
-                  context,
-                  AppRouter.settingsRoute,
-                  rootNavigator: true,
-                ),
-              ),
-            ),
-            const SizedBox(height: 10),
-            _HomeReveal(
-              index: 1,
-              child: _promiseVerse != null
-                  ? _PromisePill(
-                      promise: _promiseVerse!,
-                      onTap: () {
-                        AppRouter.push(
-                          context,
-                          PromiseVerseScreen(
-                            promise: _promiseVerse!,
-                          ),
-                        );
-                      },
-                    )
-                  : const SizedBox(),
-            ),
-            const SizedBox(height: 10),
-            _HomeReveal(
-              index: 2,
-              child: _DailyEncouragementCard(
-                item: todayEncouragement,
-                onTap: () => _showEncouragementSheet(todayEncouragement),
-              ),
-            ),
-            const SizedBox(height: 16),
-            _HomeReveal(
-              index: 3,
-              child: _SpiritualDashboardPager(
-                controller: _dashboardController,
-                currentPage: _dashboardPage,
-                dailyVerse: _dailyVerse,
-                loading: _verseLoading,
-                planStatus: readingPlanIndicator,
-                reading: todayReading,
-                readingDay: todayReadingDay,
-                devotional: continueDevotional,
-                devotionalProgress: continueProgress,
-                isContinuingDevotional:
-                    continueProgress > 0 && continueProgress < 0.999,
-                onOpenReading: () => _openTodayCombinedReading(todayReading),
-                onOpenVerse: _openDailyVerse,
-                onOpenDevotional: () => _openDevotional(
-                  continueDevotional,
-                  activeDate: continueDate,
-                ),
-                onPageChanged: (page) => setState(() => _dashboardPage = page),
-              ),
-            ),
-            const SizedBox(height: 22),
-            _HomeReveal(
-              index: 4,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const SectionHeader(title: 'Continue Your Journey'),
-                  const SizedBox(height: 10),
-                  _QuickActionsGrid(
-                    onReadBible: () => MainShell.switchTo(kTabBible),
-                    onSearch: () => MainShell.switchTo(kTabSearch),
-                    onTodayPlan: () => _openReadingPlanOverview(),
-                    onNotes: () => MainShell.switchTo(kTabJournal),
+      body: MediaQuery(
+        data: MediaQuery.of(context).copyWith(
+          textScaler: TextScaler.noScaling,
+        ),
+        child: SafeArea(
+          child: ListView(
+            padding: const EdgeInsets.fromLTRB(20, 18, 20, 120),
+            children: [
+              _HomeReveal(
+                index: 0,
+                child: _HomeHeader(
+                  title: _greetingTitle(),
+                  subtitle: _greetingSubtitle(),
+                  onSettingsTap: () => AppRouter.pushNamed(
+                    context,
+                    AppRouter.settingsRoute,
+                    rootNavigator: true,
                   ),
-                ],
+                ),
               ),
-            ),
-            const SizedBox(height: 22),
-            _HomeReveal(
-              index: 5,
-              child: _WeeklyInsightsCard(
-                stats: _weeklyStats,
-                onOpenChapters: () => _openReadingPlanOverview(),
-                onOpenDevotionals: _openDevotionalHistory,
-                onOpenSermons: _openSermonNotes,
-                onOpenSaved: _openSavedNotes,
+              const SizedBox(height: 10),
+              _HomeReveal(
+                index: 1,
+                child: _promiseVerse != null
+                    ? _PromisePill(
+                        promise: _promiseVerse!,
+                        onTap: () {
+                          AppRouter.push(
+                            context,
+                            PromiseVerseScreen(
+                              promise: _promiseVerse!,
+                            ),
+                          );
+                        },
+                      )
+                    : const SizedBox(),
               ),
-            ),
-            if (showContinueDevotional) ...[
+              const SizedBox(height: 10),
+              _HomeReveal(
+                index: 2,
+                child: _DailyEncouragementCard(
+                  item: todayEncouragement,
+                  onTap: () => _showEncouragementSheet(todayEncouragement),
+                ),
+              ),
+              const SizedBox(height: 16),
+              _HomeReveal(
+                index: 3,
+                child: _SpiritualDashboardPager(
+                  controller: _dashboardController,
+                  currentPage: _dashboardPage,
+                  dailyVerse: _dailyVerse,
+                  loading: _verseLoading,
+                  planStatus: readingPlanIndicator,
+                  reading: todayReading,
+                  readingDay: todayReadingDay,
+                  devotional: continueDevotional,
+                  devotionalProgress: continueProgress,
+                  isContinuingDevotional:
+                      continueProgress > 0 && continueProgress < 0.999,
+                  onOpenReading: () => _openTodayCombinedReading(todayReading),
+                  onOpenVerse: _openDailyVerse,
+                  onOpenDevotional: () => _openDevotional(
+                    continueDevotional,
+                    activeDate: continueDate,
+                  ),
+                  onPageChanged: (page) =>
+                      setState(() => _dashboardPage = page),
+                ),
+              ),
               const SizedBox(height: 22),
               _HomeReveal(
-                index: 6,
+                index: 4,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    SectionHeader(
-                      title: 'Continue Where You Left Off',
-                      onSeeAll: _openDevotionalHistory,
-                      seeAllLabel: 'History',
-                    ),
+                    const SectionHeader(title: 'Continue Your Journey'),
                     const SizedBox(height: 10),
-                    _ContinueDevotionalCard(
-                      title: AppBranding.logosDevotional,
-                      devotionalTitle: continueDevotional.title,
-                      subtitle: 'Continue Reflection',
-                      meta: 'Unfinished',
-                      progress: continueProgress,
-                      onTap: () => _openDevotional(
-                        continueDevotional,
-                        activeDate: continueDate,
+                    _QuickActionsGrid(
+                      onReadBible: () => MainShell.switchTo(kTabBible),
+                      onSearch: () => MainShell.switchTo(kTabSearch),
+                      onTodayPlan: () => _openReadingPlanOverview(),
+                      onNotes: () => MainShell.switchTo(kTabJournal),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 22),
+              _HomeReveal(
+                index: 5,
+                child: _WeeklyInsightsCard(
+                  stats: _weeklyStats,
+                  onOpenChapters: () => _openReadingPlanOverview(),
+                  onOpenDevotionals: _openDevotionalHistory,
+                  onOpenSermons: _openSermonNotes,
+                  onOpenSaved: _openSavedNotes,
+                ),
+              ),
+              if (showContinueDevotional) ...[
+                const SizedBox(height: 22),
+                _HomeReveal(
+                  index: 6,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SectionHeader(
+                        title: 'Continue Where You Left Off',
+                        onSeeAll: _openDevotionalHistory,
+                        seeAllLabel: 'History',
                       ),
+                      const SizedBox(height: 10),
+                      _ContinueDevotionalCard(
+                        title: AppBranding.logosDevotional,
+                        devotionalTitle: continueDevotional.title,
+                        subtitle: 'Continue Reflection',
+                        meta: 'Unfinished',
+                        progress: continueProgress,
+                        onTap: () => _openDevotional(
+                          continueDevotional,
+                          activeDate: continueDate,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+              const SizedBox(height: 22),
+              _HomeReveal(
+                index: showContinueDevotional ? 7 : 6,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SectionHeader(title: 'Grow in Faith'),
+                    const SizedBox(height: 10),
+                    _DevotionalHistoryCard(
+                      readCount: devotionalHistory.length,
+                      onTap: _openDevotionalHistory,
+                    ),
+                    const SizedBox(height: 12),
+                    _GospelTractsCard(
+                      onTap: () => MainShell.switchTo(kTabTracts),
+                    ),
+                    const SizedBox(height: 12),
+                    _SermonIntelligenceCard(
+                      onTap: _openSermonNotes,
+                    ),
+                    const SizedBox(height: 12),
+                    _AudioDevotionalCard(
+                      onTap: () => _openAudioDevotional(continueDevotional),
                     ),
                   ],
                 ),
               ),
             ],
-            const SizedBox(height: 22),
-            _HomeReveal(
-              index: showContinueDevotional ? 7 : 6,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const SectionHeader(title: 'Grow in Faith'),
-                  const SizedBox(height: 10),
-                  _DevotionalHistoryCard(
-                    readCount: devotionalHistory.length,
-                    onTap: _openDevotionalHistory,
-                  ),
-                  const SizedBox(height: 12),
-                  _GospelTractsCard(
-                    onTap: () => MainShell.switchTo(kTabTracts),
-                  ),
-                  const SizedBox(height: 12),
-                  _SermonIntelligenceCard(
-                    onTap: _openSermonNotes,
-                  ),
-                  const SizedBox(height: 12),
-                  _AudioDevotionalCard(
-                    onTap: () => _openAudioDevotional(continueDevotional),
-                  ),
-                ],
-              ),
-            ),
-          ],
+          ),
         ),
       ),
     );
@@ -1412,11 +1418,11 @@ class _DailyVerseDashboardCard extends StatelessWidget {
                 const SizedBox(height: 8),
                 Text(
                   '"$verseText"',
-                  maxLines: 3,
+                  maxLines: 4,
                   overflow: TextOverflow.ellipsis,
                   style: theme.textTheme.bodyMedium?.copyWith(
                     color: Colors.white.withValues(alpha: 0.88),
-                    height: 1.32,
+                    height: 1.26,
                     fontWeight: FontWeight.w600,
                   ),
                 ),

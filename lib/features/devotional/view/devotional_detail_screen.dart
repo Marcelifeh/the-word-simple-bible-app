@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:share_plus/share_plus.dart';
 
 import '../../../shared/state/app_state.dart';
+import '../../../shared/widgets/reading_text_scale.dart';
 import '../../devotional_audio/view/devotional_player_screen.dart';
 
 import '../../devotional/model/devotional_model.dart';
@@ -177,6 +178,7 @@ https://play.google.com/store/apps/details?id=com.theword.simplebible''';
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final readingScale = AppScope.of(context).fontScale;
     final d = widget.devotional;
 
     return Scaffold(
@@ -243,8 +245,8 @@ https://play.google.com/store/apps/details?id=com.theword.simplebible''';
                           const SizedBox(height: 8),
                           Text(
                             d.title,
-                            style: const TextStyle(
-                              fontSize: 24,
+                            style: TextStyle(
+                              fontSize: 24 * readingScale,
                               fontWeight: FontWeight.bold,
                               color: Colors.white,
                               height: 1.25,
@@ -254,7 +256,7 @@ https://play.google.com/store/apps/details?id=com.theword.simplebible''';
                           Text(
                             d.scriptureReference,
                             style: TextStyle(
-                              fontSize: 13,
+                              fontSize: (13 * readingScale).clamp(13, 18),
                               color: Colors.white.withValues(alpha: 0.75),
                             ),
                           ),
@@ -272,74 +274,88 @@ https://play.google.com/store/apps/details?id=com.theword.simplebible''';
               sliver: SliverList(
                 delegate: SliverChildListDelegate([
                   // 📖 Scripture
-                  ScriptureCard(
-                    scripture: d.scripture,
-                    reference: d.scriptureReference,
-                    accentColor: _accentColor,
+                  ReadingTextScale(
+                    child: ScriptureCard(
+                      scripture: d.scripture,
+                      reference: d.scriptureReference,
+                      accentColor: _accentColor,
+                    ),
                   ),
                   const SizedBox(height: 24),
 
                   // 🔑 Insight sections label
-                  Row(
-                    children: [
-                      const Text('🔑', style: TextStyle(fontSize: 16)),
-                      const SizedBox(width: 8),
-                      Text(
-                        'Insight',
-                        style: theme.textTheme.titleSmall?.copyWith(
-                          color: _accentColor,
-                          fontWeight: FontWeight.w700,
-                          letterSpacing: 0.5,
+                  ReadingTextScale(
+                    child: Row(
+                      children: [
+                        const Text('🔑', style: TextStyle(fontSize: 16)),
+                        const SizedBox(width: 8),
+                        Text(
+                          'Insight',
+                          style: theme.textTheme.titleSmall?.copyWith(
+                            color: _accentColor,
+                            fontWeight: FontWeight.w700,
+                            letterSpacing: 0.5,
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                   const SizedBox(height: 10),
 
                   // Expandable insight tiles
                   ...d.sections.asMap().entries.map((e) => Padding(
                         padding: const EdgeInsets.only(bottom: 10),
-                        child: InsightSectionTile(
-                          section: e.value,
-                          accentColor: _accentColor,
-                          initiallyExpanded: e.key == 0,
+                        child: ReadingTextScale(
+                          child: InsightSectionTile(
+                            section: e.value,
+                            accentColor: _accentColor,
+                            initiallyExpanded: e.key == 0,
+                          ),
                         ),
                       )),
                   const SizedBox(height: 20),
 
                   // ✨ Final Revelation
-                  FinalRevelationCard(text: d.finalRevelation),
+                  ReadingTextScale(
+                    child: FinalRevelationCard(text: d.finalRevelation),
+                  ),
                   const SizedBox(height: 28),
 
                   // 🌅 Reflection Questions
-                  Row(
-                    children: [
-                      const Text('🌅', style: TextStyle(fontSize: 16)),
-                      const SizedBox(width: 8),
-                      Text(
-                        'Reflection',
-                        style: theme.textTheme.titleSmall?.copyWith(
-                          color: const Color(0xFFF59E0B),
-                          fontWeight: FontWeight.w700,
-                          letterSpacing: 0.5,
+                  ReadingTextScale(
+                    child: Row(
+                      children: [
+                        const Text('🌅', style: TextStyle(fontSize: 16)),
+                        const SizedBox(width: 8),
+                        Text(
+                          'Reflection',
+                          style: theme.textTheme.titleSmall?.copyWith(
+                            color: const Color(0xFFF59E0B),
+                            fontWeight: FontWeight.w700,
+                            letterSpacing: 0.5,
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                   const SizedBox(height: 12),
                   ...d.reflectionQuestions.asMap().entries.map(
-                        (e) => _ReflectionQuestion(
-                          number: e.key + 1,
-                          question: e.value,
-                          controller: _reflectionCtrls[e.key],
+                        (e) => ReadingTextScale(
+                          child: _ReflectionQuestion(
+                            number: e.key + 1,
+                            question: e.value,
+                            controller: _reflectionCtrls[e.key],
+                          ),
                         ),
                       ),
                   const SizedBox(height: 28),
 
                   // 🙏 Closing Prayer
-                  ClosingPrayerCard(
-                    prayer: d.prayer,
-                    devotionalTitle: d.title,
+                  ReadingTextScale(
+                    child: ClosingPrayerCard(
+                      prayer: d.prayer,
+                      devotionalTitle: d.title,
+                    ),
                   ),
                   const SizedBox(height: 28),
 
