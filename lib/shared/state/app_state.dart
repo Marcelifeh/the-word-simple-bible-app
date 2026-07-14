@@ -395,6 +395,7 @@ class AppState extends ChangeNotifier {
 
   static const _settingsBoxName = 'settings';
   Box<dynamic>? _settingsBox;
+  Timer? _dailyDevotionalRolloverTimer;
 
   Future<void> init() async {
     await narrationService.initialize();
@@ -419,6 +420,7 @@ class AppState extends ChangeNotifier {
       _settingsBox = await Hive.openBox<dynamic>(_settingsBoxName);
     }
     _loadSettings();
+    _scheduleDailyDevotionalRollover();
   }
 
   void _loadSettings() {
@@ -646,6 +648,21 @@ class AppState extends ChangeNotifier {
     _currentDevotionalStage = DevotionalResumeStage.reading;
   }
 
+  void _scheduleDailyDevotionalRollover() {
+    _dailyDevotionalRolloverTimer?.cancel();
+    final now = DateTime.now();
+    final nextMidnight = DateTime(now.year, now.month, now.day + 1);
+    _dailyDevotionalRolloverTimer = Timer(
+      nextMidnight.difference(now) + const Duration(seconds: 1),
+      _handleDailyDevotionalRollover,
+    );
+  }
+
+  void _handleDailyDevotionalRollover() {
+    _scheduleDailyDevotionalRollover();
+    notifyListeners();
+  }
+
   DateTime _dateOnly(DateTime value) {
     return DateTime(value.year, value.month, value.day);
   }
@@ -778,6 +795,7 @@ class AppState extends ChangeNotifier {
 
   @override
   void dispose() {
+    _dailyDevotionalRolloverTimer?.cancel();
     narrationLifecycleObserver.detach();
     narrationController.dispose();
     narrationSyncEngine.dispose();

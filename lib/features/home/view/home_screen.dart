@@ -565,18 +565,19 @@ class _HomeScreenState extends State<HomeScreen> {
     final todayDevotional = devotionalService.getTodaysDevotional();
     final todayReading = readingPlanService.getReadingForDate(_todayOnly);
     final todayReadingDay = readingPlanService.dayIndexForDate(_todayOnly) + 1;
+    final todayDevotionalProgress = state.devotionalProgressForDate(_todayOnly);
     final devotionalHistory = devotionalService.getHistoryDevotionals(
       readHistory: state.devotionalReadHistory,
     );
     final readingPlanIndicator =
         _readingPlanIndicator(state, readingPlanService);
-    final continueDevotional = state.currentDevotional ?? todayDevotional;
-    final continueDate = state.currentDevotionalDate ?? _todayOnly;
-    final continueProgress = state.devotionalProgressForDate(continueDate);
-    final showContinueDevotional =
-        continueDevotional.id != todayDevotional.id &&
-            continueProgress > 0 &&
-            continueProgress < 0.999;
+    final resumeDevotional = state.currentDevotional;
+    final resumeDate = state.currentDevotionalDate ?? _todayOnly;
+    final resumeProgress = state.devotionalProgressForDate(resumeDate);
+    final showContinueDevotional = resumeDevotional != null &&
+        resumeDevotional.id != todayDevotional.id &&
+        resumeProgress > 0 &&
+        resumeProgress < 0.999;
     final todayEncouragement = _todayEncouragement;
     return Scaffold(
       body: MediaQuery(
@@ -635,15 +636,15 @@ class _HomeScreenState extends State<HomeScreen> {
                   planStatus: readingPlanIndicator,
                   reading: todayReading,
                   readingDay: todayReadingDay,
-                  devotional: continueDevotional,
-                  devotionalProgress: continueProgress,
-                  isContinuingDevotional:
-                      continueProgress > 0 && continueProgress < 0.999,
+                  devotional: todayDevotional,
+                  devotionalProgress: todayDevotionalProgress,
+                  isContinuingDevotional: todayDevotionalProgress > 0 &&
+                      todayDevotionalProgress < 0.999,
                   onOpenReading: () => _openTodayCombinedReading(todayReading),
                   onOpenVerse: _openDailyVerse,
                   onOpenDevotional: () => _openDevotional(
-                    continueDevotional,
-                    activeDate: continueDate,
+                    todayDevotional,
+                    activeDate: _todayOnly,
                   ),
                   onPageChanged: (page) =>
                       setState(() => _dashboardPage = page),
@@ -692,13 +693,13 @@ class _HomeScreenState extends State<HomeScreen> {
                       const SizedBox(height: 10),
                       _ContinueDevotionalCard(
                         title: AppBranding.logosDevotional,
-                        devotionalTitle: continueDevotional.title,
+                        devotionalTitle: resumeDevotional.title,
                         subtitle: 'Continue Reflection',
                         meta: 'Unfinished',
-                        progress: continueProgress,
+                        progress: resumeProgress,
                         onTap: () => _openDevotional(
-                          continueDevotional,
-                          activeDate: continueDate,
+                          resumeDevotional,
+                          activeDate: resumeDate,
                         ),
                       ),
                     ],
@@ -727,7 +728,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     const SizedBox(height: 12),
                     _AudioDevotionalCard(
-                      onTap: () => _openAudioDevotional(continueDevotional),
+                      onTap: () => _openAudioDevotional(todayDevotional),
                     ),
                   ],
                 ),

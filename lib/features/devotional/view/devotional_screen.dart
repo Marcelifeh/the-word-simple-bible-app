@@ -22,28 +22,31 @@ class DevotionalScreen extends StatefulWidget {
 class _DevotionalScreenState extends State<DevotionalScreen> {
   final _service = const DevotionalService();
   late DevotionalModel _today;
+  late DateTime _activeDate;
   late Duration _timeLeft;
   Timer? _ticker;
 
   @override
   void initState() {
     super.initState();
-    _today = _service.getTodaysDevotional();
+    _activeDate = _todayOnly();
+    _today = _service.getTodaysDevotional(now: _activeDate);
     _timeLeft = _service.timeUntilNextDevotional;
     // Tick every second to update the countdown.
     _ticker = Timer.periodic(const Duration(seconds: 1), (_) {
       final newLeft = _service.timeUntilNextDevotional;
-      if (newLeft.inSeconds <= 0) {
+      final today = _todayOnly();
+      if (today != _activeDate) {
         // Midnight crossed — refresh the devotional.
         setState(() {
-          _today = _service.getTodaysDevotional();
+          _activeDate = today;
+          _today = _service.getTodaysDevotional(now: today);
           _timeLeft = _service.timeUntilNextDevotional;
         });
         if (!mounted) return;
-        final now = DateTime.now();
         AppScope.of(context).setCurrentDevotional(
           _today,
-          activeDate: DateTime(now.year, now.month, now.day),
+          activeDate: today,
           stage: DevotionalResumeStage.reading,
         );
       } else {
@@ -61,12 +64,16 @@ class _DevotionalScreenState extends State<DevotionalScreen> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    final now = DateTime.now();
     AppScope.of(context).setCurrentDevotional(
       _today,
-      activeDate: DateTime(now.year, now.month, now.day),
+      activeDate: _activeDate,
       stage: DevotionalResumeStage.reading,
     );
+  }
+
+  DateTime _todayOnly() {
+    final now = DateTime.now();
+    return DateTime(now.year, now.month, now.day);
   }
 
   Future<void> _openDevotional(
