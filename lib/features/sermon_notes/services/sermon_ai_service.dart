@@ -73,9 +73,12 @@ class SermonAiService {
 
     if (response.statusCode < 200 || response.statusCode >= 300) {
       if (response.statusCode == 503) {
-        throw const SermonCloudUnavailableException(
-          'Cloud transcription is not enabled on the current server plan. '
-          'Your recording remains saved safely on this device.',
+        throw SermonCloudUnavailableException(
+          _errorDetail(
+            body,
+            fallbackMessage:
+                'Cloud transcription is unavailable during the beta. Your recording remains safely stored on this device.',
+          ),
         );
       }
       throw SermonApiException(

@@ -26,6 +26,11 @@ class Env {
     defaultValue: _defaultSermonApiUrl,
   );
 
+  static const transcriptionEnabled = bool.fromEnvironment(
+    'SERMON_TRANSCRIPTION_ENABLED',
+    defaultValue: false,
+  );
+
   static bool get hasBackendApiUrl {
     final uri = Uri.tryParse(sermonApiUrl.trim());
     return uri != null && uri.hasScheme && uri.host.isNotEmpty;

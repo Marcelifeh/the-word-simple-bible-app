@@ -33,7 +33,7 @@ class SermonReviewScreen extends StatefulWidget {
 
 class _SermonReviewScreenState extends State<SermonReviewScreen> {
   static const _cloudTranscriptionUnavailableMessage =
-      'Transcription requires cloud processing. Your recording is saved safely. Please try again when cloud transcription is available.';
+      'Cloud transcription is unavailable during the beta. Your recording remains safely stored on this device.';
 
   final GlobalKey<SermonAudioPlayerCardState> _audioKey =
       GlobalKey<SermonAudioPlayerCardState>();
@@ -71,6 +71,10 @@ class _SermonReviewScreenState extends State<SermonReviewScreen> {
   Future<void> _generateTranscript() async {
     final path = _note.audioPath;
     if (path == null || path.isEmpty || _isTranscribing) return;
+    if (!Env.transcriptionEnabled) {
+      _showCloudTranscriptionUnavailable();
+      return;
+    }
     if (!_sermonCloudProcessingAvailable) {
       _showCloudTranscriptionUnavailable();
       return;
@@ -101,7 +105,7 @@ class _SermonReviewScreenState extends State<SermonReviewScreen> {
       _showCloudError(
         e,
         fallback:
-            'Cloud transcription is not available during the beta. Your recording remains safely stored on your device.',
+            'Cloud transcription is unavailable during the beta. Your recording remains safely stored on this device.',
       );
     } finally {
       if (mounted) {
@@ -371,6 +375,8 @@ class _SermonReviewScreenState extends State<SermonReviewScreen> {
     final hasAudio = note.audioPath?.isNotEmpty ?? false;
     final hasTranscript = note.transcript?.trim().isNotEmpty ?? false;
     final sermonCloudAvailable = _sermonCloudProcessingAvailable;
+    final transcriptionAvailable =
+        sermonCloudAvailable && Env.transcriptionEnabled;
     final transcriptDisabledText = !hasAudio
         ? 'No audio recording found. Record a sermon first to generate transcript.'
         : _cloudTranscriptionUnavailableMessage;
@@ -478,14 +484,14 @@ class _SermonReviewScreenState extends State<SermonReviewScreen> {
             searchQuery: _transcriptSearchQuery,
             hasAudio: hasAudio,
             isTranscribing: _isTranscribing,
-            transcriptionAvailable: sermonCloudAvailable,
+            transcriptionAvailable: transcriptionAvailable,
             buttonText: _isTranscribing
                 ? 'Transcribing...'
-                : sermonCloudAvailable
+                : transcriptionAvailable
                     ? 'Generate Transcript'
-                    : 'Cloud Coming Soon',
+                    : 'Unavailable in Beta',
             disabledText: transcriptDisabledText,
-            onPressed: hasAudio && sermonCloudAvailable && !_isTranscribing
+            onPressed: hasAudio && transcriptionAvailable && !_isTranscribing
                 ? _generateTranscript
                 : null,
             onSeek: (position) => _audioKey.currentState?.seekTo(position),

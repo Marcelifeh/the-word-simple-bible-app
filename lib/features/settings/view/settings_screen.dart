@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../core/config/app_branding.dart';
 import '../../../core/utils/color_utils.dart';
+import '../../../core/utils/env.dart';
 import '../../../shared/state/app_state.dart';
 import '../../legal/data/legal_documents.dart';
 import '../../legal/view/legal_document_screen.dart';
@@ -159,6 +160,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
             },
           ),
           const Divider(),
+          ListTile(
+            leading: const Icon(Icons.cloud_outlined),
+            title: const Text('Cloud API'),
+            subtitle: SelectableText(Env.sermonApiUrl),
+          ),
+          const Divider(),
           const SizedBox(height: 32),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -222,8 +229,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
             child: Text(
               'The Word App • Powered by LOGOS',
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: Colors.white54,
-              ),
+                    color: Colors.white54,
+                  ),
             ),
           ),
           const SizedBox(height: 32),
