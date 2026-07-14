@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../core/config/app_branding.dart';
 import '../../../core/utils/color_utils.dart';
 import '../../../core/utils/env.dart';
+import '../../../shared/settings/home_text_size.dart';
 import '../../../shared/state/app_state.dart';
 import '../../legal/data/legal_documents.dart';
 import '../../legal/view/legal_document_screen.dart';
@@ -132,6 +133,32 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       ),
                     ],
                   ),
+                ),
+              ],
+            ),
+          ),
+          const Divider(),
+          ListTile(
+            leading: const Icon(Icons.home_rounded),
+            title: const Text('Home Text Size'),
+            subtitle: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'Adjusts headings and cards on the Home dashboard. Bible passages and long-form content use Reading Text Size.',
+                ),
+                const SizedBox(height: 10),
+                SegmentedButton<HomeTextSize>(
+                  segments: HomeTextSize.values.map((size) {
+                    return ButtonSegment<HomeTextSize>(
+                      value: size,
+                      label: Text(size.label),
+                    );
+                  }).toList(),
+                  selected: {state.homeTextSize},
+                  onSelectionChanged: (selection) {
+                    state.setHomeTextSize(selection.first);
+                  },
                 ),
               ],
             ),

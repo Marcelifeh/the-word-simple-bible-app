@@ -8,7 +8,7 @@ import '../../../data/bible/book_catalog.dart';
 import '../../../core/utils/bible_text_sanitizer.dart';
 import '../../../domain/entities/verse.dart';
 import '../../../shared/state/app_state.dart';
-import '../../../shared/widgets/feature_card.dart';
+import '../../../shared/widgets/home_text_scale.dart';
 import '../../../shared/widgets/section_header.dart';
 import '../../daily_verse/view/daily_verse_screen.dart';
 import '../../devotional/model/devotional_model.dart';
@@ -24,6 +24,7 @@ import '../../sermon_notes/view/sermon_notes_screen.dart';
 import '../../daily_verse/model/promise_verse.dart';
 import '../../daily_verse/services/promise_verse_service.dart';
 import '../../daily_verse/view/promise_verse_screen.dart';
+import '../widgets/journey_action_tile.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -580,10 +581,8 @@ class _HomeScreenState extends State<HomeScreen> {
         resumeProgress < 0.999;
     final todayEncouragement = _todayEncouragement;
     return Scaffold(
-      body: MediaQuery(
-        data: MediaQuery.of(context).copyWith(
-          textScaler: TextScaler.noScaling,
-        ),
+      body: HomeTextScale(
+        scale: state.homeTextScale,
         child: SafeArea(
           child: ListView(
             padding: const EdgeInsets.fromLTRB(20, 18, 20, 120),
@@ -657,8 +656,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const SectionHeader(title: 'Continue Your Journey'),
-                    const SizedBox(height: 10),
-                    _QuickActionsGrid(
+                    const SizedBox(height: 14),
+                    _JourneyRail(
                       onReadBible: () => MainShell.switchTo(kTabBible),
                       onSearch: () => MainShell.switchTo(kTabSearch),
                       onTodayPlan: () => _openReadingPlanOverview(),
@@ -946,24 +945,26 @@ class _PromiseTag extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(
-        horizontal: 8,
-        vertical: 4,
-      ),
-      decoration: BoxDecoration(
-        color: const Color(0xFFEC4899).withValues(alpha: 0.18),
-        borderRadius: BorderRadius.circular(999),
-        border: Border.all(
-          color: const Color(0xFFEC4899).withValues(alpha: 0.32),
+    return _FixedHomeTextScale(
+      child: Container(
+        padding: const EdgeInsets.symmetric(
+          horizontal: 8,
+          vertical: 4,
         ),
-      ),
-      child: Text(
-        tag,
-        style: const TextStyle(
-          fontSize: 11,
-          fontWeight: FontWeight.w800,
-          color: Color(0xFFFF7AB6),
+        decoration: BoxDecoration(
+          color: const Color(0xFFEC4899).withValues(alpha: 0.18),
+          borderRadius: BorderRadius.circular(999),
+          border: Border.all(
+            color: const Color(0xFFEC4899).withValues(alpha: 0.32),
+          ),
+        ),
+        child: Text(
+          tag,
+          style: const TextStyle(
+            fontSize: 11,
+            fontWeight: FontWeight.w800,
+            color: Color(0xFFFF7AB6),
+          ),
         ),
       ),
     );
@@ -1099,12 +1100,14 @@ class _WeeklyInsightsCard extends StatelessWidget {
                         strokeCap: StrokeCap.round,
                       ),
                     ),
-                    Text(
-                      progressLabel,
-                      style: theme.textTheme.labelSmall?.copyWith(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w900,
-                        fontSize: 10,
+                    _FixedHomeTextScale(
+                      child: Text(
+                        progressLabel,
+                        style: theme.textTheme.labelSmall?.copyWith(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w900,
+                          fontSize: 10,
+                        ),
                       ),
                     ),
                   ],
@@ -1267,7 +1270,7 @@ class _SpiritualDashboardPager extends StatelessWidget {
     return Column(
       children: [
         SizedBox(
-          height: 238,
+          height: 220,
           child: PageView(
             controller: controller,
             padEnds: false,
@@ -1767,8 +1770,8 @@ String _fallbackBookName(Verse verse) {
       .join(' ');
 }
 
-class _QuickActionsGrid extends StatelessWidget {
-  const _QuickActionsGrid({
+class _JourneyRail extends StatelessWidget {
+  const _JourneyRail({
     required this.onReadBible,
     required this.onSearch,
     required this.onTodayPlan,
@@ -1782,41 +1785,39 @@ class _QuickActionsGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GridView.count(
-      padding: EdgeInsets.zero,
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      crossAxisCount: 2,
-      crossAxisSpacing: 10,
-      mainAxisSpacing: 10,
-      childAspectRatio: 1.82,
+    return Column(
       children: [
-        FeatureCard(
+        JourneyActionTile(
           title: 'Bible',
-          subtitle: 'Continue Reading',
+          subtitle: 'Continue reading Scripture',
           icon: Icons.menu_book_rounded,
-          color: const Color(0xFF8B5CF6),
+          accent: const Color(0xFF8B5CF6),
+          badge: 'Resume',
           onTap: onReadBible,
         ),
-        FeatureCard(
-          title: 'Search',
-          subtitle: 'Find Scripture',
+        const SizedBox(height: 12),
+        JourneyActionTile(
+          title: 'Search Scripture',
+          subtitle: 'Find a verse, word, or passage',
           icon: Icons.search_rounded,
-          color: const Color(0xFF3B82F6),
+          accent: const Color(0xFF3B82F6),
           onTap: onSearch,
         ),
-        FeatureCard(
-          title: 'Plan',
-          subtitle: 'Full schedule',
+        const SizedBox(height: 12),
+        JourneyActionTile(
+          title: 'Reading Plan',
+          subtitle: 'Open today or view the full schedule',
           icon: Icons.check_circle_rounded,
-          color: const Color(0xFFF59E0B),
+          accent: const Color(0xFFF59E0B),
+          badge: 'Today',
           onTap: onTodayPlan,
         ),
-        FeatureCard(
+        const SizedBox(height: 12),
+        JourneyActionTile(
           title: AppBranding.logosNotes,
-          subtitle: 'Record Sermons',
+          subtitle: 'Notes, recording, transcription, and AI',
           icon: Icons.edit_note_rounded,
-          color: const Color(0xFF14B8A6),
+          accent: const Color(0xFF14B8A6),
           onTap: onNotes,
         ),
       ],
@@ -1902,11 +1903,13 @@ class _ContinueDevotionalCard extends StatelessWidget {
                           ),
                         ),
                       ),
-                      Text(
-                        progressLabel,
-                        style: theme.textTheme.labelSmall?.copyWith(
-                          color: accent,
-                          fontWeight: FontWeight.w800,
+                      _FixedHomeTextScale(
+                        child: Text(
+                          progressLabel,
+                          style: theme.textTheme.labelSmall?.copyWith(
+                            color: accent,
+                            fontWeight: FontWeight.w800,
+                          ),
                         ),
                       ),
                     ],
@@ -1962,6 +1965,22 @@ class _ContinueDevotionalCard extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+class _FixedHomeTextScale extends StatelessWidget {
+  const _FixedHomeTextScale({required this.child});
+
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    return MediaQuery(
+      data: MediaQuery.of(context).copyWith(
+        textScaler: TextScaler.noScaling,
+      ),
+      child: child,
     );
   }
 }

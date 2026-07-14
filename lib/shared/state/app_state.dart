@@ -29,6 +29,7 @@ import '../../core/narration/services/narration_lifecycle_observer.dart';
 import '../../core/narration/services/narration_preferences_service.dart';
 import '../../core/narration/services/narration_sync_engine.dart';
 import '../../domain/entities/bible_translation.dart';
+import '../settings/home_text_size.dart';
 
 /// Tracks the last chapter position so Home can show "Continue Reading".
 /// [version] lets us safely discard stale Hive data when the schema changes.
@@ -96,6 +97,7 @@ class AppState extends ChangeNotifier {
   BibleTranslation translation = BibleTranslation.web;
   ThemeMode themeMode = ThemeMode.system;
   double fontScale = 1.0;
+  HomeTextSize _homeTextSize = HomeTextSize.standard;
   Color primarySeed = Colors.indigo;
   LastReadRef? lastReadRef;
   DevotionalModel? _currentDevotional;
@@ -117,6 +119,10 @@ class AppState extends ChangeNotifier {
   DateTime? get currentDevotionalLastOpenedAt => _currentDevotionalLastOpenedAt;
 
   DevotionalResumeStage get currentDevotionalStage => _currentDevotionalStage;
+
+  HomeTextSize get homeTextSize => _homeTextSize;
+
+  double get homeTextScale => _homeTextSize.scale;
 
   double devotionalProgressForDate(DateTime date) {
     final value = _devotionalProgressByDate[_dateKey(date)] ?? 0.0;
@@ -448,6 +454,12 @@ class AppState extends ChangeNotifier {
     if (fs != null) {
       fontScale = fs.clamp(0.85, 1.5);
     }
+
+    final savedHomeTextSize = box.get('homeTextSize') as String?;
+    _homeTextSize = HomeTextSize.values.firstWhere(
+      (value) => value.name == savedHomeTextSize,
+      orElse: () => HomeTextSize.standard,
+    );
 
     // PrimarySeed
     final colorVal = box.get('primarySeedValue') as int?;
@@ -790,6 +802,13 @@ class AppState extends ChangeNotifier {
   void setFontScale(double scale) {
     fontScale = scale.clamp(0.85, 1.5);
     _saveSetting('fontScale', fontScale);
+    notifyListeners();
+  }
+
+  void setHomeTextSize(HomeTextSize value) {
+    if (_homeTextSize == value) return;
+    _homeTextSize = value;
+    _saveSetting('homeTextSize', value.name);
     notifyListeners();
   }
 
