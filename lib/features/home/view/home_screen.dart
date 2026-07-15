@@ -1476,7 +1476,7 @@ class _ReadingPlanDashboardCard extends StatelessWidget {
             label: 'BIBLE IN ONE YEAR',
             accent: accent,
           ),
-          const SizedBox(height: 14),
+          const SizedBox(height: 10),
           Row(
             children: [
               Text(
@@ -1495,7 +1495,7 @@ class _ReadingPlanDashboardCard extends StatelessWidget {
               ],
             ],
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: 8),
           Text(
             "Today's Reading",
             style: theme.textTheme.labelLarge?.copyWith(
@@ -1503,7 +1503,7 @@ class _ReadingPlanDashboardCard extends StatelessWidget {
               fontWeight: FontWeight.w700,
             ),
           ),
-          const SizedBox(height: 7),
+          const SizedBox(height: 4),
           for (final passage in passages)
             Text(
               passage,
