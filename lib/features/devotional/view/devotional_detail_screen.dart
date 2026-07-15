@@ -66,10 +66,13 @@ class _DevotionalDetailScreenState extends State<DevotionalDetailScreen> {
     }
     if (_didMarkAsRead) return;
     _didMarkAsRead = true;
-    AppScope.of(context).markDevotionalRead(
-      widget.devotional.id,
-      activeDate: _activeDate,
-    );
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      AppScope.of(context).markDevotionalRead(
+        widget.devotional.id,
+        activeDate: _activeDate,
+      );
+    });
   }
 
   @override

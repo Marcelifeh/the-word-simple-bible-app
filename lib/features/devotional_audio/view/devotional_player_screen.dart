@@ -40,13 +40,17 @@ class _DevotionalPlayerScreenState extends State<DevotionalPlayerScreen> {
     if (!_initialized) {
       SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);
       final state = AppScope.of(context);
-      state.setCurrentDevotional(
-        widget.devotional,
-        activeDate: state.currentDevotional?.id == widget.devotional.id
-            ? state.currentDevotionalDate
-            : DateTime.now(),
-        stage: DevotionalResumeStage.audio,
-      );
+      final activeDate = state.currentDevotional?.id == widget.devotional.id
+          ? state.currentDevotionalDate
+          : DateTime.now();
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        AppScope.of(context).setCurrentDevotional(
+          widget.devotional,
+          activeDate: activeDate,
+          stage: DevotionalResumeStage.audio,
+        );
+      });
       _audioService = DevotionalAudioService(state.narrationController);
       _audioService.startDevotional(widget.devotional);
       _audioService.addListener(_onServiceChange);
