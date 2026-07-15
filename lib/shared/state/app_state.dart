@@ -641,11 +641,12 @@ class AppState extends ChangeNotifier {
     final savedId = box?.get('currentDevotionalId') as String?;
     final savedDevotional =
         savedId == null ? null : devotionalService.getById(savedId);
+    final savedDate =
+        _parseDateOnly(box?.get('currentDevotionalDate') as String?);
 
-    if (savedDevotional != null) {
+    if (savedDevotional != null && savedDate == today) {
       _currentDevotional = savedDevotional;
-      _currentDevotionalDate =
-          _parseDateOnly(box?.get('currentDevotionalDate') as String?) ?? today;
+      _currentDevotionalDate = savedDate;
       _currentDevotionalLastOpenedAt =
           _parseDateTime(box?.get('currentDevotionalLastOpenedAt') as String?);
       _currentDevotionalStage = _parseDevotionalResumeStage(
@@ -654,10 +655,15 @@ class AppState extends ChangeNotifier {
       return;
     }
 
+    if (savedDevotional != null && savedDate != today) {
+      _clearPersistedCurrentDevotional();
+    }
+
     _currentDevotional = devotionalService.getTodaysDevotional(now: today);
     _currentDevotionalDate = today;
     _currentDevotionalLastOpenedAt = null;
     _currentDevotionalStage = DevotionalResumeStage.reading;
+    _persistCurrentDevotional();
   }
 
   void _scheduleDailyDevotionalRollover() {
@@ -672,6 +678,12 @@ class AppState extends ChangeNotifier {
 
   void _handleDailyDevotionalRollover() {
     _scheduleDailyDevotionalRollover();
+    final today = _dateOnly(DateTime.now());
+    _currentDevotional = devotionalService.getTodaysDevotional(now: today);
+    _currentDevotionalDate = today;
+    _currentDevotionalLastOpenedAt = null;
+    _currentDevotionalStage = DevotionalResumeStage.reading;
+    _persistCurrentDevotional();
     notifyListeners();
   }
 

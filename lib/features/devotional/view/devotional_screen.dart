@@ -25,6 +25,7 @@ class _DevotionalScreenState extends State<DevotionalScreen> {
   late DateTime _activeDate;
   late Duration _timeLeft;
   Timer? _ticker;
+  bool _didSyncCurrentDevotional = false;
 
   @override
   void initState() {
@@ -64,11 +65,16 @@ class _DevotionalScreenState extends State<DevotionalScreen> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    AppScope.of(context).setCurrentDevotional(
-      _today,
-      activeDate: _activeDate,
-      stage: DevotionalResumeStage.reading,
-    );
+    if (_didSyncCurrentDevotional) return;
+    _didSyncCurrentDevotional = true;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      AppScope.of(context).setCurrentDevotional(
+        _today,
+        activeDate: _activeDate,
+        stage: DevotionalResumeStage.reading,
+      );
+    });
   }
 
   DateTime _todayOnly() {

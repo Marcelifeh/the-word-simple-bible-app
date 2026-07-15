@@ -70,8 +70,16 @@ class DevotionalService {
   }
 
   int _daysSinceEpoch(DateTime now) {
-    // Days elapsed since 2024-01-01 (our content start date).
-    return now.difference(contentStartDate).inDays;
+    // Count calendar days, not elapsed 24-hour periods. Local elapsed time can
+    // be 23 or 25 hours across daylight-saving boundaries, which would delay
+    // the rollover at midnight in DST months.
+    final start = DateTime.utc(
+      contentStartDate.year,
+      contentStartDate.month,
+      contentStartDate.day,
+    );
+    final current = DateTime.utc(now.year, now.month, now.day);
+    return current.difference(start).inDays;
   }
 
   /// Milliseconds until the next midnight (when the devotional will change).
