@@ -886,6 +886,11 @@ class _PromisePill extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isLight = Theme.of(context).brightness == Brightness.light;
+    final textColor = isLight ? const Color(0xFF171426) : Colors.white;
+    final iconColor =
+        isLight ? const Color(0xFF8B5CF6) : const Color(0xFFB794F6);
+
     return InkWell(
       borderRadius: BorderRadius.circular(999),
       onTap: onTap,
@@ -897,22 +902,28 @@ class _PromisePill extends StatelessWidget {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(999),
           gradient: LinearGradient(
-            colors: [
-              const Color(0xFF8B5CF6).withValues(alpha: 0.26),
-              const Color(0xFF111827).withValues(alpha: 0.72),
-            ],
+            colors: isLight
+                ? [
+                    const Color(0xFFEDE5FF),
+                    const Color(0xFFFFFFFF),
+                  ]
+                : [
+                    const Color(0xFF8B5CF6).withValues(alpha: 0.26),
+                    const Color(0xFF111827).withValues(alpha: 0.72),
+                  ],
           ),
           border: Border.all(
-            color: const Color(0xFF8B5CF6).withValues(alpha: 0.34),
+            color: const Color(0xFF8B5CF6)
+                .withValues(alpha: isLight ? 0.30 : 0.34),
           ),
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Icon(
+            Icon(
               Icons.auto_awesome_rounded,
               size: 18,
-              color: Color(0xFFB794F6),
+              color: iconColor,
             ),
             const SizedBox(width: 8),
             Flexible(
@@ -920,17 +931,16 @@ class _PromisePill extends StatelessWidget {
                 "Today's Promise • ${promise.reference}",
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-                style: const TextStyle(
+                style: TextStyle(
                   fontWeight: FontWeight.w800,
-                  color: Colors.white,
+                  color: textColor,
                 ),
               ),
             ),
             const SizedBox(width: 8),
             _PromiseTag(tag: promise.tag),
             const SizedBox(width: 6),
-            const Icon(Icons.arrow_forward_rounded,
-                size: 18, color: Colors.white),
+            Icon(Icons.arrow_forward_rounded, size: 18, color: textColor),
           ],
         ),
       ),
@@ -982,6 +992,11 @@ class _DailyEncouragementCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isLight = Theme.of(context).brightness == Brightness.light;
+    final textColor = isLight ? const Color(0xFF171426) : Colors.white;
+    final iconColor =
+        isLight ? const Color(0xFFDB2777) : const Color(0xFFFF7AB6);
+
     return InkWell(
       borderRadius: BorderRadius.circular(22),
       onTap: onTap,
@@ -990,20 +1005,26 @@ class _DailyEncouragementCard extends StatelessWidget {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(22),
           gradient: LinearGradient(
-            colors: [
-              const Color(0xFFEC4899).withValues(alpha: 0.18),
-              const Color(0xFF111827).withValues(alpha: 0.72),
-            ],
+            colors: isLight
+                ? [
+                    const Color(0xFFFFD7EA),
+                    const Color(0xFFFFF7FB),
+                  ]
+                : [
+                    const Color(0xFFEC4899).withValues(alpha: 0.18),
+                    const Color(0xFF111827).withValues(alpha: 0.72),
+                  ],
           ),
           border: Border.all(
-            color: const Color(0xFFEC4899).withValues(alpha: 0.28),
+            color: const Color(0xFFEC4899)
+                .withValues(alpha: isLight ? 0.26 : 0.28),
           ),
         ),
         child: Row(
           children: [
-            const Icon(
+            Icon(
               Icons.favorite_rounded,
-              color: Color(0xFFFF7AB6),
+              color: iconColor,
             ),
             const SizedBox(width: 12),
             Expanded(
@@ -1011,18 +1032,18 @@ class _DailyEncouragementCard extends StatelessWidget {
                 '${item.message} ${item.reference}',
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
-                style: const TextStyle(
-                  color: Colors.white,
+                style: TextStyle(
+                  color: textColor,
                   fontWeight: FontWeight.w800,
                   height: 1.25,
                 ),
               ),
             ),
             const SizedBox(width: 10),
-            const Icon(
+            Icon(
               Icons.arrow_forward_rounded,
               size: 18,
-              color: Colors.white,
+              color: textColor,
             ),
           ],
         ),
@@ -1053,27 +1074,39 @@ class _WeeklyInsightsCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final isLight = theme.brightness == Brightness.light;
     const accent = Color(0xFF06B6D4);
     final dayProgress = stats.progress;
     final progressLabel = '${(dayProgress * 100).round()}%';
+    final titleColor = isLight ? const Color(0xFF172033) : Colors.white;
+    final bodyColor = isLight
+        ? const Color(0xFF526070)
+        : Colors.white.withValues(alpha: 0.64);
 
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(22),
-        gradient: const LinearGradient(
+        gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [
-            Color(0x33116475),
-            Color(0x22111427),
-            Color(0x331E1B4B),
-          ],
+          colors: isLight
+              ? const [
+                  Color(0xFFE8FAFF),
+                  Color(0xFFF8FBFF),
+                  Color(0xFFEAF2FF),
+                ]
+              : const [
+                  Color(0x33116475),
+                  Color(0x22111427),
+                  Color(0x331E1B4B),
+                ],
         ),
-        border: Border.all(color: accent.withValues(alpha: 0.24)),
+        border:
+            Border.all(color: accent.withValues(alpha: isLight ? 0.34 : 0.24)),
         boxShadow: [
           BoxShadow(
-            color: accent.withValues(alpha: 0.10),
+            color: accent.withValues(alpha: isLight ? 0.14 : 0.10),
             blurRadius: 22,
             offset: const Offset(0, 10),
           ),
@@ -1096,7 +1129,9 @@ class _WeeklyInsightsCard extends StatelessWidget {
                         value: dayProgress,
                         strokeWidth: 5,
                         color: accent,
-                        backgroundColor: Colors.white.withValues(alpha: 0.10),
+                        backgroundColor: isLight
+                            ? const Color(0xFFCCEEF7)
+                            : Colors.white.withValues(alpha: 0.10),
                         strokeCap: StrokeCap.round,
                       ),
                     ),
@@ -1104,7 +1139,7 @@ class _WeeklyInsightsCard extends StatelessWidget {
                       child: Text(
                         progressLabel,
                         style: theme.textTheme.labelSmall?.copyWith(
-                          color: Colors.white,
+                          color: titleColor,
                           fontWeight: FontWeight.w900,
                           fontSize: 10,
                         ),
@@ -1123,7 +1158,7 @@ class _WeeklyInsightsCard extends StatelessWidget {
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: theme.textTheme.titleMedium?.copyWith(
-                        color: Colors.white,
+                        color: titleColor,
                         fontWeight: FontWeight.w900,
                       ),
                     ),
@@ -1135,7 +1170,7 @@ class _WeeklyInsightsCard extends StatelessWidget {
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: theme.textTheme.bodySmall?.copyWith(
-                        color: Colors.white.withValues(alpha: 0.64),
+                        color: bodyColor,
                         fontWeight: FontWeight.w700,
                       ),
                     ),
@@ -1152,6 +1187,7 @@ class _WeeklyInsightsCard extends StatelessWidget {
               _WeekMetricChip(
                 icon: Icons.menu_book_rounded,
                 label: _countLabel(stats.chaptersRead, 'Chapter', 'Chapters'),
+                accent: accent,
                 onTap: onOpenChapters,
               ),
               _WeekMetricChip(
@@ -1161,16 +1197,19 @@ class _WeeklyInsightsCard extends StatelessWidget {
                   'Devotional',
                   'Devotionals',
                 ),
+                accent: accent,
                 onTap: onOpenDevotionals,
               ),
               _WeekMetricChip(
                 icon: Icons.mic_rounded,
                 label: _countLabel(stats.sermonsRecorded, 'Sermon', 'Sermons'),
+                accent: accent,
                 onTap: onOpenSermons,
               ),
               _WeekMetricChip(
                 icon: Icons.bookmark_rounded,
                 label: '${stats.savedItems} Saved',
+                accent: accent,
                 onTap: onOpenSaved,
               ),
             ],
@@ -1185,16 +1224,21 @@ class _WeekMetricChip extends StatelessWidget {
   const _WeekMetricChip({
     required this.icon,
     required this.label,
+    required this.accent,
     required this.onTap,
   });
 
   final IconData icon;
   final String label;
+  final Color accent;
   final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final isLight = theme.brightness == Brightness.light;
+    final textColor = isLight ? const Color(0xFF172033) : Colors.white;
+    final iconColor = isLight ? accent : Colors.white.withValues(alpha: 0.70);
 
     return InkWell(
       borderRadius: BorderRadius.circular(999),
@@ -1203,9 +1247,13 @@ class _WeekMetricChip extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(999),
-          color: Colors.white.withValues(alpha: 0.07),
+          color: isLight
+              ? Colors.white.withValues(alpha: 0.74)
+              : Colors.white.withValues(alpha: 0.07),
           border: Border.all(
-            color: Colors.white.withValues(alpha: 0.10),
+            color: isLight
+                ? accent.withValues(alpha: 0.18)
+                : Colors.white.withValues(alpha: 0.10),
           ),
         ),
         child: Row(
@@ -1214,13 +1262,13 @@ class _WeekMetricChip extends StatelessWidget {
             Icon(
               icon,
               size: 17,
-              color: Colors.white.withValues(alpha: 0.70),
+              color: iconColor,
             ),
             const SizedBox(width: 7),
             Text(
               label,
               style: theme.textTheme.labelMedium?.copyWith(
-                color: Colors.white,
+                color: textColor,
                 fontWeight: FontWeight.w800,
                 fontSize: 13,
               ),
@@ -1267,6 +1315,8 @@ class _SpiritualDashboardPager extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isLight = Theme.of(context).brightness == Brightness.light;
+
     return Column(
       children: [
         SizedBox(
@@ -1345,7 +1395,9 @@ class _SpiritualDashboardPager extends StatelessWidget {
                       borderRadius: BorderRadius.circular(999),
                       color: selected
                           ? accent
-                          : Colors.white.withValues(alpha: 0.24),
+                          : isLight
+                              ? const Color(0xFF5B5570).withValues(alpha: 0.24)
+                              : Colors.white.withValues(alpha: 0.24),
                       boxShadow: selected
                           ? [
                               BoxShadow(
@@ -1382,6 +1434,11 @@ class _DailyVerseDashboardCard extends StatelessWidget {
   Widget build(BuildContext context) {
     const accent = Color(0xFF8B5CF6);
     final theme = Theme.of(context);
+    final isLight = theme.brightness == Brightness.light;
+    final titleColor = isLight ? const Color(0xFF1E1830) : Colors.white;
+    final bodyColor = isLight
+        ? const Color(0xFF4B415F)
+        : Colors.white.withValues(alpha: 0.88);
     final reference = _compactVerseReference(verse);
     final verseText = verse == null
         ? 'The Lord is my shepherd, I shall not want.'
@@ -1397,7 +1454,9 @@ class _DailyVerseDashboardCard extends StatelessWidget {
       child: loading
           ? LinearProgressIndicator(
               color: accent,
-              backgroundColor: Colors.white.withValues(alpha: 0.08),
+              backgroundColor: isLight
+                  ? accent.withValues(alpha: 0.12)
+                  : Colors.white.withValues(alpha: 0.08),
               borderRadius: BorderRadius.circular(999),
               minHeight: 4,
             )
@@ -1415,7 +1474,7 @@ class _DailyVerseDashboardCard extends StatelessWidget {
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: theme.textTheme.titleMedium?.copyWith(
-                    color: Colors.white,
+                    color: titleColor,
                     fontWeight: FontWeight.w800,
                   ),
                 ),
@@ -1425,7 +1484,7 @@ class _DailyVerseDashboardCard extends StatelessWidget {
                   maxLines: 4,
                   overflow: TextOverflow.ellipsis,
                   style: theme.textTheme.bodyMedium?.copyWith(
-                    color: Colors.white.withValues(alpha: 0.88),
+                    color: bodyColor,
                     height: 1.26,
                     fontWeight: FontWeight.w600,
                   ),
@@ -1459,6 +1518,11 @@ class _ReadingPlanDashboardCard extends StatelessWidget {
   Widget build(BuildContext context) {
     const accent = Color(0xFFF59E0B);
     final theme = Theme.of(context);
+    final isLight = theme.brightness == Brightness.light;
+    final titleColor = isLight ? const Color(0xFF2D2312) : Colors.white;
+    final bodyColor = isLight
+        ? const Color(0xFF6B5A3B)
+        : Colors.white.withValues(alpha: 0.65);
     final passages = reading.passages.take(2).toList(growable: false);
 
     return _DashboardCardShell(
@@ -1482,7 +1546,7 @@ class _ReadingPlanDashboardCard extends StatelessWidget {
               Text(
                 'Day $readingDay',
                 style: theme.textTheme.titleLarge?.copyWith(
-                  color: Colors.white,
+                  color: titleColor,
                   fontWeight: FontWeight.w800,
                 ),
               ),
@@ -1499,7 +1563,7 @@ class _ReadingPlanDashboardCard extends StatelessWidget {
           Text(
             "Today's Reading",
             style: theme.textTheme.labelLarge?.copyWith(
-              color: Colors.white.withValues(alpha: 0.65),
+              color: bodyColor,
               fontWeight: FontWeight.w700,
             ),
           ),
@@ -1510,7 +1574,7 @@ class _ReadingPlanDashboardCard extends StatelessWidget {
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               style: theme.textTheme.titleSmall?.copyWith(
-                color: Colors.white,
+                color: titleColor,
                 fontWeight: FontWeight.w800,
                 height: 1.3,
               ),
@@ -1544,6 +1608,14 @@ class _DevotionalDashboardCard extends StatelessWidget {
   Widget build(BuildContext context) {
     const accent = Color(0xFF6366F1);
     final theme = Theme.of(context);
+    final isLight = theme.brightness == Brightness.light;
+    final titleColor = isLight ? const Color(0xFF1E1830) : Colors.white;
+    final metaColor = isLight
+        ? const Color(0xFF5B5570)
+        : Colors.white.withValues(alpha: 0.62);
+    final iconColor = isLight
+        ? const Color(0xFF6366F1)
+        : Colors.white.withValues(alpha: 0.56);
     final normalizedProgress = progress.clamp(0.0, 1.0).toDouble();
     final progressPercent = (normalizedProgress * 100).round();
 
@@ -1568,7 +1640,7 @@ class _DevotionalDashboardCard extends StatelessWidget {
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
             style: theme.textTheme.titleLarge?.copyWith(
-              color: Colors.white,
+              color: titleColor,
               fontWeight: FontWeight.w800,
               height: 1.08,
             ),
@@ -1586,13 +1658,13 @@ class _DevotionalDashboardCard extends StatelessWidget {
                 Icon(
                   Icons.trending_up_rounded,
                   size: 15,
-                  color: Colors.white.withValues(alpha: 0.56),
+                  color: iconColor,
                 ),
                 const SizedBox(width: 5),
                 Text(
                   '$progressPercent% complete',
                   style: theme.textTheme.bodySmall?.copyWith(
-                    color: Colors.white.withValues(alpha: 0.62),
+                    color: metaColor,
                     fontWeight: FontWeight.w700,
                   ),
                 ),
@@ -1602,7 +1674,9 @@ class _DevotionalDashboardCard extends StatelessWidget {
             LinearProgressIndicator(
               value: normalizedProgress,
               color: accent,
-              backgroundColor: Colors.white.withValues(alpha: 0.10),
+              backgroundColor: isLight
+                  ? accent.withValues(alpha: 0.14)
+                  : Colors.white.withValues(alpha: 0.10),
               borderRadius: BorderRadius.circular(999),
               minHeight: 5,
             ),
@@ -1612,13 +1686,13 @@ class _DevotionalDashboardCard extends StatelessWidget {
                 Icon(
                   Icons.schedule_rounded,
                   size: 15,
-                  color: Colors.white.withValues(alpha: 0.56),
+                  color: iconColor,
                 ),
                 const SizedBox(width: 5),
                 Text(
                   '7 minutes',
                   style: theme.textTheme.bodySmall?.copyWith(
-                    color: Colors.white.withValues(alpha: 0.62),
+                    color: metaColor,
                     fontWeight: FontWeight.w700,
                   ),
                 ),
@@ -1643,6 +1717,15 @@ class _DashboardCardShell extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isLight = Theme.of(context).brightness == Brightness.light;
+    final shellGradient = isLight
+        ? [
+            Color.lerp(Colors.white, accent, 0.16)!,
+            Color.lerp(const Color(0xFFF8F5FF), accent, 0.07)!,
+            Colors.white.withValues(alpha: 0.98),
+          ]
+        : gradient;
+
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -1650,15 +1733,15 @@ class _DashboardCardShell extends StatelessWidget {
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: gradient,
+          colors: shellGradient,
         ),
         border: Border.all(
-          color: accent.withValues(alpha: 0.26),
+          color: accent.withValues(alpha: isLight ? 0.34 : 0.26),
         ),
         boxShadow: [
           BoxShadow(
-            color: accent.withValues(alpha: 0.12),
-            blurRadius: 26,
+            color: accent.withValues(alpha: isLight ? 0.16 : 0.12),
+            blurRadius: isLight ? 22 : 26,
             offset: const Offset(0, 14),
           ),
         ],
@@ -1846,6 +1929,14 @@ class _ContinueDevotionalCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final accent = const Color(0xFF8B5CF6);
+    final isLight = theme.brightness == Brightness.light;
+    final titleColor = isLight ? const Color(0xFF1E1830) : Colors.white;
+    final bodyColor = isLight
+        ? const Color(0xFF5B5570)
+        : Colors.white.withValues(alpha: 0.70);
+    final metaColor = isLight
+        ? const Color(0xFF746D86)
+        : Colors.white.withValues(alpha: 0.60);
     final progressValue = progress.clamp(0.0, 1.0);
     final progressLabel = progressValue <= 0
         ? 'Ready'
@@ -1858,21 +1949,27 @@ class _ContinueDevotionalCard extends StatelessWidget {
         padding: const EdgeInsets.all(14),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(24),
-          gradient: const LinearGradient(
+          gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            colors: [
-              Color(0x332D1B69),
-              Color(0x22111427),
-              Color(0x331E1B4B),
-            ],
+            colors: isLight
+                ? const [
+                    Color(0xFFF0E9FF),
+                    Color(0xFFFFFFFF),
+                    Color(0xFFF8F5FF),
+                  ]
+                : const [
+                    Color(0x332D1B69),
+                    Color(0x22111427),
+                    Color(0x331E1B4B),
+                  ],
           ),
           border: Border.all(
-            color: accent.withValues(alpha: 0.28),
+            color: accent.withValues(alpha: isLight ? 0.34 : 0.28),
           ),
           boxShadow: [
             BoxShadow(
-              color: accent.withValues(alpha: 0.12),
+              color: accent.withValues(alpha: isLight ? 0.14 : 0.12),
               blurRadius: 24,
               offset: const Offset(0, 12),
             ),
@@ -1897,7 +1994,7 @@ class _ContinueDevotionalCard extends StatelessWidget {
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: theme.textTheme.titleMedium?.copyWith(
-                            color: Colors.white,
+                            color: titleColor,
                             fontWeight: FontWeight.w800,
                             height: 1.1,
                           ),
@@ -1920,7 +2017,7 @@ class _ContinueDevotionalCard extends StatelessWidget {
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: theme.textTheme.bodyMedium?.copyWith(
-                      color: Colors.white.withValues(alpha: 0.70),
+                      color: bodyColor,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
@@ -1930,7 +2027,7 @@ class _ContinueDevotionalCard extends StatelessWidget {
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: theme.textTheme.bodySmall?.copyWith(
-                      color: const Color(0xFFC4B5FD),
+                      color: isLight ? accent : const Color(0xFFC4B5FD),
                       fontWeight: FontWeight.w700,
                     ),
                   ),
@@ -1940,7 +2037,7 @@ class _ContinueDevotionalCard extends StatelessWidget {
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: theme.textTheme.bodySmall?.copyWith(
-                      color: Colors.white.withValues(alpha: 0.60),
+                      color: metaColor,
                     ),
                   ),
                   const SizedBox(height: 10),
@@ -1948,7 +2045,9 @@ class _ContinueDevotionalCard extends StatelessWidget {
                     value: progressValue,
                     minHeight: 5,
                     borderRadius: BorderRadius.circular(999),
-                    backgroundColor: Colors.white.withValues(alpha: 0.08),
+                    backgroundColor: isLight
+                        ? accent.withValues(alpha: 0.14)
+                        : Colors.white.withValues(alpha: 0.08),
                     valueColor: const AlwaysStoppedAnimation(
                       Color(0xFF8B5CF6),
                     ),
@@ -2181,6 +2280,7 @@ class _GlassExploreCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
+    final isLight = theme.brightness == Brightness.light;
 
     return InkWell(
       borderRadius: BorderRadius.circular(22),
@@ -2192,14 +2292,19 @@ class _GlassExploreCard extends StatelessWidget {
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            colors: gradient,
+            colors: isLight
+                ? [
+                    Color.lerp(Colors.white, accent, 0.14)!,
+                    Colors.white.withValues(alpha: 0.96),
+                  ]
+                : gradient,
           ),
           border: Border.all(
-            color: accent.withValues(alpha: 0.28),
+            color: accent.withValues(alpha: isLight ? 0.34 : 0.28),
           ),
           boxShadow: [
             BoxShadow(
-              color: accent.withValues(alpha: 0.14),
+              color: accent.withValues(alpha: isLight ? 0.12 : 0.14),
               blurRadius: 22,
               offset: const Offset(0, 10),
             ),

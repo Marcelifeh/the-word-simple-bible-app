@@ -21,6 +21,20 @@ class JourneyActionTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final isLight = theme.brightness == Brightness.light;
+    final titleColor = isLight ? const Color(0xFF151225) : Colors.white;
+    final subtitleColor = isLight
+        ? const Color(0xFF4B5563)
+        : Colors.white.withValues(alpha: 0.67);
+    final tileGradient = isLight
+        ? [
+            Color.lerp(Colors.white, accent, 0.16)!,
+            Color.lerp(const Color(0xFFF7F2FF), accent, 0.08)!,
+          ]
+        : [
+            accent.withValues(alpha: 0.18),
+            const Color(0xFF151B2A).withValues(alpha: 0.95),
+          ];
 
     return Material(
       color: Colors.transparent,
@@ -37,18 +51,15 @@ class JourneyActionTile extends StatelessWidget {
             gradient: LinearGradient(
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
-              colors: [
-                accent.withValues(alpha: 0.18),
-                const Color(0xFF151B2A).withValues(alpha: 0.95),
-              ],
+              colors: tileGradient,
             ),
             border: Border.all(
-              color: accent.withValues(alpha: 0.34),
+              color: accent.withValues(alpha: isLight ? 0.30 : 0.34),
             ),
             boxShadow: [
               BoxShadow(
-                color: accent.withValues(alpha: 0.10),
-                blurRadius: 22,
+                color: accent.withValues(alpha: isLight ? 0.12 : 0.10),
+                blurRadius: isLight ? 18 : 22,
                 offset: const Offset(0, 10),
               ),
             ],
@@ -93,6 +104,7 @@ class JourneyActionTile extends StatelessWidget {
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                             style: theme.textTheme.titleMedium?.copyWith(
+                              color: titleColor,
                               fontWeight: FontWeight.w800,
                               height: 1.05,
                             ),
@@ -114,7 +126,7 @@ class JourneyActionTile extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                       style: theme.textTheme.bodyMedium?.copyWith(
                         height: 1.2,
-                        color: Colors.white.withValues(alpha: 0.67),
+                        color: subtitleColor,
                       ),
                     ),
                   ],
