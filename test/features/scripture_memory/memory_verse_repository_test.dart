@@ -58,8 +58,14 @@ void main() {
         results: {
           verse.id: const MemoryDraftResult(
             memoryVerseId: 'pending',
-            mode: MemoryExerciseMode.progressiveFade,
-            hintCount: 1,
+            mode: MemoryExerciseMode.missingWords,
+            hintCount: 2,
+            enteredAnswers: {0: 'God', 2: 'world'},
+            revealedBlankIndexes: {1},
+            checkAttemptCount: 2,
+            correctOnFirstCheck: 1,
+            correctAfterRetry: 2,
+            fullVerseRevealed: true,
           ),
         },
       ),
@@ -70,7 +76,14 @@ void main() {
     final restored = MemoryVerseRepository();
     await restored.init();
     expect(restored.sessionDraft?.id, draft.id);
-    expect(restored.sessionDraft?.results[verse.id]?.hintCount, 1);
+    final restoredResult = restored.sessionDraft?.results[verse.id];
+    expect(restoredResult?.hintCount, 2);
+    expect(restoredResult?.enteredAnswers, {0: 'God', 2: 'world'});
+    expect(restoredResult?.revealedBlankIndexes, {1});
+    expect(restoredResult?.checkAttemptCount, 2);
+    expect(restoredResult?.correctOnFirstCheck, 1);
+    expect(restoredResult?.correctAfterRetry, 2);
+    expect(restoredResult?.fullVerseRevealed, isTrue);
 
     await Hive.box<dynamic>('memory_session_draft').put('active', '{broken');
     await Hive.close();

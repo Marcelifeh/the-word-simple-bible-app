@@ -1,5 +1,61 @@
 import 'progressive_fade_generator.dart';
 
+String normalizeMemoryText(String value) {
+  final trimmed = value.trim().toLowerCase();
+  final withoutSurroundingPunctuation = trimmed.replaceAll(
+    RegExp(r'^[^\wÀ-ÖØ-öø-ÿĀ-ſƀ-ɏẸ-ỹ]+|[^\wÀ-ÖØ-öø-ÿĀ-ſƀ-ɏẸ-ỹ]+$'),
+    '',
+  );
+  return _decomposeCommonLatin(withoutSurroundingPunctuation)
+      .replaceAll(RegExp(r'\s+'), ' ');
+}
+
+bool isMemoryWordCorrect(String userInput, String expected) {
+  return normalizeMemoryText(userInput) == normalizeMemoryText(expected);
+}
+
+String _decomposeCommonLatin(String value) {
+  const decomposed = <String, String>{
+    'à': 'a\u0300',
+    'á': 'a\u0301',
+    'â': 'a\u0302',
+    'ã': 'a\u0303',
+    'ä': 'a\u0308',
+    'è': 'e\u0300',
+    'é': 'e\u0301',
+    'ê': 'e\u0302',
+    'ë': 'e\u0308',
+    'ẹ': 'e\u0323',
+    'ì': 'i\u0300',
+    'í': 'i\u0301',
+    'î': 'i\u0302',
+    'ï': 'i\u0308',
+    'ị': 'i\u0323',
+    'ǹ': 'n\u0300',
+    'ń': 'n\u0301',
+    'ñ': 'n\u0303',
+    'ṅ': 'n\u0307',
+    'ò': 'o\u0300',
+    'ó': 'o\u0301',
+    'ô': 'o\u0302',
+    'õ': 'o\u0303',
+    'ö': 'o\u0308',
+    'ọ': 'o\u0323',
+    'ṣ': 's\u0323',
+    'ù': 'u\u0300',
+    'ú': 'u\u0301',
+    'û': 'u\u0302',
+    'ü': 'u\u0308',
+    'ụ': 'u\u0323',
+  };
+  final buffer = StringBuffer();
+  for (final rune in value.runes) {
+    final character = String.fromCharCode(rune);
+    buffer.write(decomposed[character] ?? character);
+  }
+  return buffer.toString();
+}
+
 class MemoryComparisonResult {
   const MemoryComparisonResult({
     required this.isAcceptable,

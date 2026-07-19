@@ -136,19 +136,35 @@ class MemoryExerciseGenerator {
   }) {
     final matches = _wordPattern.allMatches(text).toList(growable: false);
     if (matches.isEmpty) return text;
+    final hiddenIndexes = missingWordIndexes(
+      text,
+      difficulty: difficulty,
+      stage: stage,
+    );
+    var wordIndex = 0;
+    return text.replaceAllMapped(_wordPattern, (match) {
+      final word = match.group(0)!;
+      final shouldHide = hiddenIndexes.contains(wordIndex++);
+      if (!shouldHide) return word;
+      return List.filled(word.runes.length.clamp(3, 12).toInt(), '_').join();
+    });
+  }
 
+  Set<int> missingWordIndexes(
+    String text, {
+    required MemoryDifficulty difficulty,
+    required int stage,
+  }) {
+    final matches = _wordPattern.allMatches(text).toList(growable: false);
     final baseStride = switch (difficulty) {
       MemoryDifficulty.easy => 4,
       MemoryDifficulty.normal => 3,
       MemoryDifficulty.hard => 2,
     };
     final stride = (baseStride - (stage ~/ 3)).clamp(2, 4);
-    var wordIndex = 0;
-    return text.replaceAllMapped(_wordPattern, (match) {
-      final word = match.group(0)!;
-      final shouldHide = wordIndex++ % stride == stride - 1;
-      if (!shouldHide) return word;
-      return List.filled(word.runes.length.clamp(3, 12).toInt(), '_').join();
-    });
+    return {
+      for (var index = 0; index < matches.length; index++)
+        if (index % stride == stride - 1) index,
+    };
   }
 }

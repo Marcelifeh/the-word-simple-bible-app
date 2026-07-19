@@ -5,6 +5,8 @@ import '../../../core/utils/color_utils.dart';
 
 import '../../../core/navigation/app_router.dart';
 import '../../../core/navigation/page_transition_type.dart';
+import '../../../core/narration/content/narratable_verse.dart';
+import '../../../core/narration/models/narration_state.dart';
 import '../../../core/utils/bible_text_sanitizer.dart';
 import '../../../core/utils/env.dart';
 import '../../../shared/state/app_state.dart';
@@ -20,6 +22,8 @@ import '../../reading_plan/view/reading_plan_screen.dart';
 import '../../notes/model/verse_note.dart';
 import '../../sermon_notes/model/sermon_note.dart';
 import '../../sermon_notes/view/sermon_editor_screen.dart';
+import '../../scripture_memory/model/memory_verse.dart';
+import '../../scripture_memory/widgets/add_to_memory_sheet.dart';
 
 class DailyVerseScreen extends StatefulWidget {
   final Verse? initialVerse;
@@ -33,6 +37,7 @@ class _DailyVerseScreenState extends State<DailyVerseScreen> {
   Verse? _verse;
   bool _loading = false;
   bool _commentaryExpanded = false;
+  bool _isStartingVerseNarration = false;
   Timer? _midnightTimer;
   Future<String?>? _commentaryFuture;
 
@@ -147,6 +152,127 @@ class _DailyVerseScreenState extends State<DailyVerseScreen> {
     });
   }
 
+  Future<void> _narrateVerse() async {
+    final verse = _verse;
+    if (verse == null || _isStartingVerseNarration) return;
+    setState(() => _isStartingVerseNarration = true);
+
+    try {
+      final controller = AppScope.of(context).narrationController;
+      final content = NarratableVerse(
+        bookId: verse.ref.bookId,
+        bookName: verse.book,
+        chapter: verse.ref.chapter,
+        verse: verse.ref.verse,
+        text: verse.text,
+      );
+      await controller.playContent(
+        content,
+        id: content.id,
+        sourceType: NarrationSourceType.bible,
+        mode: controller.preferences.mode,
+      );
+    } catch (error, stackTrace) {
+      debugPrint('Daily verse narration failed: $error\n$stackTrace');
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            'This device could not start narration. Check the selected voice in Audio & Narration settings.',
+          ),
+        ),
+      );
+    } finally {
+      if (mounted) {
+        setState(() => _isStartingVerseNarration = false);
+      }
+    }
+  }
+
+  Future<void> _memorizeVerse() async {
+    final displayedVerse = _verse;
+    if (displayedVerse == null) return;
+
+    final state = AppScope.of(context);
+    var effectiveTranslation = state.translation;
+    var effectiveVerse = displayedVerse;
+    final displayedText = BibleTextSanitizer.clean(displayedVerse.text);
+
+    try {
+      final requestedChapter = await state.assetBibleRepo.loadChapter(
+        translation: state.translation,
+        bookId: displayedVerse.ref.bookId,
+        chapter: displayedVerse.ref.chapter,
+      );
+      Verse? requestedVerse;
+      for (final candidate in requestedChapter) {
+        if (candidate.ref.verse == displayedVerse.ref.verse &&
+            !candidate.isFallback &&
+            BibleTextSanitizer.clean(candidate.text) == displayedText) {
+          requestedVerse = candidate;
+          break;
+        }
+      }
+
+      if (requestedVerse != null) {
+        effectiveVerse = requestedVerse;
+      } else {
+        final kjvChapter = await state.assetBibleRepo.loadChapter(
+          translation: BibleTranslation.kjv,
+          bookId: displayedVerse.ref.bookId,
+          chapter: displayedVerse.ref.chapter,
+        );
+        for (final candidate in kjvChapter) {
+          if (candidate.ref.verse == displayedVerse.ref.verse) {
+            effectiveVerse = candidate;
+            effectiveTranslation = BibleTranslation.kjv;
+            break;
+          }
+        }
+      }
+    } catch (_) {
+      if (displayedVerse.isFallback) {
+        effectiveTranslation = BibleTranslation.kjv;
+      }
+    }
+
+    if (!mounted) return;
+    await showAddToMemorySheet(
+      context,
+      draft: MemoryVerseDraft(
+        bookId: effectiveVerse.ref.bookId,
+        bookName: effectiveVerse.book,
+        chapter: effectiveVerse.ref.chapter,
+        startVerse: effectiveVerse.ref.verse,
+        translation: effectiveTranslation,
+        text: effectiveVerse.text,
+        source: MemoryVerseSource.dailyVerse,
+      ),
+    );
+  }
+
+  bool _isCurrentVerseInMemory(AppState state) {
+    final verse = _verse;
+    if (verse == null) return false;
+    final translations = <BibleTranslation>{
+      state.translation,
+      BibleTranslation.kjv,
+    };
+    for (final translation in translations) {
+      final dedupeKey = MemoryVerse.buildDedupeKey(
+        translation: translation,
+        bookId: verse.ref.bookId,
+        chapter: verse.ref.chapter,
+        startVerse: verse.ref.verse,
+        endVerse: verse.ref.verse,
+      );
+      if (state.memoryVerseRepo.findByDedupeKey(dedupeKey) != null) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   void _addVerseToSermonNotes() {
     final verse = _verse;
     if (verse == null) return;
@@ -233,6 +359,7 @@ class _DailyVerseScreenState extends State<DailyVerseScreen> {
         currentVerseId == null ? null : state.notesRepo.get(currentVerseId);
     final alreadySavedToJournal = existingJournalNote != null &&
         existingJournalNote.text.trim().isNotEmpty;
+    final alreadyInMemory = _isCurrentVerseInMemory(state);
 
     return Scaffold(
       appBar: AppBar(
@@ -243,29 +370,14 @@ class _DailyVerseScreenState extends State<DailyVerseScreen> {
         actions: [
           if (!_loading && _verse != null) ...[
             IconButton(
-              tooltip: 'Listen',
-              icon: const Icon(Icons.volume_up),
-              onPressed: () async {
-                try {
-                  final url = await state.audioService
-                      .getVerseAudioUrl(state.translation, _verse!.ref);
-                  if (url == null) {
-                    if (!context.mounted) return;
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                          content: Text(
-                              'Audio not configured yet. Set AUDIO_API_URL.')),
-                    );
-                    return;
-                  }
-                  await state.audioPlayer.playUrl(url);
-                } catch (e) {
-                  if (!context.mounted) return;
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Audio playback failed.')),
-                  );
-                }
-              },
+              tooltip: 'Listen to verse',
+              onPressed: _isStartingVerseNarration ? null : _narrateVerse,
+              icon: _isStartingVerseNarration
+                  ? const SizedBox.square(
+                      dimension: 18,
+                      child: CircularProgressIndicator(strokeWidth: 2),
+                    )
+                  : const Icon(Icons.volume_up_rounded),
             ),
             IconButton(
               tooltip: 'Share',
@@ -387,6 +499,7 @@ class _DailyVerseScreenState extends State<DailyVerseScreen> {
                         _DailyVerseInsightSection(
                           expanded: _commentaryExpanded,
                           fontScale: state.fontScale,
+                          translation: state.translation,
                           commentaryFuture: _commentaryFuture,
                           onToggle: () {
                             setState(() {
@@ -415,6 +528,15 @@ class _DailyVerseScreenState extends State<DailyVerseScreen> {
                               ),
                             ),
                             OutlinedButton.icon(
+                              onPressed: _memorizeVerse,
+                              icon: const Icon(Icons.psychology_alt_rounded),
+                              label: Text(
+                                alreadyInMemory
+                                    ? 'Edit Memory Verse'
+                                    : 'Memorize',
+                              ),
+                            ),
+                            OutlinedButton.icon(
                               onPressed: _addVerseToSermonNotes,
                               icon: const Icon(Icons.edit_note_rounded),
                               label: const Text('Add to Sermon Notes'),
@@ -435,12 +557,14 @@ class _DailyVerseInsightSection extends StatelessWidget {
   const _DailyVerseInsightSection({
     required this.expanded,
     required this.fontScale,
+    required this.translation,
     required this.commentaryFuture,
     required this.onToggle,
   });
 
   final bool expanded;
   final double fontScale;
+  final BibleTranslation translation;
   final Future<String?>? commentaryFuture;
   final VoidCallback onToggle;
 
@@ -536,6 +660,7 @@ class _DailyVerseInsightSection extends StatelessWidget {
                                   : 'Understanding: No verse insight is bundled offline for this verse.');
 
                           return VerseInsightPanel(
+                            translation: translation,
                             rawText: text,
                             accentColor: scheme.primary,
                             baseTextStyle: theme.textTheme.bodyLarge?.copyWith(

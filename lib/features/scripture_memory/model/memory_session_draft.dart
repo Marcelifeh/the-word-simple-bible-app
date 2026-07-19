@@ -9,6 +9,12 @@ class MemoryDraftResult {
     this.hintCount = 0,
     this.duration = Duration.zero,
     this.committed = false,
+    this.enteredAnswers = const <int, String>{},
+    this.revealedBlankIndexes = const <int>{},
+    this.checkAttemptCount = 0,
+    this.correctOnFirstCheck = 0,
+    this.correctAfterRetry = 0,
+    this.fullVerseRevealed = false,
   });
 
   final String memoryVerseId;
@@ -18,6 +24,12 @@ class MemoryDraftResult {
   final int hintCount;
   final Duration duration;
   final bool committed;
+  final Map<int, String> enteredAnswers;
+  final Set<int> revealedBlankIndexes;
+  final int checkAttemptCount;
+  final int correctOnFirstCheck;
+  final int correctAfterRetry;
+  final bool fullVerseRevealed;
 
   MemoryDraftResult copyWith({
     MemoryReviewRating? rating,
@@ -25,6 +37,12 @@ class MemoryDraftResult {
     int? hintCount,
     Duration? duration,
     bool? committed,
+    Map<int, String>? enteredAnswers,
+    Set<int>? revealedBlankIndexes,
+    int? checkAttemptCount,
+    int? correctOnFirstCheck,
+    int? correctAfterRetry,
+    bool? fullVerseRevealed,
   }) {
     return MemoryDraftResult(
       memoryVerseId: memoryVerseId,
@@ -34,6 +52,12 @@ class MemoryDraftResult {
       hintCount: hintCount ?? this.hintCount,
       duration: duration ?? this.duration,
       committed: committed ?? this.committed,
+      enteredAnswers: enteredAnswers ?? this.enteredAnswers,
+      revealedBlankIndexes: revealedBlankIndexes ?? this.revealedBlankIndexes,
+      checkAttemptCount: checkAttemptCount ?? this.checkAttemptCount,
+      correctOnFirstCheck: correctOnFirstCheck ?? this.correctOnFirstCheck,
+      correctAfterRetry: correctAfterRetry ?? this.correctAfterRetry,
+      fullVerseRevealed: fullVerseRevealed ?? this.fullVerseRevealed,
     );
   }
 
@@ -45,6 +69,14 @@ class MemoryDraftResult {
         'hintCount': hintCount,
         'durationMs': duration.inMilliseconds,
         'committed': committed,
+        'enteredAnswers': enteredAnswers.map(
+          (key, value) => MapEntry(key.toString(), value),
+        ),
+        'revealedBlankIndexes': revealedBlankIndexes.toList(growable: false),
+        'checkAttemptCount': checkAttemptCount,
+        'correctOnFirstCheck': correctOnFirstCheck,
+        'correctAfterRetry': correctAfterRetry,
+        'fullVerseRevealed': fullVerseRevealed,
       };
 
   factory MemoryDraftResult.fromJson(Map<String, dynamic> json) {
@@ -66,6 +98,20 @@ class MemoryDraftResult {
         milliseconds: (json['durationMs'] as num?)?.toInt() ?? 0,
       ),
       committed: json['committed'] == true,
+      enteredAnswers: (json['enteredAnswers'] as Map? ?? const {}).map(
+        (key, value) => MapEntry(
+          int.parse(key.toString()),
+          value.toString(),
+        ),
+      ),
+      revealedBlankIndexes:
+          (json['revealedBlankIndexes'] as List? ?? const <dynamic>[])
+              .map((value) => (value as num).toInt())
+              .toSet(),
+      checkAttemptCount: (json['checkAttemptCount'] as num?)?.toInt() ?? 0,
+      correctOnFirstCheck: (json['correctOnFirstCheck'] as num?)?.toInt() ?? 0,
+      correctAfterRetry: (json['correctAfterRetry'] as num?)?.toInt() ?? 0,
+      fullVerseRevealed: json['fullVerseRevealed'] == true,
     );
   }
 }
