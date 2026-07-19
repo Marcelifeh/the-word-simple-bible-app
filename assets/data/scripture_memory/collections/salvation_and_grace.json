@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "id": "salvation_and_grace",
+  "title": "Salvation and Grace",
+  "description": "Scriptures celebrating God's saving grace.",
+  "theme": "grace",
+  "estimatedDays": 14,
+  "references": [
+    {"bookId": "ephesians", "bookName": "Ephesians", "chapter": 2, "startVerse": 8, "endVerse": 9},
+    {"bookId": "romans", "bookName": "Romans", "chapter": 3, "startVerse": 23, "endVerse": 24},
+    {"bookId": "titus", "bookName": "Titus", "chapter": 3, "startVerse": 5, "endVerse": 7},
+    {"bookId": "2_timothy", "bookName": "2 Timothy", "chapter": 1, "startVerse": 9, "endVerse": 9}
+  ]
+}

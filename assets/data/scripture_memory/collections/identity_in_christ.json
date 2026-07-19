@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "id": "identity_in_christ",
+  "title": "Identity in Christ",
+  "description": "Truths about who believers are in Christ.",
+  "theme": "identity",
+  "estimatedDays": 14,
+  "references": [
+    {"bookId": "galatians", "bookName": "Galatians", "chapter": 2, "startVerse": 20, "endVerse": 20},
+    {"bookId": "ephesians", "bookName": "Ephesians", "chapter": 2, "startVerse": 10, "endVerse": 10},
+    {"bookId": "colossians", "bookName": "Colossians", "chapter": 3, "startVerse": 3, "endVerse": 4},
+    {"bookId": "1_peter", "bookName": "1 Peter", "chapter": 2, "startVerse": 9, "endVerse": 9}
+  ]
+}

@@ -18,6 +18,7 @@ import '../../features/notes/repository/notes_repository.dart';
 import '../../features/devotional/model/devotional_model.dart';
 import '../../features/sermon_notes/repository/sermon_draft_repository.dart';
 import '../../features/sermon_notes/repository/sermon_note_repository.dart';
+import '../../features/scripture_memory/repository/memory_verse_repository.dart';
 import '../../features/tracts/repository/user_tract_repository.dart';
 import '../../features/devotional/repository/devotional_journal_repository.dart';
 import '../../features/devotional/service/devotional_service.dart';
@@ -70,6 +71,7 @@ class AppState extends ChangeNotifier {
   final notesRepo = NotesRepository();
   final sermonNoteRepo = SermonNoteRepository();
   final sermonDraftRepo = SermonDraftRepository();
+  final memoryVerseRepo = MemoryVerseRepository();
   final userTractRepo = UserTractRepository();
   final devotionalJournalRepo = DevotionalJournalRepository();
   final devotionalService = const DevotionalService();
@@ -412,6 +414,8 @@ class AppState extends ChangeNotifier {
     await notesRepo.init();
     await sermonNoteRepo.init();
     await sermonDraftRepo.init();
+    await memoryVerseRepo.init();
+    memoryVerseRepo.addListener(_handleMemoryVerseChange);
     await userTractRepo.init();
     await devotionalJournalRepo.init();
     await commentaryRepo.init();
@@ -824,9 +828,15 @@ class AppState extends ChangeNotifier {
     notifyListeners();
   }
 
+  void _handleMemoryVerseChange() {
+    notifyListeners();
+  }
+
   @override
   void dispose() {
     _dailyDevotionalRolloverTimer?.cancel();
+    memoryVerseRepo.removeListener(_handleMemoryVerseChange);
+    memoryVerseRepo.dispose();
     narrationLifecycleObserver.detach();
     narrationController.dispose();
     narrationSyncEngine.dispose();

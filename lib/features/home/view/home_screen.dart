@@ -21,6 +21,8 @@ import '../../reading_plan/reading_plan_service.dart';
 import '../../reading_plan/view/daily_plan_reader_screen.dart';
 import '../../reading_plan/view/reading_plan_screen.dart';
 import '../../sermon_notes/view/sermon_notes_screen.dart';
+import '../../scripture_memory/model/memory_home_summary.dart';
+import '../../scripture_memory/view/scripture_memory_screen.dart';
 import '../../daily_verse/model/promise_verse.dart';
 import '../../daily_verse/services/promise_verse_service.dart';
 import '../../daily_verse/view/promise_verse_screen.dart';
@@ -300,6 +302,15 @@ class _HomeScreenState extends State<HomeScreen> {
     );
     if (!mounted) return;
     await _loadWeeklyStats();
+  }
+
+  Future<void> _openScriptureMemory() async {
+    await AppRouter.push(
+      context,
+      const ScriptureMemoryScreen(),
+      rootNavigator: true,
+      transition: AppTransitionType.slideUp,
+    );
   }
 
   void _openAudioDevotional(DevotionalModel devotional) {
@@ -716,6 +727,11 @@ class _HomeScreenState extends State<HomeScreen> {
                     _DevotionalHistoryCard(
                       readCount: devotionalHistory.length,
                       onTap: _openDevotionalHistory,
+                    ),
+                    const SizedBox(height: 12),
+                    _ScriptureMemoryCard(
+                      summary: state.memoryVerseRepo.homeSummary,
+                      onTap: _openScriptureMemory,
                     ),
                     const SizedBox(height: 12),
                     _GospelTractsCard(
@@ -2184,6 +2200,39 @@ class _DevotionalHistoryCard extends StatelessWidget {
       accent: const Color(0xFF6366F1),
       gradient: const [
         Color(0x332D1B69),
+        Color(0x22111427),
+      ],
+      onTap: onTap,
+    );
+  }
+}
+
+class _ScriptureMemoryCard extends StatelessWidget {
+  const _ScriptureMemoryCard({
+    required this.summary,
+    required this.onTap,
+  });
+
+  final MemoryHomeSummary summary;
+  final VoidCallback onTap;
+
+  String get _meta {
+    if (summary.activeCount == 0) return 'Begin with a verse from your reading';
+    if (summary.dueCount == 0) return 'You are caught up for today';
+    return '${summary.dueCount} '
+        '${summary.dueCount == 1 ? 'verse' : 'verses'} ready to review';
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return _GlassExploreCard(
+      title: 'Hide God\'s Word',
+      subtitle: 'Memorize and review Scripture',
+      meta: _meta,
+      icon: Icons.psychology_alt_rounded,
+      accent: const Color(0xFF10B981),
+      gradient: const [
+        Color(0x33206448),
         Color(0x22111427),
       ],
       onTap: onTap,

@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "id": "peace_in_anxiety",
+  "title": "Peace in Anxious Moments",
+  "description": "Scriptures that direct the heart toward God's peace.",
+  "theme": "peace",
+  "estimatedDays": 14,
+  "references": [
+    {"bookId": "philippians", "bookName": "Philippians", "chapter": 4, "startVerse": 6, "endVerse": 7},
+    {"bookId": "isaiah", "bookName": "Isaiah", "chapter": 26, "startVerse": 3, "endVerse": 3},
+    {"bookId": "psalms", "bookName": "Psalms", "chapter": 46, "startVerse": 1, "endVerse": 1},
+    {"bookId": "john", "bookName": "John", "chapter": 14, "startVerse": 27, "endVerse": 27}
+  ]
+}

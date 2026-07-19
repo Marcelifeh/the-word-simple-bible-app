@@ -15,6 +15,8 @@ import '../../../shared/bible/bible_translation_dropdown.dart';
 import '../../../shared/state/app_state.dart';
 import '../../../shared/widgets/verse_insight_panel.dart';
 import '../../notes/model/verse_note.dart';
+import '../../scripture_memory/model/memory_verse.dart';
+import '../../scripture_memory/widgets/add_to_memory_sheet.dart';
 import '../../../core/narration/contracts/narratable_content.dart';
 import '../../../core/narration/models/narration_segment.dart';
 import '../../../core/narration/models/narration_state.dart';
@@ -1320,6 +1322,22 @@ class _VerseTileState extends State<_VerseTile> {
     );
   }
 
+  Future<void> _memorizeVerse() async {
+    final verse = widget.verse;
+    await showAddToMemorySheet(
+      context,
+      draft: MemoryVerseDraft(
+        bookId: verse.ref.bookId,
+        bookName: widget.bookName,
+        chapter: verse.ref.chapter,
+        startVerse: verse.ref.verse,
+        translation: widget.translation,
+        text: verse.text,
+        source: MemoryVerseSource.bible,
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final state = AppScope.of(context);
@@ -1456,6 +1474,11 @@ class _VerseTileState extends State<_VerseTile> {
                                 unawaited(AppHaptics.noteSaved());
                                 setState(() {});
                               },
+                            ),
+                            IconButton(
+                              tooltip: 'Memorize',
+                              onPressed: _memorizeVerse,
+                              icon: const Icon(Icons.psychology_alt_rounded),
                             ),
                             IconButton(
                               tooltip: 'Audio',

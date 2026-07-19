@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "id": "prayer_and_trust",
+  "title": "Prayer and Trust",
+  "description": "Passages for bringing every need to God.",
+  "theme": "prayer",
+  "estimatedDays": 14,
+  "references": [
+    {"bookId": "proverbs", "bookName": "Proverbs", "chapter": 3, "startVerse": 5, "endVerse": 6},
+    {"bookId": "jeremiah", "bookName": "Jeremiah", "chapter": 33, "startVerse": 3, "endVerse": 3},
+    {"bookId": "matthew", "bookName": "Matthew", "chapter": 6, "startVerse": 9, "endVerse": 13},
+    {"bookId": "1_john", "bookName": "1 John", "chapter": 5, "startVerse": 14, "endVerse": 14}
+  ]
+}

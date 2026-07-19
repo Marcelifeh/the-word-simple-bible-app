@@ -6,11 +6,13 @@ import 'package:share_plus/share_plus.dart';
 
 import '../../../shared/state/app_state.dart';
 import '../../../shared/widgets/reading_text_scale.dart';
+import '../../../core/utils/scripture_reference_parser.dart';
 import '../../devotional_audio/view/devotional_player_screen.dart';
 
 import '../../devotional/model/devotional_model.dart';
 import '../../devotional/model/devotional_journal_entry.dart';
 import '../../notes/model/verse_note.dart';
+import '../../scripture_memory/widgets/memory_verse_range_picker.dart';
 import 'widgets/closing_prayer_card.dart';
 import 'widgets/final_revelation_card.dart';
 import 'widgets/insight_section_tile.dart';
@@ -282,6 +284,26 @@ https://play.google.com/store/apps/details?id=com.theword.simplebible''';
                       scripture: d.scripture,
                       reference: d.scriptureReference,
                       accentColor: _accentColor,
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: OutlinedButton.icon(
+                      onPressed: () => showDevotionalMemoryVersePicker(
+                        context,
+                        scriptureReference: d.scriptureReference,
+                        category: d.theme,
+                      ),
+                      icon: const Icon(Icons.psychology_alt_rounded),
+                      label: Text(
+                        const ScriptureReferenceParser()
+                                    .tryParse(d.scriptureReference)
+                                    ?.isSingleVerse ==
+                                true
+                            ? 'Memorize this verse'
+                            : 'Choose verses to memorize',
+                      ),
                     ),
                   ),
                   const SizedBox(height: 24),

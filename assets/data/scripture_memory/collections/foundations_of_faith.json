@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "id": "foundations_of_faith",
+  "title": "Foundations of Faith",
+  "description": "Core passages for a life rooted in Christ.",
+  "theme": "faith",
+  "estimatedDays": 14,
+  "references": [
+    {"bookId": "john", "bookName": "John", "chapter": 3, "startVerse": 16, "endVerse": 16},
+    {"bookId": "romans", "bookName": "Romans", "chapter": 10, "startVerse": 9, "endVerse": 10},
+    {"bookId": "hebrews", "bookName": "Hebrews", "chapter": 11, "startVerse": 1, "endVerse": 1},
+    {"bookId": "2_corinthians", "bookName": "2 Corinthians", "chapter": 5, "startVerse": 17, "endVerse": 17}
+  ]
+}

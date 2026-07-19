@@ -649,6 +649,7 @@ flutter:
     - assets/data/commentary/
     - assets/data/daily/
     - assets/data/daily/promise_verses.json
+    - assets/data/scripture_memory/collections/
     - assets/images/
   fonts:
     - family: NotoSans
