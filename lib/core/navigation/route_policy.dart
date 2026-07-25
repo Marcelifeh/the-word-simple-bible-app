@@ -5,6 +5,8 @@ class RoutePolicy {
 
   static const String homeRoute = '/';
   static const String settingsRoute = '/settings';
+  static const String notificationSettingsRoute = '/notification-settings';
+  static const String notificationInboxRoute = '/notifications';
   static const String readingPlanRoute = '/reading-plan';
   static const String devotionalRoute = '/devotional';
   static const String readingRoute = '/reading';
@@ -25,6 +27,8 @@ class RoutePolicy {
         return AppTransitionType.scale;
       case homeRoute:
       case settingsRoute:
+      case notificationSettingsRoute:
+      case notificationInboxRoute:
       case searchRoute:
       default:
         return AppTransitionType.fade;

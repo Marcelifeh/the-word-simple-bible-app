@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../core/config/app_branding.dart';
+import '../../../core/navigation/app_router.dart';
 import '../../../core/utils/color_utils.dart';
 import '../../../core/utils/env.dart';
 import '../../../shared/settings/home_text_size.dart';
@@ -16,7 +17,6 @@ class SettingsScreen extends StatefulWidget {
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
-  bool notifications = true;
   String language = 'English';
   final List<Map<String, dynamic>> colorThemes = [
     {'label': 'Indigo', 'color': Colors.indigo},
@@ -164,10 +164,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ),
           ),
           const Divider(),
-          SwitchListTile(
+          ListTile(
+            leading: const Icon(Icons.notifications_outlined),
             title: const Text('Notifications'),
-            value: notifications,
-            onChanged: (val) => setState(() => notifications = val),
+            subtitle: const Text('Manage reminders and updates'),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () => AppRouter.pushNamed(
+              context,
+              AppRouter.notificationSettingsRoute,
+              rootNavigator: true,
+            ),
           ),
           const Divider(),
           ListTile(

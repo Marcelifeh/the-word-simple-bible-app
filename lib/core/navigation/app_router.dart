@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../../features/reading_plan/view/reading_plan_screen.dart';
+import '../../features/notifications/view/notification_inbox_screen.dart';
+import '../../features/notifications/view/notification_settings_screen.dart';
 import '../../features/settings/view/settings_screen.dart';
 import 'app_transitions.dart';
 import 'page_transition_type.dart';
@@ -10,6 +12,10 @@ class AppRouter {
   const AppRouter._();
 
   static const String settingsRoute = RoutePolicy.settingsRoute;
+  static const String notificationSettingsRoute =
+      RoutePolicy.notificationSettingsRoute;
+  static const String notificationInboxRoute =
+      RoutePolicy.notificationInboxRoute;
   static const String readingPlanRoute = RoutePolicy.readingPlanRoute;
 
   static Future<T?> push<T>(
@@ -79,6 +85,10 @@ class AppRouter {
     switch (settings.name) {
       case settingsRoute:
         return const SettingsScreen();
+      case notificationSettingsRoute:
+        return const NotificationSettingsScreen();
+      case notificationInboxRoute:
+        return const NotificationInboxScreen();
       case readingPlanRoute:
         return const ReadingPlanScreen();
       default:

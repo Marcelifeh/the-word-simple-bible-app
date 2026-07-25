@@ -20,11 +20,18 @@ class SimpleBibleApp extends StatelessWidget {
         return MaterialApp(
           title: AppBranding.appName,
           debugShowCheckedModeBanner: false,
+          navigatorKey: state.notificationNavigationService.navigatorKey,
           theme: AppTheme.light(state),
           darkTheme: AppTheme.dark(state),
           themeMode: state.themeMode,
           home: SplashScreen(nextScreen: MainShell()),
           onGenerateRoute: AppRouter.onGenerateRoute,
+          builder: (context, child) {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              state.notificationNavigationService.flushPending();
+            });
+            return child ?? const SizedBox.shrink();
+          },
         );
       },
     );

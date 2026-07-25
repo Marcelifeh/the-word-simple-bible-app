@@ -15,6 +15,15 @@ import '../../data/favorites/favorites_repository.dart';
 import '../../data/search/search_index_repository.dart';
 import '../../data/search/smart_offline_search_repository.dart';
 import '../../features/notes/repository/notes_repository.dart';
+import '../../features/notifications/repository/notification_inbox_repository.dart';
+import '../../features/notifications/repository/notification_preferences_repository.dart';
+import '../../features/notifications/repository/scheduled_notification_repository.dart';
+import '../../features/notifications/services/app_notification_service.dart';
+import '../../features/notifications/services/notification_content_service.dart';
+import '../../features/notifications/services/notification_coordinator.dart';
+import '../../features/notifications/services/notification_navigation_service.dart';
+import '../../features/notifications/services/notification_scheduler.dart';
+import '../../features/reading_plan/reading_plan_service.dart';
 import '../../features/devotional/model/devotional_model.dart';
 import '../../features/sermon_notes/repository/sermon_draft_repository.dart';
 import '../../features/sermon_notes/repository/sermon_note_repository.dart';
@@ -63,7 +72,7 @@ enum DevotionalResumeStage {
   journal,
 }
 
-class AppState extends ChangeNotifier {
+class AppState extends ChangeNotifier with WidgetsBindingObserver {
   final assetBibleRepo = BibleAssetRepository();
   late final BibleRepository bibleRepo = _buildBibleRepo();
   final commentaryRepo = CommentaryRepository();
@@ -75,7 +84,29 @@ class AppState extends ChangeNotifier {
   final userTractRepo = UserTractRepository();
   final devotionalJournalRepo = DevotionalJournalRepository();
   final devotionalService = const DevotionalService();
+  final notificationPreferencesRepository = NotificationPreferencesRepository();
+  final scheduledNotificationRepository = ScheduledNotificationRepository();
+  final notificationInboxRepository = NotificationInboxRepository();
+  final notificationContentService = NotificationContentService();
+  final appNotificationService = AppNotificationService();
   late final dailyVerseService = DailyVerseService(bibleRepo);
+  late final notificationNavigationService =
+      NotificationNavigationService(this);
+  late final notificationScheduler = NotificationScheduler(
+    notificationService: appNotificationService,
+    contentService: notificationContentService,
+    scheduleRepository: scheduledNotificationRepository,
+    readingPlanRemainingCount: _readingPlanRemainingCountForDate,
+    scriptureMemoryDueCount: _scriptureMemoryDueCountForDate,
+    devotionalCompleted: isDevotionalCompletedForDate,
+  );
+  late final notificationCoordinator = NotificationCoordinator(
+    preferencesRepository: notificationPreferencesRepository,
+    scheduleRepository: scheduledNotificationRepository,
+    inboxRepository: notificationInboxRepository,
+    scheduler: notificationScheduler,
+  );
+  bool _notificationsInitialized = false;
 
   final searchIndexRepo = SearchIndexRepository();
   final smartSearchRepo = createSmartOfflineSearchRepository();
@@ -232,6 +263,7 @@ class AppState extends ChangeNotifier {
     _persistDevotionalProgress();
     _markDevotionalReadInternal(devotionalId, DateTime.now());
     notifyListeners();
+    _refreshNotifications();
   }
 
   void markDevotionalCompleted(
@@ -354,6 +386,7 @@ class AppState extends ChangeNotifier {
     _readingPlanLastOpenedPassagesByDate[dateKey] = passage;
     await _persistReadingPlanProgress();
     notifyListeners();
+    _refreshNotifications();
   }
 
   Future<void> markReadingPlanPassageCompleted(
@@ -379,6 +412,7 @@ class AppState extends ChangeNotifier {
 
     await _persistReadingPlanProgress();
     notifyListeners();
+    _refreshNotifications();
   }
 
   Future<void> markReadingPlanCompleted({
@@ -399,6 +433,7 @@ class AppState extends ChangeNotifier {
 
     await _persistReadingPlanProgress();
     notifyListeners();
+    _refreshNotifications();
   }
 
   static const _settingsBoxName = 'settings';
@@ -431,6 +466,20 @@ class AppState extends ChangeNotifier {
     }
     _loadSettings();
     _scheduleDailyDevotionalRollover();
+    await notificationPreferencesRepository.init();
+    await scheduledNotificationRepository.init();
+    await notificationInboxRepository.init();
+    notificationInboxRepository.addListener(_handleNotificationInboxChange);
+    await notificationContentService.init();
+    await appNotificationService.initialize(
+      onPayload: (payload) async {
+        await notificationCoordinator.recordNotificationTap(payload);
+        await notificationNavigationService.handlePayload(payload);
+      },
+    );
+    _notificationsInitialized = true;
+    WidgetsBinding.instance.addObserver(this);
+    await notificationCoordinator.refresh();
   }
 
   void _loadSettings() {
@@ -689,6 +738,44 @@ class AppState extends ChangeNotifier {
     _currentDevotionalStage = DevotionalResumeStage.reading;
     _persistCurrentDevotional();
     notifyListeners();
+    _refreshNotifications();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (!_notificationsInitialized) {
+      return;
+    }
+    if (state == AppLifecycleState.resumed) {
+      notificationCoordinator.setForeground(true);
+      unawaited(_refreshTimezoneAndNotifications());
+    } else if (state == AppLifecycleState.paused) {
+      notificationCoordinator.setForeground(false);
+      _refreshNotifications();
+    }
+  }
+
+  Future<void> _refreshTimezoneAndNotifications() async {
+    await appNotificationService.refreshTimezone();
+    await notificationCoordinator.refresh();
+  }
+
+  void _refreshNotifications() {
+    if (!_notificationsInitialized) return;
+    unawaited(notificationCoordinator.refresh());
+  }
+
+  int _readingPlanRemainingCountForDate(DateTime date) {
+    final reading = ReadingPlanService().getReadingForDate(date);
+    final completed = readingPlanCompletedPassagesForDate(date);
+    return reading.passages
+        .where((passage) => !completed.contains(passage))
+        .length;
+  }
+
+  int _scriptureMemoryDueCountForDate(DateTime date) {
+    final endOfDay = DateTime(date.year, date.month, date.day, 23, 59, 59);
+    return memoryVerseRepo.due(now: endOfDay).length;
   }
 
   DateTime _dateOnly(DateTime value) {
@@ -830,11 +917,21 @@ class AppState extends ChangeNotifier {
 
   void _handleMemoryVerseChange() {
     notifyListeners();
+    _refreshNotifications();
+  }
+
+  void _handleNotificationInboxChange() {
+    notifyListeners();
   }
 
   @override
   void dispose() {
     _dailyDevotionalRolloverTimer?.cancel();
+    WidgetsBinding.instance.removeObserver(this);
+    notificationInboxRepository.removeListener(
+      _handleNotificationInboxChange,
+    );
+    notificationCoordinator.dispose();
     memoryVerseRepo.removeListener(_handleMemoryVerseChange);
     memoryVerseRepo.dispose();
     narrationLifecycleObserver.detach();

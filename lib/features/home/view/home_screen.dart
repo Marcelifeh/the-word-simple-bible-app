@@ -603,6 +603,13 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: _HomeHeader(
                   title: _greetingTitle(),
                   subtitle: _greetingSubtitle(),
+                  unreadNotifications:
+                      state.notificationInboxRepository.unreadCount,
+                  onNotificationsTap: () => AppRouter.pushNamed(
+                    context,
+                    AppRouter.notificationInboxRoute,
+                    rootNavigator: true,
+                  ),
                   onSettingsTap: () => AppRouter.pushNamed(
                     context,
                     AppRouter.settingsRoute,
@@ -823,11 +830,15 @@ class _HomeHeader extends StatelessWidget {
   const _HomeHeader({
     required this.title,
     required this.subtitle,
+    required this.unreadNotifications,
+    required this.onNotificationsTap,
     required this.onSettingsTap,
   });
 
   final String title;
   final String subtitle;
+  final int unreadNotifications;
+  final VoidCallback onNotificationsTap;
   final VoidCallback onSettingsTap;
 
   @override
@@ -881,6 +892,41 @@ class _HomeHeader extends StatelessWidget {
           ),
         ),
         const SizedBox(width: 10),
+        Stack(
+          clipBehavior: Clip.none,
+          children: [
+            IconButton(
+              onPressed: onNotificationsTap,
+              icon: const Icon(Icons.notifications_none),
+              tooltip: 'Notifications',
+            ),
+            if (unreadNotifications > 0)
+              Positioned(
+                right: 4,
+                top: 3,
+                child: Container(
+                  constraints: const BoxConstraints(
+                    minWidth: 16,
+                    minHeight: 16,
+                  ),
+                  padding: const EdgeInsets.symmetric(horizontal: 4),
+                  decoration: BoxDecoration(
+                    color: scheme.error,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  alignment: Alignment.center,
+                  child: Text(
+                    unreadNotifications > 99 ? '99+' : '$unreadNotifications',
+                    style: theme.textTheme.labelSmall?.copyWith(
+                      color: scheme.onError,
+                      fontSize: 9,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                ),
+              ),
+          ],
+        ),
         IconButton.filledTonal(
           onPressed: onSettingsTap,
           icon: const Icon(Icons.settings_outlined),

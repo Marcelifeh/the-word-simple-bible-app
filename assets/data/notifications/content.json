@@ -1,0 +1,66 @@
+{
+  "daily_verse": [
+    {
+      "title": "Begin with the Word",
+      "body": "Today's verse is ready for you."
+    },
+    {
+      "title": "A word for today",
+      "body": "Take a quiet moment with today's Scripture."
+    },
+    {
+      "title": "Today's Verse",
+      "body": "Open The Word App for today's verse and insight."
+    }
+  ],
+  "daily_devotional": [
+    {
+      "title": "Your devotional is ready",
+      "body": "Begin today with God's Word."
+    },
+    {
+      "title": "Make room for the Word",
+      "body": "Today's devotional is ready when you are."
+    }
+  ],
+  "reading_plan": [
+    {
+      "title": "Continue today's reading",
+      "bodyTemplate": "You still have {count} {passages} remaining in today's plan."
+    },
+    {
+      "title": "Grace meets you here",
+      "bodyTemplate": "Continue your {count} remaining {passages} when you're ready."
+    }
+  ],
+  "scripture_memory_review": [
+    {
+      "title": "Hide God's Word in your heart",
+      "bodyTemplate": "{count} {verses} ready for review today."
+    },
+    {
+      "title": "Keep the Word close",
+      "bodyTemplate": "Review {count} {verses} when you're ready."
+    }
+  ],
+  "prayer_reminder": [
+    {
+      "title": "Take a quiet moment with God",
+      "body": "Pause, breathe, and bring your heart before Him."
+    },
+    {
+      "title": "A moment for prayer",
+      "body": "Bring what is on your heart before God."
+    }
+  ],
+  "evening_reflection": [
+    {
+      "title": "Pause and reflect",
+      "body": "What did God teach you today?"
+    },
+    {
+      "title": "End the day with reflection",
+      "body": "Notice where grace met you today."
+    }
+  ]
+}
