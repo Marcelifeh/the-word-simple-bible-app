@@ -2,11 +2,15 @@ import 'package:flutter/foundation.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:record/record.dart';
 
+import 'sermon_audio_file_service.dart';
+
 class SermonRecordingService {
   SermonRecordingService({AudioRecorder? recorder})
       : _recorder = recorder ?? AudioRecorder();
 
   final AudioRecorder _recorder;
+  final SermonAudioFileService _audioFileService =
+      const SermonAudioFileService();
 
   Future<bool> hasPermission() => _recorder.hasPermission();
 
@@ -34,6 +38,11 @@ class SermonRecordingService {
   Future<String?> stop() => _recorder.stop();
 
   Future<bool> isRecording() => _recorder.isRecording();
+
+  Future<void> deleteFile(String path) async {
+    if (kIsWeb) return;
+    await _audioFileService.delete(path);
+  }
 
   Future<void> dispose() => _recorder.dispose();
 }

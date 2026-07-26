@@ -289,6 +289,7 @@ class _DailyVerseScreenState extends State<DailyVerseScreen> {
       context,
       SermonEditorScreen(note: note),
       transition: AppTransitionType.devotional,
+      rootNavigator: true,
     );
   }
 

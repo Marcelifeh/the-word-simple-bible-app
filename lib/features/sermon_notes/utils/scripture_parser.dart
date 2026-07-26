@@ -15,6 +15,14 @@ class ResolvedScriptureMatch {
 }
 
 class ScriptureParser {
+  static const Set<String> singleChapterBookIds = {
+    'obadiah',
+    'philemon',
+    '2_john',
+    '3_john',
+    'jude',
+  };
+
   static final List<_BookAlias> _bookAliases = _buildBookAliases();
   static final String _bookPattern =
       _bookAliases.map((alias) => _aliasPattern(alias.value)).join('|');
@@ -23,6 +31,13 @@ class ScriptureParser {
     r'\b(' +
         _bookPattern +
         r')\s+(?:(?:chapter|chap\.?|ch\.?)\s*)?(\d{1,3})(?:\s*(?::|\.|,)?\s*(?:(?:verse|verses|v\.?)\s*)?(\d{1,3})(?:\s*(?:-|through|to)\s*(\d{1,3}))?)?\b',
+    caseSensitive: false,
+  );
+
+  static final RegExp _singleChapterNumericPattern = RegExp(
+    r'\b(' +
+        _bookPattern +
+        r')\s+(\d{1,3})(?!\s*(?:(?:[:.,]\s*)?\d|(?:verse|verses|v\.?)\b))(?:\s*(?:-|\u2013|\u2014|through|to)\s*(\d{1,3}))?\b',
     caseSensitive: false,
   );
 
@@ -56,6 +71,7 @@ class ScriptureParser {
 
     final results = <ResolvedScriptureMatch>[];
     _collectNumericMatches(text, results);
+    _collectSingleChapterNumericMatches(text, results);
     _collectSpokenExplicitMatches(text, results);
     _collectSpokenCompactMatches(text, results);
 
@@ -88,13 +104,46 @@ class ScriptureParser {
       final chapter = int.tryParse(match.group(2) ?? '');
       final startVerse = int.tryParse(match.group(3) ?? '');
       final endVerse = int.tryParse(match.group(4) ?? '');
+      final book = _findBook(match.group(1) ?? '');
+      final rawText = match.group(0) ?? '';
+      final isPlainSingleChapterReference = book != null &&
+          singleChapterBookIds.contains(book.id) &&
+          startVerse == null &&
+          !RegExp(
+            r'\b(?:chapter|chap\.?|ch\.?)\b',
+            caseSensitive: false,
+          ).hasMatch(rawText);
+      if (isPlainSingleChapterReference) continue;
+
       _addMatch(
         results,
-        rawText: match.group(0) ?? '',
+        rawText: rawText,
         bookPhrase: match.group(1),
         chapter: chapter,
         startVerse: startVerse,
         endVerse: endVerse,
+        start: match.start,
+        end: match.end,
+      );
+    }
+  }
+
+  static void _collectSingleChapterNumericMatches(
+    String text,
+    List<ResolvedScriptureMatch> results,
+  ) {
+    for (final match in _singleChapterNumericPattern.allMatches(text)) {
+      final bookPhrase = match.group(1);
+      final book = bookPhrase == null ? null : _findBook(bookPhrase);
+      if (book == null || !singleChapterBookIds.contains(book.id)) continue;
+
+      _addMatch(
+        results,
+        rawText: match.group(0) ?? '',
+        bookPhrase: bookPhrase,
+        chapter: 1,
+        startVerse: int.tryParse(match.group(2) ?? ''),
+        endVerse: int.tryParse(match.group(3) ?? ''),
         start: match.start,
         end: match.end,
       );
@@ -242,13 +291,7 @@ class ScriptureParser {
     final output = <ResolvedScriptureMatch>[];
 
     for (final item in items) {
-      final scripture = item.scripture;
-      final key = [
-        scripture.bookId,
-        scripture.chapter,
-        scripture.startVerse ?? 0,
-        scripture.endVerse ?? 0,
-      ].join('-');
+      final key = '${item.start}:${item.end}';
       if (seen.add(key)) output.add(item);
     }
     return output;

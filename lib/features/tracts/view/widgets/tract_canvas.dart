@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import '../../model/tract_share_theme.dart';
+import '../../model/word_studio_custom_background.dart';
 
 enum TractLayoutMode { classic, quoteFocus, minimalist, scriptureFocus }
 
@@ -149,6 +150,7 @@ class TractCanvas extends StatelessWidget {
   final int selectedPage;
   final TractAspectRatio aspectRatio;
   final TractTextColumns textColumns;
+  final WordStudioCustomBackground? customBackground;
 
   /// When true wraps content in FittedBox so nothing ever overflows.
   final bool autoFit;
@@ -171,6 +173,7 @@ class TractCanvas extends StatelessWidget {
     this.aspectRatio = TractAspectRatio.portrait,
     this.textColumns = TractTextColumns.one,
     this.autoFit = true,
+    this.customBackground,
   });
 
   double _calculateAutoFitFontSize(
@@ -441,6 +444,8 @@ class TractCanvas extends StatelessWidget {
   Widget build(BuildContext context) {
     final hasScripture = scripture != null && scripture!.trim().isNotEmpty;
     final hasHook = hook != null && hook!.trim().isNotEmpty;
+    final customBackground = this.customBackground;
+    final hasCustomBackground = customBackground?.hasImage == true;
 
     final crossAxis = textAlign == TextAlign.center
         ? CrossAxisAlignment.center
@@ -455,11 +460,14 @@ class TractCanvas extends StatelessWidget {
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(isExportMode ? 0 : 20),
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: theme.gradientColors,
-          ),
+          color: hasCustomBackground ? Colors.black : null,
+          gradient: hasCustomBackground
+              ? null
+              : LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: theme.gradientColors,
+                ),
           border: theme.useGoldBorder
               ? Border.all(color: const Color(0xFFFFD700), width: 2.5)
               : null,
@@ -476,29 +484,54 @@ class TractCanvas extends StatelessWidget {
           borderRadius: BorderRadius.circular(isExportMode ? 0 : 17),
           child: Stack(
             children: [
-              // Background decorations
-              Positioned.fill(
-                child: CustomPaint(
-                  painter: TractBackgroundPainter(
-                    accentColor: theme.accentColor,
-                    drawCross: theme.useParchmentStyle ||
-                        theme.id == 'midnight' ||
-                        theme.id == 'stars',
-                    drawRays: theme.useClouds ||
-                        theme.id == 'fire' ||
-                        theme.id == 'sunset',
-                    drawStars: theme.useStars || theme.id == 'gold',
-                    drawParticles: theme.id == 'sunset' ||
-                        theme.id == 'emerald' ||
-                        theme.id == 'lavender' ||
-                        theme.id == 'fire',
+              if (hasCustomBackground)
+                Positioned.fill(
+                  child: Transform.scale(
+                    scale: customBackground!.scale,
+                    child: Image.memory(
+                      customBackground.bytes!,
+                      fit: customBackground.fit,
+                      alignment: customBackground.alignment,
+                      gaplessPlayback: true,
+                    ),
                   ),
                 ),
-              ),
-              if (theme.useParchmentStyle) _buildParchmentOverlay(),
-              if (theme.useClouds) _buildCloudsOverlay(),
-              if (theme.useStars) _buildStarsOverlay(),
-              if (theme.useFireGlow) _buildFireGlowOverlay(),
+              if (hasCustomBackground)
+                Positioned.fill(
+                  child: ColoredBox(
+                    color: Colors.black.withValues(
+                      alpha: customBackground!.overlayOpacity,
+                    ),
+                  ),
+                ),
+
+              // Background decorations
+              if (!hasCustomBackground)
+                Positioned.fill(
+                  child: CustomPaint(
+                    painter: TractBackgroundPainter(
+                      accentColor: theme.accentColor,
+                      drawCross: theme.useParchmentStyle ||
+                          theme.id == 'midnight' ||
+                          theme.id == 'stars',
+                      drawRays: theme.useClouds ||
+                          theme.id == 'fire' ||
+                          theme.id == 'sunset',
+                      drawStars: theme.useStars || theme.id == 'gold',
+                      drawParticles: theme.id == 'sunset' ||
+                          theme.id == 'emerald' ||
+                          theme.id == 'lavender' ||
+                          theme.id == 'fire',
+                    ),
+                  ),
+                ),
+              if (!hasCustomBackground && theme.useParchmentStyle)
+                _buildParchmentOverlay(),
+              if (!hasCustomBackground && theme.useClouds)
+                _buildCloudsOverlay(),
+              if (!hasCustomBackground && theme.useStars) _buildStarsOverlay(),
+              if (!hasCustomBackground && theme.useFireGlow)
+                _buildFireGlowOverlay(),
 
               // Fixed footer pinned at bottom
               Positioned(
@@ -513,9 +546,17 @@ class TractCanvas extends StatelessWidget {
                       begin: Alignment.topCenter,
                       end: Alignment.bottomCenter,
                       colors: [
-                        theme.gradientColors.last.withValues(alpha: 0.0),
-                        theme.gradientColors.last.withValues(alpha: 0.85),
-                        theme.gradientColors.last,
+                        (hasCustomBackground
+                                ? Colors.black
+                                : theme.gradientColors.last)
+                            .withValues(alpha: 0.0),
+                        (hasCustomBackground
+                                ? Colors.black
+                                : theme.gradientColors.last)
+                            .withValues(alpha: 0.85),
+                        hasCustomBackground
+                            ? Colors.black
+                            : theme.gradientColors.last,
                       ],
                       stops: const [0.0, 0.35, 1.0],
                     ),

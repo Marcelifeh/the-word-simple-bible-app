@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:share_plus/share_plus.dart';
 
 import '../../../shared/state/app_state.dart';
+import '../../../shared/widgets/adaptive_feature_hero.dart';
 import '../../../shared/widgets/reading_text_scale.dart';
 import '../../../core/utils/scripture_reference_parser.dart';
 import '../../devotional_audio/view/devotional_player_screen.dart';
@@ -187,88 +188,68 @@ https://play.google.com/store/apps/details?id=com.theword.simplebible''';
     final d = widget.devotional;
 
     return Scaffold(
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (_) =>
-                  DevotionalPlayerScreen(devotional: widget.devotional),
-            ),
-          );
-        },
-        icon: const Icon(Icons.headphones_rounded),
-        label: const Text('Listen & Reflect'),
-        backgroundColor: _indigo,
-        foregroundColor: Colors.white,
+      floatingActionButton: SafeArea(
+        top: false,
+        minimum: const EdgeInsets.only(bottom: 12),
+        child: FloatingActionButton.extended(
+          heroTag: 'devotional-listen-fab',
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) =>
+                    DevotionalPlayerScreen(devotional: widget.devotional),
+              ),
+            );
+          },
+          icon: const Icon(Icons.headphones_rounded),
+          label: const Text('Listen & Reflect'),
+          backgroundColor: _indigo,
+          foregroundColor: Colors.white,
+        ),
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       body: NotificationListener<ScrollNotification>(
         onNotification: _handleScrollNotification,
         child: CustomScrollView(
           slivers: [
             // ── Gradient header ───────────────────────────────────────────────
-            SliverAppBar(
-              expandedHeight: 200,
-              pinned: true,
-              stretch: true,
-              backgroundColor: _indigo,
-              flexibleSpace: FlexibleSpaceBar(
-                collapseMode: CollapseMode.parallax,
-                background: Container(
-                  decoration: const BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [_indigo, _violet],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
+            SliverToBoxAdapter(
+              child: AdaptiveFeatureHero(
+                gradient: const LinearGradient(
+                  colors: [_indigo, _violet],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+                badge: Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withValues(alpha: 0.18),
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Text(
+                    '🌿  ${d.theme.toUpperCase()}',
+                    style: const TextStyle(
+                      fontSize: 10,
+                      fontWeight: FontWeight.w700,
+                      letterSpacing: 1.5,
+                      color: Colors.white,
                     ),
                   ),
-                  child: SafeArea(
-                    child: Padding(
-                      padding: const EdgeInsets.fromLTRB(24, 52, 24, 24),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          // Theme badge
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 10, vertical: 4),
-                            decoration: BoxDecoration(
-                              color: Colors.white.withValues(alpha: 0.18),
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            child: Text(
-                              '🌿  ${d.theme.toUpperCase()}',
-                              style: const TextStyle(
-                                fontSize: 10,
-                                fontWeight: FontWeight.w700,
-                                letterSpacing: 1.5,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
-                          const SizedBox(height: 8),
-                          Text(
-                            d.title,
-                            style: TextStyle(
-                              fontSize: 24 * readingScale,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                              height: 1.25,
-                            ),
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            d.scriptureReference,
-                            style: TextStyle(
-                              fontSize: (13 * readingScale).clamp(13, 18),
-                              color: Colors.white.withValues(alpha: 0.75),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
+                ),
+                title: d.title,
+                subtitle: d.scriptureReference,
+                titleStyle: TextStyle(
+                  fontSize: 24 * readingScale,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                  height: 1.25,
+                ),
+                subtitleStyle: TextStyle(
+                  fontSize: (13 * readingScale).clamp(13, 18),
+                  color: Colors.white.withValues(alpha: 0.75),
+                  height: 1.3,
                 ),
               ),
             ),

@@ -58,4 +58,15 @@ void main() {
 
     expect(service.pendingPayloadCount, 1);
   });
+
+  test('test notification centre payload waits for the root navigator',
+      () async {
+    final service = NotificationNavigationService(AppState());
+
+    await service.handlePayload(
+      AppNotificationService.notificationCentrePayload,
+    );
+
+    expect(service.pendingPayloadCount, 1);
+  });
 }

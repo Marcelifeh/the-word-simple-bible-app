@@ -4,6 +4,8 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 
 import '../../core/utils/bible_text_sanitizer.dart';
+import '../../data/commentary/commentary_availability.dart';
+import '../../domain/entities/bible_translation.dart';
 import 'animated_stagger_list.dart';
 import 'spiritual_section.dart';
 
@@ -12,11 +14,13 @@ class VerseInsightPanel extends StatefulWidget {
     super.key,
     required this.rawText,
     required this.accentColor,
+    required this.translation,
     this.baseTextStyle,
   });
 
   final String rawText;
   final Color accentColor;
+  final BibleTranslation translation;
   final TextStyle? baseTextStyle;
 
   @override
@@ -36,12 +40,19 @@ class _VerseInsightPanelState extends State<VerseInsightPanel> {
   @override
   void didUpdateWidget(covariant VerseInsightPanel oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (widget.rawText != oldWidget.rawText) {
+    if (widget.rawText != oldWidget.rawText ||
+        widget.translation != oldWidget.translation) {
       _scheduleReveal();
     }
   }
 
   void _scheduleReveal() {
+    if (!hasCommentaryForTranslation(widget.translation)) {
+      _revealToken++;
+      _visibleSections = 0;
+      return;
+    }
+
     final sections = _VerseInsightContent.parse(widget.rawText).sections;
     final token = ++_revealToken;
     if (mounted) {
@@ -59,6 +70,14 @@ class _VerseInsightPanelState extends State<VerseInsightPanel> {
 
   @override
   Widget build(BuildContext context) {
+    if (!hasCommentaryForTranslation(widget.translation)) {
+      return _CommentaryComingSoonCard(
+        translation: widget.translation,
+        accentColor: widget.accentColor,
+        baseTextStyle: widget.baseTextStyle,
+      );
+    }
+
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
     final data = _VerseInsightContent.parse(widget.rawText);
@@ -100,6 +119,81 @@ class _VerseInsightPanelState extends State<VerseInsightPanel> {
           ),
         ],
       ],
+    );
+  }
+}
+
+class _CommentaryComingSoonCard extends StatelessWidget {
+  const _CommentaryComingSoonCard({
+    required this.translation,
+    required this.accentColor,
+    required this.baseTextStyle,
+  });
+
+  final BibleTranslation translation;
+  final Color accentColor;
+  final TextStyle? baseTextStyle;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final scheme = theme.colorScheme;
+    final languageName = commentaryLanguageName(translation);
+
+    return Semantics(
+      label: 'Commentary in $languageName is coming soon.',
+      child: Container(
+        padding: const EdgeInsets.all(18),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(16),
+          color: scheme.surfaceContainerLow,
+          border: Border.all(
+            color: accentColor.withValues(alpha: 0.25),
+          ),
+        ),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              width: 44,
+              height: 44,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: accentColor.withValues(alpha: 0.14),
+              ),
+              child: Icon(
+                Icons.translate_rounded,
+                color: accentColor,
+              ),
+            ),
+            const SizedBox(width: 14),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Commentary in $languageName is coming soon.',
+                    style: theme.textTheme.titleMedium?.copyWith(
+                      color: scheme.onSurface,
+                      fontWeight: FontWeight.w800,
+                    ),
+                  ),
+                  const SizedBox(height: 6),
+                  Text(
+                    'The verse text is available, but the translated insight '
+                    'for this language has not been added yet.',
+                    style:
+                        (baseTextStyle ?? theme.textTheme.bodyMedium)?.copyWith(
+                      height: 1.4,
+                      color: scheme.onSurfaceVariant,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

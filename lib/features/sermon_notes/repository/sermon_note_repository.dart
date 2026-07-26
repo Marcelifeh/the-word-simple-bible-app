@@ -86,7 +86,13 @@ class SermonNoteRepository {
       try {
         final json = (jsonDecode(raw) as Map).cast<String, dynamic>();
         final note = SermonNote.fromJson(json);
-        await _audioFileService.delete(note.audioPath);
+        final paths = note.recordingClips
+            .map((clip) => clip.filePath.trim())
+            .where((path) => path.isNotEmpty)
+            .toSet();
+        for (final path in paths) {
+          await _audioFileService.delete(path);
+        }
       } catch (_) {
         // Note deletion should still proceed even if cleanup metadata is stale.
       }

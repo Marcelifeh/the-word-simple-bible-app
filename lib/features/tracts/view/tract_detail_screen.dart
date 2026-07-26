@@ -4,6 +4,7 @@ import 'package:share_plus/share_plus.dart';
 import '../../../core/utils/app_haptics.dart';
 import '../../../shared/widgets/spiritual_section.dart';
 import '../../../shared/state/app_state.dart';
+import '../../../shared/widgets/adaptive_feature_hero.dart';
 import '../../../shared/widgets/reading_text_scale.dart';
 import '../../../core/narration/models/narration_state.dart';
 import '../../../core/narration/widgets/narration_fab.dart';
@@ -28,86 +29,67 @@ class _TractDetailScreenState extends State<TractDetailScreen> {
     final readingScale = AppScope.of(context).fontScale;
 
     return Scaffold(
-      floatingActionButton: NarrationFab(
-        controller: AppScope.of(context).narrationController,
-        onPlay: () {
-          AppScope.of(context).narrationController.playContent(
-                widget.tract,
-                id: 'tract_${widget.tract.id}',
-                sourceType: NarrationSourceType.tract,
-              );
-        },
+      floatingActionButton: SafeArea(
+        top: false,
+        minimum: const EdgeInsets.only(bottom: 12),
+        child: NarrationFab(
+          controller: AppScope.of(context).narrationController,
+          onPlay: () {
+            AppScope.of(context).narrationController.playContent(
+                  widget.tract,
+                  id: 'tract_${widget.tract.id}',
+                  sourceType: NarrationSourceType.tract,
+                );
+          },
+        ),
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       body: CustomScrollView(
         slivers: [
           // ── Gradient header ─────────────────────────────────────────────────
-          SliverAppBar(
-            expandedHeight: 200,
-            pinned: true,
-            stretch: true,
-            stretchTriggerOffset: 100,
-            flexibleSpace: FlexibleSpaceBar(
-              background: Container(
+          SliverToBoxAdapter(
+            child: AdaptiveFeatureHero(
+              gradient: LinearGradient(
+                colors: colors,
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+              badge: Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                 decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: colors,
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
+                  color: Colors.white.withValues(alpha: 0.20),
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Text(
+                  widget.tract.category.toUpperCase(),
+                  style: const TextStyle(
+                    fontSize: 10,
+                    fontWeight: FontWeight.w700,
+                    letterSpacing: 1.2,
+                    color: Colors.white,
                   ),
                 ),
-                child: SafeArea(
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(24, 48, 24, 24),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 10, vertical: 4),
-                          decoration: BoxDecoration(
-                            color: Colors.white.withValues(alpha: 0.20),
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          child: Text(
-                            widget.tract.category.toUpperCase(),
-                            style: const TextStyle(
-                              fontSize: 10,
-                              fontWeight: FontWeight.w700,
-                              letterSpacing: 1.2,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        Text(
-                          widget.tract.hook,
-                          style: TextStyle(
-                            fontSize: 12 * readingScale,
-                            color: Colors.white.withValues(alpha: 0.80),
-                            fontStyle: FontStyle.italic,
-                          ),
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          widget.tract.title,
-                          style: TextStyle(
-                            fontSize: 26 * readingScale,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ),
-                        ),
-                        Text(
-                          widget.tract.summary,
-                          style: TextStyle(
-                            fontSize: 13 * readingScale,
-                            color: Colors.white.withValues(alpha: 0.85),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
+              ),
+              eyebrow: widget.tract.hook,
+              title: widget.tract.title,
+              subtitle: widget.tract.summary,
+              eyebrowStyle: TextStyle(
+                fontSize: 12 * readingScale,
+                color: Colors.white.withValues(alpha: 0.80),
+                fontStyle: FontStyle.italic,
+                height: 1.25,
+              ),
+              titleStyle: TextStyle(
+                fontSize: 26 * readingScale,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+                height: 1.08,
+              ),
+              subtitleStyle: TextStyle(
+                fontSize: 13 * readingScale,
+                color: Colors.white.withValues(alpha: 0.85),
+                height: 1.3,
               ),
             ),
           ),

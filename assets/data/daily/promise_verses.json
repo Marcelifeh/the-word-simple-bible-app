@@ -1,42 +1,57 @@
 [
   {
+    "id": "psalms-23-1-peace-01",
     "bookId": "psalms",
     "bookName": "Psalms",
     "chapter": 23,
     "verse": 1,
     "tag": "Peace",
-    "commentary": "God’s care is personal and constant. This promise reminds you that the Lord is not distant; He leads, provides, and restores the heart that trusts Him."
+    "commentary": "God’s care is personal and constant. This promise reminds you that the Lord is not distant; He leads, provides, and restores the heart that trusts Him.",
+    "prayer": "Lord, shepherd my heart today. Lead me with wisdom, provide what I truly need, and teach me to rest in Your faithful care. Amen.",
+    "reflection": "What burden can I release as I trust the Shepherd who knows and provides for me?"
   },
   {
+    "id": "isaiah-41-10-strength-01",
     "bookId": "isaiah",
     "bookName": "Isaiah",
     "chapter": 41,
     "verse": 10,
     "tag": "Strength",
-    "commentary": "God does not only tell you not to fear; He promises His presence, help, and strength. Your confidence rests in who holds you, not in what surrounds you."
+    "commentary": "God does not only tell you not to fear; He promises His presence, help, and strength. Your confidence rests in who holds you, not in what surrounds you.",
+    "prayer": "Lord, quiet my fear with the assurance of Your presence. Strengthen me and hold me steady in every challenge I face today. Amen.",
+    "reflection": "Where is God inviting me to exchange fear for confidence in His presence?"
   },
   {
+    "id": "1_john-1-9-forgiveness-01",
     "bookId": "1_john",
     "bookName": "1 John",
     "chapter": 1,
     "verse": 9,
     "tag": "Forgiveness",
-    "commentary": "This promise reveals God’s faithfulness to cleanse the repentant heart. Confession is not rejection; it is the doorway back into fellowship and mercy."
+    "commentary": "This promise reveals God’s faithfulness to cleanse the repentant heart. Confession is not rejection; it is the doorway back into fellowship and mercy.",
+    "prayer": "Faithful Father, bring every hidden thing into Your light. Forgive me, cleanse me, and restore the joy of walking closely with You. Amen.",
+    "reflection": "What do I need to confess honestly so I can receive God’s cleansing grace?"
   },
   {
+    "id": "philippians-4-7-peace-01",
     "bookId": "philippians",
     "bookName": "Philippians",
     "chapter": 4,
     "verse": 7,
     "tag": "Peace",
-    "commentary": "God’s peace does more than calm emotions; it guards the heart and mind. This promise reminds you that prayer brings your inner life under divine protection."
+    "commentary": "God’s peace does more than calm emotions; it guards the heart and mind. This promise reminds you that prayer brings your inner life under divine protection.",
+    "prayer": "Jesus, guard my heart and mind with Your peace. Teach me to bring every concern to You and to rest in Your nearness. Amen.",
+    "reflection": "Which anxious thought do I need to place into God’s hands today?"
   },
   {
+    "id": "ephesians-3-20-faith-01",
     "bookId": "ephesians",
     "bookName": "Ephesians",
     "chapter": 3,
     "verse": 20,
     "tag": "Faith",
-    "commentary": "God’s power is not limited by your request or imagination. This promise calls you to trust that He is able to work beyond what you can see."
+    "commentary": "God’s power is not limited by your request or imagination. This promise calls you to trust that He is able to work beyond what you can see.",
+    "prayer": "Almighty God, enlarge my faith beyond what I can see. Work in me and through me according to Your wisdom and abundant power. Amen.",
+    "reflection": "Where have I limited my expectations of what God can do?"
   }
 ]

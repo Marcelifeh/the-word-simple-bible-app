@@ -18,6 +18,10 @@ class BibleTextSanitizer {
     // Remove strong attributes when present (mostly a USFM conversion artifact).
     s = s.replaceAll(RegExp(r'\|strong="[^"]*"'), '');
 
+    // Remove pipe-form WordLink markers left by some converted sources
+    // (e.g. "|+w LORD |+w*").
+    s = s.replaceAll(RegExp(r'\|\s*[+\-]?\s*w\*?', caseSensitive: false), ' ');
+
     // Remove WordLink/footnote marker artifacts (e.g. "Verily$1" or "$12").
     s = s.replaceAll(RegExp(r'\$\d+'), '');
     s = s.replaceAll(r'$', ''); // Remove any remaining dollar signs

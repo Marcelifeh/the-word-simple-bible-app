@@ -53,6 +53,12 @@ class NarrationBar extends StatelessWidget {
       return 'Verse ${session.currentIndex} of ${total - 1}';
     }
 
+    if (session.sourceType == NarrationSourceType.bible && total == 1) {
+      final reference = session.currentSegment?.reference ?? '';
+      final verseMatch = RegExp(r':(\d+)$').firstMatch(reference.trim());
+      return verseMatch == null ? 'Verse' : 'Verse ${verseMatch.group(1)}';
+    }
+
     return 'Segment ${session.currentIndex + 1} of $total';
   }
 

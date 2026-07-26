@@ -152,7 +152,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   segments: HomeTextSize.values.map((size) {
                     return ButtonSegment<HomeTextSize>(
                       value: size,
-                      label: Text(size.label),
+                      label: Text(size.shortLabel),
                     );
                   }).toList(),
                   selected: {state.homeTextSize},

@@ -26,6 +26,8 @@ import '../../scripture_memory/view/scripture_memory_screen.dart';
 import '../../daily_verse/model/promise_verse.dart';
 import '../../daily_verse/services/promise_verse_service.dart';
 import '../../daily_verse/view/promise_verse_screen.dart';
+import '../model/daily_encouragement.dart';
+import '../services/daily_encouragement_service.dart';
 import '../widgets/journey_action_tile.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -53,51 +55,6 @@ class WeeklyHomeStats {
   double get progress => (readingDays / 7).clamp(0.0, 1.0).toDouble();
 }
 
-class DailyEncouragement {
-  const DailyEncouragement({
-    required this.message,
-    required this.reference,
-    required this.body,
-  });
-
-  final String message;
-  final String reference;
-  final String body;
-}
-
-const _encouragements = [
-  DailyEncouragement(
-    message: 'Grace meets you here. Begin again in the Word.',
-    reference: 'Psalm 51:12',
-    body:
-        'God restores the joy of salvation and renews the heart that returns to Him.',
-  ),
-  DailyEncouragement(
-    message: 'Take heart. The Lord restores your steps.',
-    reference: 'Joel 2:25',
-    body:
-        'Nothing surrendered to God is wasted. He is able to restore what was lost.',
-  ),
-  DailyEncouragement(
-    message: 'You are not behind God\'s mercy.',
-    reference: 'Lamentations 3:22-23',
-    body:
-        'His mercies are new every morning. Today is another invitation to walk with Him.',
-  ),
-  DailyEncouragement(
-    message: 'Begin today\'s walk in the Word.',
-    reference: 'Psalm 119:105',
-    body:
-        'The Word of God gives light for the next step, even before the whole path is visible.',
-  ),
-  DailyEncouragement(
-    message: 'Let the Word dwell richly in you.',
-    reference: 'Colossians 3:16',
-    body:
-        'Scripture forms the heart over time. Every faithful return to the Word matters.',
-  ),
-];
-
 class _HomeScreenState extends State<HomeScreen> {
   Verse? _dailyVerse;
   bool _verseLoading = true;
@@ -113,6 +70,8 @@ class _HomeScreenState extends State<HomeScreen> {
   int _dashboardPage = 0;
 
   bool _initDone = false;
+  DateTime? _loadedDailyContentDate;
+  static const _encouragementService = DailyEncouragementService();
 
   @override
   void initState() {
@@ -124,8 +83,10 @@ class _HomeScreenState extends State<HomeScreen> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     _loadWeeklyStats();
-    if (!_initDone) {
+    final today = _todayOnly;
+    if (!_initDone || _loadedDailyContentDate != today) {
       _initDone = true;
+      _loadedDailyContentDate = today;
       _loadDailyVerse();
     }
   }
@@ -164,6 +125,11 @@ class _HomeScreenState extends State<HomeScreen> {
     try {
       final promise = await service.getTodayPromise(
         translation: state.translation,
+        history: state.promiseHistory,
+      );
+      await state.recordPromiseShown(
+        promiseId: promise.id,
+        theme: promise.tag,
       );
       if (mounted) {
         setState(() {
@@ -304,15 +270,6 @@ class _HomeScreenState extends State<HomeScreen> {
     await _loadWeeklyStats();
   }
 
-  Future<void> _openScriptureMemory() async {
-    await AppRouter.push(
-      context,
-      const ScriptureMemoryScreen(),
-      rootNavigator: true,
-      transition: AppTransitionType.slideUp,
-    );
-  }
-
   void _openAudioDevotional(DevotionalModel devotional) {
     final state = AppScope.of(context);
     state.setCurrentDevotional(
@@ -352,6 +309,15 @@ class _HomeScreenState extends State<HomeScreen> {
     await _loadWeeklyStats();
   }
 
+  Future<void> _openScriptureMemory() async {
+    await AppRouter.push(
+      context,
+      const ScriptureMemoryScreen(),
+      rootNavigator: true,
+      transition: AppTransitionType.slideUp,
+    );
+  }
+
   String _greetingTitle() {
     final hour = TimeOfDay.now().hour;
     if (hour < 5) return 'Good Night';
@@ -370,24 +336,110 @@ class _HomeScreenState extends State<HomeScreen> {
     return 'Meditate on His Word';
   }
 
-  DailyEncouragement get _todayEncouragement {
-    final dayIndex = _todayOnly.difference(DateTime(2026, 1, 1)).inDays;
-    final index =
-        ((dayIndex % _encouragements.length) + _encouragements.length) %
-            _encouragements.length;
-    return _encouragements[index];
+  DailyEncouragement _todayEncouragementFor(
+    AppState state,
+    ReadingPlanService readingPlanService,
+  ) {
+    final today = _todayOnly;
+    final todayReading = readingPlanService.getReadingForDate(today);
+    final devotionalProgress = state.devotionalProgressForDate(today);
+    final hasReadToday = devotionalProgress > 0 ||
+        state.readingPlanLastOpenedPassageForDate(today) != null ||
+        state.readingPlanCompletedPassagesForDate(today).isNotEmpty;
+
+    return _encouragementService.select(
+      DailyEncouragementContext(
+        now: DateTime.now(),
+        hasReadToday: hasReadToday,
+        readingPlanCompleted: state.isReadingPlanCompletedForDate(
+          today,
+          todayReading.passages,
+        ),
+        devotionalCompleted: state.isDevotionalCompletedForDate(today),
+        missedTwoDays: _missedTwoRecentDays(state, readingPlanService),
+        streakDays: _spiritualStreakDays(state, readingPlanService),
+      ),
+    );
+  }
+
+  bool _hasSpiritualActivityForDate(
+    AppState state,
+    ReadingPlanService readingPlanService,
+    DateTime date,
+  ) {
+    final reading = readingPlanService.getReadingForDate(date);
+    return state.devotionalProgressForDate(date) > 0 ||
+        state.readingPlanLastOpenedPassageForDate(date) != null ||
+        state.isReadingPlanCompletedForDate(date, reading.passages);
+  }
+
+  bool _completedSpiritualPracticeForDate(
+    AppState state,
+    ReadingPlanService readingPlanService,
+    DateTime date,
+  ) {
+    final reading = readingPlanService.getReadingForDate(date);
+    return state.isDevotionalCompletedForDate(date) ||
+        state.isReadingPlanCompletedForDate(date, reading.passages);
+  }
+
+  bool _missedTwoRecentDays(
+    AppState state,
+    ReadingPlanService readingPlanService,
+  ) {
+    final yesterday = _todayOnly.subtract(const Duration(days: 1));
+    final dayBefore = _todayOnly.subtract(const Duration(days: 2));
+    if (_hasSpiritualActivityForDate(state, readingPlanService, yesterday) ||
+        _hasSpiritualActivityForDate(state, readingPlanService, dayBefore)) {
+      return false;
+    }
+
+    for (var offset = 3; offset <= 14; offset += 1) {
+      final date = _todayOnly.subtract(Duration(days: offset));
+      if (_hasSpiritualActivityForDate(state, readingPlanService, date)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  int _spiritualStreakDays(
+    AppState state,
+    ReadingPlanService readingPlanService,
+  ) {
+    var cursor = _todayOnly;
+    if (!_completedSpiritualPracticeForDate(
+      state,
+      readingPlanService,
+      cursor,
+    )) {
+      cursor = cursor.subtract(const Duration(days: 1));
+    }
+
+    var streak = 0;
+    while (streak < 365 &&
+        _completedSpiritualPracticeForDate(
+          state,
+          readingPlanService,
+          cursor,
+        )) {
+      streak += 1;
+      cursor = cursor.subtract(const Duration(days: 1));
+    }
+    return streak;
   }
 
   void _showEncouragementSheet(DailyEncouragement item) {
+    final theme = Theme.of(context);
+    final scheme = theme.colorScheme;
+    final accent = _encouragementToneColor(item.tone, theme.brightness);
     showModalBottomSheet<void>(
       context: context,
-      backgroundColor: const Color(0xFF111827),
+      backgroundColor: scheme.surface,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
       ),
       builder: (context) {
-        final theme = Theme.of(context);
-
         return SafeArea(
           child: Padding(
             padding: const EdgeInsets.all(24),
@@ -395,24 +447,24 @@ class _HomeScreenState extends State<HomeScreen> {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Icon(
-                  Icons.favorite_rounded,
-                  color: Color(0xFFFF7AB6),
+                Icon(
+                  _encouragementToneIcon(item.tone),
+                  color: accent,
                   size: 34,
                 ),
                 const SizedBox(height: 16),
                 Text(
                   item.message,
                   style: theme.textTheme.titleLarge?.copyWith(
-                    color: Colors.white,
+                    color: scheme.onSurface,
                     fontWeight: FontWeight.w900,
                   ),
                 ),
                 const SizedBox(height: 8),
                 Text(
                   item.reference,
-                  style: const TextStyle(
-                    color: Color(0xFFFF7AB6),
+                  style: TextStyle(
+                    color: accent,
                     fontWeight: FontWeight.w800,
                   ),
                 ),
@@ -421,7 +473,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   item.body,
                   style: TextStyle(
                     height: 1.55,
-                    color: Colors.white.withValues(alpha: 0.78),
+                    color: scheme.onSurfaceVariant,
                   ),
                 ),
               ],
@@ -514,8 +566,11 @@ class _HomeScreenState extends State<HomeScreen> {
     try {
       return state.sermonNoteRepo
           .list()
-          .where((note) =>
-              note.recordedAt != null && _isThisWeek(note.recordedAt!))
+          .where(
+            (note) => note.playableClips.any(
+              (clip) => _isThisWeek(clip.createdAtUtc),
+            ),
+          )
           .length;
     } catch (_) {
       return 0;
@@ -590,7 +645,10 @@ class _HomeScreenState extends State<HomeScreen> {
         resumeDevotional.id != todayDevotional.id &&
         resumeProgress > 0 &&
         resumeProgress < 0.999;
-    final todayEncouragement = _todayEncouragement;
+    final todayEncouragement = _todayEncouragementFor(
+      state,
+      readingPlanService,
+    );
     return Scaffold(
       body: HomeTextScale(
         scale: state.homeTextScale,
@@ -1043,6 +1101,60 @@ class _PromiseTag extends StatelessWidget {
   }
 }
 
+IconData _encouragementToneIcon(DailyEncouragementTone tone) {
+  switch (tone) {
+    case DailyEncouragementTone.grace:
+      return Icons.favorite_rounded;
+    case DailyEncouragementTone.peace:
+      return Icons.spa_rounded;
+    case DailyEncouragementTone.hope:
+      return Icons.auto_awesome_rounded;
+    case DailyEncouragementTone.protection:
+      return Icons.shield_rounded;
+    case DailyEncouragementTone.faith:
+      return Icons.local_fire_department_rounded;
+    case DailyEncouragementTone.prayer:
+      return Icons.self_improvement_rounded;
+    case DailyEncouragementTone.wisdom:
+      return Icons.menu_book_rounded;
+    case DailyEncouragementTone.newBeginning:
+      return Icons.wb_twilight_rounded;
+    case DailyEncouragementTone.celebration:
+      return Icons.celebration_rounded;
+    case DailyEncouragementTone.comfort:
+      return Icons.volunteer_activism_rounded;
+  }
+}
+
+Color _encouragementToneColor(
+  DailyEncouragementTone tone,
+  Brightness brightness,
+) {
+  final isLight = brightness == Brightness.light;
+  switch (tone) {
+    case DailyEncouragementTone.grace:
+      return isLight ? const Color(0xFFDB2777) : const Color(0xFFFF7AB6);
+    case DailyEncouragementTone.peace:
+      return isLight ? const Color(0xFF0F766E) : const Color(0xFF5EEAD4);
+    case DailyEncouragementTone.hope:
+      return isLight ? const Color(0xFF7C3AED) : const Color(0xFFC4B5FD);
+    case DailyEncouragementTone.protection:
+      return isLight ? const Color(0xFF2563EB) : const Color(0xFF93C5FD);
+    case DailyEncouragementTone.faith:
+      return isLight ? const Color(0xFFC2410C) : const Color(0xFFFDBA74);
+    case DailyEncouragementTone.prayer:
+      return isLight ? const Color(0xFF6D28D9) : const Color(0xFFD8B4FE);
+    case DailyEncouragementTone.wisdom:
+      return isLight ? const Color(0xFF0369A1) : const Color(0xFF7DD3FC);
+    case DailyEncouragementTone.newBeginning:
+      return isLight ? const Color(0xFF047857) : const Color(0xFF6EE7B7);
+    case DailyEncouragementTone.celebration:
+      return isLight ? const Color(0xFFB45309) : const Color(0xFFFCD34D);
+    case DailyEncouragementTone.comfort:
+      return isLight ? const Color(0xFF9333EA) : const Color(0xFFE9D5FF);
+  }
+}
+
 class _DailyEncouragementCard extends StatelessWidget {
   const _DailyEncouragementCard({
     required this.item,
@@ -1054,10 +1166,10 @@ class _DailyEncouragementCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isLight = Theme.of(context).brightness == Brightness.light;
+    final theme = Theme.of(context);
+    final isLight = theme.brightness == Brightness.light;
+    final accent = _encouragementToneColor(item.tone, theme.brightness);
     final textColor = isLight ? const Color(0xFF171426) : Colors.white;
-    final iconColor =
-        isLight ? const Color(0xFFDB2777) : const Color(0xFFFF7AB6);
 
     return InkWell(
       borderRadius: BorderRadius.circular(22),
@@ -1069,24 +1181,26 @@ class _DailyEncouragementCard extends StatelessWidget {
           gradient: LinearGradient(
             colors: isLight
                 ? [
-                    const Color(0xFFFFD7EA),
-                    const Color(0xFFFFF7FB),
+                    accent.withValues(alpha: 0.20),
+                    Color.alphaBlend(
+                      accent.withValues(alpha: 0.05),
+                      theme.colorScheme.surface,
+                    ),
                   ]
                 : [
-                    const Color(0xFFEC4899).withValues(alpha: 0.18),
+                    accent.withValues(alpha: 0.18),
                     const Color(0xFF111827).withValues(alpha: 0.72),
                   ],
           ),
           border: Border.all(
-            color: const Color(0xFFEC4899)
-                .withValues(alpha: isLight ? 0.26 : 0.28),
+            color: accent.withValues(alpha: isLight ? 0.30 : 0.34),
           ),
         ),
         child: Row(
           children: [
             Icon(
-              Icons.favorite_rounded,
-              color: iconColor,
+              _encouragementToneIcon(item.tone),
+              color: accent,
             ),
             const SizedBox(width: 12),
             Expanded(
@@ -1530,7 +1644,7 @@ class _DailyVerseDashboardCard extends StatelessWidget {
                   label: 'DAILY VERSE',
                   accent: accent,
                 ),
-                const SizedBox(height: 14),
+                const SizedBox(height: 10),
                 Text(
                   reference,
                   maxLines: 1,
@@ -1540,18 +1654,22 @@ class _DailyVerseDashboardCard extends StatelessWidget {
                     fontWeight: FontWeight.w800,
                   ),
                 ),
-                const SizedBox(height: 8),
-                Text(
-                  '"$verseText"',
-                  maxLines: 4,
-                  overflow: TextOverflow.ellipsis,
-                  style: theme.textTheme.bodyMedium?.copyWith(
-                    color: bodyColor,
-                    height: 1.26,
-                    fontWeight: FontWeight.w600,
+                const SizedBox(height: 6),
+                Expanded(
+                  child: Align(
+                    alignment: Alignment.topLeft,
+                    child: Text(
+                      '"$verseText"',
+                      maxLines: 4,
+                      overflow: TextOverflow.ellipsis,
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        color: bodyColor,
+                        height: 1.2,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
                   ),
                 ),
-                const Spacer(),
                 _DashboardLink(
                   label: 'Read Full Verse',
                   color: accent,
@@ -1630,18 +1748,21 @@ class _ReadingPlanDashboardCard extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 4),
-          for (final passage in passages)
-            Text(
-              passage,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: theme.textTheme.titleSmall?.copyWith(
-                color: titleColor,
-                fontWeight: FontWeight.w800,
-                height: 1.3,
+          Expanded(
+            child: Align(
+              alignment: Alignment.topLeft,
+              child: Text(
+                passages.join('\n'),
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: theme.textTheme.titleSmall?.copyWith(
+                  color: titleColor,
+                  fontWeight: FontWeight.w800,
+                  height: 1.2,
+                ),
               ),
             ),
-          const Spacer(),
+          ),
           _DashboardLink(
             label: 'Read All Passages',
             color: accent,
@@ -2253,6 +2374,28 @@ class _DevotionalHistoryCard extends StatelessWidget {
   }
 }
 
+class _GospelTractsCard extends StatelessWidget {
+  const _GospelTractsCard({required this.onTap});
+
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return _GlassExploreCard(
+      title: 'Gospel Tracts',
+      subtitle: 'Share the Gospel',
+      meta: 'Create and send beautiful tracts',
+      icon: Icons.ios_share_rounded,
+      accent: const Color(0xFF8B5CF6),
+      gradient: const [
+        Color(0x332D1B69),
+        Color(0x22111427),
+      ],
+      onTap: onTap,
+    );
+  }
+}
+
 class _ScriptureMemoryCard extends StatelessWidget {
   const _ScriptureMemoryCard({
     required this.summary,
@@ -2279,28 +2422,6 @@ class _ScriptureMemoryCard extends StatelessWidget {
       accent: const Color(0xFF10B981),
       gradient: const [
         Color(0x33206448),
-        Color(0x22111427),
-      ],
-      onTap: onTap,
-    );
-  }
-}
-
-class _GospelTractsCard extends StatelessWidget {
-  const _GospelTractsCard({required this.onTap});
-
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return _GlassExploreCard(
-      title: 'Gospel Tracts',
-      subtitle: 'Share the Gospel',
-      meta: 'Create and send beautiful tracts',
-      icon: Icons.ios_share_rounded,
-      accent: const Color(0xFF8B5CF6),
-      gradient: const [
-        Color(0x332D1B69),
         Color(0x22111427),
       ],
       onTap: onTap,

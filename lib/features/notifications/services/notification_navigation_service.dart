@@ -17,6 +17,8 @@ import '../model/notification_type.dart';
 class NotificationNavigationService {
   NotificationNavigationService(this._state);
 
+  static const notificationCentreType = 'notification_centre';
+
   final AppState _state;
   final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
   final List<String> _pendingPayloads = <String>[];
@@ -26,8 +28,7 @@ class NotificationNavigationService {
 
   Future<void> handlePayload(String payload) async {
     final data = _parsePayload(payload);
-    if (data == null ||
-        NotificationTypeX.fromWireName(data['type'] as String?) == null) {
+    if (data == null || !_isSupportedType(data['type'] as String?)) {
       return;
     }
     if (navigatorKey.currentContext == null) {
@@ -53,14 +54,24 @@ class NotificationNavigationService {
   Future<void> _navigate(String payload) async {
     final data = _parsePayload(payload);
     if (data == null) return;
-    final type = NotificationTypeX.fromWireName(data['type'] as String?);
-    if (type == null) return;
     final context = navigatorKey.currentContext;
     if (context == null) {
       _pendingPayloads.add(payload);
       return;
     }
 
+    final wireType = data['type'] as String?;
+    if (wireType == notificationCentreType) {
+      await AppRouter.pushNamed(
+        context,
+        AppRouter.notificationSettingsRoute,
+        rootNavigator: true,
+      );
+      return;
+    }
+
+    final type = NotificationTypeX.fromWireName(wireType);
+    if (type == null) return;
     switch (type) {
       case NotificationType.dailyVerse:
         await AppRouter.push(
@@ -135,6 +146,10 @@ class NotificationNavigationService {
       return null;
     }
   }
+
+  bool _isSupportedType(String? value) =>
+      value == notificationCentreType ||
+      NotificationTypeX.fromWireName(value) != null;
 
   DateTime? _parseDate(String? value) {
     final parsed = DateTime.tryParse(value ?? '');

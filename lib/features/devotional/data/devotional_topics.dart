@@ -3406,7 +3406,7 @@ final class DevotionalTopics {
         'Do I truly believe that God’s authority is greater than my current situation?',
         'What would change if I fully rested in the truth that power belongs to God?',
       ],
-      prayer: 'Lord, '
+      prayer: 'Lord,\n'
           'Thank You for revealing that all power belongs to You (Psalm 62:11). '
           'Help me to truly understand this, not just in knowledge but in the way '
           'I live and trust You daily.\n '
@@ -4881,12 +4881,14 @@ final class DevotionalTopics {
               'favorable circumstances. Their stability would come from wisdom and '
               'knowledge rooted in Him. This truth remains relevant today because the '
               'world is constantly changing, but God remains unchanging. '
+              '\n'
               'Many people seek security in things that can easily be shaken. '
               'Careers change, economies fluctuate, relationships can disappoint, and '
               'human strength has limitations. However, the believer who builds life '
               'upon God\'s truth possesses an anchor that remains firm through every '
               'storm. As Jesus taught in 7:24–25, the house built upon the rock '
               'remains standing when the winds and floods come. '
+              '\n'
               'Lasting stability is not found in controlling circumstances but in '
               'trusting the God who controls all things.',
         ),
@@ -4900,12 +4902,14 @@ final class DevotionalTopics {
               'truth correctly. Many people possess information yet still make '
               'destructive decisions because wisdom is absent. God desires His people '
               'not merely to know truth but to live according to it. '
+              '\n'
               'Biblical wisdom begins with understanding life from God\'s '
               'perspective. It helps believers navigate challenges, relationships, '
               'opportunities, and decisions with discernment. As 9:10 teaches, the '
               'fear of the Lord is the beginning of wisdom. The closer believers walk '
               'with God, the clearer they see life\'s complexities through the lens of '
               'His truth. '
+              '\n'
               'Wisdom protects the believer from unnecessary mistakes and provides '
               'direction when circumstances seem confusing.',
         ),
@@ -4918,11 +4922,13 @@ final class DevotionalTopics {
               'God. There is a significant difference between knowing about God and '
               'truly knowing Him. A personal knowledge of God\'s character, promises, '
               'and faithfulness strengthens the heart during difficult seasons. '
+              '\n'
               'When challenges arise, believers often draw strength from what they '
               'know about God. They remember His faithfulness in the past, His '
               'promises in Scripture, and His power to sustain them. As 11:32 '
               'declares, those who know their God shall be strong and carry out great '
               'exploits. '
+              '\n'
               'The deeper a believer\'s knowledge of God becomes, the less vulnerable '
               'they are to fear, confusion, and spiritual instability.',
         ),
@@ -4936,10 +4942,12 @@ final class DevotionalTopics {
               'God\'s salvation also provides present-day strength. Through Christ, '
               'believers receive grace to endure trials, overcome temptation, and '
               'walk faithfully through life\'s challenges. '
+              '\n'
               'God\'s saving work affects every aspect of life. His presence '
               'strengthens weary hearts, restores hope, and provides courage when '
               'circumstances seem overwhelming. As 8:10 declares, the joy of the Lord '
               'becomes strength for His people. '
+              '\n'
               'The believer\'s confidence is not rooted in personal ability but in '
               'the saving power and sustaining grace of God.',
         ),
@@ -4953,11 +4961,13 @@ final class DevotionalTopics {
               'deep respect for God. It is the recognition of His greatness, '
               'holiness, authority, and worthiness. A heart that fears God places Him '
               'above every other influence and priority. '
+              '\n'
               'In a culture that often values independence and self-reliance, the '
               'fear of the Lord anchors believers in humility and obedience. It '
               'protects them from pride and keeps their hearts aligned with God\'s '
               'purposes. As 14:27 teaches, the fear of the Lord is a fountain of life '
               'that leads away from destruction. '
+              '\n'
               'Those who treasure God above all else discover a stability that the '
               'world can never provide.',
         ),
@@ -4972,18 +4982,23 @@ final class DevotionalTopics {
       ],
       prayer:
           'Lord, '
+
           'Thank You for being my source of stability in an ever-changing world. '
           'When circumstances become uncertain and challenges arise, help me to '
           'remain anchored in Your wisdom, truth, and faithfulness. '
+          '\n'
           'Teach me to seek Your wisdom above human understanding and to grow in '
           'the knowledge of who You are. Let my heart be strengthened by Your '
           'promises and sustained by Your saving grace. Guard me from placing my '
           'confidence in temporary things that cannot provide lasting security. '
+          '\n'
           'Create within me a deeper fear of the Lord—a heart that honors, '
           'reveres, and treasures You above all else. Help me walk in humility, '
           'obedience, and dependence upon You every day. '
+          '\n'
           'May my life remain firmly established in You, and may Your wisdom and '
           'knowledge become the stability of my times. '
+          '\n'
           'Amen.',
       createdAt: DateTime(2024, 2, 8),
     ),
@@ -7691,19 +7706,15 @@ final class DevotionalTopics {
               'inconsistent. People make promises they cannot keep, change their '
               'minds, forget their commitments, or fail because circumstances shift. '
               'God is completely different. His character is flawless, His integrity '
-              'is perfect, and His faithfulness is absolute. '
-              '\n'
+              'is perfect, and His faithfulness is absolute.\n'
               'Every promise God makes is rooted in who He is. Because He is truth, '
               'He cannot lie. Because He is faithful, He cannot abandon His word. '
               'Because He is eternal, His promises are not affected by changing '
               'circumstances. As Epistle to Titus 1:2 teaches, God cannot lie. The '
               'believer\'s confidence rests not merely in the promise itself but in '
-              'the character of the One who made it. '
-              '\n'
+              'the character of the One who made it.\n'
               'Faith becomes stronger when we focus less on circumstances and more '
-              'on the unchanging nature of God. '
-              '\n'
-              '---',
+              'on the unchanging nature of God.\n',
         ),
         DevotionalSection(
           icon: '🔍',
@@ -7714,19 +7725,15 @@ final class DevotionalTopics {
               'fluctuate, opinions shift, and circumstances often influence '
               'decisions. God, however, remains unchanged. His purposes are not '
               'altered by obstacles, opposition, or unexpected events because nothing '
-              'ever takes Him by surprise. '
-              '\n'
+              'ever takes Him by surprise.\n'
               'Many believers struggle when life does not unfold as expected. '
               'Delays, disappointments, and unanswered questions can create '
               'uncertainty. Yet Numbers 23:19 reminds us that God\'s plans are not '
               'subject to the instability that characterizes human experience. As '
               'Epistle of James 1:17 declares, with God there is no variation or '
-              'shadow of turning. '
-              '\n'
+              'shadow of turning.\n'
               'The God who made the promise remains the same God regardless of what '
-              'circumstances may suggest. '
-              '\n'
-              '---',
+              'circumstances may suggest.\n',
         ),
         DevotionalSection(
           icon: '⚔️',
@@ -7737,19 +7744,15 @@ final class DevotionalTopics {
               'question highlights the certainty of God\'s Word. When God speaks, His '
               'Word carries both authority and power. Human promises often depend '
               'upon resources, opportunities, or favorable conditions. God\'s promises '
-              'depend solely upon His sovereign ability. '
-              '\n'
+              'depend solely upon His sovereign ability.\n'
               'Throughout Scripture, God repeatedly demonstrated His power to '
               'fulfill what He spoke. He promised Abraham a son and fulfilled it. He '
               'promised Israel deliverance and accomplished it. He promised a Messiah '
               'and sent Jesus in the fullness of time. As Book of Isaiah 55:11 '
               'teaches, God\'s Word never returns void but accomplishes exactly what '
-              'He intends. '
-              '\n'
+              'He intends.\n'
               'What God speaks is not merely information—it is a declaration backed '
-              'by divine power. '
-              '\n'
-              '---',
+              'by divine power. ',
         ),
         DevotionalSection(
           icon: '🌱',
@@ -7760,18 +7763,14 @@ final class DevotionalTopics {
               'waiting often becomes the true test of faith. Time has a way of '
               'challenging confidence and creating questions. Yet God\'s delays are '
               'never evidence of His failure. His timing is as perfect as His '
-              'promises. '
-              '\n'
+              'promises.\n'
               'Abraham waited years for Isaac. Joseph endured years of hardship '
               'before seeing God\'s plan unfold. David was anointed king long before '
               'he sat on the throne. In every case, God fulfilled His word at the '
               'appointed time. As Epistle to the Hebrews 10:23 encourages, believers '
-              'should hold fast to their hope because He who promised is faithful. '
-              '\n'
+              'should hold fast to their hope because He who promised is faithful.\n'
               'Waiting does not change God\'s faithfulness; it often reveals it more '
-              'clearly. '
-              '\n'
-              '---',
+              'clearly. ',
         ),
         DevotionalSection(
           icon: '🚶',
@@ -7782,18 +7781,14 @@ final class DevotionalTopics {
               'Faith is not blind optimism or wishful thinking. It is confidence '
               'rooted in the reliability of God\'s character and promises. Believers '
               'can move forward with assurance because the God they trust has never '
-              'failed and never will. '
-              '\n'
+              'failed and never will.\n'
               'Every challenge, every uncertainty, and every season of waiting '
               'becomes easier to navigate when believers remember who God is. His '
               'record of faithfulness stretches across generations and throughout '
               'eternity. As Book of Lamentations 3:23 declares, His faithfulness is '
-              'great and His mercies are new every morning. '
-              '\n'
+              'great and His mercies are new every morning.\n'              '\n'
               'The believer\'s greatest security is not found in favorable '
-              'circumstances but in the unwavering faithfulness of God. '
-              '\n'
-              '---',
+              'circumstances but in the unwavering faithfulness of God. ',
         ),
       ],
       finalRevelation:
@@ -7805,26 +7800,21 @@ final class DevotionalTopics {
         'How can I strengthen my confidence in God\'s unchanging character?',
       ],
       prayer:
-          'Lord, '
-          '\n'
+          'Lord,\n'
           'Thank You for being a God who never lies, never changes, and never '
           'fails. In a world filled with uncertainty and inconsistency, You '
           'remain faithful and true. Your character gives me confidence, and Your '
-          'promises give me hope. '
-          '\n'
+          'promises give me hope.\n'
           'Forgive me for the times I have allowed circumstances, delays, or '
           'disappointments to weaken my trust in You. Help me remember that Your '
           'faithfulness is not determined by what I see but by who You are. '
           'Strengthen my heart to believe Your Word even when fulfillment seems '
-          'distant. '
-          '\n'
+          'distant.\n'
           'Teach me to rest in Your reliability and to trust Your timing as much '
           'as I trust Your promises. Let every waiting season deepen my faith and '
-          'increase my confidence in Your goodness. '
-          '\n'
+          'increase my confidence in Your goodness.\n'
           'May I stand firmly upon Your Word, '
-          'knowing that what You have spoken, You will surely bring to pass. '
-          '\n'
+          'knowing that what You have spoken, You will surely bring to pass.\n'
           'Amen. 🙏🌿',
       createdAt: DateTime(2024, 2, 26),
     ),
@@ -7996,7 +7986,7 @@ final class DevotionalTopics {
 
     // ── 59. THE ──────────────────────────────────────────────────
     DevotionalModel(
-      id: 'the_power_of',
+      id: 'the_power_of_united_prayer',
       theme: 'The',
       title: 'The Power of Surrendering to God\'s Will',
       scripture:
@@ -9747,10 +9737,10 @@ final class DevotionalTopics {
       createdAt: DateTime(2024, 3, 9),
     ),
 
-    // ── 70. THE ──────────────────────────────────────────────────
+    // ── 70. SHIELD ──────────────────────────────────────────────────
     DevotionalModel(
       id: 'the_god_who',
-      theme: 'The',
+      theme: 'Shield',
       title: 'The God Who Lifts Your Head',
       scripture:
           'But You, O Lord, are a shield for me, my glory and the One who lifts '
@@ -9905,10 +9895,10 @@ final class DevotionalTopics {
       createdAt: DateTime(2024, 3, 10),
     ),
 
-    // ── 71. LIVING ──────────────────────────────────────────────────
+    // ── 71. HOPE ──────────────────────────────────────────────────
     DevotionalModel(
       id: 'living_in_hope',
-      theme: 'Living',
+      theme: 'Hope',
       title: 'Living in Hope of Christ\'s Return',
       scripture:
           'So Christ was offered once to bear the sins of many. To those who '
@@ -10070,10 +10060,10 @@ final class DevotionalTopics {
       createdAt: DateTime(2024, 3, 11),
     ),
 
-    // ── 72. LIVING ──────────────────────────────────────────────────
+    // ── 72. SONSHIP ──────────────────────────────────────────────────
     DevotionalModel(
       id: 'living_as_gods',
-      theme: 'Living',
+      theme: 'Sonship',
       title: 'Living as God\'s Beloved Child',
       scripture:
           'And because you are sons, God has sent forth the Spirit of His Son '
@@ -10232,10 +10222,10 @@ final class DevotionalTopics {
       createdAt: DateTime(2024, 3, 12),
     ),
 
-    // ── 73. GOD ──────────────────────────────────────────────────
+    // ── 73. SERVICE ──────────────────────────────────────────────────
     DevotionalModel(
       id: 'god_never_forgets',
-      theme: 'God',
+      theme: 'Service',
       title: 'God Never Forgets Your Faithful Service',
       scripture:
           'For God is not unjust to forget your work and labor of love which you '
@@ -10395,10 +10385,10 @@ final class DevotionalTopics {
       createdAt: DateTime(2024, 3, 13),
     ),
 
-    // ── 74. THE ──────────────────────────────────────────────────
+    // ── 74. FRUIT ──────────────────────────────────────────────────
     DevotionalModel(
       id: 'the_fruit_of',
-      theme: 'The',
+      theme: 'Fruit',
       title: 'The Fruit of God\'s Loving Discipline',
       scripture:
           'Now no chastening seems to be joyful for the present, but painful; '
@@ -10879,10 +10869,10 @@ final class DevotionalTopics {
     ),
 
 
-    // ── 77. GODS ──────────────────────────────────────────────────
+    // ── 77. DELIVERANCE ──────────────────────────────────────────────────
     DevotionalModel(
       id: 'gods_deliverance_through',
-      theme: 'Gods',
+      theme: 'Deliverance',
       title: 'God\'s Deliverance Through Every Trial',
       scripture:
           'Many are the afflictions of the righteous, but the Lord delivers him '
@@ -11594,10 +11584,10 @@ final class DevotionalTopics {
       createdAt: DateTime(2024, 3, 21),
     ),
 
-    // ── 82. THE ──────────────────────────────────────────────────
+    // ── 82. SACRIFICE ──────────────────────────────────────────────────
     DevotionalModel(
       id: 'the_sacrifice_god',
-      theme: 'The',
+      theme: 'Sacrifice',
       title: 'The Sacrifice God Will Never Reject',
       scripture:
           'The sacrifices of God are a broken spirit, a broken and a contrite '
@@ -11948,7 +11938,7 @@ final class DevotionalTopics {
               'in the middle of the fire. The three Hebrew men experienced God\'s '
               'presence in the fiery furnace, not outside of it. As Isaiah declares '
               'in Book of Isaiah 43:2, when God\'s people pass through the fire, He is '
-              'with them, and they will not be consumed. '
+              'with them, and they will not be consumed.\n'
               'God does not send you into the fire to destroy your faith—He uses it '
               'to purify it.',
         ),
@@ -11961,13 +11951,13 @@ final class DevotionalTopics {
               'honor, and glory when Jesus Christ is revealed. This means that '
               'present trials must always be viewed through the lens of eternity. The '
               'pain believers experience today is preparing them for an eternal '
-              'reward that far outweighs every temporary hardship. '
+              'reward that far outweighs every temporary hardship.\n'
               'It is easy to become discouraged when we focus only on present '
               'difficulties. But God\'s perspective reaches beyond today\'s struggles '
               'to tomorrow\'s glory. As Paul writes in Second Epistle to the '
               'Corinthians 4:17–18, our light and momentary afflictions are producing '
               'an eternal weight of glory that far surpasses them all. Heaven gives '
-              'meaning to every faithful step taken on earth. '
+              'meaning to every faithful step taken on earth.\n'
               'The fire of today is preparing you for the glory of tomorrow.',
         ),
         DevotionalSection(
@@ -11979,13 +11969,13 @@ final class DevotionalTopics {
               'ultimate goal of the Christian life is not simply surviving trials but '
               'becoming more like Christ and one day seeing Him face to face. Every '
               'trial invites believers to keep their eyes fixed on Jesus rather than '
-              'becoming overwhelmed by their circumstances. '
+              'becoming overwhelmed by their circumstances.\n'
               'When Peter walked on the water, he remained steady while his eyes '
               'were on Jesus, but he began to sink when he focused on the storm. The '
               'same principle applies today. As the writer of Epistle to the Hebrews '
               '12:2 encourages, believers are to fix their eyes on Jesus, the author '
               'and finisher of their faith. A Christ-centered focus produces '
-              'steadfast faith even in life\'s fiercest storms. '
+              'steadfast faith even in life\'s fiercest storms.\n'
               'The strength to endure every trial is found by keeping your eyes on '
               'the Savior rather than the storm.',
         ),
@@ -12003,23 +11993,23 @@ final class DevotionalTopics {
         'discouraged by my circumstances?',
       ],
       prayer:
-          'Lord, '
+          'Lord,\n'
           'Thank You for reminding me that my faith is precious in Your sight '
           'and that every trial has a purpose in Your perfect plan. Thank You '
           'that You never waste my pain but use it to refine my character and '
-          'draw me closer to You. '
+          'draw me closer to You.\n'
           'Help me trust You when the fire of testing becomes intense. Remove '
           'every impurity from my heart—pride, fear, doubt, and self-reliance—and '
           'replace them with deeper faith, greater humility, and unwavering '
-          'confidence in Your promises. '
+          'confidence in Your promises.\n'
           'Teach me to value eternal treasures more than temporary comforts. '
           'When I grow weary, remind me that You are walking with me through '
           'every trial and that Your grace is sufficient for every season. Keep '
           'my eyes fixed on Jesus and fill my heart with hope as I look forward '
-          'to the day when I will see Him face to face. '
+          'to the day when I will see Him face to face.\n'
           'May every trial strengthen my faith, every challenge deepen my trust, '
           'and every victory bring praise, honor, and glory to my Lord and '
-          'Savior, Jesus Christ. '
+          'Savior, Jesus Christ.\n'
           'Amen. 🙏🌿',
       createdAt: DateTime(2024, 3, 24),
     ),
@@ -12045,12 +12035,12 @@ final class DevotionalTopics {
               'presence. It speaks of a lifestyle of intimate fellowship rather than '
               'occasional visits during times of crisis. God desires to be more than '
               'a refuge we seek in emergencies; He desires to become the home where '
-              'our souls continually rest. '
+              'our souls continually rest.\n'
               'Many believers only seek God when life becomes difficult. Yet God '
               'longs for daily communion with His children. As Jesus taught in Gospel '
               'of John 15:4, believers are called to abide in Him just as a branch '
               'remains connected to the vine. Strength, peace, and spiritual fruit '
-              'flow naturally from a life that continually remains close to God. '
+              'flow naturally from a life that continually remains close to God.\n'
               'The safest place on earth is not a location—it is a life that '
               'continually dwells in the presence of God. '
               '---',
@@ -12065,13 +12055,13 @@ final class DevotionalTopics {
               'worship, meditation on His Word, and complete dependence upon Him. It '
               'is where hearts are transformed, burdens are surrendered, and faith is '
               'strengthened. The secret place is where believers learn to hear God\'s '
-              'voice above every other voice. '
+              'voice above every other voice.\n'
               'In a noisy world filled with distractions, many believers struggle to '
               'cultivate intimacy with God. Yet it is in quiet fellowship that '
               'spiritual strength is renewed. As David wrote in Book of Psalms 27:4, '
               'his greatest desire was to dwell in the house of the Lord and behold '
               'His beauty. Intimacy with God is not reserved for a few—it is the '
-              'privilege of every believer. '
+              'privilege of every believer.\n'
               'The deeper your fellowship with God becomes, the stronger your faith '
               'will grow. '
               '---',
@@ -12086,13 +12076,13 @@ final class DevotionalTopics {
               'greater is standing nearby. God\'s shadow represents His constant '
               'presence, protection, and covering over His people. His protection '
               'does not remove every trial, but it assures believers that they are '
-              'never abandoned or beyond His care. '
+              'never abandoned or beyond His care.\n'
               'Throughout Scripture, God repeatedly demonstrated His protective hand '
               'over His people. He shielded Israel in the wilderness, preserved '
               'Daniel in the lions\' den, and strengthened Paul through persecution. '
               'As the Lord declared through Book of Isaiah 43:2, when His people pass '
               'through waters or fire, He promises to be with them. His presence is '
-              'the believer\'s greatest security. '
+              'the believer\'s greatest security.\n'
               'The safest shelter is not found in favorable circumstances but '
               'beneath the shadow of the Almighty. '
               '—',
@@ -12106,13 +12096,13 @@ final class DevotionalTopics {
               'uncertainty. The more believers spend time in His presence, the more '
               'they discover His faithfulness, wisdom, and love. Trust is not built '
               'overnight; it grows through consistent fellowship with the One who '
-              'never changes. '
+              'never changes.\n'
               'Many people try to develop faith only after problems arise. But faith '
               'is strengthened long before the storm arrives. Daily prayer, worship, '
               'and meditation on Scripture prepare the heart to remain steadfast '
               'during difficult seasons. As the prophet declared in Book of Isaiah '
               '26:3, God keeps in perfect peace those whose minds remain fixed upon '
-              'Him because they trust in Him. '
+              'Him because they trust in Him.\n'
               'Those who dwell with God during peaceful seasons will discover His '
               'peace during difficult seasons. '
               '---',
@@ -12127,13 +12117,13 @@ final class DevotionalTopics {
               'presence. Victory over fear, anxiety, temptation, and discouragement '
               'is not found through human effort but through continual fellowship '
               'with the Lord. Those who abide in Him discover that His strength '
-              'becomes their strength. '
+              'becomes their strength.\n'
               'Every day presents a fresh invitation to enter God\'s presence and '
               'remain there. No matter how busy life becomes, the greatest priority '
               'remains knowing Him. As the writer of Epistle to the Hebrews 10:22 '
               'reminds believers, they are invited to draw near to God with sincere '
               'hearts and full assurance of faith. Those who remain near to God will '
-              'never lack His grace for the journey. '
+              'never lack His grace for the journey.\n'
               'A believer who lives in God\'s presence will always find strength for '
               'life\'s battles. '
               '---',
@@ -12152,31 +12142,31 @@ final class DevotionalTopics {
         'How can I intentionally cultivate intimacy with God each day?',
       ],
       prayer:
-          'Lord, '
+          'Lord,\n'
           'Thank You for inviting me into the secret place of Your presence. '
           'Thank You that You are not only my Creator but also my refuge, my '
           'shelter, and my resting place. There is no safer place than abiding '
-          'close to You. '
+          'close to You.\n'
           'Forgive me for the times I have sought comfort, security, or '
           'direction apart from You. Draw my heart back to You each day. Teach me '
           'to love Your presence more than the distractions of this world and to '
-          'make time for prayer, worship, and meditation on Your Word. '
+          'make time for prayer, worship, and meditation on Your Word.\n'
           'Help me remain under the shadow of Your Almighty care. When fear '
           'rises, remind me that You are my refuge. When uncertainty comes, '
           'strengthen my faith through Your promises. Let my relationship with '
           'You grow deeper until Your peace guards my heart and Your presence '
-          'becomes my greatest joy. '
+          'becomes my greatest joy.\n'
           'May I dwell continually in the secret place of the Most High, rest '
           'confidently beneath the shadow of the Almighty, and live each day '
-          'knowing that my greatest security is found in You alone. '
+          'knowing that my greatest security is found in You alone.\n'
           'Amen. 🙏🌿',
       createdAt: DateTime(2024, 3, 25),
     ),
 
-    // ── 86. THE ──────────────────────────────────────────────────
+    // ── 86. HUMILITY ──────────────────────────────────────────────────
     DevotionalModel(
       id: 'the_path_to',
-      theme: 'The',
+      theme: 'Humility',
       title: 'The Path to God\'s Exaltation',
       scripture:
           'Therefore humble yourselves under the mighty hand of God, that He may '
@@ -12193,13 +12183,13 @@ final class DevotionalTopics {
               'strength under God\'s authority. It is the willingness to acknowledge '
               'that God is Lord, His wisdom is perfect, and His plans are greater '
               'than our own. Humility positions the heart to receive God\'s grace and '
-              'guidance. '
+              'guidance.\n'
               'The world often celebrates self-promotion, independence, and personal '
               'achievement. However, God\'s kingdom operates differently. Those who '
               'humble themselves before Him discover His favor and strength. As James '
               'declares in Epistle of James 4:6, God resists the proud but gives '
               'grace to the humble. The more we surrender our lives to Him, the more '
-              'His grace works powerfully within us. '
+              'His grace works powerfully within us.\n'
               'True greatness is not found in lifting yourself up but in bowing '
               'before God. '
               '---',
@@ -12214,13 +12204,13 @@ final class DevotionalTopics {
               'protect, provide, discipline, and deliver His people. The same hand '
               'that parted the Red Sea, sustained Israel in the wilderness, and '
               'raised Christ from the dead is the hand that lovingly guides every '
-              'believer today. '
+              'believer today.\n'
               'There are times when God\'s hand leads us through difficult seasons '
               'that we do not fully understand. Yet His mighty hand is never against '
               'His children—it is always working for their good. As Paul assures us '
               'in Epistle to the Romans 8:28, God works all things together for the '
               'good of those who love Him. Even when His ways seem mysterious, His '
-              'heart remains faithful. '
+              'heart remains faithful.\n'
               'The hand that asks for your surrender is the same hand that '
               'faithfully sustains your life. '
               '---',
@@ -12234,14 +12224,14 @@ final class DevotionalTopics {
               'the greatest challenges believers face is waiting for God\'s timing. We '
               'often desire immediate answers, quick promotions, and instant '
               'breakthroughs, but God works according to His perfect schedule rather '
-              'than our impatient expectations. '
+              'than our impatient expectations.\n'
               'Waiting seasons are not wasted seasons. They are often times of '
               'preparation, refinement, and spiritual growth. Joseph waited in prison '
               'before leading Egypt. David waited years before becoming king. Jesus '
               'Himself waited until the appointed time to begin His public ministry. '
               'As Solomon reminds us in Book of Ecclesiastes 3:11, God makes '
               'everything beautiful in its time. His delays are never mistakes—they '
-              'are part of His perfect plan. '
+              'are part of His perfect plan.\n'
               'God\'s timing is never late because He always works according to '
               'perfect wisdom. '
               '---',
@@ -12255,13 +12245,13 @@ final class DevotionalTopics {
               'recognition, or force open doors that God has not yet opened. Peter '
               'teaches believers to leave their promotion in God\'s hands. When God '
               'chooses the right time to lift someone up, no human obstacle can '
-              'prevent His purpose from being fulfilled. '
+              'prevent His purpose from being fulfilled.\n'
               'The enemy often tempts believers to compare themselves with others or '
               'become frustrated when they seem overlooked. But God calls His '
               'children to faithfulness rather than competition. As Jesus teaches in '
               'Gospel of Matthew 23:12, whoever humbles themselves will be exalted. '
               'The safest place is not striving for recognition but faithfully '
-              'serving where God has placed you. '
+              'serving where God has placed you.\n'
               'You never have to force what God has already planned for your life. '
               '—',
         ),
@@ -12274,12 +12264,12 @@ final class DevotionalTopics {
               'life into His hands. It means believing that He knows what is best, '
               'even when we cannot see the full picture. Whether the season is one of '
               'waiting, serving, growing, or suffering, God is faithfully working '
-              'behind the scenes for His glory and our good. '
+              'behind the scenes for His glory and our good.\n'
               'The verses that follow encourage believers to cast all their cares '
               'upon God because He cares for them. Humility and trust go hand in '
               'hand. As David declares in Book of Psalms 37:5, committing your way to '
               'the Lord and trusting Him allows Him to bring His purposes to pass. A '
-              'humble heart rests confidently in God\'s unfailing care. '
+              'humble heart rests confidently in God\'s unfailing care.\n'
               'Those who trust God\'s hands never need to fear God\'s timing. '
               '---',
         ),
@@ -12298,31 +12288,31 @@ final class DevotionalTopics {
         'mighty hand?',
       ],
       prayer:
-          'Lord, '
+          'Lord,\n'
           'Thank You for Your mighty hand that protects, guides, and faithfully '
           'cares for me. Thank You that You are working in my life even when I '
           'cannot see what You are doing. I acknowledge that Your wisdom is '
-          'greater than mine and Your timing is always perfect. '
+          'greater than mine and Your timing is always perfect.\n'
           'Forgive me for the times I have allowed pride, impatience, or '
           'self-reliance to control my decisions. Teach me to humble myself '
           'before You each day and to trust Your plans above my own. Help me wait '
           'with faith instead of frustration, knowing that You never forget Your '
-          'promises. '
+          'promises.\n'
           'Strengthen me to serve faithfully wherever You have placed me. Keep '
           'my heart free from comparison and the desire for human recognition. '
           'Let my confidence rest in Your approval alone, trusting that You will '
-          'open every door at the right time. '
+          'open every door at the right time.\n'
           'May I gladly live under Your mighty hand, walk humbly before You, and '
           'patiently wait for the day You choose to lift me up according to Your '
-          'perfect will. '
+          'perfect will.\n'
           'Amen. 🙏🌿',
       createdAt: DateTime(2024, 3, 26),
     ),
 
-    // ── 87. A ──────────────────────────────────────────────────
+    // ── 87. KNOWLEDGE ──────────────────────────────────────────────────
     DevotionalModel(
       id: 'a_heart_that',
-      theme: 'A',
+      theme: 'Knowledge',
       title: 'A Heart That Never Stops Learning',
       scripture:
           'The heart of the prudent acquires knowledge, and the ear of the wise '
@@ -12338,13 +12328,13 @@ final class DevotionalTopics {
               'This reveals that wisdom is not accidental—it is intentional. A '
               'teachable heart recognizes that there is always more to learn from '
               'God. Instead of depending on personal understanding, the wise '
-              'continually seek truth, instruction, and spiritual growth. '
+              'continually seek truth, instruction, and spiritual growth.\n'
               'Many people become stagnant because they believe they already know '
               'enough. Pride closes the door to growth, but humility keeps the heart '
               'open to God\'s instruction. As Solomon writes in Book of Proverbs 9:9, '
               'instruct a wise person and they will become even wiser. Spiritual '
               'maturity is marked by a continual desire to grow in the knowledge of '
-              'God. '
+              'God.\n'
               'A teachable heart is fertile ground where God\'s wisdom can flourish. '
               '---',
         ),
@@ -12357,13 +12347,13 @@ final class DevotionalTopics {
               'effort, consistency, and desire. God has given His Word, His Spirit, '
               'and the fellowship of believers so that we may continually grow in '
               'understanding. Spiritual wisdom is not gained by passive listening but '
-              'by actively pursuing God\'s truth. '
+              'by actively pursuing God\'s truth.\n'
               'In today\'s world, countless voices compete for our attention. Without '
               'discernment, it is easy to absorb opinions while neglecting God\'s '
               'truth. As Paul encourages in Second Epistle to Timothy 2:15, believers '
               'should diligently present themselves to God, correctly handling the '
               'Word of truth. Those who seek God\'s wisdom will never lack direction '
-              'for life\'s journey. '
+              'for life\'s journey.\n'
               'Those who hunger for God\'s truth will continually discover new depths '
               'of His wisdom. '
               '---',
@@ -12376,12 +12366,12 @@ final class DevotionalTopics {
               'Biblical knowledge is never meant to remain merely in the mind. God '
               'desires truth that transforms the heart and shapes daily living. The '
               'wise seek knowledge because they desire to obey God more faithfully, '
-              'not simply to accumulate information. '
+              'not simply to accumulate information.\n'
               'Many believers know Scripture but struggle to apply it in practical '
               'ways. Genuine wisdom is revealed through obedience. As James teaches '
               'in Epistle of James 1:22, believers are called to be doers of the Word '
               'and not hearers only. Knowledge becomes wisdom when it is lived out '
-              'through faithful obedience. '
+              'through faithful obedience.\n'
               'The goal of learning God\'s truth is not simply to know more—it is to '
               'become more like Christ. '
               '---',
@@ -12395,12 +12385,12 @@ final class DevotionalTopics {
               'known not only for speaking well but for listening carefully. They '
               'listen to God\'s voice through Scripture, the guidance of the Holy '
               'Spirit, and the wise counsel of mature believers. Listening is one of '
-              'the greatest expressions of humility. '
+              'the greatest expressions of humility.\n'
               'Many mistakes are made because people are quick to speak but slow to '
               'listen. Yet God often guides those who quietly seek His direction. As '
               'Isaiah declares in Book of Isaiah 30:21, believers hear God\'s voice '
               'saying, "This is the way; walk in it." A listening heart becomes a '
-              'heart that walks confidently in God\'s will. '
+              'heart that walks confidently in God\'s will.\n'
               'God often speaks most clearly to hearts that are willing to listen. '
               '---',
         ),
@@ -12413,12 +12403,12 @@ final class DevotionalTopics {
               'season of life, God continues to teach, refine, and prepare His '
               'people. Those who remain teachable become increasingly fruitful '
               'because they continue growing in wisdom, discernment, and Christlike '
-              'character. '
+              'character.\n'
               'The greatest servants of God never stopped learning from Him. Moses, '
               'David, Paul, and the apostles continually sought God\'s wisdom '
               'throughout their lives. As Peter encourages in Second Epistle of Peter '
               '3:18, believers are to grow in the grace and knowledge of our Lord and '
-              'Savior Jesus Christ. A growing believer becomes a fruitful believer. '
+              'Savior Jesus Christ. A growing believer becomes a fruitful believer.\n'
               'The moment you stop learning from God is the moment you stop growing '
               'in Him. '
               '---',
@@ -12436,20 +12426,20 @@ final class DevotionalTopics {
         'What truth has God been teaching me that I need to put into practice?',
       ],
       prayer:
-          'Lord, '
+          'Lord,\n'
           'Thank You for being the source of all wisdom and truth. Thank You for '
           'giving me Your Word, Your Holy Spirit, and the privilege of growing in '
-          'the knowledge of You each day. '
+          'the knowledge of You each day.\n'
           'Forgive me for the times I have relied on my own understanding '
           'instead of seeking Your wisdom. Remove every trace of pride that keeps '
           'me from learning, and give me a humble and teachable heart. Help me '
-          'hunger for Your truth more than the opinions of this world. '
+          'hunger for Your truth more than the opinions of this world.\n'
           'Open my ears to hear Your voice and my heart to receive Your '
           'instruction. Teach me not only to understand Your Word but also to '
           'faithfully obey it in every area of my life. Let Your wisdom guide my '
-          'decisions, shape my character, and strengthen my faith. '
+          'decisions, shape my character, and strengthen my faith.\n'
           'May I never stop seeking You, never stop learning from You, and never '
-          'stop growing into the person You have called me to be. '
+          'stop growing into the person You have called me to be.\n'
           'Amen. 🙏🌿',
       createdAt: DateTime(2024, 3, 27),
     ),
@@ -12473,14 +12463,14 @@ final class DevotionalTopics {
               'philosophies, and human reasoning, Jesus declared that God\'s Word '
               'alone is absolute truth. Truth is not determined by popular opinion or '
               'personal preference; it is established by God\'s unchanging character '
-              'and revealed through His Word. '
+              'and revealed through His Word.\n'
               'Today, many voices compete for our attention, offering conflicting '
               'ideas about life, purpose, and morality. Without God\'s truth, people '
               'are easily led astray. Yet Scripture remains the unchanging foundation '
               'upon which believers can confidently build their lives. As David '
               'proclaims in Book of Psalms 119:160, the entirety of God\'s Word is '
               'truth, and every one of His righteous judgments endures forever. God\'s '
-              'truth never changes because God Himself never changes. '
+              'truth never changes because God Himself never changes.\n'
               'When everything around you is uncertain, God\'s Word remains your '
               'unshakable foundation. '
               '---',
@@ -12494,13 +12484,13 @@ final class DevotionalTopics {
               'for God and continually transformed into the likeness of Christ. While '
               'salvation happens the moment we place our faith in Jesus, '
               'sanctification is a lifelong process in which God gradually shapes our '
-              'hearts, minds, and character. '
+              'hearts, minds, and character.\n'
               'Many believers become discouraged because they still see areas of '
               'weakness within themselves. Yet God never expects instant perfection. '
               'He patiently works within His children day by day. As Paul assures '
               'believers in Epistle to the Philippians 1:6, He who began a good work '
               'will carry it on to completion until the day of Christ Jesus. Every '
-              'day spent walking with God is another step in His transforming work. '
+              'day spent walking with God is another step in His transforming work.\n'
               'God loves you enough to accept you as you are, but He loves you too '
               'much to leave you unchanged. '
               '---',
@@ -12513,13 +12503,13 @@ final class DevotionalTopics {
               'One of Satan\'s greatest weapons is deception. From the Garden of Eden '
               'until today, he seeks to distort God\'s truth and replace it with lies '
               'that produce fear, confusion, pride, and unbelief. The only effective '
-              'defense against deception is a heart firmly established in God\'s Word. '
+              'defense against deception is a heart firmly established in God\'s Word.\n'
               'Jesus Himself demonstrated this during His temptation in the '
               'wilderness. Every attack of the enemy was answered with the words, "It '
               'is written." As Paul teaches in Epistle to the Ephesians 6:17, the '
               'Word of God is the sword of the Spirit, enabling believers to stand '
               'against the enemy\'s schemes. Truth exposes deception and gives '
-              'believers confidence to walk in freedom. '
+              'believers confidence to walk in freedom.\n'
               'A mind filled with God\'s truth cannot easily be conquered by the '
               'enemy\'s lies. '
               '---',
@@ -12533,13 +12523,13 @@ final class DevotionalTopics {
               'transform lives. As believers meditate upon God\'s Word, the Holy '
               'Spirit uses it to renew their minds, purify their motives, strengthen '
               'their faith, and produce Christlike character. True spiritual growth '
-              'always begins with God\'s truth taking root within the heart. '
+              'always begins with God\'s truth taking root within the heart.\n'
               'Many people read the Bible simply to gain information, yet God '
               'desires transformation. His Word convicts, comforts, instructs, '
               'corrects, and encourages His people. As the writer of Epistle to the '
               'Hebrews 4:12 explains, God\'s Word is living and powerful, discerning '
               'the thoughts and intentions of the heart. The more believers submit to '
-              'Scripture, the more they become like Christ. '
+              'Scripture, the more they become like Christ.\n'
               'The Bible is not merely a book to be read—it is God\'s living voice '
               'that transforms those who receive it. '
               '---',
@@ -12552,13 +12542,13 @@ final class DevotionalTopics {
               'Jesus prayed that His followers would be sanctified by truth because '
               'truth leads to genuine freedom. Freedom is not found in doing whatever '
               'we desire but in living according to God\'s design. His truth protects '
-              'us from sin, guides our decisions, and leads us into abundant life. '
+              'us from sin, guides our decisions, and leads us into abundant life.\n'
               'Every day presents opportunities to choose between the world\'s values '
               'and God\'s truth. Those who continually walk in His Word discover '
               'increasing peace, wisdom, and spiritual maturity. As Jesus declared in '
               'Gospel of John 8:31–32, those who continue in His Word know the truth, '
               'and the truth sets them free. God\'s truth liberates the soul from the '
-              'bondage of sin and fear. '
+              'bondage of sin and fear.\n'
               'Those who build their lives upon God\'s truth will discover the '
               'freedom that only Christ can give. '
               '---',
@@ -12578,31 +12568,31 @@ final class DevotionalTopics {
         'day?',
       ],
       prayer:
-          'Lord, '
+          'Lord,\n'
           'Thank You for the gift of Your holy and unchanging Word. Thank You '
           'that Your truth is perfect, trustworthy, and powerful enough to '
           'transform my life. I praise You because Your Word never fails and '
-          'always leads me in the path of righteousness. '
+          'always leads me in the path of righteousness.\n'
           'Sanctify my heart through Your truth. Remove every lie, wrong belief, '
           'and sinful attitude that keeps me from becoming more like Jesus. Renew '
           'my mind each day through the power of Your Word, and help me to love '
-          'Your truth above every voice this world offers. '
+          'Your truth above every voice this world offers.\n'
           'Teach me to meditate on Scripture, obey it faithfully, and allow it '
           'to shape every decision I make. Fill me with wisdom, discernment, and '
           'spiritual understanding so that I may walk in freedom and reflect the '
-          'character of Christ. '
+          'character of Christ.\n'
           'May Your truth become the foundation of my life, the light that '
           'guides my path, and the transforming power that continually makes me '
-          'more like my Savior. '
+          'more like my Savior.\n'
           'Amen. 🙏🌿',
       createdAt: DateTime(2024, 3, 28),
     ),
 
 
-    // ── 89. LIVING ──────────────────────────────────────────────────
+    // ── 89. PROMISES ──────────────────────────────────────────────────
     DevotionalModel(
       id: 'living_through_gods',
-      theme: 'Living',
+      theme: 'Promises',
       title: 'Living Through God\'s Precious Promises',
       scripture:
           'By which have been given to us exceedingly great and precious '
@@ -12621,14 +12611,14 @@ final class DevotionalTopics {
               'declarations of an unchanging God. Every promise in Scripture reflects '
               'His love, wisdom, and commitment toward His children. God never makes '
               'a promise that He cannot fulfill, because His character guarantees the '
-              'certainty of His Word. '
+              'certainty of His Word.\n'
               'Many people place their confidence in promises made by human beings, '
               'only to experience disappointment. Human promises are limited by '
               'weakness and changing circumstances, but God\'s promises are '
               'established upon His eternal faithfulness. As Paul declares in Second '
               'Epistle to the Corinthians 1:20, all the promises of God find their '
               '"Yes" and "Amen" in Christ. Every promise is secured through Jesus and '
-              'upheld by God\'s perfect integrity. '
+              'upheld by God\'s perfect integrity.\n'
               'God\'s promises are not built upon changing circumstances—they are '
               'anchored in His unchanging character. '
               '---',
@@ -12642,13 +12632,13 @@ final class DevotionalTopics {
               'of the divine nature." This does not mean believers become divine, but '
               'that they increasingly reflect God\'s holy character. As we trust His '
               'promises and obey His Word, the Holy Spirit transforms our thoughts, '
-              'desires, and actions until we begin to resemble Christ more closely. '
+              'desires, and actions until we begin to resemble Christ more closely.\n'
               'Many believers see God\'s promises only as blessings to receive, but '
               'they are also instruments of transformation. Every promise invites '
               'deeper faith, greater obedience, and stronger dependence upon God. As '
               'Paul teaches in Epistle to the Romans 12:2, believers are transformed '
               'through the renewing of their minds. God\'s promises reshape the way we '
-              'think, live, and respond to life\'s challenges. '
+              'think, live, and respond to life\'s challenges.\n'
               'Every promise you believe becomes another step in God\'s work of '
               'transforming you into the likeness of Christ. '
               '---',
@@ -12662,14 +12652,14 @@ final class DevotionalTopics {
               'the world through lust." The world is marked by sinful desires, '
               'selfish ambition, and moral decay, but through Christ, believers have '
               'been given both the freedom and the power to live differently. Sin no '
-              'longer has the final authority over those who belong to Him. '
+              'longer has the final authority over those who belong to Him.\n'
               'The enemy constantly tempts believers to return to old patterns of '
               'living, but God\'s grace provides the strength to resist. Victory over '
               'sin is not achieved through human determination alone but through the '
               'power of the Holy Spirit. As Paul declares in Epistle to the Galatians '
               '5:16, those who walk by the Spirit will not fulfill the desires of the '
               'flesh. God\'s promises give believers confidence that holiness is '
-              'possible through His power. '
+              'possible through His power.\n'
               'The same grace that forgives your sin also empowers you to overcome '
               'it. '
               '---',
@@ -12684,13 +12674,13 @@ final class DevotionalTopics {
               'God\'s promise despite his old age. Joshua trusted God\'s promise before '
               'entering the Promised Land. Mary believed God\'s promise before she saw '
               'its fulfillment. Their confidence rested not in what they could see '
-              'but in the faithfulness of the One who had spoken. '
+              'but in the faithfulness of the One who had spoken.\n'
               'There will be seasons when God\'s promises seem delayed or difficult '
               'to understand. Yet faith continues to trust because it knows God\'s '
               'timing is perfect. As the writer of Epistle to the Hebrews 10:23 '
               'encourages, believers should hold firmly to the hope they profess '
               'because He who promised is faithful. God\'s promises remain true even '
-              'when circumstances seem to say otherwise. '
+              'when circumstances seem to say otherwise.\n'
               'Faith grows stronger every time you choose to trust God\'s promises '
               'over your present circumstances. '
               '---',
@@ -12704,13 +12694,13 @@ final class DevotionalTopics {
               'to live differently from the world around them. Their values, '
               'priorities, attitudes, and relationships should reflect the new life '
               'they have received through Christ. God\'s promises are not only meant '
-              'to comfort us—they are meant to shape the way we live every day. '
+              'to comfort us—they are meant to shape the way we live every day.\n'
               'Living according to God\'s promises requires daily surrender, '
               'continual dependence upon the Holy Spirit, and unwavering confidence '
               'in God\'s Word. As Paul writes in Epistle to the Ephesians 4:22–24, '
               'believers are to put off the old self and put on the new self, created '
               'to be like God in true righteousness and holiness. Every day becomes '
-              'an opportunity to demonstrate the transforming power of God\'s grace. '
+              'an opportunity to demonstrate the transforming power of God\'s grace.\n'
               'Those who trust God\'s promises will increasingly reflect God\'s '
               'character. '
               '---',
@@ -12730,29 +12720,29 @@ final class DevotionalTopics {
         'around me?',
       ],
       prayer:
-          'Lord, '
+          'Lord,\n'
           'Thank You for giving me Your exceedingly great and precious promises. '
           'Thank You that every promise You have spoken is trustworthy because it '
-          'rests upon Your unchanging character and Your unfailing love. '
+          'rests upon Your unchanging character and Your unfailing love.\n'
           'Help me build my life upon Your Word instead of my feelings or '
           'circumstances. Strengthen my faith to believe Your promises even when '
           'I cannot yet see their fulfillment. Let Your truth renew my mind and '
-          'transform my heart so that I may become more like Jesus each day. '
+          'transform my heart so that I may become more like Jesus each day.\n'
           'Empower me through Your Holy Spirit to overcome the corruption of '
           'this world and to live a life that reflects Your holiness. Teach me to '
           'walk in obedience, trusting that Your grace is sufficient and Your '
-          'promises never fail. '
+          'promises never fail.\n'
           'May Your promises become the anchor of my soul, the strength of my '
           'faith, and the foundation upon which I build my entire life, until the '
-          'world sees the character of Christ reflected in me. '
+          'world sees the character of Christ reflected in me.\n'
           'Amen. 🙏🌿',
       createdAt: DateTime(2024, 3, 29),
     ),
 
-    // ── 90. THE ──────────────────────────────────────────────────
+    // ── 90. OVERCOMER ──────────────────────────────────────────────────
     DevotionalModel(
       id: 'the_greater_one',
-      theme: 'The',
+      theme: 'Overcomer',
       title: 'The Greater One Lives Within You',
       scripture:
           'You are of God, little children, and have overcome them, because He '
@@ -12769,14 +12759,14 @@ final class DevotionalTopics {
               'confidence does not begin with our abilities or experiences but with '
               'our identity as God\'s children. Through faith in Jesus Christ, we '
               'belong to God, and that relationship changes everything about how we '
-              'face life. '
+              'face life.\n'
               'The enemy constantly attacks the believer\'s identity, trying to '
               'produce fear, doubt, and insecurity. He wants God\'s children to forget '
               'who they are in Christ. But Scripture repeatedly reminds us that we '
               'have been adopted into God\'s family and sealed by His Spirit. As Paul '
               'writes in Epistle to the Ephesians 2:19, believers are no longer '
               'strangers but members of God\'s household. Our identity is secure '
-              'because it is established by God Himself. '
+              'because it is established by God Himself.\n'
               'You can face every battle with confidence because you already belong '
               'to the God who has never lost a battle. '
               '---',
@@ -12790,13 +12780,13 @@ final class DevotionalTopics {
               'past tense. Through Christ\'s death and resurrection, the decisive '
               'victory has already been won. Believers do not strive to achieve '
               'victory over Satan—they stand in the victory that Jesus has already '
-              'secured on the cross. '
+              'secured on the cross.\n'
               'Many Christians live as though they are constantly defeated, '
               'forgetting the triumph of Christ. The cross not only brought '
               'forgiveness but also defeated the powers of darkness. As Paul declares '
               'in Epistle to the Colossians 2:15, Jesus disarmed principalities and '
               'powers, triumphing over them through the cross. Every spiritual battle '
-              'must be viewed in light of Christ\'s finished work. '
+              'must be viewed in light of Christ\'s finished work.\n'
               'Victory is not something you earn—it is something you receive through '
               'Jesus Christ. '
               '---',
@@ -12810,13 +12800,13 @@ final class DevotionalTopics {
               'you is greater than he who is in the world." The Holy Spirit lives '
               'within every believer, bringing God\'s power, wisdom, comfort, and '
               'strength. No force of darkness can overcome the presence of the '
-              'Almighty God dwelling within His people. '
+              'Almighty God dwelling within His people.\n'
               'The enemy may tempt, accuse, or intimidate, but he is a defeated foe. '
               'His influence is limited by the authority of Christ. As Paul reminds '
               'believers in Epistle to the Romans 8:11, the same Spirit who raised '
               'Jesus from the dead now lives within them. The power at work in the '
               'believer is infinitely greater than any opposition they will ever '
-              'face. '
+              'face.\n'
               'The battle may be real, but the power within you is greater than the '
               'power against you. '
               '---',
@@ -12830,13 +12820,13 @@ final class DevotionalTopics {
               'problems and minimizes God\'s promises. But faith does the opposite—it '
               'magnifies God\'s greatness and places every challenge beneath His '
               'authority. When believers remember that the greater One lives within '
-              'them, fear begins to lose its grip. '
+              'them, fear begins to lose its grip.\n'
               'Throughout Scripture, God continually called His people not to fear '
               'because He was with them. His presence was always their greatest '
               'source of courage. As the Lord declares in Book of Isaiah 41:10, "Fear '
               'not, for I am with you." God\'s presence does not eliminate every '
               'battle, but it guarantees that believers never face those battles '
-              'alone. '
+              'alone.\n'
               'Faith grows stronger when your focus shifts from the size of your '
               'problems to the greatness of your God. '
               '---',
@@ -12851,12 +12841,12 @@ final class DevotionalTopics {
               'we can resist temptation, overcome discouragement, remain faithful '
               'through trials, and boldly fulfill God\'s calling. Victory is expressed '
               'through daily obedience, continual dependence upon the Holy Spirit, '
-              'and unwavering trust in God\'s promises. '
+              'and unwavering trust in God\'s promises.\n'
               'The Christian life is not one of self-confidence but '
               'Christ-confidence. Every day we choose to rely upon His strength '
               'instead of our own. As Paul declares in Epistle to the Philippians '
               '4:13, "I can do all things through Christ who strengthens me." The '
-              'believer who walks closely with Christ walks in continual victory. '
+              'believer who walks closely with Christ walks in continual victory.\n'
               'Those who know the Greater One lives within them can face every '
               'challenge with courage, peace, and unwavering hope. '
               '---',
@@ -12874,32 +12864,32 @@ final class DevotionalTopics {
         'strength?',
       ],
       prayer:
-          'Lord, '
+          'Lord,\n'
           'Thank You for making me Your child and for placing Your Holy Spirit '
           'within me. Thank You that I do not have to live in fear because the '
           'Greater One lives in my heart. My confidence rests not in my abilities '
-          'but in Your power and Your unfailing presence. '
+          'but in Your power and Your unfailing presence.\n'
           'Forgive me for the times I have focused more on the enemy\'s attacks '
           'than on Your promises. Strengthen my faith to remember that through '
           'Jesus Christ I have already been given victory. Help me stand firm '
           'against temptation, discouragement, and every lie that seeks to weaken '
-          'my trust in You. '
+          'my trust in You.\n'
           'Fill me daily with the power of Your Holy Spirit. Teach me to walk in '
           'obedience, courage, and confidence, knowing that no challenge is '
           'greater than Your power. Let my life become a testimony that Christ '
           'truly lives within me and that His victory is sufficient for every '
-          'battle I face. '
+          'battle I face.\n'
           'May I live each day as an overcomer, trusting not in myself, but in '
           'the Greater One who lives within me, until my life brings glory to '
-          'Your holy name. '
+          'Your holy name.\n'
           'Amen. 🙏🌿',
       createdAt: DateTime(2024, 3, 30),
     ),
 
-    // ── 91. A ──────────────────────────────────────────────────
+    // ── 91. HEART ──────────────────────────────────────────────────
     DevotionalModel(
       id: 'a_heart_revived',
-      theme: 'A',
+      theme: 'Heart',
       title: 'A Heart Revived by God\'s Word',
       scripture:
           'Turn away my eyes from looking at worthless things, and revive me in '
@@ -12916,7 +12906,7 @@ final class DevotionalTopics {
               'looking at worthless things." He understood that what we continually '
               'look at eventually influences our thoughts, desires, and actions. Our '
               'eyes are often the gateway to our hearts, and whatever fills our '
-              'attention gradually shapes our character. '
+              'attention gradually shapes our character.\n'
               'Today\'s world constantly competes for our attention with '
               'distractions, entertainment, materialism, and temptations that can '
               'quietly draw our hearts away from God. The enemy knows that if he can '
@@ -12924,7 +12914,7 @@ final class DevotionalTopics {
               'must intentionally fix their eyes on what honors God. As Paul '
               'encourages in Epistle to the Philippians 4:8, we should meditate on '
               'whatever is true, honorable, pure, lovely, and praiseworthy. A heart '
-              'that focuses on God\'s truth will grow stronger in faith. '
+              'that focuses on God\'s truth will grow stronger in faith.\n'
               'Your life will naturally move toward whatever continually holds your '
               'attention. '
               '---',
@@ -12939,13 +12929,13 @@ final class DevotionalTopics {
               'offering something better. His ways lead to life, peace, joy, and '
               'lasting fulfillment. Spiritual revival begins when believers return '
               'their hearts to God\'s path and allow His presence to renew their '
-              'souls. '
+              'souls.\n'
               'Many people search for satisfaction in temporary pleasures, only to '
               'discover lasting emptiness. Yet true life is found only in walking '
               'with God. As Jesus declared in Gospel of John 10:10, He came so that '
               'His people might have life and have it abundantly. God\'s ways may '
               'require surrender, but they always lead to greater joy than the world '
-              'can offer. '
+              'can offer.\n'
               'The world may entertain you for a moment, but only God can revive '
               'your soul. '
               '---',
@@ -12958,12 +12948,12 @@ final class DevotionalTopics {
               'The psalmist prays, "Establish Your word to Your servant." He '
               'understood that lasting stability comes from God\'s promises, not from '
               'changing circumstances. When God\'s Word is firmly rooted in the heart, '
-              'believers are able to stand strong even when life becomes difficult. '
+              'believers are able to stand strong even when life becomes difficult.\n'
               'The enemy constantly attacks with lies, fear, and doubt. But God\'s '
               'Word anchors believers in truth and gives them confidence during every '
               'season. As Jesus taught in Gospel of Matthew 7:24–25, the person who '
               'hears and obeys His words is like one who builds a house upon the '
-              'rock. Storms will come, but God\'s truth keeps His people standing. '
+              'rock. Storms will come, but God\'s truth keeps His people standing.\n'
               'A life established upon God\'s Word cannot be shaken by the changing '
               'winds of this world. '
               '---',
@@ -12976,12 +12966,12 @@ final class DevotionalTopics {
               'The psalmist identifies himself as one who is devoted to fearing God. '
               'Biblical fear is not terror but deep reverence, love, honor, and '
               'joyful submission to the Lord. It is recognizing God\'s holiness and '
-              'allowing that awareness to shape every decision, attitude, and action. '
+              'allowing that awareness to shape every decision, attitude, and action.\n'
               'Many people seek God\'s blessings while neglecting a genuine reverence '
               'for Him. Yet Scripture teaches that wisdom begins with the fear of the '
               'Lord. As Solomon writes in Book of Proverbs 9:10, the fear of the Lord '
               'is the beginning of wisdom. Reverence for God produces humility, '
-              'obedience, and a growing desire to live a life that pleases Him. '
+              'obedience, and a growing desire to live a life that pleases Him.\n'
               'The closer you grow to God, the deeper your reverence for Him '
               'becomes. '
               '---',
@@ -12995,12 +12985,12 @@ final class DevotionalTopics {
               'within the heart of every believer who continually seeks Him. Each day '
               'brings fresh opportunities to turn away from distractions, meditate on '
               'God\'s Word, and walk in His ways. Spiritual renewal happens as '
-              'believers repeatedly surrender themselves to God\'s transforming work. '
+              'believers repeatedly surrender themselves to God\'s transforming work.\n'
               'There will always be voices competing for your attention, but God '
               'continually invites you back into His presence. As Paul teaches in '
               'Epistle to the Romans 12:2, believers are transformed through the '
               'renewing of their minds. Every day spent in God\'s Word strengthens the '
-              'soul and prepares the heart to faithfully follow Christ. '
+              'soul and prepares the heart to faithfully follow Christ.\n'
               'A revived heart is not produced by occasional encounters with God but '
               'by daily communion with Him. '
               '---',
@@ -13024,20 +13014,19 @@ final class DevotionalTopics {
           'Thank You for Your living Word that gives life, wisdom, and direction '
           'to my soul. Thank You for loving me enough to call my heart away from '
           'the empty distractions of this world and back into Your life-giving '
-          'presence. '
+          'presence.\n'
           'Turn my eyes away from anything that weakens my devotion to You. '
           'Remove every distraction, temptation, and desire that competes for my '
           'affection. Revive my heart through Your Holy Spirit and renew my '
-          'passion for walking in Your ways. '
+          'passion for walking in Your ways.\n'
           'Establish Your Word deeply within me so that I may remain steadfast '
           'through every season of life. Teach me to honor You with reverence, '
           'obey You with joy, and trust Your promises without hesitation. Let my '
           'mind be continually renewed by Your truth and my life increasingly '
-          'reflect the character of Jesus Christ. '
+          'reflect the character of Jesus Christ.\n'
           'May my eyes remain fixed on You, my heart remain anchored in Your '
           'Word, and my life continually be revived by Your unfailing presence, '
-          'until every thought, desire, and action brings glory to Your holy '
-          'name. '
+          'until every thought, desire, and action brings glory to Your holy.\n'
           'Amen. 🙏🌿',
       createdAt: DateTime(2024, 3, 31),
     ),
@@ -13062,13 +13051,13 @@ final class DevotionalTopics {
               'was afraid." This was not the fear of punishment but the awe and '
               'reverence that comes from encountering the holiness and majesty of '
               'God. The prophet realized that God is infinitely greater than human '
-              'understanding, and that realization humbled his heart before the Lord. '
+              'understanding, and that realization humbled his heart before the Lord.\n'
               'In a generation that often treats God casually, believers are called '
               'to recover a deep reverence for His presence. Revival does not begin '
               'with emotional excitement but with hearts that recognize God\'s '
               'greatness and submit to His authority. As Isaiah experienced in Book '
               'of Isaiah 6:1–5, a true encounter with God\'s holiness leads to '
-              'humility, repentance, and renewed devotion. '
+              'humility, repentance, and renewed devotion.\n'
               'A heart that truly reveres God becomes a heart that is ready for '
               'revival. '
               '---',
@@ -13083,13 +13072,13 @@ final class DevotionalTopics {
               'or emotions. Revival is a sovereign work of God in which He renews His '
               'people, restores their passion for Him, and awakens them to His '
               'purposes. While believers prepare their hearts through prayer and '
-              'obedience, only God can breathe fresh spiritual life into them. '
+              'obedience, only God can breathe fresh spiritual life into them.\n'
               'Many Christians become discouraged when they see spiritual decline in '
               'their lives, families, or communities. Yet Habakkuk teaches us to '
               'bring that burden to God in prayer. As the psalmist prayed in Book of '
               'Psalms 85:6, "Will You not revive us again, that Your people may '
               'rejoice in You?" God delights in restoring hearts that sincerely seek '
-              'Him. '
+              'Him.\n'
               'The greatest revival does not begin in a crowd—it begins in a '
               'surrendered heart. '
               '---',
@@ -13103,13 +13092,13 @@ final class DevotionalTopics {
               'God to move in his own generation rather than waiting for some distant '
               'future. This prayer reveals both urgency and trust. Habakkuk believed '
               'that God could intervene at the perfect moment, even when '
-              'circumstances appeared hopeless. '
+              'circumstances appeared hopeless.\n'
               'There are seasons when believers pray for change but see little '
               'immediate progress. Yet God\'s delays are never signs of His absence. '
               'He works according to His perfect wisdom and appointed times. As '
               'Solomon reminds us in Book of Ecclesiastes 3:11, God makes everything '
               'beautiful in its time. His timing often prepares our hearts before He '
-              'changes our circumstances. '
+              'changes our circumstances.\n'
               'God is never late—He always moves according to His perfect purpose. '
               '---',
         ),
@@ -13122,12 +13111,12 @@ final class DevotionalTopics {
               'remember mercy." The prophet knew that God\'s judgment against sin was '
               'just, yet he also knew that God\'s heart is rich in compassion. Even '
               'while acknowledging God\'s holiness, Habakkuk appealed to His mercy, '
-              'trusting that grace would prevail. '
+              'trusting that grace would prevail.\n'
               'This prayer reaches its fullest expression in Jesus Christ. At the '
               'cross, God\'s justice and mercy met perfectly. Sin was judged, yet '
               'sinners were offered forgiveness through Christ\'s sacrifice. As James '
               'declares in Epistle of James 2:13, mercy triumphs over judgment. God\'s '
-              'desire is always to restore those who humbly return to Him. '
+              'desire is always to restore those who humbly return to Him.\n'
               'God\'s justice reveals His holiness, but His mercy reveals His heart. '
               '---',
         ),
@@ -13140,13 +13129,13 @@ final class DevotionalTopics {
               'participate in it. Every believer is called to become an instrument '
               'through whom God brings renewal to others. Revival begins when God\'s '
               'people humble themselves, seek His face, obey His Word, and allow the '
-              'Holy Spirit to transform their lives. '
+              'Holy Spirit to transform their lives.\n'
               'The world desperately needs believers whose hearts are alive with the '
               'presence of God. As God promised in Second Book of Chronicles 7:14, if '
               'His people humble themselves, pray, seek His face, and turn from their '
               'wicked ways, He will hear from heaven, forgive their sin, and heal '
               'their land. Personal revival often becomes the beginning of corporate '
-              'revival. '
+              'revival.\n'
               'A revived believer becomes a light through which God revives others. '
               '---',
         ),
@@ -13167,7 +13156,7 @@ final class DevotionalTopics {
           'I stand before You with reverence and awe, recognizing that You alone '
           'are holy, mighty, and worthy of all praise. Thank You for Your mercy '
           'that has been revealed through Jesus Christ and for Your desire to '
-          'restore and renew Your people. '
+          'restore and renew Your people.\n'
           'Revive Your work in my heart. Remove every trace of spiritual '
           'complacency, pride, and distraction that keeps me from fully walking '
           'with You. Fill me afresh with Your Holy Spirit, renew my love for Your '
@@ -13176,7 +13165,7 @@ final class DevotionalTopics {
           'immediate answers. Let my life become a vessel through which Your '
           'grace, truth, and love flow to others. May Your mercy continually '
           'shape my heart, and may I reflect the character of Christ in '
-          'everything I do. '
+          'everything I do.\n'
           'Lord, begin revival in me, let it spread through my family, my '
           'church, and my community, until Your name is glorified and many hearts '
           'are drawn back to You. '
@@ -13204,7 +13193,7 @@ final class DevotionalTopics {
               'enemies was not evidence of God\'s absence. In fact, God\'s covenant '
               'remained firmly established even when His people faced resistance. '
               'Every believer who seeks to live faithfully will encounter opposition, '
-              'but that opposition cannot cancel God\'s purposes. '
+              'but that opposition cannot cancel God\'s purposes.\n'
               'Many believers become discouraged when they experience criticism, '
               'rejection, or spiritual attacks. They assume that difficulties mean '
               'they have stepped outside of God\'s will. Yet Scripture repeatedly '
@@ -13212,7 +13201,7 @@ final class DevotionalTopics {
               'in complete obedience. As Paul reminds us in Second Epistle to Timothy '
               '3:12, all who desire to live godly lives in Christ Jesus will '
               'experience persecution. Opposition is often confirmation that God is '
-              'at work. '
+              'at work.\n'
               'God\'s presence is not measured by the absence of battles but by His '
               'faithfulness in the midst of them. '
               '---',
@@ -13226,13 +13215,13 @@ final class DevotionalTopics {
               'Me." This reveals that while God permits opposition, He is never the '
               'author of evil. Human hostility, spiritual attacks, and the enemy\'s '
               'schemes are never beyond His authority. Nothing happens outside His '
-              'knowledge, and nothing can frustrate His eternal plan. '
+              'knowledge, and nothing can frustrate His eternal plan.\n'
               'The enemy often wants believers to believe that evil has gained '
               'control. But Scripture continually points us back to God\'s absolute '
               'sovereignty. Even when Joseph was betrayed, God was working behind the '
               'scenes. As Joseph later declared in Book of Genesis 50:20, what others '
               'intended for evil, God intended for good. God remains in control even '
-              'when circumstances appear chaotic. '
+              'when circumstances appear chaotic.\n'
               'What threatens you has never escaped the authority of the God who '
               'reigns over all things. '
               '---',
@@ -13246,14 +13235,14 @@ final class DevotionalTopics {
               'your sake." This is not a promise that believers will never face '
               'conflict, but it is a promise that evil will never ultimately triumph '
               'over God\'s purposes. The Lord Himself becomes the Defender of those '
-              'who trust Him. '
+              'who trust Him.\n'
               'Throughout Scripture, God repeatedly fought for His people. He '
               'defeated Pharaoh at the Red Sea, protected Daniel in Babylon, and '
               'delivered Peter from prison. The greatest victory came through Jesus '
               'Christ, who defeated sin, death, and Satan at the cross. As Moses '
               'declared in Book of Exodus 14:14, "The Lord will fight for you, and '
               'you shall hold your peace." God\'s battles are never uncertain because '
-              'His victory is always complete. '
+              'His victory is always complete.\n'
               'When God becomes your Defender, no enemy has the final word over your '
               'life. '
               '---',
@@ -13267,12 +13256,12 @@ final class DevotionalTopics {
               'that His love is everlasting. Their confidence was never meant to rest '
               'in favorable circumstances but in God\'s unchanging faithfulness. Even '
               'when surrounded by opposition, they could stand securely because God\'s '
-              'covenant could not be broken. '
+              'covenant could not be broken.\n'
               'Believers today live under the greater covenant established through '
               'Jesus Christ. His promises remain firm regardless of changing '
               'circumstances. As Paul confidently declares in Epistle to the Romans '
               '8:31, "If God is for us, who can be against us?" The believer\'s '
-              'security is found in God\'s promises, not in the absence of problems. '
+              'security is found in God\'s promises, not in the absence of problems.\n'
               'The strength of your confidence is determined by the faithfulness of '
               'the God who made the promise. '
               '---',
@@ -13286,12 +13275,12 @@ final class DevotionalTopics {
               'forward with courage instead of fear. Fear focuses on the strength of '
               'the enemy, while faith focuses on the greatness of God. Every '
               'challenge becomes another opportunity to witness God\'s power, '
-              'protection, and faithfulness at work. '
+              'protection, and faithfulness at work.\n'
               'This confidence does not produce arrogance but peaceful trust. '
               'Believers know they do not stand alone because the Lord goes before '
               'them. As David declared in Book of Psalms 27:1, "The Lord is my light '
               'and my salvation; whom shall I fear?" A heart resting in God\'s '
-              'promises can remain steady even when surrounded by uncertainty. '
+              'promises can remain steady even when surrounded by uncertainty.\n'
               'Those who trust God\'s protection can move forward with courage '
               'because they know their future rests securely in His hands. '
               '---',
@@ -13311,30 +13300,30 @@ final class DevotionalTopics {
         'fearing my circumstances?',
       ],
       prayer:
-          'Lord, '
+          'Lord,\n'
           'Thank You for being my Defender, my Protector, and my faithful God. '
           'Thank You that no opposition, attack, or circumstance can overcome the '
           'plans You have for my life. I find peace in knowing that You remain '
-          'sovereign over every situation I face. '
+          'sovereign over every situation I face.\n'
           'Forgive me for the times I have allowed fear to become greater than '
           'my faith. Help me remember that You are fighting for me and that Your '
           'purposes cannot be defeated. Strengthen my heart to trust You when '
-          'opposition arises and to stand firmly upon Your promises. '
+          'opposition arises and to stand firmly upon Your promises.\n'
           'Teach me to walk with confidence, humility, and unwavering faith. '
           'Fill me with courage to continue obeying You regardless of the '
           'challenges before me. Let every battle become another opportunity to '
-          'witness Your power, Your faithfulness, and Your unfailing love. '
+          'witness Your power, Your faithfulness, and Your unfailing love.\n'
           'May I live each day without fear, knowing that the God who has called '
           'me also surrounds me with His protection, and that no weapon formed '
-          'against Your purpose for my life will ever prevail. '
+          'against Your purpose for my life will ever prevail.\n'
           'Amen. 🙏🌿',
       createdAt: DateTime(2024, 4, 2),
     ),
 
-    // ── 94. THE ──────────────────────────────────────────────────
+    // ── 94. DEFENDER ──────────────────────────────────────────────────
     DevotionalModel(
       id: 'the_lord_my',
-      theme: 'The',
+      theme: 'Defender',
       title: 'The Lord, My Mighty Defender',
       scripture:
           'But the Lord is with me as a mighty awesome One. Therefore my '
@@ -13354,14 +13343,14 @@ final class DevotionalTopics {
               'overwhelming opposition, Jeremiah shifted his focus from his enemies '
               'to God\'s presence. He declared, "The Lord is with me." That single '
               'truth gave him strength to continue when everything around him '
-              'suggested he should quit. '
+              'suggested he should quit.\n'
               'Life often brings seasons when criticism, rejection, and hardship '
               'seem overwhelming. The enemy wants believers to believe they are '
               'fighting alone, but God\'s greatest promise has always been His '
               'presence. As the Lord assured Joshua in Book of Joshua 1:9, He would '
               'be with him wherever he went. The presence of God does not eliminate '
               'every battle, but it guarantees that His people never face those '
-              'battles alone. '
+              'battles alone.\n'
               'The greatest source of courage is not the absence of enemies but the '
               'presence of God. '
               '---',
@@ -13375,14 +13364,14 @@ final class DevotionalTopics {
               'warrior. This picture reminds believers that God is not a distant '
               'observer but an active Defender who fights for His people. He is '
               'infinitely stronger than every force that opposes His purposes. While '
-              'human strength has limits, God\'s power knows no boundaries. '
+              'human strength has limits, God\'s power knows no boundaries.\n'
               'There are moments when believers feel powerless against life\'s '
               'challenges. But God\'s power is never diminished by the size of our '
               'problems. The same God who defeated Pharaoh, brought down the walls of '
               'Jericho, and raised Jesus from the dead is still fighting for His '
               'people today. As Moses declared in Book of Exodus 14:14, "The Lord '
               'will fight for you, and you shall hold your peace." God\'s victories '
-              'never depend on human ability. '
+              'never depend on human ability.\n'
               'When God stands beside you, no enemy stands above you. '
               '---',
         ),
@@ -13395,14 +13384,14 @@ final class DevotionalTopics {
               'will not prevail." His confidence was not based on their weakness but '
               'on God\'s sovereignty. Opposition may delay God\'s work, but it can '
               'never destroy it. Every attack against God\'s purposes is temporary '
-              'because His plans are eternal. '
+              'because His plans are eternal.\n'
               'The enemy often uses fear to make believers believe that evil has the '
               'final word. Yet throughout Scripture, those who trusted God discovered '
               'that His purposes always prevailed. Joseph was betrayed but became a '
               'ruler. Daniel entered the lions\' den but emerged unharmed. Paul was '
               'imprisoned, yet the Gospel continued to spread. As Paul writes in '
               'Epistle to the Romans 8:28, God works all things together for the good '
-              'of those who love Him. No attack can cancel what God has ordained. '
+              'of those who love Him. No attack can cancel what God has ordained.\n'
               'Those who oppose God\'s purpose may resist it for a season, but they '
               'can never defeat it. '
               '---',
@@ -13416,13 +13405,13 @@ final class DevotionalTopics {
               'changed. His enemies were still present, and his suffering continued. '
               'Yet faith allowed him to see beyond the present moment to God\'s '
               'ultimate victory. Biblical faith is not denying reality—it is '
-              'believing that God\'s promises are greater than present circumstances. '
+              'believing that God\'s promises are greater than present circumstances.\n'
               'Many believers wait for circumstances to improve before trusting God. '
               'But genuine faith trusts Him before the breakthrough arrives. As the '
               'writer of Epistle to the Hebrews 11:1 explains, faith is the assurance '
               'of things hoped for and the conviction of things not yet seen. God\'s '
               'promises become the believer\'s confidence even when visible evidence '
-              'has not yet appeared. '
+              'has not yet appeared.\n'
               'Faith celebrates God\'s victory long before it becomes visible. '
               '---',
         ),
@@ -13435,13 +13424,13 @@ final class DevotionalTopics {
               'calling despite intense opposition. He understood that success was not '
               'measured by popularity or comfort but by faithfulness. Those who '
               'remain faithful can trust that God Himself will vindicate them in His '
-              'perfect time. '
+              'perfect time.\n'
               'Believers today are also called to stand firm in truth, even when '
               'doing so is difficult. The world may reject God\'s message, but His '
               'truth never changes. As Paul encourages in First Epistle to the '
               'Corinthians 15:58, believers should remain steadfast and immovable, '
               'knowing that their labor in the Lord is never in vain. God honors '
-              'those who faithfully trust Him through every season. '
+              'those who faithfully trust Him through every season.\n'
               'The believer\'s responsibility is to remain faithful; God\'s '
               'responsibility is to fulfill His promises. '
               '---',
@@ -13460,22 +13449,22 @@ final class DevotionalTopics {
         'deliverance?',
       ],
       prayer:
-          'Lord, '
+          'Lord,\n'
           'Thank You for being my Mighty Warrior and faithful Defender. Thank '
           'You that I never face life\'s battles alone because Your presence goes '
-          'before me, walks beside me, and surrounds me with Your unfailing love. '
+          'before me, walks beside me, and surrounds me with Your unfailing love.\n'
           'Forgive me for the times I have allowed fear, discouragement, or '
           'opposition to weaken my faith. Help me lift my eyes above my '
           'circumstances and fix them firmly on You. Remind me that no enemy is '
           'stronger than Your power and that no attack can cancel the purpose You '
-          'have for my life. '
+          'have for my life.\n'
           'Strengthen me to remain faithful when I face rejection, criticism, or '
           'hardship. Fill me with courage to stand for Your truth, even when it '
           'is unpopular. Let my confidence rest not in my own strength but in '
-          'Your mighty hand that fights for me. '
+          'Your mighty hand that fights for me.\n'
           'May I walk through every challenge with unwavering faith, knowing '
           'that You are with me, You are fighting for me, and You will faithfully '
-          'accomplish every purpose You have ordained for my life. '
+          'accomplish every purpose You have ordained for my life.\n'
           'Amen. 🙏🌿',
       createdAt: DateTime(2024, 4, 3),
     ),
@@ -13500,14 +13489,14 @@ final class DevotionalTopics {
               'grace was fully revealed through Jesus Christ, who came into the world '
               'to bring salvation to everyone who believes. Salvation is not earned '
               'through good works, religious rituals, or human effort. It is God\'s '
-              'undeserved gift, offered freely because of His great love and mercy. '
+              'undeserved gift, offered freely because of His great love and mercy.\n'
               'Many people spend their lives trying to earn God\'s acceptance, '
               'believing they must become good enough before approaching Him. But the '
               'Gospel teaches the opposite. God reaches us while we are still sinners '
               'and invites us into a relationship with Him through His grace. As Paul '
               'writes in Epistle to the Ephesians 2:8–9, we are saved by grace '
               'through faith, not by works, so that no one can boast. Grace is God\'s '
-              'invitation to receive what we could never achieve on our own. '
+              'invitation to receive what we could never achieve on our own.\n'
               'Grace does not begin where human effort ends—it begins where human '
               'effort proves insufficient. '
               '---',
@@ -13522,13 +13511,13 @@ final class DevotionalTopics {
               'continually instructs, corrects, and shapes those who belong to '
               'Christ. It gently leads us away from sin and trains us to walk in '
               'obedience. Grace is not passive; it is actively transforming every '
-              'area of our lives. '
+              'area of our lives.\n'
               'Some misunderstand grace as permission to live however they choose, '
               'but biblical grace always produces spiritual growth. The same grace '
               'that forgives also transforms. As Paul explains in Epistle to the '
               'Romans 6:1–2, those who have received grace are not called to continue '
               'in sin but to walk in newness of life. Grace lovingly trains believers '
-              'to become more like Jesus. '
+              'to become more like Jesus./n'
               'True grace not only changes your eternal destination—it changes your '
               'daily direction. '
               '---',
@@ -13542,14 +13531,14 @@ final class DevotionalTopics {
               'lusts. Every follower of Christ faces a daily choice between the '
               'values of God\'s kingdom and the desires of the world. Spiritual '
               'maturity is not only about saying "yes" to God but also about saying '
-              '"no" to anything that separates us from Him. '
+              '"no" to anything that separates us from Him.\n'
               'The world constantly encourages self-indulgence and compromise, but '
               'the Holy Spirit gives believers the strength to resist temptation. '
               'Victory over sin is not achieved by human willpower alone but by God\'s '
               'empowering grace. As Paul teaches in Epistle to the Galatians 5:16, '
               'those who walk by the Spirit will not fulfill the desires of the '
               'flesh. Every act of obedience is evidence that God\'s grace is at work '
-              'within us. '
+              'within us.\n'
               'Grace gives you both the desire and the power to turn away from what '
               'dishonors God. '
               '---',
@@ -13563,12 +13552,12 @@ final class DevotionalTopics {
               'the present age." God does not ask His people to wait until heaven '
               'before living holy lives. He calls them to reflect Christ in the '
               'middle of a broken world. A sober life is marked by self-control, a '
-              'righteous life by integrity, and a godly life by devotion to God. '
+              'righteous life by integrity, and a godly life by devotion to God.\n'
               'The greatest testimony of the Gospel is often the transformed life of '
               'a believer. As Jesus taught in Gospel of Matthew 5:16, believers are '
               'to let their light shine before others so that people may see their '
               'good works and glorify the Father. Holy living is not about earning '
-              'God\'s love; it is about displaying His transforming grace. '
+              'God\'s love; it is about displaying His transforming grace.\n'
               'The world should not shape the believer—the believer should reflect '
               'Christ to the world. '
               '---',
@@ -13582,12 +13571,12 @@ final class DevotionalTopics {
               'in which believers live every day. Each day God patiently teaches, '
               'corrects, strengthens, and matures His children. Every victory over '
               'temptation, every act of obedience, and every step of faith is '
-              'evidence of His grace working within us. '
+              'evidence of His grace working within us.\n'
               'Spiritual growth is often gradual, but God is faithful to complete '
               'what He has begun. He never stops shaping those who remain surrendered '
               'to Him. As Peter encourages in Second Epistle of Peter 3:18, believers '
               'are to grow in the grace and knowledge of our Lord and Savior Jesus '
-              'Christ. The more we depend on His grace, the more we become like Him. '
+              'Christ. The more we depend on His grace, the more we become like Him.\n'
               'Those who continually live under God\'s grace will continually grow '
               'into Christ\'s likeness. '
               '---',
@@ -13607,22 +13596,22 @@ final class DevotionalTopics {
         'and decisions?',
       ],
       prayer:
-          'Lord, '
+          'Lord,\n'
           'Thank You for the amazing grace You have shown me through Jesus '
           'Christ. Thank You for saving me when I could not save myself and for '
           'loving me even when I was undeserving. Your grace is truly greater '
-          'than all my sin. '
+          'than all my sin.\n'
           'Teach me to live under the influence of Your grace every day. Help me '
           'turn away from ungodliness and every desire that pulls me away from '
           'You. Fill me with the power of Your Holy Spirit so that I may live '
-          'with self-control, righteousness, and wholehearted devotion to You. '
+          'with self-control, righteousness, and wholehearted devotion to You.\n'
           'Continue transforming my heart, renewing my mind, and shaping my '
           'character until I reflect the likeness of Jesus. Let my life become a '
           'testimony of what Your grace can accomplish in someone who is fully '
-          'surrendered to You. '
+          'surrendered to You.\n'
           'May Your grace guide my thoughts, strengthen my obedience, transform '
           'my character, and shine through my life, so that others may see Christ '
-          'in me and glorify Your holy name. '
+          'in me and glorify Your holy name.\n'
           'Amen. 🙏🌿',
       createdAt: DateTime(2024, 4, 4),
     ),
@@ -13647,13 +13636,13 @@ final class DevotionalTopics {
               'feeling or spoken confession. It is demonstrated by a life that '
               'willingly submits to His will. Obedience is not an attempt to earn '
               'God\'s love—it is the natural response of a heart that has already '
-              'experienced His grace. '
+              'experienced His grace.\n'
               'In today\'s culture, love is often measured by feelings, but Scripture '
               'measures love by faithfulness. Jesus Himself declared in Gospel of '
               'John 14:15, "If you love Me, keep My commandments." Every act of '
               'obedience is a declaration that Christ is Lord and that His wisdom is '
               'greater than our own. Our choices reveal where our deepest love truly '
-              'resides. '
+              'resides.\n'
               'Love is proven not merely by what we say to God, but by how '
               'faithfully we follow Him. '
               '---',
@@ -13668,14 +13657,14 @@ final class DevotionalTopics {
               'restrict our joy but to protect and increase it. Every instruction He '
               'gives flows from His perfect wisdom and His deep love for His '
               'children. His commands are the loving guidance of a Father who desires '
-              'our highest good. '
+              'our highest good.\n'
               'Many people see God\'s commands as limitations on freedom, yet the '
               'opposite is true. Just as a loving parent establishes boundaries to '
               'protect a child, God gives His commands to guard us from sin and lead '
               'us into abundant life. As David declares in Book of Psalms 19:7–8, the '
               'law of the Lord is perfect, refreshing the soul and bringing joy to '
               'the heart. God\'s commands are expressions of His care, not obstacles '
-              'to our happiness. '
+              'to our happiness.\n'
               'God never asks you to surrender anything without offering something '
               'infinitely better. '
               '---',
@@ -13689,13 +13678,13 @@ final class DevotionalTopics {
               'continually resists God\'s will. But through the Holy Spirit, believers '
               'receive both the desire and the power to obey. God\'s grace not only '
               'forgives our failures—it transforms our hearts so that obedience '
-              'becomes an act of love rather than a heavy obligation. '
+              'becomes an act of love rather than a heavy obligation.\n'
               'The Christian life is not about striving in human strength but about '
               'walking daily in dependence upon God\'s Spirit. As Paul writes in '
               'Epistle to the Philippians 2:13, it is God who works in believers both '
               'to will and to act according to His good pleasure. Every victory over '
               'temptation and every step of faithful obedience is evidence of God\'s '
-              'grace at work within us. '
+              'grace at work within us.\n'
               'What once felt impossible becomes joyful when God\'s Spirit '
               'strengthens the willing heart. '
               '---',
@@ -13709,13 +13698,13 @@ final class DevotionalTopics {
               'reveals that true freedom is found in walking according to His truth. '
               'Sin promises freedom but produces bondage. Obedience may require '
               'sacrifice, but it always leads to lasting peace, spiritual maturity, '
-              'and genuine joy. '
+              'and genuine joy.\n'
               'Every command God gives is designed to shape believers into the '
               'likeness of Christ and protect them from the destructive consequences '
               'of sin. As the psalmist proclaims in Book of Psalms 119:165, those who '
               'love God\'s law enjoy great peace, and nothing causes them to stumble. '
               'A heart surrendered to God experiences a stability that the world '
-              'cannot provide. '
+              'cannot provide.\n'
               'God\'s commands are not chains that imprison you—they are pathways '
               'that lead you into abundant life. '
               '--',
@@ -13729,12 +13718,12 @@ final class DevotionalTopics {
               'His transforming power. The world notices the difference between '
               'obedience motivated by fear and obedience inspired by love. A life '
               'marked by humility, integrity, forgiveness, compassion, and '
-              'faithfulness points others to the beauty of Christ. '
+              'faithfulness points others to the beauty of Christ.\n'
               'Jesus taught that obedience is one of the clearest demonstrations of '
               'authentic discipleship. As He said in Gospel of Matthew 5:16, '
               'believers are to let their light shine before others so that people '
               'may glorify the Father. Every decision to obey God becomes an '
-              'opportunity to reflect His character to a watching world. '
+              'opportunity to reflect His character to a watching world.\n'
               'A life that joyfully obeys God quietly proclaims the beauty of the '
               'Gospel. '
               '---',
@@ -13753,31 +13742,31 @@ final class DevotionalTopics {
         'today?',
       ],
       prayer:
-          'Lord, '
+          'Lord,\n'
           'Thank You for loving me with an everlasting love and for revealing '
           'Your will through Your holy Word. Thank You that Your commandments are '
           'not given to burden me but to lead me into the fullness of life You '
-          'have prepared for me. '
+          'have prepared for me.\n'
           'Forgive me for the times I have obeyed You reluctantly or viewed Your '
           'commands as obstacles instead of blessings. Fill my heart with a '
           'deeper love for You so that obedience becomes my joyful response '
-          'rather than my reluctant duty. '
+          'rather than my reluctant duty.\n'
           'Strengthen me through Your Holy Spirit to walk faithfully in Your '
           'ways each day. Help me trust that every command You give is rooted in '
           'Your perfect wisdom and unfailing love. Let my life reflect the beauty '
           'of Christ through willing obedience, humble surrender, and steadfast '
-          'faith. '
+          'faith.\n'
           'May my love for You grow deeper every day, my obedience become '
           'increasingly joyful, and my life become a living testimony that Your '
           'ways are always good, Your commands are always life-giving, and Your '
-          'love is always enough. '
+          'love is always enough.\n'
           'Amen. 🙏🌿',
       createdAt: DateTime(2024, 4, 5),
     ),
 
     // ── 97. STANDING ──────────────────────────────────────────────────
     DevotionalModel(
-      id: 'standing_firm_in',
+      id: 'standing_firm_in_grace',
       theme: 'Standing',
       title: 'Standing Firm in the Freedom of Christ',
       scripture:
@@ -13795,14 +13784,14 @@ final class DevotionalTopics {
               'from the guilt of sin, the condemnation of the law, the slavery of '
               'sinful desires, and the fear of eternal judgment. Through His death '
               'and resurrection, Jesus broke every chain that once held us captive '
-              'and opened the way for a new life of grace. '
+              'and opened the way for a new life of grace.\n'
               'Many people spend their lives searching for freedom through success, '
               'wealth, pleasure, or self-expression, only to discover that these '
               'things cannot satisfy the deepest needs of the soul. True freedom is '
               'found only in Jesus Christ. As Jesus declared in Gospel of John 8:36, '
               '"Therefore if the Son makes you free, you shall be free indeed." The '
               'freedom Christ gives is complete, lasting, and rooted in His finished '
-              'work on the cross. '
+              'work on the cross.\n'
               'True freedom is not the ability to do whatever you desire—it is the '
               'power to become everything God created you to be. '
               '---',
@@ -13817,13 +13806,13 @@ final class DevotionalTopics {
               'seeks to draw believers back into spiritual bondage through guilt, '
               'fear, legalism, temptation, or worldly thinking. If we are not '
               'watchful, we can slowly exchange the freedom of grace for the chains '
-              'Christ has already broken. '
+              'Christ has already broken.\n'
               'Standing firm requires daily dependence on God\'s Word and the Holy '
               'Spirit. Just as a soldier stands his ground during battle, believers '
               'must firmly hold onto the truth of the Gospel. As Paul teaches in '
               'Epistle to the Ephesians 6:13, we are to take up the whole armor of '
               'God so that we can stand firm in the evil day. Spiritual freedom is '
-              'preserved through continual faith and obedience. '
+              'preserved through continual faith and obedience.\n'
               'Freedom is a gift from Christ, but remaining firm in that freedom '
               'requires continual trust in Him. '
               '---',
@@ -13837,14 +13826,14 @@ final class DevotionalTopics {
               'bondage. Before knowing Christ, people were enslaved by sin, '
               'self-righteousness, fear, and empty religious efforts. Returning to '
               'those things is like a prisoner willingly walking back into a prison '
-              'after being released. '
+              'after being released.\n'
               'The enemy often tempts believers to return to old habits, unhealthy '
               'relationships, destructive thought patterns, or religious performance '
               'instead of resting in God\'s grace. But Christ has called us into a '
               'completely new way of living. As Paul writes in Epistle to the Romans '
               '6:14, sin shall no longer have dominion over those who live under '
               'grace. The chains that Christ has broken should never be willingly '
-              'picked up again. '
+              'picked up again.\n'
               'Never return to the prison from which Christ has already set you '
               'free. '
               '---',
@@ -13858,13 +13847,13 @@ final class DevotionalTopics {
               'opportunity to live faithfully. God\'s grace does not encourage sin—it '
               'empowers holiness. When believers understand the depth of Christ\'s '
               'love, obedience becomes a joyful response rather than a burdensome '
-              'obligation. '
+              'obligation.\n'
               'The Holy Spirit transforms freedom into a life of love, purity, and '
               'service. Later in this same chapter, Paul teaches believers to walk by '
               'the Spirit instead of gratifying the desires of the flesh. As he '
               'explains in Epistle to the Galatians 5:16, walking in the Spirit '
               'enables believers to overcome sinful desires. True freedom produces '
-              'lives that increasingly reflect the character of Christ. '
+              'lives that increasingly reflect the character of Christ.\n'
               'The greatest evidence of freedom is not doing whatever you want—it is '
               'becoming more like Jesus. '
               '---',
@@ -13879,12 +13868,12 @@ final class DevotionalTopics {
               'to carry the weight of condemnation, fear, shame, or the pressure to '
               'earn God\'s acceptance. We live from His acceptance, not for it. Every '
               'day becomes an opportunity to rejoice in His grace and walk '
-              'confidently in His promises. '
+              'confidently in His promises.\n'
               'This freedom fills the believer with peace, joy, and boldness to '
               'serve God wholeheartedly. As Paul proclaims in Second Epistle to the '
               'Corinthians 3:17, where the Spirit of the Lord is, there is liberty. '
               'The closer we walk with Christ, the more we experience the freedom '
-              'that only His Spirit can provide. '
+              'that only His Spirit can provide.\n'
               'Those who live in God\'s grace discover a freedom that no circumstance '
               'and no enemy can ever take away. '
               '---',
@@ -13904,32 +13893,32 @@ final class DevotionalTopics {
         'day?',
       ],
       prayer:
-          'Lord, '
+          'Heavenly Father,\n'
           'Thank You for the incredible freedom You have given me through Jesus '
           'Christ. Thank You for breaking the chains of sin, guilt, fear, and '
           'condemnation that once held me captive. I rejoice that my freedom was '
-          'purchased by the precious blood of Christ. '
+          'purchased by the precious blood of Christ.\n'
           'Forgive me for the times I have returned to old habits, trusted in my '
           'own efforts, or allowed fear and guilt to replace the peace You have '
           'given me. Help me stand firmly in the truth of the Gospel and never '
-          'lose sight of the grace that has saved me. '
+          'lose sight of the grace that has saved me.\n'
           'Fill me with Your Holy Spirit each day so that I may walk in true '
           'freedom. Teach me to use my liberty to honor You, serve others, and '
           'grow in holiness. Strengthen me to resist every temptation that seeks '
           'to pull me back into bondage, and remind me that I belong to You '
-          'alone. '
+          'alone.\n'
           'May I live each day with the joyful confidence of one who has been '
           'set free, walking in the power of Your grace, standing firm in Your '
           'truth, and reflecting the freedom of Christ to a world that longs to '
-          'be truly free. '
+          'be truly free.\n'
           'Amen. 🙏🌿',
       createdAt: DateTime(2024, 4, 6),
     ),
 
-    // ── 98. OUR ──────────────────────────────────────────────────
+    // ── 98. WEAKNESSES ──────────────────────────────────────────────────
     DevotionalModel(
       id: 'our_compassionate_high',
-      theme: 'Our',
+      theme: 'Weaknesses',
       title: 'Our Compassionate High Priest',
       scripture:
           'For we do not have a High Priest who cannot sympathize with our '
@@ -13946,14 +13935,14 @@ final class DevotionalTopics {
               'experiencing hunger, exhaustion, rejection, betrayal, sorrow, '
               'loneliness, and temptation. Every hardship He endured enables Him to '
               'understand the struggles His followers face. He does not sympathize '
-              'from a distance—He sympathizes through personal experience. '
+              'from a distance—He sympathizes through personal experience.\n'
               'Many believers feel that no one truly understands what they are going '
               'through. Friends may misunderstand, family may not fully relate, and '
               'others may overlook their hidden battles. But Jesus understands every '
               'burden because He willingly entered our broken world. As the prophet '
               'foretold in Book of Isaiah 53:3–4, He was a Man of sorrows, acquainted '
               'with grief, and He bore our suffering. There is no pain you experience '
-              'that is unfamiliar to your Savior. '
+              'that is unfamiliar to your Savior.\n'
               'The One who comforts you is the One who has personally walked through '
               'suffering. '
               '---',
@@ -13967,14 +13956,14 @@ final class DevotionalTopics {
               'without sin." This does not mean He experienced every specific '
               'temptation, but He experienced every category of human temptation. '
               'Satan attacked Him through physical needs, pride, fear, suffering, and '
-              'worldly glory, yet Jesus remained perfectly obedient to the Father. '
+              'worldly glory, yet Jesus remained perfectly obedient to the Father.\n'
               'This truth gives believers tremendous hope. Jesus did not overcome '
               'temptation because life was easy for Him but because He completely '
               'trusted and obeyed the Father. As we see in Gospel of Matthew 4:1–11, '
               'Jesus defeated every temptation by standing upon the Word of God. His '
               'victory assures us that temptation itself is not sin; yielding to it '
               'is. Through Him, believers receive both forgiveness when they fail and '
-              'strength to stand when they are tempted. '
+              'strength to stand when they are tempted.\n'
               'Because Christ conquered temptation, He can strengthen those who are '
               'still fighting it. '
               '---',
@@ -13988,13 +13977,13 @@ final class DevotionalTopics {
               'fully aware of our limitations, struggles, and failures. He does not '
               'respond to our weakness with rejection but with compassion. His grace '
               'is sufficient where our strength is lacking, and His power is made '
-              'perfect in our weakness. '
+              'perfect in our weakness.\n'
               'The enemy often uses failure to convince believers that God has given '
               'up on them. But Jesus, our High Priest, intercedes for us instead of '
               'condemning us. As Paul writes in Second Epistle to the Corinthians '
               '12:9, God\'s grace is sufficient, and His strength is made perfect in '
               'weakness. Our weakness becomes the place where God\'s power shines most '
-              'clearly. '
+              'clearly.\n'
               'God is not looking for people who have no weaknesses—He is looking '
               'for people who will trust Him in the middle of them. '
               '---',
@@ -14008,13 +13997,13 @@ final class DevotionalTopics {
               'from Him in shame. Instead, they are invited to come honestly before '
               'Him with every burden, temptation, fear, and failure. The following '
               'verse encourages believers to approach God\'s throne of grace with '
-              'confidence because Christ has opened the way through His sacrifice. '
+              'confidence because Christ has opened the way through His sacrifice.\n'
               'Many people run from God when they fail, believing they must first '
               'make themselves worthy. But Jesus invites the weary, the broken, and '
               'the struggling to come just as they are. As He lovingly declares in '
               'Gospel of Matthew 11:28–30, all who are weary and burdened can come to '
               'Him and find rest for their souls. His compassion is greater than our '
-              'guilt. '
+              'guilt.\n'
               'The throne of God is no longer a place to fear—it is a throne of '
               'grace where mercy is freely given. '
               '---',
@@ -14028,12 +14017,12 @@ final class DevotionalTopics {
               'face life\'s challenges. They no longer fight alone. Their High Priest '
               'continually intercedes for them, strengthens them through the Holy '
               'Spirit, and faithfully walks beside them. Every temptation becomes an '
-              'opportunity to depend more deeply upon His grace. '
+              'opportunity to depend more deeply upon His grace.\n'
               'This confidence does not come from trusting ourselves but from '
               'trusting Christ. As the writer later declares in Epistle to the '
               'Hebrews 12:2, believers are to fix their eyes on Jesus, the author and '
               'finisher of their faith. The One who remained faithful through every '
-              'trial will faithfully sustain those who place their hope in Him. '
+              'trial will faithfully sustain those who place their hope in Him.\n'
               'The Savior who understands your weakness is also the Savior who '
               'strengthens you to overcome it. '
               '---',
@@ -14054,33 +14043,33 @@ final class DevotionalTopics {
         'own?',
       ],
       prayer:
-          'Lord Jesus, '
+          'Lord Jesus,\n'
           'Thank You for becoming my compassionate High Priest. Thank You for '
           'entering this broken world, experiencing suffering, and enduring '
           'temptation so that You could fully understand my struggles. I am '
           'grateful that You never look upon my weakness with condemnation but '
-          'with mercy, love, and compassion. '
+          'with mercy, love, and compassion.\n'
           'Forgive me for the times I have tried to hide my failures from You or '
           'relied upon my own strength instead of Your grace. Help me remember '
           'that I can come boldly to You because You have already made a way '
           'through Your sacrifice. Teach me to trust You with every fear, '
-          'temptation, and burden I carry. '
+          'temptation, and burden I carry.\n'
           'Strengthen me through the power of Your Holy Spirit to stand firm '
           'against temptation and to persevere through every trial. Let Your '
           'compassion give me hope, Your grace give me strength, and Your '
           'presence give me peace. Help me fix my eyes on You, knowing that You '
-          'are faithful to complete the work You have begun in me. '
+          'are faithful to complete the work You have begun in me.\n'
           'May I walk each day with confidence, resting in the love of my '
           'compassionate Savior, drawing strength from Your unfailing grace, and '
-          'trusting that You will never leave me nor forsake me. '
+          'trusting that You will never leave me nor forsake me.\n'
           'Amen. 🙏🌿',
       createdAt: DateTime(2024, 4, 7),
     ),
 
-    // ── 99. THE ──────────────────────────────────────────────────
+    // ── 99. KINDNESS ──────────────────────────────────────────────────
     DevotionalModel(
       id: 'the_transforming_power',
-      theme: 'The',
+      theme: 'Kindness',
       title: 'The Transforming Power of Kindness and Forgiveness',
       scripture:
           'And be kind to one another, tenderhearted, forgiving one another, '
@@ -14097,14 +14086,14 @@ final class DevotionalTopics {
               'expression of God\'s love through our words, actions, and attitudes. It '
               'chooses compassion over criticism, encouragement over harshness, and '
               'generosity over selfishness. Kindness reveals a heart that has been '
-              'transformed by God\'s grace. '
+              'transformed by God\'s grace.\n'
               'In a world often marked by anger, division, and indifference, '
               'kindness shines as a powerful testimony of Christ. Small acts of '
               'kindness can restore hope, heal wounded hearts, and point others to '
               'God\'s love. As Solomon writes in Book of Proverbs 16:24, gracious '
               'words are like honeycomb, sweet to the soul and healing to the bones. '
               'Every act of kindness becomes an opportunity to display the character '
-              'of Christ. '
+              'of Christ.\n'
               'Kindness is love made visible through everyday actions. '
               '---',
         ),
@@ -14117,13 +14106,13 @@ final class DevotionalTopics {
               'remains sensitive to God\'s voice and compassionate toward the needs of '
               'others. Rather than becoming hardened by disappointment or bitterness, '
               'it continues to love, forgive, and serve because it has experienced '
-              'God\'s mercy. '
+              'God\'s mercy.\n'
               'Life\'s hurts can easily harden the heart. Rejection, betrayal, and '
               'suffering often tempt believers to become distant and guarded. Yet the '
               'Holy Spirit continually softens hearts that remain surrendered to God. '
               'As the Lord declared through Book of Ezekiel 36:26, He gives His '
               'people a new heart and removes the heart of stone. A tender heart '
-              'reflects the compassion of the Savior. '
+              'reflects the compassion of the Savior.\n'
               'A heart softened by God\'s mercy becomes a channel through which His '
               'love flows to others. '
               '---',
@@ -14137,13 +14126,13 @@ final class DevotionalTopics {
               'forgave you." Our willingness to forgive is rooted in the immeasurable '
               'forgiveness we have already received through Jesus Christ. At the '
               'cross, God freely forgave a debt we could never repay. That same grace '
-              'empowers us to extend forgiveness to those who have wronged us. '
+              'empowers us to extend forgiveness to those who have wronged us.\n'
               'Forgiveness does not deny the reality of pain or excuse sinful '
               'behavior. Instead, it releases the desire for revenge and entrusts '
               'justice to God. The enemy uses unforgiveness to imprison hearts in '
               'bitterness, but God\'s grace brings freedom and healing. As Jesus '
               'taught in Gospel of Matthew 6:14–15, forgiving others reflects a heart '
-              'that truly understands the Father\'s mercy. '
+              'that truly understands the Father\'s mercy.\n'
               'Those who have experienced God\'s forgiveness are called to become '
               'instruments of His forgiveness. '
               '---',
@@ -14157,7 +14146,7 @@ final class DevotionalTopics {
               'show kindness, compassion, and forgiveness to earn God\'s favor; they '
               'do so because they have already received His favor through Christ. The '
               'more deeply we understand God\'s grace toward us, the more naturally '
-              'His grace begins to flow through us toward others. '
+              'His grace begins to flow through us toward others.\n'
               'Every relationship becomes an opportunity to demonstrate the '
               'transforming power of the Gospel. Whether in the home, the workplace, '
               'the church, or the community, believers are called to respond '
@@ -14165,7 +14154,7 @@ final class DevotionalTopics {
               'Epistle to the Colossians 3:12–13, God\'s chosen people are to clothe '
               'themselves with compassion, kindness, humility, gentleness, patience, '
               'and forgiveness. Grace transforms both the heart and the way we relate '
-              'to others. '
+              'to others.\n'
               'The measure of God\'s grace in your life is often revealed by the '
               'grace you extend to others. '
               '---',
@@ -14181,12 +14170,12 @@ final class DevotionalTopics {
               'Christ. Some days this will require patience with difficult people, '
               'forgiveness after painful offenses, or kindness when it is undeserved. '
               'Yet these are the very moments when Christ is most clearly seen '
-              'through His people. '
+              'through His people.\n'
               'Walking in love requires continual dependence upon God because human '
               'strength alone cannot sustain it. As Jesus declared in Gospel of John '
               '13:34–35, the world will recognize His disciples by their love for one '
               'another. Christlike love becomes one of the strongest testimonies to '
-              'the transforming power of the Gospel. '
+              'the transforming power of the Gospel.\n'
               'Every choice to love like Christ becomes a witness that His grace is '
               'alive within you. '
               '---',
@@ -14206,30 +14195,30 @@ final class DevotionalTopics {
         'today?',
       ],
       prayer:
-          'Heavenly Father, '
+          'Heavenly Father,\n'
           'Thank You for the immeasurable kindness You have shown me through '
           'Jesus Christ. Thank You for forgiving my sins, showing me mercy when I '
           'did not deserve it, and loving me with an everlasting love. Your grace '
-          'has completely changed my life. '
+          'has completely changed my life.\n'
           'Forgive me for the times I have been unkind, impatient, or unwilling '
           'to forgive others. Remove every trace of bitterness, resentment, and '
           'hardness from my heart. Fill me with the compassion of Christ and '
-          'teach me to see people through Your eyes. '
+          'teach me to see people through Your eyes.\n'
           'Help me become a person whose words bring healing, whose actions '
           'reflect kindness, and whose heart is quick to forgive. Strengthen me '
           'through Your Holy Spirit to love those who are difficult to love and '
-          'to extend the same grace that You have so freely given to me. '
+          'to extend the same grace that You have so freely given to me.\n'
           'May my life reflect the kindness of my Savior, my heart overflow with '
           'Your compassion, and my relationships become living testimonies of the '
-          'transforming power of Your amazing grace. '
+          'transforming power of Your amazing grace.\n'
           'Amen. 🙏🌿',
       createdAt: DateTime(2024, 4, 8),
     ),
 
-    // ── 100. THE ──────────────────────────────────────────────────
+    // ── 100. FAITHFUL ──────────────────────────────────────────────────
     DevotionalModel(
       id: 'the_heart_that',
-      theme: 'The',
+      theme: 'Faithful',
       title: 'The Heart That Gives Faithfully',
       scripture:
           'For even in Thessalonica you sent aid once and again for my '
@@ -14246,12 +14235,12 @@ final class DevotionalTopics {
               'a one-time emotional response but a consistent expression of love. '
               'While many appreciated Paul\'s ministry, the Philippian church '
               'demonstrated their gratitude through practical action. Their giving '
-              'became a visible reflection of their faith in Christ. '
+              'became a visible reflection of their faith in Christ.\n'
               'True Christian love is never confined to words alone. It seeks '
               'opportunities to meet the needs of others with joyful generosity. As '
               'John writes in First Epistle of John 3:18, believers are called to '
               'love not merely in word or speech, but in deed and in truth. Genuine '
-              'faith always produces practical compassion. '
+              'faith always produces practical compassion.\n'
               'Love becomes most visible when it willingly meets the needs of '
               'others. '
               '---',
@@ -14265,13 +14254,13 @@ final class DevotionalTopics {
               'occasional but continual. They remained faithful even when giving '
               'required sacrifice. Their consistency demonstrated that their '
               'commitment was not driven by convenience but by devotion to God and '
-              'concern for His servant. '
+              'concern for His servant.\n'
               'Many people begin well but struggle to remain faithful over time. Yet '
               'God values steady obedience more than occasional enthusiasm. Whether '
               'serving, praying, giving, or encouraging others, consistent '
               'faithfulness reflects a heart anchored in God\'s love. As Jesus taught '
               'in Gospel of Luke 16:10, those who are faithful in little things can '
-              'also be trusted with greater things. '
+              'also be trusted with greater things.\n'
               'God delights in hearts that remain faithful long after the excitement '
               'has faded. '
               '---',
@@ -14285,14 +14274,14 @@ final class DevotionalTopics {
               'needs—they were partnering with God\'s mission. Their gifts enabled the '
               'Gospel to continue spreading, making them active participants in God\'s '
               'kingdom work. What appeared to be a simple act of generosity carried '
-              'eternal significance. '
+              'eternal significance.\n'
               'Every believer has the privilege of advancing God\'s work through '
               'prayer, service, encouragement, generosity, and faithful stewardship. '
               'No contribution offered for God\'s glory is ever insignificant. As Paul '
               'later writes in Second Epistle to the Corinthians 9:7–8, God loves a '
               'cheerful giver and is able to supply every need for those who give '
               'with willing hearts. When we invest in God\'s kingdom, we participate '
-              'in His eternal purposes. '
+              'in His eternal purposes.\n'
               'Every gift offered to God becomes an investment in eternity. '
               '---',
         ),
@@ -14304,13 +14293,13 @@ final class DevotionalTopics {
               'The Philippians likely never imagined that their generosity would be '
               'remembered and recorded in Scripture for generations to come. Yet God '
               'saw every sacrifice they made. Even when acts of kindness go unnoticed '
-              'by people, they are never overlooked by the Lord. '
+              'by people, they are never overlooked by the Lord.\n'
               'There are seasons when believers faithfully serve, give, and '
               'encourage others without receiving recognition. But God\'s eyes never '
               'miss a single act of love done in His name. As the writer of Epistle '
               'to the Hebrews 6:10 reminds us, God is not unjust to forget the work '
               'and labor of love shown toward His name. Heaven remembers what the '
-              'world often overlooks. '
+              'world often overlooks.\n'
               'Nothing done for Christ is ever forgotten by Christ. '
               '---',
         ),
@@ -14322,13 +14311,13 @@ final class DevotionalTopics {
               'The Philippian believers could give because they trusted God to care '
               'for their own needs. Their generosity reflected confidence that God '
               'would continue to provide. A heart that trusts God\'s provision is free '
-              'from the fear of scarcity and open to blessing others. '
+              'from the fear of scarcity and open to blessing others.\n'
               'Generosity is ultimately an act of faith. It declares that God is our '
               'source, not our possessions. Shortly after this passage, Paul gives '
               'the well-known promise in Epistle to the Philippians 4:19 that God '
               'will supply all our needs according to His riches in glory by Christ '
               'Jesus. Those who trust God\'s provision discover that His resources are '
-              'never exhausted. '
+              'never exhausted.\n'
               'Open hands reveal a heart that fully trusts the Provider. '
               '---',
         ),
@@ -14346,22 +14335,22 @@ final class DevotionalTopics {
         'faithfully?',
       ],
       prayer:
-          'Heavenly Father, '
+          'Heavenly Father,\n'
           'Thank You for being my faithful Provider and for generously pouring '
           'out Your grace upon my life. Everything I have comes from Your loving '
-          'hand, and I praise You for Your constant faithfulness. '
+          'hand, and I praise You for Your constant faithfulness.\n'
           'Give me a heart like the believers in Philippi—a heart that is '
           'generous, compassionate, and faithful. Help me recognize the needs '
           'around me and respond with joyful obedience. Teach me to support Your '
           'work with my time, my resources, my prayers, and my encouragement, '
           'knowing that every act done for Your kingdom has eternal significance. '
-          'Remove every trace of selfishness, fear, and greed from my heart. '
+          'Remove every trace of selfishness, fear, and greed from my heart.\n'
           'Help me trust You completely as my Provider, believing that You will '
           'supply every need according to Your perfect wisdom. Let my generosity '
-          'become an act of worship that brings glory to Your name. '
+          'become an act of worship that brings glory to Your name.\n'
           'May my life be marked by faithful love, consistent generosity, and '
           'wholehearted partnership in Your kingdom, until the day I stand before '
-          'You and hear, "Well done, good and faithful servant." '
+          'You and hear, "Well done, good and faithful servant."\n'
           'Amen. 🙏🌿',
       createdAt: DateTime(2024, 4, 9),
     ),
@@ -14386,14 +14375,14 @@ final class DevotionalTopics {
               'their lives. He sees not only our physical needs but also our '
               'emotional, spiritual, relational, and mental burdens. Nothing escapes '
               'His loving attention. Before we even ask, our Heavenly Father already '
-              'knows what we truly need. '
+              'knows what we truly need.\n'
               'Many people spend their lives overwhelmed by anxiety, wondering how '
               'tomorrow\'s needs will be met. Yet Jesus lovingly reminded His '
               'followers that the Father knows exactly what they need before they '
               'ask. As He taught in Gospel of Matthew 6:31–33, those who seek God\'s '
               'kingdom first can trust Him to provide everything necessary for life. '
               'God\'s knowledge of our needs is complete, and His care for us is '
-              'constant. '
+              'constant.\n'
               'God never overlooks a need because He never loses sight of His '
               'children. '
               '---',
@@ -14408,13 +14397,13 @@ final class DevotionalTopics {
               'abundance rather than by our limited circumstances. His resources are '
               'never depleted, His wisdom never fails, and His generosity is never '
               'exhausted. The God who created the universe possesses everything '
-              'needed to care for His children. '
+              'needed to care for His children.\n'
               'Human resources often run dry, but God\'s resources remain infinite. '
               'Throughout Scripture, He fed Israel in the wilderness, multiplied a '
               'widow\'s oil, provided manna from heaven, and fed thousands with a few '
               'loaves and fish. As David testified in Book of Psalms 23:1, "The Lord '
               'is my Shepherd; I shall not want." God\'s provision flows from His '
-              'unlimited riches, not from the limitations of our circumstances. '
+              'unlimited riches, not from the limitations of our circumstances.\n'
               'God\'s ability to provide is never limited by what you lack. '
               '---',
         ),
@@ -14428,14 +14417,14 @@ final class DevotionalTopics {
               'Christ. While God certainly provides daily necessities, His greatest '
               'gift is Jesus Himself. Through Christ we receive forgiveness, peace, '
               'eternal life, wisdom, strength, grace, and the constant presence of '
-              'the Holy Spirit. '
+              'the Holy Spirit.\n'
               'Sometimes believers focus so much on material provision that they '
               'overlook the greater spiritual treasures already given to them. Even '
               'when earthly resources seem scarce, those who have Christ possess '
               'immeasurable riches. As Paul writes in Epistle to the Ephesians 1:3, '
               'God has blessed believers with every spiritual blessing in the '
               'heavenly places through Christ. The greatest provision God has ever '
-              'given is His Son. '
+              'given is His Son.\n'
               'When you have Christ, you possess the greatest treasure heaven could '
               'ever offer. '
               '---',
@@ -14450,14 +14439,14 @@ final class DevotionalTopics {
               'experience rather than convenience. He had learned that God\'s '
               'faithfulness remains constant whether circumstances are favorable or '
               'difficult. His peace rested in God\'s character, not in his '
-              'surroundings. '
+              'surroundings.\n'
               'Worry often grows when believers focus on what they do not have '
               'instead of the God who has never failed them. Faith remembers God\'s '
               'past faithfulness and confidently trusts His future provision. As the '
               'writer of Epistle to the Hebrews 13:5 reminds believers, God has '
               'promised, "I will never leave you nor forsake you." The greatest '
               'security is not found in earthly possessions but in God\'s abiding '
-              'presence. '
+              'presence.\n'
               'Faith does not deny life\'s needs—it confidently trusts God\'s ability '
               'to meet them. '
               '---',
@@ -14472,14 +14461,14 @@ final class DevotionalTopics {
               'generosity. God delights in providing for those who trust Him, but He '
               'also calls His children to become channels of His provision to others. '
               'Those who experience God\'s generosity should reflect that same '
-              'generosity in their own lives. '
+              'generosity in their own lives.\n'
               'Gratitude and generosity grow together. When believers recognize '
               'God\'s continual faithfulness, they become less fearful about giving '
               'and more joyful in serving others. As Paul teaches in Second Epistle '
               'to the Corinthians 9:8, God is able to make all grace abound so that '
               'His people have all they need while overflowing in every good work. '
               'God\'s provision is not only for our comfort but also for His kingdom\'s '
-              'purposes. '
+              'purposes.\n'
               'Those who trust God\'s provision can live with open hands because they '
               'know their Provider will never fail them. '
               '---',
@@ -14500,29 +14489,5750 @@ final class DevotionalTopics {
         'faithful provision?',
       ],
       prayer:
-          'Heavenly Father, '
+          'Heavenly Father,\n'
           'Thank You for being my faithful Provider. Thank You that You know '
           'every need in my life before I even speak it, and that Your care for '
           'me never changes. I praise You because Your resources are unlimited '
-          'and Your promises never fail. '
+          'and Your promises never fail.\n'
           'Forgive me for the times I have allowed worry, fear, or doubt to '
           'overshadow my faith. Help me trust that You will provide everything I '
           'truly need according to Your perfect wisdom and timing. Teach me to '
-          'seek Your kingdom first and rest confidently in Your unfailing care. '
+          'seek Your kingdom first and rest confidently in Your unfailing care.\n'
           'Thank You above all for giving me Jesus Christ, the greatest gift I '
           'could ever receive. Through Him I have forgiveness, hope, peace, and '
           'eternal life. Let my heart always treasure these spiritual riches '
-          'above every earthly possession. '
+          'above every earthly possession.\n'
           'Make me a grateful and generous servant. Help me use the blessings '
           'You have entrusted to me to encourage others and advance Your kingdom. '
           'May my confidence remain in You alone, knowing that You are always '
-          'faithful and that You will never abandon those who trust in You. '
+          'faithful and that You will never abandon those who trust in You.\n'
           'May I live each day with peace instead of anxiety, faith instead of '
           'fear, and gratitude instead of complaint, confident that my faithful '
           'God will supply all my needs according to His glorious riches in '
-          'Christ Jesus. '
+          'Christ Jesus.\n'
           'Amen. 🙏🌿',
       createdAt: DateTime(2024, 4, 10),
+    ),
+
+
+    // ── 102. DAILY ──────────────────────────────────────────────────
+    DevotionalModel(
+      id: 'daily_loaded_with',
+      theme: 'Daily',
+      title: 'Daily Loaded with God\'s Benefits',
+      scripture:
+          'Blessed be the Lord, who daily loads us with benefits, the God of our '
+          'salvation! Selah.',
+      scriptureReference: 'Psalms 68:19',
+      sections: const [
+        DevotionalSection(
+          icon: '🔑',
+          heading:
+              'Every Day Begins with God\'s Blessing',
+          body:
+              'David begins this verse with praise: "Blessed be the Lord." Before '
+              'speaking about God\'s gifts, he worships the Giver. This reminds us '
+              'that our relationship with God should never be based merely on what He '
+              'provides but on who He is. Worship is the proper response to a God '
+              'whose goodness never fails and whose mercies are new every morning.\n'
+              'Many people begin each day focused on their responsibilities, '
+              'worries, or unmet desires. David begins with thanksgiving because he '
+              'understands that every new day is evidence of God\'s faithfulness. As '
+              'Jeremiah declares in Book of Lamentations 3:22–23, God\'s steadfast '
+              'love never ceases, and His mercies are new every morning. Every '
+              'sunrise is another reminder that God\'s grace has not run out.\n'
+              'A heart that begins with worship will see God\'s blessings more '
+              'clearly throughout the day. '
+              '---',
+        ),
+        DevotionalSection(
+          icon: '🔍',
+          heading:
+              'God\'s Provision Is Continuous, Not Occasional',
+          body:
+              'David says that God "daily loads us with benefits." God\'s care is not '
+              'reserved for special moments or seasons of abundance. He faithfully '
+              'provides every single day. His blessings include far more than '
+              'material possessions—they include His peace, strength, wisdom, '
+              'forgiveness, protection, guidance, comfort, and unfailing presence.\n'
+              'It is easy to overlook God\'s daily blessings because they often '
+              'become familiar. The breath in our lungs, the strength to work, the '
+              'peace to endure trials, and the hope we have in Christ are all gifts '
+              'from His gracious hand. As James reminds us in Epistle of James 1:17, '
+              'every good and perfect gift comes from above, from the Father who '
+              'never changes. God\'s generosity never takes a day off.\n'
+              'God\'s greatest miracles are often found in His daily faithfulness. '
+              '---',
+        ),
+        DevotionalSection(
+          icon: '⚔️',
+          heading:
+              'God Gives You Strength for Today\'s Journey',
+          body:
+              'The phrase "daily loads us" reminds us that God gives grace according '
+              'to the needs of each day. He does not promise strength for tomorrow\'s '
+              'battles before tomorrow arrives, but He faithfully supplies everything '
+              'needed for today\'s challenges. His grace is always timely and always '
+              'sufficient.\n'
+              'Many believers become overwhelmed because they carry tomorrow\'s '
+              'burdens before tomorrow comes. Yet Jesus taught His followers to trust '
+              'God one day at a time. As He said in Gospel of Matthew 6:34, each day '
+              'has enough trouble of its own. God\'s grace is renewed daily because He '
+              'desires His children to depend upon Him daily.\n'
+              'God never asks you to carry tomorrow\'s burdens with today\'s strength. '
+              '---',
+        ),
+        DevotionalSection(
+          icon: '🌱',
+          heading:
+              'Salvation Is God\'s Greatest Benefit',
+          body:
+              'David calls the Lord "the God of our salvation." Every other blessing '
+              'flows from this greatest gift. Before God provided for our earthly '
+              'needs, He provided for our greatest spiritual need through Jesus '
+              'Christ. Salvation is the foundation upon which every other blessing '
+              'rests. Without Christ, earthly blessings are temporary; with Christ, '
+              'every blessing carries eternal significance.\n'
+              'Sometimes believers become so focused on what they want God to do '
+              'that they forget what He has already done. Through Christ we have '
+              'forgiveness, reconciliation, adoption into God\'s family, the '
+              'indwelling Holy Spirit, and the promise of eternal life. As Peter '
+              'declares in First Epistle of Peter 1:3–4, believers have been given a '
+              'living hope and an inheritance that can never perish or fade.\n'
+              'The greatest blessing God has ever given is not something—it is '
+              'Someone: Jesus Christ. '
+              '---',
+        ),
+        DevotionalSection(
+          icon: '🚶',
+          heading:
+              'Pause and Remember God\'s Goodness',
+          body:
+              'David ends the verse with the word "Selah." This invitation calls '
+              'believers to stop, reflect, and meditate upon the greatness of God. In '
+              'the rush of daily life, it is easy to become consumed by problems and '
+              'overlook God\'s continual faithfulness. "Selah" reminds us to pause and '
+              'remember that God has been sustaining us every step of the way.\n'
+              'Gratitude transforms the heart. When believers intentionally remember '
+              'God\'s goodness, fear gives way to faith, anxiety gives way to peace, '
+              'and discouragement gives way to hope. As Paul encourages in First '
+              'Epistle to the Thessalonians 5:18, believers are to give thanks in all '
+              'circumstances because this is God\'s will in Christ Jesus. A thankful '
+              'heart recognizes God\'s hand even in ordinary moments.\n'
+              'The more you remember God\'s daily goodness, the more confidently you '
+              'will trust Him for tomorrow. '
+              '---',
+        ),
+      ],
+      finalRevelation:
+          'Every day God gives you more than another sunrise—He gives you fresh '
+          'mercy, renewed strength, guiding wisdom, abundant grace, and the '
+          'assurance of His saving love. The greatest evidence of God\'s '
+          'faithfulness is not that He blesses you occasionally—it is that He '
+          'faithfully carries you every single day. ---',
+      reflectionQuestions: const [
+        'Have I been noticing God\'s daily blessings, or have I taken them for '
+        'granted?',
+        'Am I trusting God for today\'s needs instead of worrying about '
+        'tomorrow?',
+        'How can I intentionally pause each day to thank God for His '
+        'faithfulness?',
+      ],
+      prayer:
+          'Heavenly Father,\n'
+          'Blessed are You, my faithful God, who daily loads me with benefits '
+          'beyond anything I deserve. Thank You for Your constant love, Your '
+          'endless mercy, and Your unwavering faithfulness. Every good thing in '
+          'my life comes from Your gracious hand.\n'
+          'Forgive me for the times I have focused more on what I lack than on '
+          'the countless blessings You have already given me. Open my eyes to '
+          'recognize Your goodness in both the extraordinary and the ordinary '
+          'moments of each day. Teach me to live with a grateful heart that '
+          'continually praises You.\n'
+          'Thank You above all for the gift of salvation through Jesus Christ. '
+          'Thank You for forgiving my sins, giving me eternal life, and filling '
+          'me with the hope that can never be taken away. Help me depend upon '
+          'Your grace one day at a time, trusting that You will always provide '
+          'exactly what I need.\n'
+          'May every sunrise remind me of Your mercy, every breath remind me of '
+          'Your sustaining grace, every challenge remind me of Your strength, and '
+          'every blessing draw my heart into deeper worship of the God who '
+          'faithfully carries me each and every day.\n'
+          'Amen. 🙏🌿',
+      createdAt: DateTime(2024, 4, 11),
+    ),
+
+    // ── 103. LESS ──────────────────────────────────────────────────
+    DevotionalModel(
+      id: 'less_of_me',
+      theme: 'Less',
+      title: 'Less of Me, More of Christ',
+      scripture:
+          'He must increase, but I must decrease.',
+      scriptureReference: 'John 3:30',
+      sections: const [
+        DevotionalSection(
+          icon: '🔑',
+          heading:
+              'The Christian Life Is Centered on Christ, Not Self',
+          body:
+              'These words were spoken by John the Baptist when some of his '
+              'disciples became concerned that more people were following Jesus '
+              'instead of him. Rather than becoming jealous or defensive, John '
+              'rejoiced because he understood that his life\'s purpose was never to '
+              'make himself known—it was to point people to Christ. His ministry '
+              'reached its greatest success when people began following Jesus instead '
+              'of him.\n'
+              'In a world that encourages self-promotion, personal recognition, and '
+              'the pursuit of fame, John\'s attitude is both refreshing and '
+              'challenging. The Christian life is not about building our own '
+              'reputation but about making Christ known. As Paul later declared in '
+              'Epistle to the Philippians 1:21, "For to me, to live is Christ." A '
+              'life centered on Jesus finds its greatest joy in seeing Him receive '
+              'the glory.\n'
+              'A life finds its highest purpose when Christ becomes greater and self '
+              'becomes less.  '
+              '---',
+        ),
+        DevotionalSection(
+          icon: '🔍',
+          heading:
+              'Humility Makes Room for God\'s Glory',
+          body:
+              'John said, "I must decrease." This was not a statement of low '
+              'self-worth but of genuine humility. Humility is not thinking poorly of '
+              'yourself; it is thinking of Christ more than yourself. John understood '
+              'that his influence, gifts, and ministry existed to glorify God rather '
+              'than himself.\n'
+              'Pride constantly seeks recognition, applause, and personal '
+              'importance. Humility, however, willingly steps aside so that Christ '
+              'may be seen more clearly. As Paul teaches in Epistle to the '
+              'Philippians 2:3–5, believers are called to value others above '
+              'themselves and to have the same humble attitude that was found in '
+              'Christ Jesus. The more pride decreases, the more God\'s glory becomes '
+              'visible through our lives.\n'
+              'God can accomplish extraordinary things through hearts that no longer '
+              'seek their own glory. '
+              '---',
+        ),
+        DevotionalSection(
+          icon: '⚔️',
+          heading:
+              'Spiritual Growth Means Becoming More Like Christ',
+          body:
+              'John\'s words describe the lifelong journey of every believer. As '
+              'Christ increases within us, our old attitudes, selfish ambitions, '
+              'sinful desires, and worldly priorities begin to decrease. The Holy '
+              'Spirit continually transforms us so that the character of Jesus '
+              'becomes increasingly evident in our thoughts, words, and actions.\n'
+              'This transformation does not happen overnight. It is the daily work '
+              'of God\'s grace as we surrender more of ourselves to Him. As Paul '
+              'writes in Second Epistle to the Corinthians 3:18, believers are being '
+              'transformed into Christ\'s image from one degree of glory to another by '
+              'the Holy Spirit. Every day presents another opportunity to become less '
+              'like the old self and more like Jesus.\n'
+              'The evidence of spiritual maturity is not that people notice you '
+              'more—it is that they see Christ more clearly through you. '
+              '---',
+        ),
+        DevotionalSection(
+          icon: '🌱',
+          heading:
+              'Surrender Leads to Greater Fulfillment',
+          body:
+              'From a human perspective, decreasing sounds like losing. Yet in God\'s '
+              'kingdom, surrender leads to abundance. The more believers surrender '
+              'their own plans, ambitions, and desires to Christ, the more they '
+              'discover the joy, peace, and purpose that only He can provide. God '
+              'never asks us to surrender something without replacing it with '
+              'something infinitely greater.\n'
+              'Jesus repeatedly taught that true life is found through surrender. As '
+              'He declared in Gospel of Matthew 16:24–25, whoever loses their life '
+              'for His sake will truly find it. What appears to be loss in the eyes '
+              'of the world becomes eternal gain in the kingdom of God.\n'
+              'When Christ becomes the center of your life, you do not lose your '
+              'purpose—you discover it. '
+              '---',
+        ),
+        DevotionalSection(
+          icon: '🚶',
+          heading:
+              'Let Every Area of Life Magnify Christ',
+          body:
+              'John\'s declaration was not limited to ministry—it was the posture of '
+              'his entire life. Every believer is called to let Christ increase in '
+              'every area: our relationships, decisions, conversations, careers, '
+              'ambitions, finances, and daily habits. As Jesus becomes Lord over '
+              'every part of our lives, His light shines more brightly through us.\n'
+              'The goal of the Christian life is not simply to know more about Jesus '
+              'but to increasingly reflect Him. As Paul wrote in Epistle to the '
+              'Galatians 2:20, "It is no longer I who live, but Christ lives in me." '
+              'The world is transformed when believers consistently allow Christ to '
+              'be seen through their lives.\n'
+              'The greatest testimony you can give is a life where Christ is '
+              'increasingly visible and self is increasingly surrendered. '
+              '---',
+        ),
+      ],
+      finalRevelation:
+          'The greatest life is not the one that draws attention to itself—it is '
+          'the one that points people to Jesus. When pride decreases, Christ\'s '
+          'glory increases. When self is surrendered, His purpose is fulfilled. '
+          'When Jesus becomes greater, everything else finds its proper place. '
+          '---',
+      reflectionQuestions: const [
+        'In what areas of my life am I seeking my own recognition instead of '
+        'Christ\'s glory?',
+        'What attitudes or desires does God want me to surrender so that '
+        'Christ may increase in me?',
+        'If others observed my life today, would they be drawn more to me or '
+        'more to Jesus?',
+      ],
+      prayer:
+          'Lord Jesus,\n'
+          'Thank You for being worthy of all honor, glory, and praise. Forgive '
+          'me for the times I have sought recognition, approval, or success for '
+          'myself instead of living to exalt You. Teach me to embrace the '
+          'humility that was displayed by John the Baptist and perfectly '
+          'demonstrated in Your own life.\n'
+          'Help me to decrease so that You may increase in every part of my '
+          'life. Remove every trace of pride, selfish ambition, and self-reliance '
+          'that competes for the throne of my heart. Fill me with Your Holy '
+          'Spirit and shape my thoughts, desires, and actions until they reflect '
+          'Your character.\n'
+          'Let my words point people to You. Let my decisions honor You. Let my '
+          'relationships display Your love. Let my service bring glory to Your '
+          'name rather than my own. May my greatest ambition be to make Christ '
+          'known wherever You place me.\n'
+          'May my life become a living declaration that You must increase, I '
+          'must decrease, until every part of who I am reflects the beauty, '
+          'humility, and glory of my Savior.\n'
+          'Amen. 🙏🌿',
+      createdAt: DateTime(2024, 4, 12),
+    ),
+
+    // ── 104. CHOOSING ──────────────────────────────────────────────────
+    DevotionalModel(
+      id: 'choosing_the_narrow',
+      theme: 'Choosing',
+      title: 'Choosing the Narrow Way',
+      scripture:
+          'Enter by the narrow gate; for wide is the gate and broad is the way '
+          'that leads to destruction, and there are many who go in by it. Because '
+          'narrow is the gate and difficult is the way which leads to life, and '
+          'there are few who find it.',
+      scriptureReference: 'Matthew 7:13–14',
+      sections: const [
+        DevotionalSection(
+          icon: '🔑',
+          heading:
+              'Every Person Must Choose a Path',
+          body:
+              'Jesus presents one of the most sobering realities in Scripture: there '
+              'are only two paths in life. There is the broad road that leads to '
+              'destruction and the narrow road that leads to life. There is no third '
+              'option and no place of neutrality. Every decision we make either moves '
+              'us closer to Christ or farther away from Him. The greatest decision '
+              'anyone will ever make is whether to follow Jesus.\n'
+              'The broad road is attractive because it demands little commitment. It '
+              'follows the desires of the natural heart and blends comfortably with '
+              'the values of the world. The narrow road, however, requires '
+              'repentance, faith, and surrender to Christ. As Joshua challenged '
+              'Israel in Book of Joshua 24:15, every generation must choose whom they '
+              'will serve. God lovingly invites us to choose the path that leads to '
+              'eternal life.\n'
+              'Every life is moving toward a destination, and every destination '
+              'begins with a choice. '
+              '---',
+        ),
+        DevotionalSection(
+          icon: '🔍',
+          heading:
+              'The Narrow Gate Is Jesus Christ',
+          body:
+              'The narrow gate is not a system of good works, religious traditions, '
+              'or personal morality. Jesus Himself is the only entrance into eternal '
+              'life. Through His death and resurrection, He opened the way for '
+              'sinners to be reconciled to God. Entering the narrow gate means '
+              'placing complete trust in Christ alone for salvation and surrendering '
+              'our lives to His Lordship.\n'
+              'Many believe there are many ways to God, but Jesus declared '
+              'otherwise. He said in Gospel of John 14:6, "I am the way, the truth, '
+              'and the life. No one comes to the Father except through Me." The '
+              'narrow gate is exclusive not because God desires to exclude people, '
+              'but because only Christ has paid the price for humanity\'s redemption.\n'
+              'The gate is narrow because salvation is found in one Savior, but it '
+              'is open to everyone who comes to Him in faith. '
+              '---',
+        ),
+        DevotionalSection(
+          icon: '⚔️',
+          heading:
+              'The Narrow Way Requires Daily Surrender',
+          body:
+              'Jesus teaches that the way leading to life is difficult—not because '
+              'God delights in hardship, but because following Christ requires '
+              'denying self, resisting sin, and remaining faithful in a world that '
+              'often opposes His truth. Walking the narrow road means choosing '
+              'obedience when compromise seems easier and trusting God when the '
+              'journey becomes challenging.\n'
+              'The Christian life is not a momentary decision but a lifelong '
+              'commitment. Each day presents opportunities to follow Christ more '
+              'closely or drift toward the values of the world. As Jesus declared in '
+              'Gospel of Luke 9:23, those who desire to follow Him must deny '
+              'themselves, take up their cross daily, and follow Him. Every act of '
+              'surrender brings believers into deeper fellowship with Christ.\n'
+              'The narrow way may be challenging, but it is the only path that leads '
+              'to lasting joy and eternal life. '
+              '---',
+        ),
+        DevotionalSection(
+          icon: '🌱',
+          heading:
+              'Do Not Measure Truth by Popularity',
+          body:
+              'Jesus said that many travel the broad road, while few find the narrow '
+              'way. This reminds believers that truth is never determined by majority '
+              'opinion. Throughout history, God\'s people have often stood apart from '
+              'the surrounding culture because they chose faithfulness over '
+              'popularity.\n'
+              'There will be moments when following Christ means standing alone. The '
+              'pressure to compromise can be intense, but God calls His people to '
+              'remain faithful regardless of the crowd. As Paul urges in Epistle to '
+              'the Romans 12:2, believers must not conform to the pattern of this '
+              'world but be transformed by the renewing of their minds. Faithfulness '
+              'is measured by obedience to God, not by acceptance from the world.\n'
+              'The safest place is not where the crowd is going—it is where Christ '
+              'is leading. '
+              '---',
+        ),
+        DevotionalSection(
+          icon: '🚶',
+          heading:
+              'The Narrow Way Ends in Eternal Life',
+          body:
+              'Although the narrow road may involve sacrifice, its destination is '
+              'life—life that begins with knowing Christ now and continues forever in '
+              'His presence. Every hardship endured for Christ is temporary, but the '
+              'reward awaiting His faithful followers is eternal. The difficulties of '
+              'the journey cannot compare with the glory that lies ahead.\n'
+              'Jesus never promised His followers an easy path, but He promised His '
+              'presence every step of the way. As Paul writes in Epistle to the '
+              'Romans 8:18, the sufferings of this present time are not worthy to be '
+              'compared with the glory that will be revealed. Those who persevere '
+              'with Christ will discover that every sacrifice was worthwhile.\n'
+              'The narrow road may be difficult, but it always leads to the presence '
+              'of the One who is Life itself. '
+              '---',
+        ),
+      ],
+      finalRevelation:
+          'There are only two roads—one is easy but empty, the other is '
+          'difficult but full of life. The broad road follows the desires of the '
+          'world. The narrow road follows Jesus. One ends in destruction. The '
+          'other ends in eternal joy with Christ. Every day you walk, you are '
+          'choosing which road you will travel. ---',
+      reflectionQuestions: const [
+        'Am I intentionally following Jesus each day, or am I drifting with '
+        'the values of the world?',
+        'Are there areas where I have chosen comfort over obedience?',
+        'What practical step can I take today to walk more faithfully on the '
+        'narrow path?',
+      ],
+      prayer:
+          'Heavenly Father,\n'
+          'Thank You for lovingly showing me the way that leads to life through '
+          'Your Son, Jesus Christ. Thank You that even though the road is narrow, '
+          'You have not left me to walk it alone. Your grace sustains me, Your '
+          'Spirit guides me, and Your promises strengthen me every step of the '
+          'journey.\n'
+          'Forgive me for the times I have been tempted to follow the easier '
+          'path of compromise instead of the path of faithful obedience. Give me '
+          'the courage to choose Your will over my own desires and Your truth '
+          'over the opinions of the world. Help me remain steadfast when the road '
+          'becomes difficult, remembering that Your presence is with me.\n'
+          'Strengthen my faith to trust You daily. Teach me to deny myself, take '
+          'up my cross, and joyfully follow Christ wherever He leads. Let my life '
+          'point others toward the narrow gate, so they too may discover the '
+          'hope, peace, and eternal life found in Jesus alone.\n'
+          'May I never be guided by what is popular,but always by what is true. '
+          'May I never seek the broad road of convenience, but faithfully walk '
+          'the narrow way of Christ, until I stand in Your presence and hear, '
+          '"Well done, good and faithful servant."\n'
+          'Amen. 🙏🌿',
+      createdAt: DateTime(2024, 4, 13),
+    ),
+
+    // ── 105. NEVER ──────────────────────────────────────────────────
+    DevotionalModel(
+      id: 'never_alone_never',
+      theme: 'Never',
+      title: 'Never Alone, Never Forsaken',
+      scripture:
+          'Let your conduct be without covetousness; be content with such things '
+          'as you have. For He Himself has said, ‘I will never leave you nor '
+          'forsake you.',
+      scriptureReference: 'Hebrews 13:5',
+      sections: const [
+        DevotionalSection(
+          icon: '🔑',
+          heading:
+              'True Contentment Is Found in God\'s Presence',
+          body:
+              'The writer of Hebrews begins by urging believers to live free from '
+              'the love of money and to be content with what they have. This command '
+              'is not rooted in the value of possessions but in the value of God\'s '
+              'presence. Material things are temporary and uncertain, but God is '
+              'eternal and unchanging. The greatest treasure a believer possesses is '
+              'not what is in their hands, but Who walks beside them.\n'
+              'Our world constantly encourages us to believe that happiness is found '
+              'in acquiring more. Yet the human heart can never be satisfied by '
+              'possessions because it was created to find its fulfillment in God '
+              'alone. As David declared in Book of Psalms 16:11, fullness of joy is '
+              'found in God\'s presence. When Christ becomes our greatest treasure, '
+              'contentment begins to replace restlessness.\n'
+              'Contentment grows when you realize that God\'s presence is worth more '
+              'than the world\'s greatest possessions. '
+              '---',
+        ),
+        DevotionalSection(
+          icon: '🔍',
+          heading:
+              'God\'s Promise Never Changes',
+          body:
+              'The foundation of this passage is one of the greatest promises in '
+              'Scripture: "I will never leave you nor forsake you." God does not '
+              'merely promise to visit His children occasionally—He promises His '
+              'continual presence. Even when circumstances change, relationships '
+              'fail, or life\'s path becomes uncertain, God\'s commitment to His people '
+              'remains unshakable.\n'
+              'Human promises are sometimes broken because people are limited by '
+              'weakness and changing circumstances. God\'s promises are different '
+              'because they rest upon His perfect character. As the Lord declared in '
+              'Book of Deuteronomy 31:6, He will never leave or forsake His people. '
+              'The God who made this promise thousands of years ago remains just as '
+              'faithful today.\n'
+              'God\'s presence is not based on your feelings—it is based on His '
+              'unchanging promise. '
+              '---',
+        ),
+        DevotionalSection(
+          icon: '⚔️',
+          heading:
+              'You Are Never Alone in Your Battles',
+          body:
+              'Life often brings seasons of loneliness, suffering, uncertainty, and '
+              'spiritual warfare. During those moments, the enemy whispers that God '
+              'has abandoned you. But Hebrews reminds believers that God\'s presence '
+              'remains constant even when His activity is not immediately visible. He '
+              'walks with His children through every valley, every storm, and every '
+              'trial.\n'
+              'Throughout Scripture, God\'s faithful servants experienced this truth. '
+              'Joseph found God with him in prison. Daniel experienced God\'s presence '
+              'in the lions\' den. Paul knew God\'s strength while sitting in prison. '
+              'Most importantly, Jesus promised His followers in Gospel of Matthew '
+              '28:20, "I am with you always, even to the end of the age." The '
+              'believer never faces life\'s darkest moments alone.\n'
+              'God\'s presence may not always remove the storm, but it will always '
+              'sustain you through it. '
+              '---',
+        ),
+        DevotionalSection(
+          icon: '🌱',
+          heading:
+              'God\'s Presence Produces Courage',
+          body:
+              'Immediately after this promise, the writer says believers can '
+              'confidently declare, "The Lord is my helper; I will not fear." Fear '
+              'loses its power when faith remembers who is standing beside us. '
+              'Courage is not the absence of danger but the confidence that God is '
+              'greater than whatever we face.\n'
+              'Many believers spend too much time measuring the size of their '
+              'problems instead of remembering the greatness of their God. But when '
+              'God\'s presence becomes our focus, fear begins to lose its grip. As '
+              'David boldly proclaimed in Book of Psalms 27:1, "The Lord is my light '
+              'and my salvation; whom shall I fear?" The presence of God transforms '
+              'fearful hearts into courageous ones.\n'
+              'When God is your Helper, no challenge is greater than His power. '
+              '---',
+        ),
+        DevotionalSection(
+          icon: '🚶',
+          heading:
+              'Live Every Day with Confidence in God\'s Faithfulness',
+          body:
+              'Because God has promised never to leave His children, believers can '
+              'walk confidently into every new day. Whether facing success or '
+              'disappointment, abundance or lack, certainty or uncertainty, God\'s '
+              'faithfulness remains unchanged. His presence becomes the anchor that '
+              'steadies the soul through every season of life.\n'
+              'This promise also calls believers to remain faithful in return. Since '
+              'God never abandons us, we can confidently obey Him wherever He leads. '
+              'As Paul writes in Epistle to the Romans 8:38–39, nothing in all '
+              'creation can separate believers from the love of God in Christ Jesus. '
+              'Our future is secure because our lives are held by an unchanging God.\n'
+              'Those who walk with God never walk alone, and those whom God holds '
+              'can never be truly forsaken. '
+              '---',
+        ),
+      ],
+      finalRevelation:
+          'God\'s greatest gift is not merely His provision— it is His presence. '
+          'Money may fail. People may disappoint. Circumstances may change. But '
+          'the God who promised, "I will never leave you nor forsake you," will '
+          'remain faithful forever. His presence is your security, His '
+          'faithfulness is your confidence, and His love is your eternal refuge. '
+          '---',
+      reflectionQuestions: const [
+        'Am I finding my security in God\'s presence or in temporary '
+        'possessions?',
+        'Have I allowed fear or loneliness to make me question God\'s promise?',
+        'How can I live today with greater confidence that God is always with '
+        'me?',
+      ],
+      prayer:
+          'Heavenly Father,\n'
+          'Thank You for the incredible promise that You will never leave me nor '
+          'forsake me. Thank You that Your presence is constant, Your love is '
+          'unwavering, and Your faithfulness never fails. No matter what I face, '
+          'I can rest in the assurance that You are always with me.\n'
+          'Forgive me for the times I have placed my confidence in possessions, '
+          'people, or circumstances instead of You. Teach me to find true '
+          'contentment in Your presence and to trust that You will always provide '
+          'exactly what I need according to Your perfect wisdom.\n'
+          'When I feel lonely, remind me that You are near. When I feel afraid, '
+          'remind me that You are my Helper. When I feel uncertain, remind me '
+          'that Your promises never fail. Fill my heart with courage, peace, and '
+          'unwavering faith as I walk through every season of life.\n'
+          'May I never measure my life by what I possess,but by the privilege of '
+          'walking daily with You.\n'
+          'Let Your presence be my greatest treasure, Your faithfulness be my '
+          'constant confidence, and Your love be the anchor of my soul, today and '
+          'forever.\n'
+          'Amen. 🙏🌿',
+      createdAt: DateTime(2024, 4, 14),
+    ),
+
+    // ── 106. JOY ──────────────────────────────────────────────────
+    DevotionalModel(
+      id: 'the_cost_and',
+      theme: 'Joy',
+      title: 'The Cost and Joy of Following Jesus',
+      scripture:
+          'Then He said to them all, ‘If anyone desires to come after Me, let '
+          'him deny himself, and take up his cross daily, and follow Me.',
+      scriptureReference: 'Luke 9:23',
+      sections: const [
+        DevotionalSection(
+          icon: '🔑',
+          heading:
+              'Following Jesus Begins with a Personal Decision',
+          body:
+              'Jesus begins His invitation with the words, "If anyone desires to '
+              'come after Me." Following Christ is not something inherited through '
+              'family, culture, or religious tradition. It is a personal decision '
+              'that every individual must make. God never forces anyone to follow '
+              'Him; He lovingly invites every heart to choose Him.\n'
+              'Many people admire Jesus without truly following Him. They appreciate '
+              'His teachings but hesitate to surrender their lives completely. Yet '
+              'true discipleship begins when Christ becomes more than a Savior to '
+              'admire—He becomes the Lord to obey. As Joshua declared in Book of '
+              'Joshua 24:15, "Choose for yourselves this day whom you will serve." '
+              'Every day presents a fresh opportunity to renew our commitment to '
+              'follow Christ wholeheartedly.\n'
+              'The greatest decision you will ever make is not simply believing in '
+              'Jesus—it is choosing to follow Him every day. '
+              '---',
+        ),
+        DevotionalSection(
+          icon: '🔍',
+          heading:
+              'Denying Yourself Is Surrendering to God\'s Will',
+          body:
+              'Jesus says, "Let him deny himself." Self-denial does not mean '
+              'rejecting your value or neglecting legitimate needs. Rather, it means '
+              'surrendering your own desires, ambitions, and will so that Christ '
+              'becomes Lord over every area of your life. It is exchanging self-rule '
+              'for Christ\'s loving leadership.\n'
+              'The world teaches people to follow their hearts and pursue personal '
+              'fulfillment above everything else. Jesus teaches the opposite. True '
+              'life is found by surrendering our lives to Him. As Paul writes in '
+              'Epistle to the Romans 12:1, believers are called to present themselves '
+              'as living sacrifices, holy and pleasing to God. Every act of surrender '
+              'allows Christ\'s life to be more fully revealed through us.\n'
+              'Self-denial is not losing your life—it is placing your life into the '
+              'hands of the One who knows it best. '
+              '---',
+        ),
+        DevotionalSection(
+          icon: '⚔️',
+          heading:
+              'Taking Up Your Cross Means Faithful Obedience',
+          body:
+              'Jesus commands His followers to "take up his cross daily." In Jesus\' '
+              'day, the cross was a symbol of sacrifice, suffering, and complete '
+              'submission. Taking up the cross means willingly embracing whatever '
+              'obedience to Christ requires, even when it involves hardship, '
+              'rejection, or personal sacrifice. It is choosing faithfulness over '
+              'comfort.\n'
+              'Many believers desire the blessings of Christ without embracing the '
+              'cost of discipleship. Yet every faithful follower will face moments '
+              'when obedience requires courage. As Paul reminds believers in Second '
+              'Epistle to Timothy 3:12, all who desire to live godly lives in Christ '
+              'Jesus will face opposition. But every sacrifice made for Christ is '
+              'temporary compared to the eternal reward awaiting His people.\n'
+              'The cross is not a burden meant to defeat you—it is the pathway '
+              'through which Christ shapes you into His likeness. '
+              '---',
+        ),
+        DevotionalSection(
+          icon: '🌱',
+          heading:
+              'Discipleship Is a Daily Commitment',
+          body:
+              'Jesus specifically says to take up the cross daily. Following Him is '
+              'not a one-time decision but a lifelong journey of continual surrender. '
+              'Every new day brings fresh opportunities to trust God, resist '
+              'temptation, forgive others, serve faithfully, and grow in Christlike '
+              'character.\n'
+              'Spiritual growth happens through daily obedience rather than '
+              'occasional moments of inspiration. Each day we choose whether Christ '
+              'or self will rule our hearts. As the writer of Book of Lamentations '
+              '3:22–23 reminds us, God\'s mercies are new every morning. Just as His '
+              'grace is renewed daily, so our commitment to follow Him must also be '
+              'renewed daily.\n'
+              'Great disciples are not made by one extraordinary decision, but by '
+              'thousands of faithful daily choices. '
+              '---',
+        ),
+        DevotionalSection(
+          icon: '🚶',
+          heading:
+              'Following Jesus Leads to True Life',
+          body:
+              'Jesus never calls His followers to surrender without promising '
+              'something far greater. The path of discipleship may involve sacrifice, '
+              'but it leads to abundant life, deep joy, lasting peace, and eternal '
+              'fellowship with God. Whatever is surrendered for Christ is never truly '
+              'lost—it is transformed for His glory and our good.\n'
+              'The world promises fulfillment through self-centered living, but '
+              'Jesus reveals that true life is found in wholehearted devotion to Him. '
+              'As He declares just a few verses later in Gospel of Luke 9:24, whoever '
+              'loses their life for His sake will save it. The paradox of the Gospel '
+              'is that surrender leads to freedom, and dying to self leads to genuine '
+              'life.\n'
+              'The closer you follow Christ, the more fully you become the person '
+              'God created you to be. '
+              '---',
+        ),
+      ],
+      finalRevelation:
+          'Jesus never promised that following Him would be easy—but He promised '
+          'it would be worth it. Every act of self-denial, every cross faithfully '
+          'carried, and every step taken in obedience draws you closer to the '
+          'heart of Christ. The cross is not the end of the journey—it is the '
+          'road that leads to resurrection life. ---',
+      reflectionQuestions: const [
+        'Is there an area of my life that I have not fully surrendered to '
+        'Christ?',
+        'What "cross" is Jesus asking me to carry faithfully today?',
+        'Am I following Jesus only when it is convenient, or am I committed to '
+        'Him every day?',
+      ],
+      prayer:
+          'Lord Jesus,\n'
+          'Thank You for calling me to follow You and for showing me the perfect '
+          'example of obedience, humility, and sacrificial love. Thank You that '
+          'You carried the cross for my salvation so that I may now walk in the '
+          'new life You have given me.\n'
+          'Forgive me for the times I have placed my own desires above Your '
+          'will. Teach me to deny myself daily and to joyfully surrender every '
+          'part of my life into Your hands. Give me the courage to carry whatever '
+          'cross You have entrusted to me, trusting that Your grace is always '
+          'sufficient.\n'
+          'Strengthen me through Your Holy Spirit to remain faithful when the '
+          'path is difficult. Help me choose obedience over convenience, faith '
+          'over fear, and Your glory over my own comfort. Let each day draw me '
+          'closer to Your heart and shape me more into Your likeness. '
+          'May my greatest desire be to follow You, my greatest joy be to know '
+          'You, and my greatest purpose be to glorify You.\n'
+          'Teach me to take up my cross daily, walk faithfully in Your '
+          'footsteps, and finish my race with unwavering devotion, until I see '
+          'You face to face.\n'
+          'Amen. 🙏🌿',
+      createdAt: DateTime(2024, 4, 15),
+    ),
+
+    // ── 107. PROMISE ──────────────────────────────────────────────────
+    DevotionalModel(
+      id: 'the_promise_to',
+      theme: 'Promise',
+      title: 'The Promise to the Faithful Overcomer',
+      scripture:
+          'He who overcomes shall be clothed in white garments, and I will not '
+          'blot out his name from the Book of Life; but I will confess his name '
+          'before My Father and before His angels.',
+      scriptureReference: 'Revelation 3:5',
+      sections: const [
+        DevotionalSection(
+          icon: '🔑',
+          heading:
+              'God Calls Every Believer to Live as an Overcomer',
+          body:
+              'Jesus spoke these words to the church in Sardis, a church that '
+              'appeared spiritually alive on the outside but was spiritually weak '
+              'within. His message was both a warning and an invitation. He called '
+              'His people to wake up, repent, and remain faithful. The promise was '
+              'not reserved for extraordinary believers but for everyone who '
+              'perseveres in genuine faith.\n'
+              'The Christian life is not a passive journey but a daily battle '
+              'against sin, temptation, and spiritual complacency. Yet believers do '
+              'not overcome by their own strength—they overcome through Christ, who '
+              'has already conquered sin, death, and Satan. As John writes in First '
+              'Epistle of John 5:4, everyone born of God overcomes the world through '
+              'faith. Victory belongs to those who continue trusting Christ.\n'
+              'An overcomer is not someone who never struggles—it is someone who '
+              'never stops trusting Jesus. '
+              '---',
+        ),
+        DevotionalSection(
+          icon: '🔍',
+          heading:
+              'White Garments Represent Christ\'s Righteousness',
+          body:
+              'Jesus promises that the overcomer will be clothed in white garments. '
+              'Throughout Scripture, white garments symbolize purity, righteousness, '
+              'victory, and acceptance before God. These garments are not earned '
+              'through human goodness but are given through the saving work of Jesus '
+              'Christ. He removes our sin and clothes us with His own righteousness.\n'
+              'Many people spend their lives trying to cover their guilt through '
+              'good works or religious efforts. But only Christ can remove the stain '
+              'of sin. As Isaiah declares in Book of Isaiah 1:18, though our sins are '
+              'like scarlet, God can make them as white as snow. Every believer '
+              'stands before God, not in their own righteousness, but clothed in the '
+              'perfect righteousness of Christ.\n'
+              'The greatest garment you will ever wear is the righteousness of Jesus '
+              'Christ. '
+              '---',
+        ),
+        DevotionalSection(
+          icon: '⚔️',
+          heading:
+              'Your Security Rests in Christ\'s Faithfulness',
+          body:
+              'Jesus declares that He will not blot out the overcomer\'s name from '
+              'the Book of Life. This is a powerful assurance given to those who '
+              'remain faithful to Him. The emphasis is not on creating fear but on '
+              'encouraging perseverance. Believers can walk confidently because their '
+              'hope rests in Christ\'s faithfulness rather than their own ability to '
+              'save themselves.\n'
+              'The enemy constantly seeks to fill believers with doubt and '
+              'condemnation. But Jesus continually points His people toward His '
+              'promises. As Paul confidently writes in Epistle to the Romans 8:38–39, '
+              'nothing in all creation can separate believers from the love of God in '
+              'Christ Jesus. Our assurance is anchored in the finished work of Christ '
+              'and His unwavering commitment to His people.\n'
+              'Your confidence is not found in the strength of your grip on Christ, '
+              'but in the strength of His grip on you. '
+              '---',
+        ),
+        DevotionalSection(
+          icon: '🌱',
+          heading:
+              'Jesus Is Not Ashamed of Those Who Belong to Him',
+          body:
+              'One of the most beautiful promises in this verse is that Jesus will '
+              'confess the overcomer\'s name before the Father and His angels. Imagine '
+              'the King of kings publicly acknowledging those who faithfully followed '
+              'Him. This is the fulfillment of the relationship Christ desires with '
+              'every believer—a relationship marked by love, acceptance, and eternal '
+              'fellowship.\n'
+              'In a world where many believers face rejection or ridicule because of '
+              'their faith, Jesus offers incredible encouragement. Those who '
+              'faithfully confess Him before others will one day hear Him confess '
+              'them before the Father. As He promised in Gospel of Matthew 10:32, '
+              'whoever acknowledges Him before others, He will acknowledge before His '
+              'Father in heaven. No earthly approval can compare with the joy of '
+              'Christ\'s eternal approval.\n'
+              'There is no greater honor than hearing Jesus call your name before '
+              'the Father. '
+              '---',
+        ),
+        DevotionalSection(
+          icon: '🚶',
+          heading:
+              'Persevere Faithfully Until the End',
+          body:
+              'The promise of Revelation 3:5 encourages believers to remain '
+              'spiritually awake, faithful, and steadfast. The Christian journey is '
+              'not a sprint but a lifelong walk of faith. There will be seasons of '
+              'testing, discouragement, and spiritual warfare, but Christ promises '
+              'eternal reward to those who remain devoted to Him.\n'
+              'God never asks His people to persevere alone. He continually '
+              'strengthens them through His Spirit, His Word, and His grace. As the '
+              'writer of Epistle to the Hebrews 12:1–2 encourages, believers are to '
+              'run the race with endurance while fixing their eyes on Jesus, the '
+              'Author and Finisher of their faith. The One who began the work will '
+              'faithfully bring it to completion.\n'
+              'Faithfulness today prepares you for eternal joy tomorrow. '
+              '---',
+        ),
+      ],
+      finalRevelation:
+          'The Christian life is not about merely starting well—it is about '
+          'remaining faithful to Christ until the end. Those who overcome through '
+          'faith will be clothed in His righteousness, secure in His salvation, '
+          'and joyfully welcomed into His eternal presence. The greatest reward '
+          'of heaven is not simply its beauty—it is hearing Jesus gladly declare, '
+          '"This one belongs to Me." ---',
+      reflectionQuestions: const [
+        'Am I faithfully walking with Christ, or have I become spiritually '
+        'complacent?',
+        'Am I relying on Christ\'s righteousness or on my own efforts to please '
+        'God?',
+        'If Jesus were to examine my heart today, would He find a life that is '
+        'fully devoted to Him?',
+      ],
+      prayer:
+          'Lord Jesus,\n'
+          'Thank You for the glorious promises You have given to those who '
+          'remain faithful to You. Thank You for clothing me with Your '
+          'righteousness, writing my name in the Book of Life, and giving me the '
+          'hope of eternal fellowship with You. My salvation rests not in my own '
+          'goodness but in Your finished work on the cross.\n'
+          'Forgive me for the times I have grown spiritually careless or allowed '
+          'the distractions of this world to weaken my devotion. Awaken my heart '
+          'to pursue You with renewed passion. Help me remain faithful through '
+          'every trial, temptation, and season of waiting.\n'
+          'Strengthen me by Your Holy Spirit to live each day as an overcomer. '
+          'Keep my eyes fixed on You, my heart anchored in Your promises, and my '
+          'life marked by holiness, humility, and perseverance. Let my words, '
+          'choices, and actions reflect the reality that I belong to You.\n'
+          'May I walk faithfully until the end, clothed in Your righteousness, '
+          'secure in Your unfailing love, and filled with joyful anticipation for '
+          'the day when You will confess my name before the Father and welcome me '
+          'into Your everlasting kingdom.\n'
+          'Amen. 🙏🌿',
+      createdAt: DateTime(2024, 4, 16),
+    ),
+
+    // ── 108. STRENGTH ──────────────────────────────────────────────────
+    DevotionalModel(
+      id: 'strength_perfected_in',
+      theme: 'Strength',
+      title: 'Strength Perfected in Weakness',
+      scripture:
+          'And He said to me, ‘My grace is sufficient for you, for My strength '
+          'is made perfect in weakness.’ Therefore most gladly I will rather '
+          'boast in my infirmities, that the power of Christ may rest upon me.',
+      scriptureReference: '2 Corinthians 12:9',
+      sections: const [
+        DevotionalSection(
+          icon: '🔑',
+          heading:
+              'God\'s Grace Is Always Sufficient',
+          body:
+              'Paul received this promise after repeatedly asking God to remove the '
+              '"thorn in the flesh" that caused him great suffering. Instead of '
+              'removing the trial, God offered something even greater—His '
+              'all-sufficient grace. God\'s grace is more than His unmerited favor; it '
+              'is His divine strength, sustaining presence, and empowering help that '
+              'enables believers to endure every circumstance.\n'
+              'There are seasons when God answers our prayers by changing our '
+              'circumstances, but there are also seasons when He answers by changing '
+              'us within our circumstances. His grace never runs out because it flows '
+              'from His infinite love and faithfulness. As the writer of Epistle to '
+              'the Hebrews 4:16 encourages, believers can confidently approach God\'s '
+              'throne of grace to receive mercy and find grace to help in time of '
+              'need. God\'s grace is always enough for today\'s battle.\n'
+              'God may not always remove your burden, but He will always provide the '
+              'grace to carry it. '
+              '---',
+        ),
+        DevotionalSection(
+          icon: '🔍',
+          heading:
+              'God\'s Strength Is Revealed Through Human Weakness',
+          body:
+              'God told Paul, "My strength is made perfect in weakness." This truth '
+              'completely transforms the way believers view weakness. The world '
+              'teaches us to hide our weaknesses and depend upon ourselves, but God '
+              'often uses our weakest moments to display His greatest power. When '
+              'human strength reaches its limit, God\'s power becomes unmistakably '
+              'evident.\n'
+              'Many believers pray for greater strength while trying to conceal '
+              'their weaknesses. Yet God invites us to depend entirely upon Him. As '
+              'Isaiah declares in Book of Isaiah 40:29–31, He gives power to the weak '
+              'and renews the strength of those who wait upon Him. Weakness is not an '
+              'obstacle to God\'s work—it is often the very place where His glory '
+              'shines most brightly.\n'
+              'Your weakness is not where God\'s power stops—it is where His power is '
+              'often most clearly displayed. '
+              '---',
+        ),
+        DevotionalSection(
+          icon: '⚔️',
+          heading:
+              'Dependence on God Produces Spiritual Strength',
+          body:
+              'Paul learned that self-sufficiency could never accomplish what '
+              'complete dependence upon God could. As long as believers rely solely '
+              'on their own abilities, they limit what God desires to do through '
+              'them. But when they acknowledge their need for Him, they position '
+              'themselves to experience His supernatural strength.\n'
+              'The enemy often convinces believers that weakness is failure, causing '
+              'them to become discouraged. But God\'s kingdom operates differently. '
+              'Jesus taught that apart from Him, we can do nothing. As He declared in '
+              'Gospel of John 15:5, those who abide in Him will bear much fruit. '
+              'Spiritual strength grows as dependence upon Christ increases.\n'
+              'The strongest believer is not the one who depends most on themselves, '
+              'but the one who depends most on God. '
+              '---',
+        ),
+        DevotionalSection(
+          icon: '🌱',
+          heading:
+              'Trials Become Opportunities for God\'s Glory',
+          body:
+              'Paul reached the remarkable point where he could "boast" in his '
+              'weaknesses because he understood their purpose. His trials were no '
+              'longer viewed as evidence of God\'s absence but as opportunities for '
+              'Christ\'s power to rest upon him. Suffering became the platform upon '
+              'which God\'s faithfulness was displayed.\n'
+              'This perspective changes how believers face adversity. Instead of '
+              'asking only, "Why is this happening?" they begin asking, "How can God '
+              'be glorified through this?" As James teaches in Epistle of James '
+              '1:2–4, trials produce perseverance, maturity, and steadfast faith. God '
+              'wastes nothing in the lives of His children. Every difficulty can '
+              'become an instrument of spiritual growth and a testimony of His '
+              'sustaining grace.\n'
+              'The greatest testimonies are often born from the deepest trials '
+              'sustained by God\'s unfailing grace. '
+              '---',
+        ),
+        DevotionalSection(
+          icon: '🚶',
+          heading:
+              'Live Confidently in God\'s Sufficient Grace',
+          body:
+              'Paul\'s confidence was no longer rooted in his gifts, accomplishments, '
+              'or personal strength. His confidence rested entirely in God\'s grace. '
+              'Every day, believers are invited to exchange self-reliance for '
+              'complete trust in the Lord. Whether facing weakness, uncertainty, '
+              'disappointment, or hardship, God\'s grace remains constant and His '
+              'strength never fails.\n'
+              'This confidence frees believers from fear because they know they are '
+              'upheld by God\'s power rather than their own. As Paul declares in '
+              'Epistle to the Philippians 4:13, "I can do all things through Christ '
+              'who strengthens me." The believer who depends upon Christ discovers '
+              'that His grace is sufficient for every challenge and every season.\n'
+              'Those who lean fully upon God\'s grace will never find His strength '
+              'lacking. '
+              '---',
+        ),
+      ],
+      finalRevelation:
+          'God does not always remove your weakness—but He always offers His '
+          'grace. He does not always calm every storm—but He promises His '
+          'presence within it. Your weakness is not the end of your usefulness; '
+          'it is often the place where Christ\'s power shines most brilliantly. '
+          'When you can no longer rely on yourself, you begin to fully experience '
+          'the strength of God. ---',
+      reflectionQuestions: const [
+        'What weakness or struggle am I trying to overcome in my own strength '
+        'instead of surrendering to God?',
+        'Have I been asking God only to remove my trial, or have I also asked '
+        'Him to reveal His power through it?',
+        'How can I rely more deeply on God\'s grace in my current season of '
+        'life?',
+      ],
+      prayer:
+          'Heavenly Father,\n'
+          'Thank You for the assurance that Your grace is always sufficient for '
+          'me. Thank You that even when I feel weak, discouraged, or overwhelmed, '
+          'Your strength never fails. You know every burden I carry, every '
+          'struggle I face, and every limitation I experience, yet You continue '
+          'to sustain me with Your unfailing love.\n'
+          'Forgive me for the times I have depended on my own abilities instead '
+          'of trusting in Your power. Teach me to surrender every weakness, fear, '
+          'and disappointment into Your hands. Help me stop seeing my weaknesses '
+          'as obstacles and begin seeing them as opportunities for Your strength '
+          'to be revealed.\n'
+          'Fill me with the power of Your Holy Spirit each day. Strengthen me to '
+          'persevere through every trial with unwavering faith and joyful '
+          'confidence. Let my life become a testimony that Your grace is truly '
+          'enough and that Your power is made perfect in weakness. '
+          'May I never boast in my own strength, but always rejoice in the '
+          'sufficiency of Your grace. \n'
+          'Let the power of Christ rest upon me, so that through every weakness, '
+          'every trial, and every victory, Your glory alone will be seen.\n'
+          'Amen. 🙏🌿',
+      createdAt: DateTime(2024, 4, 17),
+    ),
+
+    // ── 109. HUMILITY ──────────────────────────────────────────────────
+    DevotionalModel(
+      id: 'humility_that_leads',
+      theme: 'Humility',
+      title: 'Humility That Leads to God\'s Exaltation',
+      scripture:
+          'Therefore humble yourselves under the mighty hand of God, that He may '
+          'exalt you in due time.',
+      scriptureReference: '1 Peter 5:6',
+      sections: const [
+        DevotionalSection(
+          icon: '🔑',
+          heading:
+              'True Humility Begins with Surrender to God',
+          body:
+              'Peter does not simply tell believers to be humble before people—he '
+              'calls them to humble themselves under the mighty hand of God. Biblical '
+              'humility is recognizing God\'s absolute authority, trusting His wisdom '
+              'above our own, and willingly submitting every part of our lives to His '
+              'will. It is acknowledging that God knows what is best, even when we '
+              'cannot understand His ways.\n'
+              'The world often equates humility with weakness, but in God\'s kingdom, '
+              'humility is the pathway to spiritual strength. Pride insists on '
+              'controlling life, while humility confidently places life into God\'s '
+              'hands. As Solomon teaches in Book of Proverbs 3:5–6, believers are to '
+              'trust in the Lord with all their hearts and not lean on their own '
+              'understanding. Humility begins where self-reliance ends.\n'
+              'The strongest life is not the one controlled by self, but the one '
+              'surrendered to God. '
+              '---',
+        ),
+        DevotionalSection(
+          icon: '🔍',
+          heading:
+              'God\'s Mighty Hand Is Both Powerful and Loving',
+          body:
+              'Peter reminds believers that they are under the "mighty hand of God." '
+              'Throughout Scripture, God\'s mighty hand represents His power to '
+              'protect, provide, discipline, rescue, and guide His people. The same '
+              'hand that delivered Israel from Egypt, sustained Elijah in the '
+              'wilderness, and raised Jesus from the dead is the hand that lovingly '
+              'holds every believer today.\n'
+              'Sometimes God\'s hand allows seasons of waiting, correction, or '
+              'hardship that we do not immediately understand. Yet His mighty hand '
+              'never acts without purpose. Everything He allows is shaped by His '
+              'wisdom, love, and faithfulness. As Paul assures us in Epistle to the '
+              'Romans 8:28, God works all things together for the good of those who '
+              'love Him. His hand may lead through valleys, but it always leads '
+              'toward His perfect purpose.\n'
+              'The hand that humbles you is the same hand that faithfully sustains '
+              'you. '
+              '---',
+        ),
+        DevotionalSection(
+          icon: '⚔️',
+          heading:
+              'God\'s Timing Is Always Perfect',
+          body:
+              'Peter promises that God will exalt His people "in due time." One of '
+              'the greatest challenges of the Christian life is learning to trust '
+              'God\'s timing. We often desire immediate answers, instant '
+              'breakthroughs, and quick recognition, but God works according to His '
+              'eternal wisdom rather than our human schedules.\n'
+              'Waiting is never wasted in God\'s kingdom. It is often His classroom '
+              'where character is developed, faith is strengthened, and dependence '
+              'upon Him deepens. Joseph waited before becoming a ruler. David waited '
+              'before becoming king. Even Jesus waited for the Father\'s appointed '
+              'time before beginning His public ministry. As Solomon declares in Book '
+              'of Ecclesiastes 3:11, God makes everything beautiful in its time. His '
+              'delays are never denials—they are often preparations.\n'
+              'God\'s timing is not slow—it is perfectly wise. '
+              '---',
+        ),
+        DevotionalSection(
+          icon: '🌱',
+          heading:
+              'Humility Frees You from the Burden of Self-Promotion',
+          body:
+              'Pride constantly seeks recognition, approval, and personal '
+              'advancement. Humility, however, rests in the confidence that God knows '
+              'exactly when and how to fulfill His purposes. Those who trust God\'s '
+              'timing no longer need to manipulate circumstances or compete for '
+              'attention because they know that what God has ordained cannot be '
+              'prevented by people.\n'
+              'The enemy often uses comparison to rob believers of peace. We may '
+              'become discouraged when others seem to advance more quickly or receive '
+              'greater recognition. But God\'s calling for each person is unique. As '
+              'Jesus teaches in Gospel of Matthew 23:12, whoever humbles themselves '
+              'will be exalted. Promotion that comes from God is always better than '
+              'recognition gained through human striving.\n'
+              'When God opens a door, no one can shut it; when He lifts you up, no '
+              'one can pull you down. '
+              '---',
+        ),
+        DevotionalSection(
+          icon: '🚶',
+          heading:
+              'Trust God\'s Process While Remaining Faithful',
+          body:
+              'Humility is not passive resignation—it is active trust. It means '
+              'faithfully serving God today while confidently leaving tomorrow in His '
+              'hands. Whether the season is one of waiting, serving quietly, enduring '
+              'hardship, or experiencing blessing, believers can rest knowing that '
+              'God is shaping them for His eternal purposes.\n'
+              'Immediately after this verse, Peter encourages believers to cast all '
+              'their cares upon God because He cares for them. Humility and trust '
+              'always walk together. As David writes in Book of Psalms 37:5, "Commit '
+              'your way to the Lord, trust also in Him, and He shall bring it to '
+              'pass." God honors those who faithfully trust Him through every season.\n'
+              'The believer who humbly trusts God\'s process will never be '
+              'disappointed by God\'s purpose. '
+              '---',
+        ),
+      ],
+      finalRevelation:
+          'Humility is not thinking less of yourself—it is thinking more of God. '
+          'When you place your life under His mighty hand, you no longer have to '
+          'force open doors, fight for recognition, or fear the future. The God '
+          'who humbles you for a season is the same God who will lift you up at '
+          'exactly the right time, for exactly the right purpose, and in exactly '
+          'the right way. ---',
+      reflectionQuestions: const [
+        'Am I truly surrendered to God\'s will, or am I trying to control my '
+        'own future?',
+        'Is pride, impatience, or comparison preventing me from trusting God\'s '
+        'timing?',
+        'What burden do I need to place under God\'s mighty hand today?',
+      ],
+      prayer:
+          'Heavenly Father, '
+          'Thank You for Your mighty hand that lovingly guides, protects, and '
+          'sustains my life. Thank You that You see the beginning and the end, '
+          'and that Your plans for me are always wiser than my own. I choose '
+          'today to humble myself before You and trust Your perfect will.\n'
+          'Forgive me for the times I have been impatient, prideful, or anxious '
+          'about my future. Teach me to rest in Your timing instead of striving '
+          'in my own strength. Remove every desire for selfish recognition, and '
+          'help me find my identity and security in You alone.\n'
+          'Strengthen me to remain faithful in every season, whether I am '
+          'waiting, serving quietly, or walking through trials. Give me grace to '
+          'trust that You are working even when I cannot see it. Help me '
+          'faithfully cast every care upon You, knowing that You truly care for '
+          'me.\n'
+          'May my heart remain humble, my faith remain steadfast, and my eyes '
+          'remain fixed on You. Let me walk confidently under Your mighty hand, '
+          'trusting that in Your perfect time, You will accomplish every purpose '
+          'You have prepared for my life, for Your glory and for my good.\n'
+          'Amen. 🙏🌿',
+      createdAt: DateTime(2024, 4, 18),
+    ),
+
+    // ── 110. DWELL ──────────────────────────────────────────────────
+    DevotionalModel(
+      id: 'god_will_dwell',
+      theme: 'Dwell',
+      title: 'God Will Dwell with His People',
+      scripture:
+          'And I heard a loud voice from heaven saying, ‘Behold, the tabernacle '
+          'of God is with men, and He will dwell with them, and they shall be His '
+          'people. God Himself will be with them and be their God.',
+      scriptureReference: 'Revelation 21:3',
+      sections: const [
+        DevotionalSection(
+          icon: '🔑',
+          heading:
+              'God\'s Greatest Promise Is His Presence',
+          body:
+              'As John witnessed the vision of the new heaven and the new earth, a '
+              'loud voice declared the fulfillment of God\'s eternal plan: "The '
+              'tabernacle of God is with men." From the Garden of Eden to the '
+              'wilderness tabernacle, from the temple in Jerusalem to Christ dwelling '
+              'among humanity, God\'s desire has always been to live in close '
+              'fellowship with His people. Revelation reveals the glorious completion '
+              'of that promise—God will dwell with His redeemed forever.\n'
+              'Throughout history, sin separated humanity from God\'s holy presence. '
+              'But through Jesus Christ, the barrier has been removed. His sacrifice '
+              'restored what sin had broken. As John declares in Gospel of John 1:14, '
+              'the Word became flesh and dwelt among us, revealing God\'s glory. '
+              'Revelation 21:3 points beyond Christ\'s first coming to the eternal day '
+              'when God\'s people will experience His presence without interruption or '
+              'separation.\n'
+              'God\'s greatest gift has never been heaven itself—it has always been '
+              'Himself. '
+              '---',
+        ),
+        DevotionalSection(
+          icon: '🔍',
+          heading:
+              'You Belong to God Forever',
+          body:
+              'The heavenly announcement continues: "They shall be His people." This '
+              'is the fulfillment of God\'s covenant repeated throughout Scripture. '
+              'From Abraham to Moses, from the prophets to the apostles, God '
+              'consistently promised to claim a people for Himself. In eternity, that '
+              'promise reaches its perfect fulfillment as every believer enjoys '
+              'complete and everlasting fellowship with the Lord.\n'
+              'In a world where many struggle with loneliness, rejection, and '
+              'uncertainty about their identity, this promise brings lasting '
+              'assurance. Those who belong to Christ are eternally accepted into '
+              'God\'s family. As Peter writes in First Epistle of Peter 2:9, believers '
+              'are God\'s chosen people and His treasured possession. Our identity is '
+              'not determined by the world but by the God who calls us His own.\n'
+              'Your greatest identity is not found in what you do—it is found in '
+              'whose you are. '
+              '---',
+        ),
+        DevotionalSection(
+          icon: '⚔️',
+          heading:
+              'God\'s Presence Ends Every Separation',
+          body:
+              'Sin brought separation between humanity and God. It introduced guilt, '
+              'fear, death, and brokenness into creation. But Revelation announces '
+              'the complete reversal of that tragedy. There will never again be '
+              'distance between God and His people. His presence will completely fill '
+              'the new creation, and every trace of sin\'s curse will be gone forever.\n'
+              'Many believers experience seasons where God seems distant because of '
+              'suffering, unanswered prayers, or spiritual struggles. Yet His '
+              'promises remain unchanging. Even now, He is near to those who seek '
+              'Him. As James encourages in Epistle of James 4:8, those who draw near '
+              'to God will find that He draws near to them. The intimacy we '
+              'experience now is only a glimpse of the perfect fellowship awaiting '
+              'us.\n'
+              'The greatest pain of this world is separation from God; the greatest '
+              'joy of eternity is His unhindered presence. '
+              '---',
+        ),
+        DevotionalSection(
+          icon: '🌱',
+          heading:
+              'Hope Changes How We Live Today',
+          body:
+              'Revelation was written to believers who were facing persecution, '
+              'hardship, and uncertainty. God did not promise them an easy present, '
+              'but He gave them an unshakable future. Knowing that God will one day '
+              'dwell fully with His people gives believers strength to remain '
+              'faithful through today\'s trials.\n'
+              'Hope is not wishful thinking—it is confident expectation based on '
+              'God\'s promises. Every sacrifice, every tear, and every act of faithful '
+              'obedience is moving toward the day when Christ will make all things '
+              'new. As Paul reminds believers in Epistle to the Romans 8:18, the '
+              'sufferings of this present time cannot compare with the glory that '
+              'will be revealed. Eternal hope gives present endurance.\n'
+              'Those who live with eternity in view can endure temporary hardships '
+              'with unwavering faith. '
+              '---',
+        ),
+        DevotionalSection(
+          icon: '🚶',
+          heading:
+              'Live Today as Citizens of God\'s Eternal Kingdom',
+          body:
+              'Although believers await the fullness of God\'s kingdom, they are '
+              'called to live as His people today. Every act of love, holiness, '
+              'worship, forgiveness, and faithful service reflects the reality that '
+              'we already belong to Him. Our lives should point others toward the '
+              'glorious future that God has prepared for all who trust in Christ.\n'
+              'The Holy Spirit already dwells within believers as a foretaste of '
+              'what is to come. Every moment spent in God\'s presence today prepares '
+              'our hearts for eternal fellowship with Him. As Paul writes in Epistle '
+              'to the Philippians 3:20, our citizenship is in heaven, from which we '
+              'eagerly await our Savior. We live on earth with our hearts anchored in '
+              'eternity.\n'
+              'Those who belong to God\'s eternal kingdom should reflect His kingdom '
+              'wherever they live today. '
+              '---',
+        ),
+      ],
+      finalRevelation:
+          'From the beginning of creation, God\'s desire has been to dwell with '
+          'His people. The cross made that relationship possible. The Holy Spirit '
+          'makes it present today. And eternity will make it perfect forever. The '
+          'greatest hope of heaven is not its beauty, its streets of gold, or its '
+          'endless joy—it is that God Himself will be with His people forever. '
+          '---',
+      reflectionQuestions: const [
+        'Is God\'s presence my greatest desire, or have other things taken '
+        'first place in my heart?',
+        'How does the promise of eternal fellowship with God change the way I '
+        'face today\'s struggles?',
+        'Am I living each day as someone who truly belongs to God\'s eternal '
+        'kingdom?',
+      ],
+      prayer:
+          'Heavenly Father, '
+          'Thank You for Your incredible promise that one day You will dwell '
+          'forever with Your people. Thank You that from the beginning, Your '
+          'desire has always been to bring humanity into perfect fellowship with '
+          'Yourself. Through Jesus Christ, You have made a way for me to become '
+          'part of Your eternal family.\n'
+          'Forgive me for the times I have allowed the temporary concerns of '
+          'this world to distract me from the eternal hope You have prepared for '
+          'me. Help me long for Your presence above every earthly blessing and '
+          'find my greatest joy in knowing You.\n'
+          'Strengthen me to remain faithful as I wait for the day when every '
+          'promise will be fulfilled. Fill me with hope when I grow weary, '
+          'courage when I face trials, and peace when life feels uncertain. Let '
+          'the certainty of eternity shape my priorities, deepen my worship, and '
+          'inspire my obedience.\n'
+          'May I live each day with my eyes fixed on Christ, my heart longing '
+          'for Your presence, and my life reflecting the hope of Your coming '
+          'kingdom.\n'
+          'Until the day when every barrier is removed, every promise is '
+          'fulfilled, and I stand forever in the joy of Your glorious presence, '
+          'where You will be my God, and I will be Your child forever.\n'
+          'Amen. 🙏🌿',
+      createdAt: DateTime(2024, 4, 19),
+    ),
+
+    // ── 111. PRAYER ──────────────────────────────────────────────────
+    DevotionalModel(
+      id: 'the_power_of',
+      theme: 'Prayer',
+      title: 'The Power of United Prayer',
+      scripture:
+          'Again I say to you that if two of you agree on earth concerning '
+          'anything that they ask, it will be done for them by My Father in '
+          'heaven.',
+      scriptureReference: 'Matthew 18:19',
+      sections: const [
+        DevotionalSection(
+          icon: '🔑',
+          heading:
+              'God Desires Unity Among His People',
+          body:
+              'Jesus spoke these words in the context of relationships within the '
+              'community of believers. Before speaking about the power of united '
+              'prayer, He emphasized forgiveness, reconciliation, and mutual care. '
+              'This reminds us that God\'s power often flows through hearts that are '
+              'united in love and humility. Unity is not simply agreeing with one '
+              'another—it is agreeing together under the will and authority of God.\n'
+              'The enemy works tirelessly to create division because he knows that '
+              'unity strengthens God\'s people. When believers humble themselves, '
+              'forgive one another, and seek God\'s purposes together, they reflect '
+              'the heart of Christ. As David declares in Book of Psalms 133:1, '
+              '"Behold, how good and how pleasant it is for brethren to dwell '
+              'together in unity!" A united church becomes a powerful testimony of '
+              'God\'s love.\n'
+              'God\'s power is beautifully displayed when His people walk together in '
+              'love and unity. '
+              '---',
+        ),
+        DevotionalSection(
+          icon: '🔍',
+          heading:
+              'Agreement Begins with Aligning Our Hearts with God\'s Will',
+          body:
+              'Jesus speaks of two believers agreeing concerning what they ask. '
+              'Biblical agreement is much deeper than simply sharing the same desire. '
+              'The word "agree" carries the idea of harmony, like different '
+              'instruments producing one beautiful melody. True agreement happens '
+              'when believers bring their hearts into alignment with God\'s Word, His '
+              'character, and His purposes.\n'
+              'Prayer is not about persuading God to endorse our plans; it is about '
+              'allowing God to shape our desires until they reflect His will. As the '
+              'apostle John teaches in First Epistle of John 5:14, we have confidence '
+              'that if we ask anything according to His will, He hears us. When our '
+              'prayers flow from hearts surrendered to God, we pray with confidence '
+              'because we are seeking what delights Him.\n'
+              'The most powerful prayers are those that echo the heart of God. '
+              '---',
+        ),
+        DevotionalSection(
+          icon: '⚔️',
+          heading:
+              'United Prayer Invites God\'s Mighty Work',
+          body:
+              'Jesus promises that when believers unite in prayer according to God\'s '
+              'will, the Father responds. This does not mean God grants every request '
+              'exactly as we imagine, but it assures us that He hears, acts, and '
+              'accomplishes His perfect purposes. United prayer expresses dependence '
+              'upon God rather than confidence in human ability.\n'
+              'Throughout Scripture, God moved powerfully when His people prayed '
+              'together. The early church gathered in prayer before Pentecost, and '
+              'the Holy Spirit was poured out with power. Later, when they prayed '
+              'under persecution, God shook the place where they were assembled and '
+              'filled them with boldness. As recorded in Acts of the Apostles 4:31, '
+              'united prayer prepared God\'s people to accomplish His mission.\n'
+              'Prayer does not overcome God\'s reluctance—it welcomes His willingness '
+              'to work among His people. '
+              '---',
+        ),
+        DevotionalSection(
+          icon: '🌱',
+          heading:
+              'Faith Grows Stronger in Community',
+          body:
+              'Jesus intentionally speaks of "two of you" instead of emphasizing '
+              'isolated faith. While personal prayer is essential, God also designed '
+              'believers to encourage, strengthen, and support one another. When '
+              'Christians pray together, they remind one another of God\'s promises, '
+              'strengthen each other\'s faith, and carry one another\'s burdens.\n'
+              'The Christian life was never intended to be lived in isolation. God '
+              'often ministers through the encouragement and prayers of fellow '
+              'believers. As the writer of Epistle to the Hebrews 10:24–25 urges, '
+              'believers should encourage one another and faithfully gather together. '
+              'Shared faith often strengthens weary hearts and renews hope during '
+              'difficult seasons.\n'
+              'When believers kneel together in prayer, they often rise together in '
+              'greater faith. '
+              '---',
+        ),
+        DevotionalSection(
+          icon: '🚶',
+          heading:
+              'Live as a Person of Prayer and Unity',
+          body:
+              'Matthew 18:19 is not simply an invitation to pray when needs arise—it '
+              'is a call to cultivate a lifestyle of unity, humility, and dependence '
+              'upon God. Every believer has the privilege of approaching the Father '
+              'with confidence, knowing that He delights to hear the prayers of His '
+              'children. As we walk in fellowship with one another and remain '
+              'surrendered to God\'s will, our prayers increasingly reflect His heart.\n'
+              'God continues to accomplish remarkable things through ordinary '
+              'believers who faithfully seek Him together. As Paul encourages in '
+              'Epistle to the Ephesians 3:20, God is able to do exceedingly '
+              'abundantly above all that we ask or think according to His power at '
+              'work within us. The greatest results come when God\'s people seek His '
+              'glory above their own desires.\n'
+              'A praying church is a powerful church because it depends on the '
+              'limitless power of God rather than the limited strength of people. '
+              '---',
+        ),
+      ],
+      finalRevelation:
+          'United prayer is not about persuading God—it is about partnering with '
+          'Him. When hearts are united, lives are surrendered, and prayers are '
+          'aligned with His will, God delights to work in ways that bring glory '
+          'to His name. The greatest miracle is not simply receiving an answer—it '
+          'is seeing God\'s will accomplished through praying hearts that trust '
+          'Him completely. ---',
+      reflectionQuestions: const [
+        'Are my prayers shaped more by my desires or by God\'s will?',
+        'Is there someone God is calling me to pray with in unity and faith?',
+        'How can I become a stronger source of encouragement through prayer '
+        'for others?',
+      ],
+      prayer:
+          'Heavenly Father,\n'
+          'Thank You for inviting me into the privilege of prayer and for '
+          'promising that You hear the cries of Your children. Thank You that You '
+          'desire not only to answer prayer but also to unite Your people in '
+          'love, faith, and obedience to Your will.\n'
+          'Forgive me for the times I have allowed pride, selfishness, or '
+          'division to hinder my relationships with others. Give me a humble '
+          'heart that seeks peace, values unity, and delights in praying '
+          'alongside fellow believers. Teach me to bring my desires into harmony '
+          'with Your perfect will.\n'
+          'Strengthen my faith as I pray. Help me trust that You are working '
+          'even when I cannot yet see the answer. Use my prayers to encourage '
+          'others, strengthen Your church, and advance Your kingdom. Let my life '
+          'become a testimony that You are faithful to every promise You have '
+          'spoken.\n'
+          'May my heart remain united with Yours, my prayers be guided by Your '
+          'Spirit, and my life reflect the beauty of believers walking together '
+          'in faith.\n'
+          'May every prayer I offer bring glory to Your name, advance Your '
+          'kingdom, and draw me into deeper fellowship with You, until the whole '
+          'earth sees the power of a people who trust their Heavenly Father.\n'
+          'Amen. 🙏🌿',
+      createdAt: DateTime(2024, 4, 20),
+    ),
+
+    // ── 112. ENLIGHTENED ──────────────────────────────────────────────────
+    DevotionalModel(
+      id: 'enlightened_eyes_transformed',
+      theme: 'Enlightened',
+      title: 'Enlightened Eyes, Transformed Life',
+      scripture:
+          'The eyes of your understanding being enlightened; that you may know '
+          'what is the hope of His calling, what are the riches of the glory of '
+          'His inheritance in the saints.',
+      scriptureReference: 'Ephesians 1:18',
+      sections: const [
+        DevotionalSection(
+          icon: '🔑',
+          heading:
+              'Spiritual Vision Is Greater Than Physical Sight',
+          body:
+              'Paul prayed that the believers\' "eyes of understanding" would be '
+              'enlightened. He was not referring to physical eyesight but to '
+              'spiritual perception. A person may see clearly with their natural eyes '
+              'and yet remain spiritually blind. True understanding comes when the '
+              'Holy Spirit opens our hearts to recognize God\'s truth, His purposes, '
+              'and His presence.\n'
+              'Many people evaluate life only through what they can see, which often '
+              'leads to fear, confusion, and discouragement. But God calls His '
+              'children to live by spiritual vision rather than natural sight. As '
+              'Paul later writes in Second Epistle to the Corinthians 5:7, "For we '
+              'walk by faith, not by sight." When God enlightens our hearts, we begin '
+              'to see life from His eternal perspective rather than through temporary '
+              'circumstances.\n'
+              'The greatest blindness is not the inability to see with your eyes—it '
+              'is the inability to see God\'s purpose with your heart. '
+              '---',
+        ),
+        DevotionalSection(
+          icon: '🔍',
+          heading:
+              'God\'s Calling Gives Life Meaning',
+          body:
+              'Paul prayed that believers would know "the hope of His calling." '
+              'God\'s calling is far more than a specific ministry or career—it is His '
+              'gracious invitation to know Him, become like Christ, and participate '
+              'in His eternal purpose. Every believer has been called into a '
+              'relationship with God and commissioned to reflect His glory in the '
+              'world.\n'
+              'Many people search endlessly for purpose, hoping success, '
+              'possessions, or achievements will give their lives meaning. Yet '
+              'lasting purpose is found only in God\'s calling. As Peter reminds '
+              'believers in First Epistle of Peter 2:9, God has called His people out '
+              'of darkness into His marvelous light so they may proclaim His '
+              'excellencies. When we understand God\'s calling, we no longer live '
+              'merely for ourselves but for His glory.\n'
+              'Your life finds its greatest purpose when it is lived according to '
+              'God\'s calling rather than personal ambition. '
+              '---',
+        ),
+        DevotionalSection(
+          icon: '⚔️',
+          heading:
+              'You Are Richer Than You Realize',
+          body:
+              'Paul also prays that believers would understand "the riches of the '
+              'glory of His inheritance in the saints." Many Christians focus only on '
+              'earthly blessings while overlooking the immeasurable spiritual '
+              'inheritance they already possess in Christ. Through Jesus, believers '
+              'have forgiveness, adoption into God\'s family, the indwelling Holy '
+              'Spirit, eternal life, and the promise of an everlasting kingdom.\n'
+              'The enemy often tries to convince believers that they are lacking, '
+              'forgotten, or insignificant. But God\'s Word declares the opposite. As '
+              'Peter writes in First Epistle of Peter 1:3–4, believers have an '
+              'inheritance that is imperishable, undefiled, and reserved in heaven. '
+              'Earthly treasures fade, but the riches found in Christ are eternal.\n'
+              'Those who know their inheritance in Christ will not spend their lives '
+              'chasing the empty treasures of this world. '
+              '---',
+        ),
+        DevotionalSection(
+          icon: '🌱',
+          heading:
+              'Spiritual Understanding Changes Daily Living',
+          body:
+              'Paul\'s prayer was not simply for greater knowledge but for '
+              'transformed lives. When believers truly understand who God is, what He '
+              'has done, and who they are in Christ, their priorities begin to '
+              'change. Fear gives way to faith, anxiety to peace, selfish ambition to '
+              'humble service, and hopelessness to joyful confidence.n'
+              'God\'s truth is meant to shape both the mind and the heart. The Holy '
+              'Spirit continually renews believers so they can reflect Christ more '
+              'fully. As Paul urges in Epistle to the Romans 12:2, believers are '
+              'transformed by the renewing of their minds. Spiritual illumination '
+              'always produces practical transformation.\n'
+              'A heart enlightened by God\'s truth will naturally begin to live '
+              'differently. '
+              '---',
+        ),
+        DevotionalSection(
+          icon: '🚶',
+          heading:
+              'Keep Praying for Greater Revelation',
+          body:
+              'Although the Ephesian believers were already Christians, Paul still '
+              'prayed that they would know God more deeply. Spiritual growth never '
+              'ends. The closer believers walk with Christ, the more they discover '
+              'the depth of His wisdom, love, power, and grace. Every new revelation '
+              'draws them into greater intimacy with Him.\n'
+              'God desires His children to continue growing in spiritual '
+              'understanding throughout their lives. As Paul later prays in Epistle '
+              'to the Colossians 1:9–10, believers should be filled with the '
+              'knowledge of God\'s will so they may walk worthy of the Lord. A growing '
+              'knowledge of God produces increasing faithfulness and deeper joy.\n'
+              'The more clearly you see Christ, the more completely your life will '
+              'reflect Him. '
+              '---',
+        ),
+      ],
+      finalRevelation:
+          'God does not simply want you to know facts about Him—He wants to open '
+          'the eyes of your heart. When your spiritual vision is enlightened, you '
+          'discover the hope of your calling, the riches of your inheritance, and '
+          'the greatness of the God who walks with you. The greatest miracle is '
+          'not merely seeing with your eyes—it is seeing your life through the '
+          'light of God\'s eternal truth. ---',
+      reflectionQuestions: const [
+        'Are the eyes of my heart focused more on earthly circumstances or on '
+        'God\'s eternal promises?',
+        'Do I truly understand the hope and purpose of God\'s calling for my '
+        'life?',
+        'How can I seek deeper spiritual understanding through God\'s Word and '
+        'the Holy Spirit each day?',
+      ],
+      prayer:
+          'Heavenly Father,\n'
+          'Thank You for calling me out of darkness into Your marvelous light. '
+          'Thank You for giving me the hope of salvation, the riches of Your '
+          'grace, and an eternal inheritance through Jesus Christ. I praise You '
+          'because Your plans for my life are greater than I can fully '
+          'understand.\n'
+          'Open the eyes of my heart so that I may know You more deeply. Remove '
+          'every spiritual blindness, every distraction, and every '
+          'misunderstanding that keeps me from seeing Your truth clearly. Fill me '
+          'with the wisdom and revelation of Your Holy Spirit as I study Your '
+          'Word and walk with You each day.\n'
+          'Help me live with the confidence that comes from knowing who I am in '
+          'Christ. Let the hope of Your calling shape my decisions, strengthen me '
+          'during trials, and fill me with joy as I serve You. Keep my heart '
+          'focused on eternal treasures rather than temporary pursuits, and teach '
+          'me to value what You value.\n'
+          'May my spiritual eyes remain fixed on Jesus, my heart continually '
+          'grow in the knowledge of Your truth, and my life increasingly reflect '
+          'the hope, the riches, and the glorious calling You have given me, '
+          'until I see You face to face in Your everlasting kingdom.\n'
+          'Amen. 🙏🌿',
+      createdAt: DateTime(2024, 4, 21),
+    ),
+
+    // ── 113. GRACE ──────────────────────────────────────────────────
+    DevotionalModel(
+      id: 'standing_firm_in',
+      theme: 'Grace',
+      title: 'Standing Firm in the Grace of God',
+      scripture:
+          'Therefore, having been justified by faith, we have peace with God '
+          'through our Lord Jesus Christ, through whom also we have access by '
+          'faith into this grace in which we stand, and rejoice in hope of the '
+          'glory of God.',
+      scriptureReference: 'Romans 5:1–2',
+      sections: const [
+        DevotionalSection(
+          icon: '🔑',
+          heading:
+              'Justification Gives Us Peace with God',
+          body:
+              'Paul begins with one of the greatest truths of the Gospel: "Having '
+              'been justified by faith." To be justified means that God declares the '
+              'believer righteous, not because of personal goodness, but because of '
+              'the finished work of Jesus Christ. Through faith, our sins are '
+              'forgiven, Christ\'s righteousness is credited to us, and our broken '
+              'relationship with God is completely restored.\n'
+              'Before salvation, humanity stood under the weight of sin and '
+              'separated from God. But through Christ\'s sacrifice, hostility has been '
+              'replaced with peace. This peace is not merely an emotional feeling—it '
+              'is the settled reality that we are fully accepted by God. As Paul '
+              'declares in Epistle to the Colossians 1:20, Jesus made peace through '
+              'the blood of His cross, reconciling us to God. Because of Christ, we '
+              'no longer stand as condemned sinners but as beloved children of our '
+              'Heavenly Father.\n'
+              'The greatest peace you can ever experience is knowing that your '
+              'relationship with God has been fully restored through Jesus Christ. '
+              '---',
+        ),
+        DevotionalSection(
+          icon: '🔍',
+          heading:
+              'Jesus Is the Only Door into God\'s Grace',
+          body:
+              'Paul reminds us that "through Him also we have access by faith into '
+              'this grace." Jesus is not only the One who saves us; He is the One who '
+              'continually brings us into the presence of God. We do not approach God '
+              'because of our achievements or religious performance. We come '
+              'confidently because Christ has opened the way.\n'
+              'Under the old covenant, access to God\'s presence was limited, but '
+              'through Jesus, every believer has direct fellowship with the Father. '
+              'As the writer of Epistle to the Hebrews 10:19–22 teaches, we can draw '
+              'near with confidence because Christ has made a new and living way '
+              'through His sacrifice. Every prayer, every act of worship, and every '
+              'moment spent in God\'s presence is possible because Jesus has become '
+              'our perfect Mediator.\n'
+              'Grace is not a place you earn your way into—it is a gift you receive '
+              'through Christ alone. '
+              '---',
+        ),
+        DevotionalSection(
+          icon: '⚔️',
+          heading:
+              'Grace Is the Foundation on Which We Stand',
+          body:
+              'Paul says we "stand" in God\'s grace. Grace is not merely the doorway '
+              'into the Christian life; it is the solid foundation upon which '
+              'believers continue to live every day. We do not begin by grace and '
+              'continue by our own strength. Every victory, every act of obedience, '
+              'and every moment of perseverance is sustained by God\'s continual '
+              'grace.\n'
+              'The enemy often tries to convince believers that they must earn God\'s '
+              'approval after receiving salvation. But Scripture teaches that our '
+              'confidence rests entirely upon God\'s grace. As Paul writes in Second '
+              'Epistle to the Corinthians 12:9, God\'s grace is sufficient, and His '
+              'strength is made perfect in weakness. When we stumble, His grace '
+              'restores us. When we grow weary, His grace strengthens us. When we '
+              'face uncertainty, His grace steadies us.\n'
+              'The Christian life is not sustained by human effort but by God\'s '
+              'unfailing grace. '
+              '---',
+        ),
+        DevotionalSection(
+          icon: '🌱',
+          heading:
+              'Hope Gives Strength for Today\'s Journey',
+          body:
+              'Paul concludes by saying believers "rejoice in hope of the glory of '
+              'God." Biblical hope is not uncertain optimism—it is confident '
+              'assurance based on God\'s unchanging promises. Because Christ has '
+              'justified us and brought us into God\'s grace, we can confidently look '
+              'forward to the day when we will share in His eternal glory.\n'
+              'This hope transforms how we face present difficulties. Trials no '
+              'longer define our future because our future is already secure in '
+              'Christ. As Peter writes in First Epistle of Peter 1:3–4, believers '
+              'have been born into a living hope through the resurrection of Jesus '
+              'Christ and have an inheritance that can never perish, spoil, or fade. '
+              'Eternal hope gives present strength.\n'
+              'When your future is secure in Christ, your present circumstances lose '
+              'the power to steal your joy. '
+              '---',
+        ),
+        DevotionalSection(
+          icon: '🚶',
+          heading:
+              'Live Each Day with Confidence and Gratitude',
+          body:
+              'Romans 5:1–2 invites believers to live with joyful confidence rather '
+              'than fear. We no longer have to question whether God loves us or '
+              'whether we belong to Him. We have peace with God, continual access to '
+              'His grace, and the certain hope of eternal glory. These truths become '
+              'the foundation for every decision, every challenge, and every season '
+              'of life.\n'
+              'A believer who understands the richness of God\'s grace lives '
+              'differently. Gratitude replaces anxiety. Confidence replaces fear. '
+              'Worship replaces striving. As Paul declares in Epistle to the '
+              'Philippians 1:6, the God who began a good work in us will faithfully '
+              'complete it. The Christian journey is held securely by the grace of '
+              'God from beginning to end.\n'
+              'Those who stand in God\'s grace can walk through life\'s uncertainties '
+              'with unwavering confidence. '
+              '---',
+        ),
+      ],
+      finalRevelation:
+          'Because of Jesus, you are no longer condemned—you are justified. You '
+          'are no longer separated—you have peace with God. You are no longer '
+          'standing on the unstable ground of human effort—you are standing on '
+          'the unshakable foundation of God\'s grace. And because of that grace, '
+          'you can face today with peace, tomorrow with hope, and eternity with '
+          'joyful confidence. ---',
+      reflectionQuestions: const [
+        'Am I resting in the peace Christ has given me, or am I still trying '
+        'to earn God\'s acceptance?',
+        'Do I truly believe that God\'s grace is enough to sustain me through '
+        'every season?',
+        'How does the hope of God\'s coming glory shape the way I respond to '
+        'today\'s challenges?',
+      ],
+      prayer:
+          'Heavenly Father,\n'
+          'Thank You for the incredible gift of justification through faith in '
+          'Jesus Christ. Thank You that because of His finished work on the '
+          'cross, I have peace with You and no longer stand condemned. I rejoice '
+          'that I have been welcomed into Your presence, not because of my own '
+          'righteousness, but because of Your amazing grace.\n'
+          'Help me to stand firmly in that grace every day. When I am tempted to '
+          'rely on my own strength, remind me that Your grace is sufficient. When '
+          'fear or doubt tries to overwhelm me, fill my heart with the peace that '
+          'comes from knowing I belong to You. Teach me to rest confidently in '
+          'Your unfailing love and Your unchanging promises.\n'
+          'Lord, fix my eyes on the hope of Your coming glory. Let that hope '
+          'strengthen me through every trial, encourage me in every season, and '
+          'inspire me to live faithfully for You. May my life be marked by '
+          'gratitude instead of striving, faith instead of fear, and joyful '
+          'confidence instead of uncertainty.\n'
+          'May I stand securely in Your grace, walk daily in Your peace, rejoice '
+          'continually in Your hope, and live each moment for Your glory, until '
+          'the day I stand before You, complete in Christ, rejoicing forever in '
+          'Your everlasting presence.\n'
+          'Amen. 🙏🌿',
+      createdAt: DateTime(2024, 4, 22),
+    ),
+
+    // ── 114. GRACE ──────────────────────────────────────────────────
+    DevotionalModel(
+      id: 'grace_that_rescues',
+      theme: 'Grace',
+      title: 'Grace That Rescues and Reforms',
+      scripture:
+          'For the grace of God that brings salvation has appeared to all men, '
+          'teaching us that, denying ungodliness and worldly lusts, we should '
+          'live soberly, righteously, and godly in the present age.',
+      scriptureReference: 'Titus 2:11–12',
+      sections: const [
+        DevotionalSection(
+          icon: '🔑',
+          heading:
+              'Grace Appeared in the Person of Jesus Christ',
+          body:
+              'Paul describes grace as something that has appeared. Grace is not '
+              'merely an idea, doctrine, or feeling; it was revealed visibly through '
+              'Jesus Christ. In Him, God entered humanity’s brokenness, carried the '
+              'judgment of sin, and opened the way of salvation to everyone who '
+              'believes. The appearance of Christ proves that God did not wait for '
+              'sinners to reach Him—He came searching for them.\n'
+              'This grace cannot be earned through morality, religious activity, or '
+              'personal sacrifice. Ephesians 2:8–9 teaches that salvation is received '
+              'by grace through faith, not achieved by works. The Gospel begins not '
+              'with what humanity can do for God, but with what God has already done '
+              'for humanity through Christ. '
+              '---',
+        ),
+        DevotionalSection(
+          icon: '🔍',
+          heading:
+              'Saving Grace Also Becomes Our Teacher',
+          body:
+              'The same grace that saves also teaches. God does not rescue people '
+              'from sin and then leave them unchanged. Grace enters the believer’s '
+              'life as a patient instructor, correcting wrong desires, reshaping '
+              'priorities, and leading the heart into obedience. It teaches us not '
+              'only what to leave behind, but also how to live in a way that reflects '
+              'Christ.\n'
+              'This means grace should never be treated as permission to continue '
+              'comfortably in sin. Romans 6:1–2 rejects the idea that believers '
+              'should remain in sin so that grace may increase. Authentic grace '
+              'produces transformation because those who have truly encountered '
+              'Christ begin to desire the life for which He saved them. '
+              '---',
+        ),
+        DevotionalSection(
+          icon: '⚔️',
+          heading:
+              'Grace Teaches Us to Deny What Once Controlled Us',
+          body:
+              'Paul says grace teaches believers to deny ungodliness and worldly '
+              'lusts. To deny something is to refuse its authority. Through Christ, '
+              'sinful desires may still attempt to speak, but they no longer have the '
+              'right to rule. Grace gives believers the power to reject patterns that '
+              'once dominated their thoughts, habits, and choices.\n'
+              'This denial is not accomplished through willpower alone. Galatians '
+              '5:16 teaches that those who walk by the Spirit will not fulfill the '
+              'desires of the flesh. Every victory over temptation is evidence that '
+              'God’s grace is actively working within the surrendered heart. '
+              '---',
+        ),
+        DevotionalSection(
+          icon: '🌱',
+          heading:
+              'Grace Produces Balance, Righteousness, and Devotion',
+          body:
+              'Paul describes the transformed life with three words: soberly, '
+              'righteously, and godly. Living soberly means exercising self-control '
+              'and sound judgment. Living righteously concerns how we treat '
+              'others—with honesty, justice, and integrity. Living godly describes a '
+              'life directed toward God, shaped by reverence, worship, and obedience.\n'
+              'Together, these qualities show that grace affects every relationship: '
+              'how we govern ourselves, how we relate to others, and how we walk with '
+              'God. The fruit of grace is not confined to church gatherings; it '
+              'becomes visible in our conversations, decisions, responsibilities, and '
+              'private conduct. Grace reaches every part of life because Christ '
+              'claims every part of the believer. '
+              '---',
+        ),
+        DevotionalSection(
+          icon: '🚶',
+          heading:
+              'Grace Equips Us to Shine in the Present Age',
+          body:
+              'Paul says believers must live godly lives “in the present age.” God '
+              'does not call His people to wait for ideal conditions before becoming '
+              'faithful. He places them within a broken generation so that their '
+              'transformed lives can reveal the power and beauty of the Gospel.\n'
+              'The darkness of the age does not weaken the calling of the Church; it '
+              'makes its light more necessary. Philippians 2:15 calls believers to '
+              'shine as lights in the world. When Christians live with purity, '
+              'compassion, humility, and courage, they demonstrate that God’s grace '
+              'is not merely a message about the future—it is a transforming power at '
+              'work today. '
+              '---',
+        ),
+      ],
+      finalRevelation:
+          'Grace does not merely pardon the life you lived before Christ—it '
+          'trains you to live a new life in Christ. It rescues you from sin’s '
+          'judgment, breaks sin’s authority, reshapes your desires, and teaches '
+          'you to reflect Jesus in the present world. The clearest evidence that '
+          'grace has reached the heart is that grace begins changing the life. '
+          '---',
+      reflectionQuestions: const [
+        'Am I allowing God’s grace to transform me, or am I using it only as '
+        'reassurance of forgiveness?',
+        'What desire, habit, or attitude is grace teaching me to deny?',
+        'Does my present lifestyle clearly reflect the salvation I have '
+        'received through Christ?',
+      ],
+      prayer:
+          'Heavenly Father,\n'
+          'Thank You for revealing Your grace through Jesus Christ and for '
+          'offering me the salvation I could never earn. Thank You for finding me '
+          'in sin, forgiving me completely, and bringing me into a new life with '
+          'You.\n'
+          'Forgive me for every time I have treated grace lightly or resisted '
+          'its transforming work. Teach me to deny ungodliness, worldly desires, '
+          'and every habit that competes with Your will. Strengthen me through '
+          'Your Holy Spirit to choose obedience when temptation arises.\n'
+          'Produce self-control, righteousness, and godly devotion within me. '
+          'Let Your grace shape my thoughts, govern my words, and direct my '
+          'actions. May the way I live in this present age reveal the reality of '
+          'Jesus Christ to everyone around me.\n'
+          'Let the grace that saved me continue training me, the Spirit who '
+          'lives in me continue transforming me, and the life I now live '
+          'continually bring glory to Your name. '
+          'Amen.',
+      createdAt: DateTime(2024, 4, 23),
+    ),
+
+    // ── 115. DEBT ──────────────────────────────────────────────────
+    DevotionalModel(
+      id: 'the_debt_that',
+      theme: 'Debt',
+      title: 'The Debt That Was Nailed to the Cross',
+      scripture:
+          'Having wiped out the handwriting of requirements that was against us, '
+          'which was contrary to us. And He has taken it out of the way, having '
+          'nailed it to the cross.',
+      scriptureReference: 'Colossians 2:14',
+      sections: const [
+        DevotionalSection(
+          icon: '🔑',
+          heading:
+              'Sin Created a Debt We Could Never Repay',
+          body:
+              'Paul describes our sin as a "handwriting of requirements" that stood '
+              'against us. In the ancient world, a handwritten certificate of debt '
+              'was legal proof that a person owed what they could not pay. '
+              'Spiritually, every sin, every act of disobedience, and every failure '
+              'stood as evidence of humanity\'s guilt before a perfectly holy God. No '
+              'amount of good works, religious effort, or personal sacrifice could '
+              'erase that debt.\n'
+              'Many people spend their lives trying to make themselves acceptable to '
+              'God through good behavior or religious devotion. Yet Scripture teaches '
+              'that all have sinned and fall short of God\'s glory. As Paul writes in '
+              'Epistle to the Romans 3:23–24, we are justified freely by God\'s grace '
+              'through the redemption that is in Christ Jesus. Our greatest problem '
+              'was never merely our sinful actions—it was the debt of sin that '
+              'separated us from God.\n'
+              'The greatest burden humanity carried was a debt that only God Himself '
+              'could remove. '
+              '---',
+        ),
+        DevotionalSection(
+          icon: '🔍',
+          heading:
+              'Christ Completely Canceled Our Debt',
+          body:
+              'Paul declares that Jesus "wiped out" the record that stood against '
+              'us. The language conveys the picture of completely erasing a written '
+              'document until no trace remains. God did not simply reduce our debt or '
+              'postpone its payment—through Christ, He canceled it completely. Every '
+              'sin confessed and placed under the blood of Jesus has been fully '
+              'forgiven.\n'
+              'This is the wonder of the Gospel. God\'s forgiveness is not partial or '
+              'temporary; it is complete because Christ paid the full price on the '
+              'cross. As David joyfully declares in Book of Psalms 103:12, as far as '
+              'the east is from the west, so far has God removed our transgressions '
+              'from us. When God forgives, He does not keep a record to use against '
+              'His children later.\n'
+              'The cross did not merely cover your sin—it completely canceled its '
+              'debt. '
+              '---',
+        ),
+        DevotionalSection(
+          icon: '⚔️',
+          heading:
+              'The Cross Is the Place Where Justice and Mercy Met',
+          body:
+              'Paul says Christ "took it out of the way, having nailed it to the '
+              'cross." At Calvary, Jesus willingly took upon Himself the judgment '
+              'that rightfully belonged to us. God\'s justice was fully satisfied '
+              'because sin was punished, and God\'s mercy was fully revealed because '
+              'the punishment fell upon His Son instead of those who deserved it.\n'
+              'The cross demonstrates both God\'s holiness and His immeasurable love. '
+              'He never ignored sin, but neither did He abandon sinners. As Isaiah '
+              'prophesied in Book of Isaiah 53:5–6, Christ was wounded for our '
+              'transgressions, and the Lord laid upon Him the iniquity of us all. '
+              'Every nail driven into Christ\'s hands declared that our debt was being '
+              'paid in full.\n'
+              'The cross is where God\'s perfect justice and perfect love embraced '
+              'for the salvation of humanity. '
+              '---',
+        ),
+        DevotionalSection(
+          icon: '🌱',
+          heading:
+              'Live Free from Guilt and Condemnation',
+          body:
+              'Because Christ has removed the record of our debt, believers no '
+              'longer need to live under the weight of guilt, shame, or condemnation. '
+              'The enemy often reminds us of our past failures, hoping we will doubt '
+              'God\'s forgiveness. But the cross stands as God\'s eternal declaration '
+              'that the debt has already been paid.\n'
+              'Living in continual condemnation dishonors the completeness of '
+              'Christ\'s sacrifice. When God forgives, He invites us to walk in the '
+              'freedom of His grace. As Paul triumphantly proclaims in Epistle to the '
+              'Romans 8:1, there is now no condemnation for those who are in Christ '
+              'Jesus. Our past no longer defines us because Christ has given us a new '
+              'identity.\n'
+              'The enemy remembers your past to discourage you, but God points you '
+              'to the cross to remind you that it has been forgiven. '
+              '---',
+        ),
+        DevotionalSection(
+          icon: '🚶',
+          heading:
+              'Live Each Day in Grateful Obedience',
+          body:
+              'The forgiveness Christ purchased should never lead to complacency; it '
+              'should inspire wholehearted devotion. Those who understand the '
+              'greatness of God\'s mercy desire to honor the One who paid such a great '
+              'price for their redemption. Gratitude becomes the motivation for holy '
+              'living, joyful worship, and faithful service.\n'
+              'Every day is an opportunity to live as someone who has been '
+              'completely forgiven. Instead of striving to earn God\'s acceptance, '
+              'believers serve Him because they have already received it through '
+              'Christ. As Paul urges in Epistle to the Romans 12:1, we are to present '
+              'our lives as living sacrifices in response to God\'s abundant mercy. A '
+              'forgiven heart naturally desires to glorify the Savior.\n'
+              'Those who never forget the price of the cross will joyfully live for '
+              'the One who paid it. '
+              '---',
+        ),
+      ],
+      finalRevelation:
+          'Your greatest debt was not financial—it was spiritual. Your greatest '
+          'enemy was not Satan—it was the guilt of sin that separated you from '
+          'God. But at the cross, Jesus took your record of debt, nailed it to '
+          'the wood, paid it in full, and forever declared, "It is finished." '
+          'Because of Christ, your guilt has been removed, your debt has been '
+          'canceled, and your future has been redeemed. ---',
+      reflectionQuestions: const [
+        'Am I still carrying guilt for sins that Christ has already forgiven?',
+        'Do I truly believe that Jesus completely paid my spiritual debt?',
+        'How can my daily life reflect gratitude for the price Christ paid on '
+        'the cross?',
+      ],
+      prayer:
+          'Heavenly Father,\n'
+          'Thank You for the incredible gift of salvation through Jesus Christ. '
+          'Thank You that when I could never repay the debt of my sin, You sent '
+          'Your Son to take my place and bear the punishment I deserved. I stand '
+          'in awe of the love revealed at the cross.\n'
+          'Forgive me for the times I have doubted Your forgiveness or continued '
+          'to live under guilt and condemnation. Help me believe with all my '
+          'heart that my debt has been completely canceled through the blood of '
+          'Jesus. Teach me to rest in the freedom of Your grace rather than '
+          'striving to earn what Christ has already secured for me.\n'
+          'Fill my heart with deep gratitude for the sacrifice of my Savior. Let '
+          'the reality of the cross transform my thoughts, shape my choices, and '
+          'inspire my obedience. May I never take Your mercy for granted, but '
+          'live each day in joyful surrender to the One who loved me enough to '
+          'pay my debt in full.\n'
+          'May I never forget that my forgiveness came at the cost of Your Son. '
+          'May the cross remain the foundation of my faith, the source of my '
+          'peace, and the motivation for my worship, until the day I stand before '
+          'You, rejoicing forever in the grace of the One who declared, "Your '
+          'debt has been paid in full."\n'
+          'Amen. 🙏🌿',
+      createdAt: DateTime(2024, 4, 24),
+    ),
+
+    // ── 116. VICTORY ──────────────────────────────────────────────────
+    DevotionalModel(
+      id: 'the_victory_of',
+      theme: 'Victory',
+      title: 'The Victory of the Cross',
+      scripture:
+          'Having disarmed principalities and powers, He made a public spectacle '
+          'of them, triumphing over them in it.',
+      scriptureReference: 'Colossians 2:15',
+      sections: const [
+        DevotionalSection(
+          icon: '🔑',
+          heading:
+              'The Cross Was Heaven\'s Greatest Victory',
+          body:
+              'To many who witnessed it, the cross appeared to be Jesus\' greatest '
+              'defeat. He was mocked, rejected, beaten, and crucified like a '
+              'criminal. Yet what looked like defeat on earth was actually God\'s '
+              'greatest triumph in heaven. At the cross, Jesus accomplished what no '
+              'human being could ever accomplish—He defeated sin, broke the power of '
+              'death, and secured eternal redemption for everyone who believes.\n'
+              'God often works through circumstances that seem contrary to His '
+              'promises. The resurrection proved that God\'s purposes cannot be '
+              'stopped by human opposition or satanic schemes. As Paul declares in '
+              'First Epistle to the Corinthians 1:18, the message of the cross is the '
+              'power of God to those who are being saved. What appeared weak became '
+              'the greatest demonstration of divine power.\n'
+              'The cross did not mark the end of Christ\'s victory—it revealed the '
+              'fullness of it. '
+              '---',
+        ),
+        DevotionalSection(
+          icon: '🔍',
+          heading:
+              'Christ Completely Defeated the Powers of Darkness',
+          body:
+              'Paul declares that Jesus "disarmed principalities and powers." These '
+              'principalities and powers refer to the spiritual forces of evil that '
+              'oppose God\'s purposes. Through His death and resurrection, Christ '
+              'stripped Satan of his ultimate weapon—the power to condemn those who '
+              'belong to Him because of their sin. The enemy still opposes believers, '
+              'but he no longer possesses ultimate authority over those redeemed by '
+              'Christ.\n'
+              'Satan\'s greatest strategy has always been accusation. He reminds '
+              'believers of their failures, hoping they will live in guilt and fear. '
+              'But through Christ, every accusation against those who trust Him has '
+              'been answered by His sacrifice. As John writes in Book of Revelation '
+              '12:10–11, the accuser is overcome through the blood of the Lamb and '
+              'the testimony of God\'s people. The cross permanently changed the '
+              'believer\'s standing before God.\n'
+              'The enemy may still speak lies, but the cross has already declared '
+              'the final truth. '
+              '---',
+        ),
+        DevotionalSection(
+          icon: '⚔️',
+          heading:
+              'Christ\'s Triumph Is Our Victory',
+          body:
+              'Paul says Christ "made a public spectacle of them, triumphing over '
+              'them." In the Roman world, a victorious king would publicly display '
+              'defeated enemies as evidence of complete victory. Paul uses this image '
+              'to show that Jesus openly defeated every force that stood against '
+              'God\'s redemptive plan. His victory was complete, visible, and final.\n'
+              'Because believers are united with Christ, His victory becomes their '
+              'victory. They no longer fight for victory but from victory. Spiritual '
+              'warfare remains real, but its outcome has already been determined by '
+              'Christ\'s finished work. As Paul triumphantly declares in Epistle to '
+              'the Romans 8:37, believers are more than conquerors through Him who '
+              'loved them. Confidence comes not from our strength but from Christ\'s '
+              'completed triumph.\n'
+              'Every battle you face must ultimately bow before the victory Christ '
+              'has already won. '
+              '---',
+        ),
+        DevotionalSection(
+          icon: '🌱',
+          heading:
+              'Live Free from Fear and Condemnation',
+          body:
+              'Because Christ has defeated the powers of darkness, believers no '
+              'longer need to live under fear, shame, or condemnation. The enemy\'s '
+              'greatest weapons have been broken by the cross. Although temptation, '
+              'trials, and spiritual attacks continue, they cannot separate God\'s '
+              'children from His love or overturn their salvation.\n'
+              'Many Christians continue living as though they are still prisoners, '
+              'forgetting that Christ has already opened the prison door. Freedom is '
+              'found by believing what God has declared rather than what fear '
+              'suggests. As Paul proclaims in Epistle to the Romans 8:1, there is now '
+              'no condemnation for those who are in Christ Jesus. The believer\'s '
+              'identity is defined by redemption, not by past failures.\n'
+              'Those whom Christ has set free should no longer live as though they '
+              'remain defeated. '
+              '---',
+        ),
+        DevotionalSection(
+          icon: '🚶',
+          heading:
+              'Walk Daily in Christ\'s Victory',
+          body:
+              'Christ\'s victory is not merely a future hope—it is a present reality '
+              'that transforms daily living. Every temptation can be faced with '
+              'confidence because Christ provides strength. Every trial can be '
+              'endured with hope because He reigns. Every fear can be surrendered '
+              'because He has overcome the world. Believers are called to live each '
+              'day with the assurance that their Savior has already secured the final '
+              'victory.\n'
+              'Walking in victory requires remaining close to Christ through prayer, '
+              'His Word, and the guidance of the Holy Spirit. As Jesus declared in '
+              'Gospel of John 16:33, "In the world you will have tribulation; but be '
+              'of good cheer, I have overcome the world." The closer we remain to the '
+              'victorious Christ, the more His victory shapes our lives.\n'
+              'Victory is not found in striving harder—it is found in abiding more '
+              'deeply in Christ. '
+              '---',
+        ),
+      ],
+      finalRevelation:
+          'The cross was not Satan\'s greatest triumph—it was his greatest '
+          'defeat. Jesus disarmed the powers of darkness, silenced every '
+          'accusation, destroyed the power of sin, and conquered death itself. '
+          'Because Christ is victorious, His people do not live in fear—they live '
+          'in freedom, they stand in grace, and they walk in the confidence of a '
+          'finished victory. ---',
+      reflectionQuestions: const [
+        'Am I living in the confidence of Christ\'s victory, or am I allowing '
+        'fear and condemnation to control my heart?',
+        'Are there lies from the enemy that I need to replace with the truth '
+        'of God\'s Word?',
+        'How can I walk more boldly each day, knowing that Christ has already '
+        'won the ultimate victory?',
+      ],
+      prayer:
+          'Heavenly Father, '
+          'Thank You for the glorious victory You accomplished through the cross '
+          'of Jesus Christ. Thank You that what appeared to be defeat became the '
+          'greatest triumph in history. Through Your Son, You have broken the '
+          'power of sin, conquered death, and defeated every force of darkness '
+          'that stood against me.\n'
+          'Lord, forgive me for the times I have lived in fear, guilt, or '
+          'discouragement, forgetting the victory You have already won. Help me '
+          'reject every lie of the enemy and stand firmly upon the truth of Your '
+          'Word. Remind me daily that I am no longer condemned, no longer a slave '
+          'to sin, and no longer powerless before spiritual opposition.\n'
+          'Fill me with the courage that comes from knowing Christ has already '
+          'triumphed. Strengthen me through Your Holy Spirit to resist '
+          'temptation, persevere through trials, and faithfully follow You with '
+          'confidence and joy. Let every area of my life reflect the victory of '
+          'my risen Savior.\n'
+          'May I never live as one who has been defeated, but always as one who '
+          'belongs to the victorious King.\n'
+          'Let the power of the cross shape my faith, the hope of the '
+          'resurrection strengthen my heart, and the triumph of Christ inspire me '
+          'to walk boldly, until the day I stand before You, sharing forever in '
+          'the eternal victory of my Lord Jesus Christ.\n'
+          'Amen. 🙏🌿',
+      createdAt: DateTime(2024, 4, 25),
+    ),
+
+    // ── 117. STRENGTH ──────────────────────────────────────────────────
+    DevotionalModel(
+      id: 'from_strength_to',
+      theme: 'Strength',
+      title: 'From Strength to Strength',
+      scripture:
+          'They go from strength to strength; each one appears before God in '
+          'Zion.',
+      scriptureReference: 'Psalms 84:7',
+      sections: const [
+        DevotionalSection(
+          icon: '🔑',
+          heading:
+              'The Journey of Faith Is a Journey of Growth',
+          body:
+              'Psalm 84 describes pilgrims traveling to Jerusalem to worship God. '
+              'Their journey was long, difficult, and physically demanding, yet they '
+              'continued moving forward because their hearts were set on meeting with '
+              'the Lord. Verse 7 reveals a remarkable truth: instead of growing '
+              'weaker through the journey, "they go from strength to strength." Their '
+              'relationship with God became the source of continual renewal.\n'
+              'The Christian life is also a pilgrimage. We are traveling through a '
+              'broken world toward our eternal home with Christ. Along the way, we '
+              'encounter trials, disappointments, and spiritual battles, yet God '
+              'never intended for these experiences to destroy our faith. Instead, He '
+              'uses them to deepen our dependence on Him. As Paul writes in Second '
+              'Epistle to the Corinthians 4:16, though our outward self is wasting '
+              'away, our inner self is being renewed day by day.\n'
+              'God never wastes the journey—He uses it to strengthen the traveler. '
+              '---',
+        ),
+        DevotionalSection(
+          icon: '🔍',
+          heading:
+              'God\'s Strength Is Renewed at Every Stage',
+          body:
+              'The psalmist does not say believers receive strength only once. He '
+              'says they go from strength to strength. God supplies fresh grace for '
+              'every season, every challenge, and every step of obedience. '
+              'Yesterday\'s strength is not enough for today\'s battles, but God\'s '
+              'mercy and power are renewed every morning.\n'
+              'Many believers become discouraged because they feel exhausted by '
+              'life\'s responsibilities. Yet God never expects us to rely on our own '
+              'strength. He continually supplies what we need for each new day. As '
+              'Isaiah declares in Book of Isaiah 40:31, those who wait upon the Lord '
+              'shall renew their strength. God\'s resources never diminish, and His '
+              'power never grows weary.\n'
+              'God does not simply give strength for the journey—He becomes your '
+              'strength throughout the journey. '
+              '---',
+        ),
+        DevotionalSection(
+          icon: '⚔️',
+          heading:
+              'Every Trial Can Produce Greater Spiritual Strength',
+          body:
+              'The verses preceding Psalm 84:7 describe God\'s people passing through '
+              'the Valley of Baca, a place associated with weeping and hardship. Yet '
+              'they transformed that valley into a place of refreshing because God '
+              'met them there. Their difficulties did not weaken their faith—they '
+              'became opportunities to experience God\'s sustaining power.\n'
+              'Life will inevitably bring valleys of sorrow, uncertainty, and '
+              'testing. But believers are never abandoned in those seasons. God often '
+              'does His deepest work during our greatest struggles. As James teaches '
+              'in Epistle of James 1:2–4, trials produce perseverance, maturity, and '
+              'spiritual completeness. What appears to be a setback often becomes the '
+              'place where faith grows strongest.\n'
+              'The valleys you fear today may become the places where God '
+              'strengthens you the most. '
+              '---',
+        ),
+        DevotionalSection(
+          icon: '🌱',
+          heading:
+              'Spiritual Strength Comes Through God\'s Presence',
+          body:
+              'The pilgrims\' strength was directly connected to their desire to '
+              'appear before God in Zion. Their destination gave meaning to their '
+              'journey. Likewise, believers grow spiritually as they continually seek '
+              'God\'s presence through prayer, worship, His Word, and obedience.\n'
+              'Intimacy with God is the source of lasting spiritual vitality. '
+              'Many seek strength through self-confidence, determination, or '
+              'personal ability, but true strength flows from abiding in Christ. '
+              'Jesus taught in Gospel of John 15:5 that apart from Him we can do '
+              'nothing. The closer we remain to Him, the more His life, peace, '
+              'wisdom, and strength flow through us.\n'
+              'Those who stay close to God will always find strength for the next '
+              'step. '
+              '---',
+        ),
+        DevotionalSection(
+          icon: '🚶',
+          heading:
+              'The Journey Ends in God\'s Presence',
+          body:
+              'Psalm 84 concludes this beautiful picture by declaring that every '
+              'pilgrim appears before God in Zion. This reminds believers that the '
+              'Christian journey has a glorious destination. Every act of '
+              'faithfulness, every battle endured, every sacrifice made for Christ is '
+              'moving toward the day when we will stand before Him in His eternal '
+              'kingdom.\n'
+              'This hope transforms how we face today\'s difficulties. We are not '
+              'wandering without purpose—we are walking toward an eternal meeting '
+              'with our Savior. As Paul writes in Second Epistle to Timothy 4:7–8, '
+              'those who faithfully finish the race will receive the crown of '
+              'righteousness prepared by the Lord. Every step taken in faith brings '
+              'us closer to our eternal home.\n'
+              'The strength God gives today is preparing you for the glory you will '
+              'experience forever. '
+              '---',
+        ),
+      ],
+      finalRevelation:
+          'God never intended your spiritual life to move from strength to '
+          'weakness. His desire is that you move from faith to deeper faith, from '
+          'grace to greater grace, and from strength to greater strength. Every '
+          'trial, every prayer, every act of obedience, and every season of '
+          'waiting is shaping you for the day you will stand joyfully in His '
+          'presence. The closer you walk with God, the stronger your soul '
+          'becomes. ',
+      reflectionQuestions: const [
+        'Am I relying on my own strength, or am I allowing God to renew me '
+        'daily?',
+        'What valley is God using to strengthen my faith right now?',
+        'How can I seek God\'s presence more intentionally so that I continue '
+        'growing from strength to strength?',
+      ],
+      prayer:
+          'Heavenly Father,\n'
+          'Thank You for being the source of my strength and the One who '
+          'faithfully walks with me through every season of life. Thank You that '
+          'You never ask me to face life\'s challenges alone, but continually '
+          'renew me with Your grace, Your power, and Your presence.\n'
+          'Forgive me for the times I have relied on my own strength instead of '
+          'depending on You. When I grow weary, remind me that Your strength is '
+          'never exhausted. When I walk through valleys of sorrow or uncertainty, '
+          'help me trust that You are using every trial to deepen my faith and '
+          'draw me closer to You.\n'
+          'Teach me to seek Your presence above everything else. Let Your Word '
+          'strengthen my heart, Your Spirit guide my steps, and Your promises '
+          'sustain my hope. Help me continue growing spiritually each day until '
+          'my life reflects the character of Christ more fully.\n'
+          'May I never stop moving forward, never stop trusting Your '
+          'faithfulness, and never stop depending upon Your grace. Lead me from '
+          'strength to strength, from glory to glory, and from faith to deeper '
+          'faith, until the day I stand before You, rejoicing forever in Your '
+          'glorious presence.\n'
+          'Amen. 🙏🌿',
+      createdAt: DateTime(2024, 4, 26),
+    ),
+
+    // ── 118. WHOLEHEARTED ──────────────────────────────────────────────────
+    DevotionalModel(
+      id: 'wholehearted_devotion_to',
+      theme: 'Wholehearted',
+      title: 'Wholehearted Devotion to God',
+      scripture:
+          'And he did what was right in the sight of the Lord, but not with a '
+          'loyal heart.',
+      scriptureReference: 'Second Book of Chronicles 25:2',
+      sections: const [
+        DevotionalSection(
+          icon: '🔑',
+          heading:
+              'God Looks Beyond Our Actions to Our Hearts',
+          body:
+              'King Amaziah did many things that appeared right before the Lord. '
+              'Outwardly, he obeyed God\'s commands and followed many of the practices '
+              'expected of a righteous king. Yet God exposed a deeper issue—his heart '
+              'was not fully devoted to Him. This verse reminds us that God evaluates '
+              'not only what we do but also why we do it. He sees motives, desires, '
+              'and the true condition of the heart.\n'
+              'It is possible to attend church, pray, serve in ministry, and perform '
+              'many religious activities while the heart remains distant from God. '
+              'The Lord has always desired genuine relationship over empty ritual. As '
+              'He declared to Samuel in First Book of Samuel 16:7, people look at the '
+              'outward appearance, but the Lord looks at the heart. Our greatest '
+              'concern should not be how we appear before others but how we stand '
+              'before God.\n'
+              'God is not impressed by outward performance when the heart is not '
+              'fully surrendered to Him. '
+              '---',
+        ),
+        DevotionalSection(
+          icon: '🔍',
+          heading:
+              'Partial Devotion Is Not Complete Obedience',
+          body:
+              'Amaziah\'s greatest failure was not open rebellion but incomplete '
+              'surrender. He obeyed God in some areas while reserving other parts of '
+              'his heart for himself. Partial obedience may satisfy people, but it '
+              'never satisfies God\'s desire for wholehearted love and devotion.\n'
+              'Many believers unknowingly fall into the same pattern. They trust God '
+              'with certain areas of life while holding tightly to others—whether '
+              'ambitions, relationships, finances, or personal desires. Yet Jesus '
+              'taught that the greatest commandment is to love the Lord with all our '
+              'heart, soul, mind, and strength. As Moses declared in Book of '
+              'Deuteronomy 6:5, God deserves complete devotion, not divided '
+              'affection.\n'
+              'A divided heart cannot fully experience the joy of wholehearted '
+              'fellowship with God. '
+              '---',
+        ),
+        DevotionalSection(
+          icon: '⚔️',
+          heading:
+              'A Wholehearted Heart Trusts God Completely',
+          body:
+              'One reason people struggle with complete surrender is because they '
+              'fear losing control. Amaziah later relied on human alliances and '
+              'ignored God\'s instructions, revealing that his confidence was not '
+              'fully rooted in the Lord. A heart that is only partially devoted will '
+              'eventually seek security somewhere other than God.\n'
+              'Wholehearted devotion grows as we learn to trust God\'s wisdom above '
+              'our own understanding. Even when His instructions seem difficult, we '
+              'can obey because His plans are always good. As Solomon teaches in Book '
+              'of Proverbs 3:5–6, we are to trust in the Lord with all our heart and '
+              'not lean on our own understanding. Trust is the foundation of '
+              'wholehearted obedience.\n'
+              'The more completely you trust God, the more completely you will '
+              'surrender to Him. '
+              '---',
+        ),
+        DevotionalSection(
+          icon: '🌱',
+          heading:
+              'God Desires Relationship More Than Religious Activity',
+          body:
+              'Throughout Scripture, God consistently emphasizes the heart above '
+              'religious performance. Worship, service, giving, and obedience are '
+              'pleasing to Him only when they flow from genuine love. He is not '
+              'seeking people who merely perform spiritual duties; He is seeking '
+              'people whose hearts delight in Him.\n'
+              'David understood this truth when he prayed for a clean heart after '
+              'his failure. He knew that external sacrifices alone could never '
+              'replace genuine repentance. As David declares in Book of Psalms '
+              '51:16–17, God delights in a broken and contrite heart. A heart that '
+              'truly loves God will naturally desire to obey Him.\n'
+              'God wants more than your hands serving Him—He wants your heart '
+              'belonging to Him. '
+              '---',
+        ),
+        DevotionalSection(
+          icon: '🚶',
+          heading:
+              'Live Each Day with an Undivided Heart',
+          body:
+              'Wholehearted devotion is not achieved through one emotional moment '
+              'but through daily surrender. Every day presents opportunities to '
+              'choose God\'s will above our own, to love Him more deeply, and to grow '
+              'in intimacy with Him. The Holy Spirit continually shapes believers '
+              'whose hearts remain open and yielded to His work.\n'
+              'God promises to strengthen those who are fully committed to Him. As '
+              'Hanani told King Asa in Second Book of Chronicles 16:9, "The eyes of '
+              'the Lord run to and fro throughout the whole earth, to show Himself '
+              'strong on behalf of those whose heart is loyal to Him." A fully '
+              'devoted heart becomes a place where God\'s power is beautifully '
+              'displayed.\n'
+              'A heart completely surrendered to God becomes a life powerfully used '
+              'by God. '
+              '---',
+        ),
+      ],
+      finalRevelation:
+          'God is not looking for perfect people—He is looking for fully '
+          'surrendered hearts. He is not impressed by religious performance '
+          'without genuine devotion. The greatest offering you can ever bring to '
+          'God is not your talent, your service, or your accomplishments—it is a '
+          'heart that belongs completely to Him. When your heart is fully His, '
+          'your life will naturally reflect His glory. ',
+      reflectionQuestions: const [
+        'Is my relationship with God marked by wholehearted devotion or '
+        'partial surrender?',
+        'Are there areas of my life that I have withheld from God\'s control?',
+        'What practical step can I take today to love and trust God more '
+        'completely?',
+      ],
+      prayer:
+          'Heavenly Father, '
+          'Thank You for loving me completely and calling me into a relationship '
+          'with You. Thank You that You see beyond my outward actions and '
+          'lovingly search my heart. I desire not merely to appear faithful '
+          'before others but to be truly devoted to You from the inside out.\n'
+          'Forgive me for the times I have given You only part of my heart while '
+          'holding on to my own plans, fears, or desires. Reveal every area where '
+          'my devotion has been divided. Teach me to trust You completely and to '
+          'surrender every part of my life into Your loving hands.\n'
+          'Create in me a loyal and steadfast heart that delights in obeying '
+          'You. Let my worship be sincere, my service be motivated by love, and '
+          'my obedience flow from genuine faith. Fill me with Your Holy Spirit so '
+          'that my life increasingly reflects the character of Jesus Christ.\n'
+          'May my heart be fully Yours, my trust remain firmly in You, and my '
+          'life become a testimony that wholehearted devotion is the greatest joy '
+          'and the greatest privilege of knowing my faithful God.\n'
+          'Amen. 🙏🌿',
+      createdAt: DateTime(2024, 4, 27),
+    ),
+
+    // ── 119. HEART ──────────────────────────────────────────────────
+    DevotionalModel(
+      id: 'a_heart_fully',
+      theme: 'Heart',
+      title: 'A Heart Fully Committed to God',
+      scripture:
+          'But the high places were not removed. Nevertheless Asa\'s heart was '
+          'loyal to the Lord all his days.',
+      scriptureReference: 'First Book of Kings 15:14',
+      sections: const [
+        DevotionalSection(
+          icon: '🔑',
+          heading:
+              'God Values the Direction of Your Heart',
+          body:
+              'King Asa was not a perfect man. Although he brought significant '
+              'spiritual reforms to Judah, Scripture honestly records that "the high '
+              'places were not removed." Yet, despite this imperfection, God gives '
+              'this remarkable testimony: "Asa\'s heart was loyal to the Lord all his '
+              'days." This reminds us that God is not searching for flawless people '
+              'but for hearts that are sincerely devoted to Him.\n'
+              'Every believer has weaknesses and areas where growth is still needed. '
+              'Satan wants us to believe that our imperfections disqualify us from '
+              'God\'s love and purpose. But God looks beyond our shortcomings and sees '
+              'the direction of our hearts. As David prayed in Book of Psalms 86:11, '
+              '"Unite my heart to fear Your name." A heart that continually turns '
+              'toward God is precious in His sight.\n'
+              'God is not looking for perfection—He is looking for wholehearted '
+              'devotion. '
+              '---',
+        ),
+        DevotionalSection(
+          icon: '🔍',
+          heading:
+              'A Loyal Heart Chooses Faithfulness Every Day',
+          body:
+              'The Bible says Asa\'s heart was loyal to the Lord all his days. '
+              'Loyalty is not proven by occasional moments of faithfulness but by '
+              'consistent devotion over time. It is remaining committed to God '
+              'through seasons of blessing and seasons of hardship, through victories '
+              'and failures, through clarity and uncertainty.\n'
+              'Faithfulness is built one decision at a time. Every day presents '
+              'opportunities either to draw closer to God or to drift away from Him. '
+              'Jesus emphasized this daily commitment when He called His followers to '
+              'abide in Him continually. As He teaches in Gospel of John 15:4, those '
+              'who remain in Him will bear much fruit. A loyal heart keeps returning '
+              'to God regardless of life\'s changing circumstances.\n'
+              'A faithful life is built through thousands of daily choices to remain '
+              'close to God. '
+              '---',
+        ),
+        DevotionalSection(
+          icon: '⚔️',
+          heading:
+              'Wholehearted Devotion Does Not Mean a Perfect Journey',
+          body:
+              'Although Asa was commended for his loyal heart, later chapters reveal '
+              'that he also made mistakes. He sometimes relied on political alliances '
+              'instead of trusting God completely. This teaches us that wholehearted '
+              'devotion does not mean believers will never stumble. Rather, it means '
+              'that the deepest desire of the heart remains fixed upon God even while '
+              'He continues His work of sanctification.\n'
+              'This truth should encourage every believer who struggles with '
+              'weakness. God patiently shapes those whose hearts belong to Him. As '
+              'Paul reminds us in Epistle to the Philippians 1:6, He who began a good '
+              'work in us will faithfully complete it. Our confidence rests not in '
+              'our perfection but in God\'s transforming grace.\n'
+              'God measures your life by the direction of your heart, not merely by '
+              'isolated moments of failure. '
+              '---',
+        ),
+        DevotionalSection(
+          icon: '🌱',
+          heading:
+              'God Strengthens Those Who Are Fully His',
+          body:
+              'A loyal heart is never ignored by God. Throughout Scripture, God '
+              'promises to strengthen, guide, and sustain those who remain devoted to '
+              'Him. His power flows into lives that trust Him completely, enabling '
+              'them to endure trials, resist temptation, and fulfill His purposes.\n'
+              'God is continually searching for hearts that are fully surrendered. '
+              'As Hanani declared in Second Book of Chronicles 16:9, "The eyes of the '
+              'Lord run to and fro throughout the whole earth, to show Himself strong '
+              'on behalf of those whose heart is loyal to Him." God\'s greatest desire '
+              'is not merely to bless His people but to reveal His strength through '
+              'lives that are fully committed to Him.\n'
+              'A heart surrendered to God becomes a life empowered by God. '
+              '---',
+        ),
+        DevotionalSection(
+          icon: '🚶',
+          heading:
+              'Finish Your Race with an Undivided Heart',
+          body:
+              'The greatest testimony of Asa\'s life was not his military victories '
+              'or political achievements—it was that his heart remained loyal to the '
+              'Lord throughout his life. Every believer is called to pursue the same '
+              'lifelong faithfulness. Success in God\'s kingdom is measured less by '
+              'earthly accomplishments and more by steadfast devotion to Christ.\n'
+              'The Christian life is a marathon, not a sprint. God calls us to '
+              'remain faithful until the end, trusting His grace each step of the '
+              'way. As Paul wrote near the end of his life in Second Epistle to '
+              'Timothy 4:7–8, he had fought the good fight, finished the race, and '
+              'kept the faith. May that also become the testimony of every believer.\n'
+              'The greatest legacy you can leave is a heart that remained faithful '
+              'to God until the very end. '
+              '---',
+        ),
+      ],
+      finalRevelation:
+          'God remembers more than your achievements—He remembers your heart. '
+          'People may measure success by accomplishments, recognition, or '
+          'influence, but God measures a life by its faithfulness. A loyal heart, '
+          'though still growing, is precious in His sight. Those who remain '
+          'devoted to Him will discover that His grace is sufficient, His '
+          'strength is unfailing, and His reward is eternal. ---',
+      reflectionQuestions: const [
+        'Is my heart fully devoted to God, or have other priorities begun to '
+        'compete for my affection?',
+        'Am I faithfully walking with God every day, even when the journey is '
+        'difficult?',
+        'What practical step can I take today to deepen my loyalty and '
+        'devotion to Christ?',
+      ],
+      prayer:
+          'Heavenly Father,\n'
+          'Thank You for loving me with perfect faithfulness and for patiently '
+          'shaping my heart each day. Thank You that You look beyond outward '
+          'appearances and see the true condition of my heart. I desire to be '
+          'known not merely for what I accomplish but for my wholehearted '
+          'devotion to You.\n'
+          'Forgive me for every divided affection, every misplaced priority, and '
+          'every moment when I have trusted in my own strength instead of Yours. '
+          'Create within me a loyal heart that seeks You above all else. Help me '
+          'remain faithful through every season of life, whether in times of joy '
+          'or times of testing.\n'
+          'Strengthen me by Your Holy Spirit to walk closely with You each day. '
+          'Teach me to trust Your wisdom, obey Your Word, and remain steadfast '
+          'until the end of my journey. May my life continually reflect the love, '
+          'humility, and faithfulness of Jesus Christ.\n'
+          'May it be said of me, not that I lived a perfect life, but that my '
+          'heart belonged completely to You.\n'
+          'Keep me faithful until the day I stand in Your presence, hear Your '
+          'voice, and rejoice forever in the unfailing love of my Lord. '
+          'Amen. 🙏🌿',
+      createdAt: DateTime(2024, 4, 28),
+    ),
+
+    // ── 120. JOY ──────────────────────────────────────────────────
+    DevotionalModel(
+      id: 'when_god_restores',
+      theme: 'Joy',
+      title: 'When God Restores, Joy Overflows',
+      scripture:
+          'When the Lord brought back the captivity of Zion, we were like those '
+          'who dream. Then our mouth was filled with laughter, and our tongue '
+          'with singing. Then they said among the nations, ‘The Lord has done '
+          'great things for them.',
+      scriptureReference: 'Psalms 126:1–2',
+      sections: const [
+        DevotionalSection(
+          icon: '🔑',
+          heading:
+              'God Is the God of Restoration',
+          body:
+              'Psalm 126 celebrates one of the greatest truths about God\'s '
+              'character—He is a God who restores. After years of captivity and '
+              'sorrow, God brought His people back to Zion. What seemed impossible '
+              'became reality through His mighty hand. Their restoration was not the '
+              'result of human strength or political power, but of God\'s covenant '
+              'faithfulness.\n'
+              'Many believers walk through seasons of loss, disappointment, broken '
+              'dreams, or spiritual dryness. Those seasons may seem permanent, but '
+              'God\'s purposes are never defeated by time or circumstances. The God '
+              'who restored Israel is still restoring lives today. As the prophet '
+              'declares in Book of Joel 2:25, God is able to restore the years that '
+              'have been consumed by hardship. Nothing surrendered to God\'s hands is '
+              'ever beyond His power to redeem.\n'
+              'God specializes in restoring what people believe is beyond recovery. '
+              '---',
+        ),
+        DevotionalSection(
+          icon: '🔍',
+          heading:
+              'God\'s Blessings Often Exceed Our Expectations',
+          body:
+              'The psalmist says, "We were like those who dream." Their restoration '
+              'was so overwhelming that it seemed almost too wonderful to believe. '
+              'God\'s blessings often surpass what His people dare to imagine because '
+              'His plans are always greater than human expectations.\n'
+              'There are moments when God answers prayers in ways that leave us '
+              'standing in awe of His goodness. His faithfulness reminds us that He '
+              'is able to accomplish far more than our limited understanding can '
+              'comprehend. As Paul writes in Epistle to the Ephesians 3:20, God is '
+              'able to do exceedingly abundantly above all that we ask or think '
+              'according to His power at work within us. His blessings often exceed '
+              'our greatest expectations because His love knows no limits.\n'
+              'God\'s answers are often greater than the prayers that first brought '
+              'us to Him. '
+              '---',
+        ),
+        DevotionalSection(
+          icon: '⚔️',
+          heading:
+              'God\'s Restoration Replaces Sorrow with Joy',
+          body:
+              'The people who once wept in exile now found their mouths filled with '
+              'laughter and songs of praise. God transformed mourning into '
+              'celebration because His presence always brings hope where despair once '
+              'ruled. His restoration reaches beyond outward circumstances and brings '
+              'healing to the deepest places of the heart.\n'
+              'Many believers carry hidden wounds, painful memories, or seasons of '
+              'prolonged grief. Yet God promises that sorrow will never have the '
+              'final word. As David proclaims in Book of Psalms 30:5, weeping may '
+              'endure for a night, but joy comes in the morning. God\'s joy is not '
+              'dependent upon perfect circumstances; it flows from His faithful '
+              'presence and His redeeming power.\n'
+              'When God restores the heart, joy becomes stronger than yesterday\'s '
+              'pain. '
+              '---',
+        ),
+        DevotionalSection(
+          icon: '🌱',
+          heading:
+              'A Restored Life Becomes a Testimony to the World',
+          body:
+              'The surrounding nations declared, "The Lord has done great things for '
+              'them." God\'s work in His people became visible to everyone around '
+              'them. Their transformation pointed others toward the greatness and '
+              'faithfulness of God. Genuine restoration always glorifies the Restorer '
+              'more than the restored.\n'
+              'God desires every believer\'s life to become a testimony of His grace. '
+              'The way He heals broken hearts, restores hope, forgives sin, and '
+              'renews lives becomes evidence of His power before a watching world. As '
+              'Jesus teaches in Gospel of Matthew 5:16, believers are to let their '
+              'light shine before others so that people may glorify the Father in '
+              'heaven. The greatest testimony is a life that clearly reveals what God '
+              'alone can accomplish.\n'
+              'Your restored life may become the very evidence someone else needs to '
+              'believe in God\'s power. '
+              '---',
+        ),
+        DevotionalSection(
+          icon: '🚶',
+          heading:
+              'Live with Expectant Faith',
+          body:
+              'Psalm 126 teaches believers to remember God\'s past faithfulness while '
+              'confidently trusting Him for future restoration. Every previous '
+              'victory becomes a reminder that God remains faithful today. The same '
+              'God who restored Zion continues to restore hearts, families, '
+              'ministries, and lives according to His perfect timing.\n'
+              'Faith grows stronger when we remember what God has already done. '
+              'Instead of allowing present difficulties to define our outlook, we can '
+              'confidently expect God\'s continued work in our lives. As Jeremiah '
+              'declares in Book of Jeremiah 32:27, "Behold, I am the Lord, the God of '
+              'all flesh. Is there anything too hard for Me?" No situation is beyond '
+              'the reach of His restoring hand.\n'
+              'Those who remember God\'s past faithfulness will confidently trust His '
+              'future promises. '
+              '---',
+        ),
+      ],
+      finalRevelation:
+          'God\'s restoration is never partial—it reaches the broken heart, the '
+          'weary soul, the forgotten dream, and the impossible situation. He '
+          'turns mourning into dancing, captivity into freedom, and despair into '
+          'joyful praise. The God who restored Zion is still restoring lives '
+          'today, and His greatest work is transforming hearts for His eternal '
+          'glory. ---',
+      reflectionQuestions: const [
+        'What area of my life needs God\'s restoring touch today?',
+        'Have I allowed disappointment to limit my expectation of what God can '
+        'do?',
+        'How can my life become a testimony that "the Lord has done great '
+        'things for me"?',
+      ],
+      prayer:
+          'Heavenly Father, '
+          'Thank You for being the God of restoration, whose power reaches into '
+          'every broken place of my life. Thank You that no failure is too great, '
+          'no wound too deep, and no circumstance too hopeless for Your redeeming '
+          'love. You are the God who brings beauty from ashes and joy from '
+          'sorrow.\n'
+          'Lord, I surrender every area of my life that needs Your healing and '
+          'restoration. Restore my faith where it has grown weak, my hope where '
+          'it has faded, and my joy where sorrow has lingered. Help me trust that '
+          'Your timing is perfect and that Your plans for me are always good.\n'
+          'Teach me to remember Your faithfulness in the past so that I may '
+          'confidently trust You for the future. Fill my heart with praise before '
+          'the answer comes, knowing that You are already working in ways I '
+          'cannot yet see. Let my life become a living testimony of Your '
+          'goodness, so that others may see Your power and glorify Your name.\n'
+          'May my heart overflow with gratitude, my mouth be filled with joyful '
+          'praise, and my life continually proclaim, "The Lord has done great '
+          'things for me."\n'
+          'May I walk each day with hope, expecting Your restoring hand, until '
+          'every promise is fulfilled and I rejoice forever in Your glorious '
+          'presence.\n'
+          'Amen. 🙏🌿',
+      createdAt: DateTime(2024, 4, 29),
+    ),
+
+    // ── 121. PURPOSE ──────────────────────────────────────────────────
+    DevotionalModel(
+      id: 'created_for_gods',
+      theme: 'Purpose',
+      title: 'Created for God\'s Purpose',
+      scripture:
+          'For we are His workmanship, created in Christ Jesus for good works, '
+          'which God prepared beforehand that we should walk in them.',
+      scriptureReference: 'Ephesians 2:10',
+      sections: const [
+        DevotionalSection(
+          icon: '🔑',
+          heading:
+              'You Are God\'s Masterpiece',
+          body:
+              'Paul describes believers as God\'s "workmanship." The original word '
+              'refers to a carefully crafted work of art or masterpiece. This means '
+              'your life is not an accident or a random event. God intentionally '
+              'created you with divine wisdom, unique purpose, and eternal value. '
+              'Although sin damaged humanity, God is continually restoring His people '
+              'into the image of Christ.\n'
+              'In a world where many struggle with insecurity, comparison, and '
+              'feelings of insignificance, this verse reminds us that our value comes '
+              'from our Creator, not from the opinions of others. You are loved, '
+              'chosen, and fashioned by the hands of the Almighty. As David declares '
+              'in Book of Psalms 139:13–14, God wonderfully formed you, and His works '
+              'are marvelous. Your identity is established by God\'s craftsmanship, '
+              'not by the world\'s approval.\n'
+              'Your greatest worth is found in the fact that you are God\'s '
+              'masterpiece. '
+              '---',
+        ),
+        DevotionalSection(
+          icon: '🔍',
+          heading:
+              'New Life Begins in Christ',
+          body:
+              'Paul says we are "created in Christ Jesus." This points beyond '
+              'physical creation to the miracle of spiritual rebirth. Through faith '
+              'in Christ, God makes believers into new creations. Old guilt, '
+              'condemnation, and spiritual death are replaced with forgiveness, '
+              'righteousness, and new life through the Holy Spirit.\n'
+              'The Christian life is not about improving the old person but becoming '
+              'a new person through Christ. God does not merely repair what sin has '
+              'broken—He gives us a completely new identity. As Paul writes in Second '
+              'Epistle to the Corinthians 5:17, if anyone is in Christ, they are a '
+              'new creation; the old has passed away and the new has come. Everything '
+              'begins with the transforming work of Christ.\n'
+              'God does not simply change your behavior—He transforms your very '
+              'nature. '
+              '---',
+        ),
+        DevotionalSection(
+          icon: '⚔️',
+          heading:
+              'You Were Created for Good Works',
+          body:
+              'Salvation is by grace alone, but grace never leaves a believer '
+              'unchanged. Paul makes it clear that we are created "for good works." '
+              'These good works are not the cause of salvation but the evidence of '
+              'it. A transformed heart naturally produces a transformed life that '
+              'reflects the love, holiness, and compassion of Christ.\n'
+              'Every act of kindness, forgiveness, generosity, service, and '
+              'obedience becomes an opportunity to reveal God\'s character. The Holy '
+              'Spirit empowers believers to become the hands and feet of Christ in a '
+              'hurting world. As Jesus taught in Gospel of Matthew 5:16, we are to '
+              'let our light shine before others so they may glorify our Father in '
+              'heaven. Our lives become living testimonies of God\'s grace.\n'
+              'Good works do not earn God\'s love—they reveal that His love has '
+              'already transformed your heart. '
+              '---',
+        ),
+        DevotionalSection(
+          icon: '🌱',
+          heading:
+              'God Has Already Prepared Your Purpose',
+          body:
+              'Paul reveals that God prepared these good works "beforehand." Long '
+              'before you were born, God already knew the purpose He had designed for '
+              'your life. Nothing about your calling is accidental. Every gift, '
+              'opportunity, experience, and even every trial can become part of His '
+              'greater plan to shape you and bless others through you.\n'
+              'Sometimes believers become anxious about discovering God\'s will, '
+              'fearing they might somehow miss it. Yet God faithfully leads those who '
+              'seek Him with humble hearts. As Jeremiah records in Book of Jeremiah '
+              '29:11, God knows the plans He has for His people—plans for hope and a '
+              'future. His purpose unfolds as we faithfully walk with Him day by day. '
+              'God has already prepared the path—He simply invites you to walk with '
+              'Him upon it. '
+              '---',
+        ),
+        DevotionalSection(
+          icon: '🚶',
+          heading:
+              'Walk Daily in Your God-Given Calling',
+          body:
+              'Paul concludes by saying that we "should walk in them." God\'s purpose '
+              'is not fulfilled through occasional moments of obedience but through a '
+              'daily lifestyle of faithfulness. Every conversation, decision, '
+              'challenge, and opportunity becomes part of our walk with Christ. As we '
+              'remain close to Him, He faithfully directs our steps.\n'
+              'Walking with God requires continual dependence upon His Spirit rather '
+              'than our own understanding. We may not always see the entire journey '
+              'ahead, but God faithfully reveals each step as we trust Him. As '
+              'Solomon teaches in Book of Proverbs 3:5–6, those who trust in the Lord '
+              'with all their hearts will find Him directing their paths. The purpose '
+              'of life is not merely discovering God\'s plan but faithfully living it '
+              'every day.\n'
+              'A life surrendered to God becomes the masterpiece through which He '
+              'displays His glory. '
+              '---',
+        ),
+      ],
+      finalRevelation:
+          'You were not created merely to exist—you were created with eternal '
+          'purpose. You are God\'s masterpiece, redeemed by His grace, renewed '
+          'through Christ, and empowered by His Spirit. The God who designed your '
+          'life has already prepared the path before you. As you walk faithfully '
+          'with Him, your ordinary days become part of His extraordinary plan. '
+          '---',
+      reflectionQuestions: const [
+        'Do I truly see myself as God\'s workmanship, or do I allow the world '
+        'to define my value?',
+        'Am I living each day with the awareness that God has prepared a '
+        'purpose for me?',
+        'What good work might God be calling me to faithfully walk in today?',
+      ],
+      prayer:
+          'Heavenly Father,\n'
+          'Thank You for creating me with purpose and for making me Your '
+          'workmanship through Jesus Christ. Thank You that my identity is not '
+          'determined by my past, my failures, or the opinions of others, but by '
+          'Your redeeming love and Your perfect design.\n'
+          'Forgive me for the times I have doubted my value or questioned Your '
+          'purpose for my life. Help me believe that You have intentionally '
+          'created me and prepared good works for me to accomplish through the '
+          'power of Your Holy Spirit. Teach me to trust Your plans even when I '
+          'cannot see the entire path ahead.\n'
+          'Lead me each day in the work You have prepared for me. Fill my heart '
+          'with compassion, my hands with willingness to serve, and my life with '
+          'faithful obedience. May everything I do reflect the beauty of Christ '
+          'and bring glory to Your name.\n'
+          'May I walk confidently in the purpose You have designed, serve '
+          'faithfully wherever You lead, and live each day as Your workmanship, '
+          'displaying the beauty of Your grace, the power of Your Spirit, and the '
+          'glory of Your Son, until the work You have begun in me is perfectly '
+          'completed in Your eternal presence.\n'
+          'Amen. 🙏🌿',
+      createdAt: DateTime(2024, 4, 30),
+    ),
+
+
+    // ── 122. COME ──────────────────────────────────────────────────
+    DevotionalModel(
+      id: 'come_and_drink',
+      theme: 'Come',
+      title: 'Come and Drink from the Living Water',
+      scripture:
+          'On the last day, that great day of the feast, Jesus stood and cried '
+          'out, saying, ‘If anyone thirsts, let him come to Me and drink.',
+      scriptureReference: 'John 7:37',
+      sections: const [
+        DevotionalSection(
+          icon: '🔑',
+          heading:
+              'Jesus Invites Every Thirsty Soul',
+          body:
+              'On the final and most significant day of the Feast of Tabernacles, '
+              'when priests poured water as a symbol of God\'s provision in the '
+              'wilderness, Jesus stood and made a bold invitation. He did not invite '
+              'only the religious leaders, the righteous, or the successful. He '
+              'simply said, "If anyone thirsts." His invitation is open to every '
+              'person who recognizes the emptiness of life apart from God.\n'
+              'Spiritual thirst is one of God\'s greatest gifts because it awakens the '
+              'soul to its deepest need. Many spend their lives trying to satisfy '
+              'this thirst with success, wealth, relationships, pleasure, or '
+              'achievement, only to discover that nothing in this world can satisfy '
+              'the longing within. As Isaiah lovingly invites in Book of Isaiah 55:1, '
+              '"Everyone who thirsts, come to the waters." God alone satisfies the '
+              'deepest desires of the human heart.\n'
+              'The first step toward spiritual fullness is recognizing your need for '
+              'Christ.',
+        ),
+        DevotionalSection(
+          icon: '🔍',
+          heading:
+              'Jesus Alone Satisfies the Soul',
+          body:
+              'Jesus did not say, "Come to religion," or "Come to a system of rules." '
+              'He simply said, "Come to Me." This reveals that Christianity is first '
+              'and foremost a relationship with Christ. Every spiritual blessing, '
+              'every lasting joy, and every true satisfaction is found in Him alone. '
+              'He is not merely the One who gives living water—He is the source of '
+              'it.\n'
+              'The world continually offers temporary satisfaction that quickly '
+              'fades, leaving the soul thirstier than before. Jesus offers something '
+              'entirely different—lasting fulfillment that reaches the deepest parts '
+              'of our being. As He told the Samaritan woman in Gospel of John '
+              '4:13–14, whoever drinks the water He gives will never thirst again '
+              'because it becomes a fountain of eternal life within them.\n'
+              'Only the Creator of your soul can fully satisfy the hunger of your '
+              'soul.',
+        ),
+        DevotionalSection(
+          icon: '⚔️',
+          heading:
+              'Faith Is Receiving What Christ Freely Offers',
+          body:
+              'Jesus says, "Come...and drink." Drinking is a simple act of receiving. '
+              'Just as water must be personally received to quench physical thirst, '
+              'Christ must be personally trusted to satisfy spiritual thirst. '
+              'Salvation is not earned by effort but received through faith. God '
+              'freely offers His grace, but each person must respond to His '
+              'invitation.\n'
+              'Many know about Jesus without truly coming to Him. Knowledge alone '
+              'cannot satisfy the heart. Genuine faith involves trusting Him '
+              'completely and depending upon Him daily. As Paul declares in Epistle '
+              'to the Romans 10:13, everyone who calls upon the name of the Lord will '
+              'be saved. Christ\'s invitation remains open to all who are willing to '
+              'come.\n'
+              'God\'s greatest gifts are not achieved by human effort—they are '
+              'received through humble faith.',
+        ),
+        DevotionalSection(
+          icon: '🌱',
+          heading:
+              'The Holy Spirit Becomes a Living River Within You',
+          body:
+              'The following verses explain that Jesus was speaking about the Holy '
+              'Spirit, whom believers would receive. God\'s intention is not merely to '
+              'refresh His people occasionally but to place His very Spirit within '
+              'them. The Holy Spirit continually supplies strength, wisdom, comfort, '
+              'conviction, and joy, becoming an ever-flowing source of spiritual '
+              'life.\n'
+              'Many believers try to live the Christian life in their own strength, '
+              'only to become weary and discouraged. Yet God never intended His '
+              'children to depend upon themselves. As Paul teaches in Epistle to the '
+              'Galatians 5:25, if we live by the Spirit, we should also walk by the '
+              'Spirit. The Christian life flourishes as we continually draw from the '
+              'life of the Holy Spirit.\n'
+              'Those who continually drink from Christ will never run dry because His '
+              'Spirit continually renews them.',
+        ),
+        DevotionalSection(
+          icon: '🚶',
+          heading:
+              'A Filled Life Becomes a Blessing to Others',
+          body:
+              'Jesus\' invitation does not end with personal satisfaction. Those who '
+              'drink deeply from Him become channels through which His life flows to '
+              'others. A heart filled with God\'s presence naturally overflows with '
+              'love, compassion, encouragement, wisdom, and hope. God\'s blessings are '
+              'never intended to stop with us—they are meant to flow through us.\n'
+              'As believers remain close to Christ, their lives become refreshing '
+              'streams in a spiritually thirsty world. Their words encourage the '
+              'discouraged, their prayers strengthen the weak, and their lives point '
+              'others toward Jesus. As Jesus continues in Gospel of John 7:38, '
+              'whoever believes in Him will have rivers of living water flowing from '
+              'within. God\'s Spirit transforms satisfied believers into life-giving '
+              'witnesses.\n'
+              'The heart that continually drinks from Christ becomes a river of '
+              'blessing to others.',
+        ),
+      ],
+      finalRevelation:
+          'Every human heart is thirsty. Some seek satisfaction in possessions, '
+          'others in success, relationships, or recognition.\n'
+          'But every earthly well eventually runs dry. Jesus alone offers the '
+          'living water that satisfies forever.\n'
+          'When you come to Him, your emptiness is filled, your soul is '
+          'refreshed, and the Holy Spirit begins flowing through your life as an '
+          'endless river of grace.',
+      reflectionQuestions: const [
+        'What have I been depending on to satisfy the deepest needs of my '
+        'heart?',
+        'Am I continually coming to Christ, or have I been trying to live on '
+        'yesterday\'s spiritual experience?',
+        'How can God\'s living water flow through me to refresh someone else '
+        'today?',
+      ],
+      prayer:
+          'Heavenly Father,\n'
+          'Thank You for sending Jesus, the source of living water, to satisfy '
+          'the deepest thirst of my soul. Thank You that You lovingly invite '
+          'everyone who is weary, empty, and searching to come freely to Christ. '
+          'I praise You because Your grace is abundant, Your mercy never fails, '
+          'and Your invitation remains open.\n'
+          'Lord, forgive me for the times I have searched for satisfaction in '
+          'things that can never truly fulfill me. Draw my heart back to You. '
+          'Teach me to come daily to Jesus and drink deeply from His presence '
+          'through Your Word, prayer, and the power of the Holy Spirit.\n'
+          'Fill me afresh with Your Spirit. Let Your life flow through me until '
+          'my thoughts reflect Your truth, my words bring hope, and my actions '
+          'reveal Your love. Make me a source of encouragement to those who are '
+          'weary and spiritually thirsty. Help me point others, not to myself, '
+          'but to the only One who can truly satisfy.\n'
+          'May I never thirst for the empty promises of this world, but always '
+          'hunger and thirst for Your presence.\n'
+          'Let rivers of living water flow through my life, bringing hope to the '
+          'hopeless, strength to the weary, and glory to Jesus Christ, until the '
+          'day I drink forever from the river of life in Your eternal kingdom.\n'
+          'Amen. 🙏🌿',
+      createdAt: DateTime(2024, 5, 1),
+    ),
+
+    // ── 123. CALL ──────────────────────────────────────────────────
+    DevotionalModel(
+      id: 'call_to_me',
+      theme: 'Call',
+      title: 'Call to Me, and I Will Answer',
+      scripture:
+          'Call to Me, and I will answer you, and show you great and mighty '
+          'things, which you do not know.',
+      scriptureReference: 'Jeremiah 33:3',
+      sections: const [
+        DevotionalSection(
+          icon: '🔑',
+          heading:
+              'God Invites You into Personal Fellowship',
+          body:
+              'Jeremiah received this promise while he was imprisoned. Jerusalem was '
+              'under siege, the nation faced judgment, and everything around him '
+              'appeared hopeless. Yet in the middle of darkness, God did not first '
+              'give Jeremiah an explanation—He gave him an invitation: "Call to Me." '
+              'This reveals the heart of God. He desires that His children run to Him '
+              'before they run to anyone or anything else.\n'
+              'Prayer is far more than presenting requests to God. It is an '
+              'invitation into intimate fellowship with the Creator of heaven and '
+              'earth. Every time we pray, we acknowledge that our greatest need is '
+              'not merely God\'s gifts but God Himself. As David declared in Book of '
+              'Psalms 145:18, the Lord is near to all who call upon Him in truth. '
+              'God\'s first desire is relationship before revelation.\n'
+              'The greatest privilege of prayer is not simply receiving answers—it is '
+              'drawing near to the heart of God.',
+        ),
+        DevotionalSection(
+          icon: '🔍',
+          heading:
+              'God Always Hears the Prayers of His Children',
+          body:
+              'God gives Jeremiah an extraordinary promise: "I will answer you." This '
+              'assurance does not mean God always answers according to our preferred '
+              'timing or expectations, but it does mean He never ignores the sincere '
+              'prayers of His people. Every prayer offered in faith reaches the ears '
+              'of a loving Father who delights in caring for His children.\n'
+              'Sometimes God\'s answer is "yes," sometimes it is "wait," and sometimes '
+              'it is "I have something better." His wisdom is infinitely greater than '
+              'ours, and His answers are always shaped by His perfect love. As Jesus '
+              'taught in Gospel of Matthew 7:7–11, our Heavenly Father gladly gives '
+              'good gifts to those who ask Him. We can pray with confidence because '
+              'God\'s heart is always inclined toward His children.\n'
+              'God\'s silence is never His absence, and His delays are never His '
+              'indifference.',
+        ),
+        DevotionalSection(
+          icon: '⚔️',
+          heading:
+              'God Reveals What Human Wisdom Cannot Discover',
+          body:
+              'God promised to show Jeremiah "great and mighty things" that he did '
+              'not know. These were hidden truths about God\'s plans, purposes, and '
+              'future restoration that human understanding could never discover on '
+              'its own. God delights in revealing His wisdom to those who humbly seek '
+              'Him.\n'
+              'There are situations in life where experience, intelligence, and '
+              'careful planning are not enough. We need divine wisdom that comes only '
+              'from God. As James teaches in Epistle of James 1:5, those who lack '
+              'wisdom should ask God, who gives generously without finding fault. '
+              'When we seek Him sincerely, He opens our spiritual eyes to truths we '
+              'could never discover by ourselves.\n'
+              'Prayer is often the doorway through which God reveals heaven\'s '
+              'perspective on earthly problems.',
+        ),
+        DevotionalSection(
+          icon: '🌱',
+          heading:
+              'God\'s Plans Are Greater Than Our Present Circumstances',
+          body:
+              'Jeremiah was surrounded by destruction, yet God was already speaking '
+              'about restoration, hope, and future blessing. This teaches us that our '
+              'present circumstances never limit God\'s eternal purposes. Even when we '
+              'cannot see beyond today\'s difficulties, God is already working toward '
+              'tomorrow\'s redemption.\n'
+              'Many believers become discouraged because they judge God\'s '
+              'faithfulness by their current situation. But God\'s promises reach far '
+              'beyond what we can presently see. As He declared earlier in Book of '
+              'Jeremiah 29:11, He knows the plans He has for His people—plans for '
+              'peace, hope, and a future. Faith learns to trust God\'s promises even '
+              'before His answers become visible.\n'
+              'What seems impossible from your perspective may already be part of '
+              'God\'s unfolding plan.',
+        ),
+        DevotionalSection(
+          icon: '🚶',
+          heading:
+              'Make Prayer Your First Response, Not Your Last Resort',
+          body:
+              'Jeremiah 33:3 reminds believers that prayer is not something reserved '
+              'for emergencies—it is a lifestyle of continual dependence upon God. '
+              'Those who regularly seek the Lord discover His peace, His guidance, '
+              'His wisdom, and His strength for every season of life. Prayer keeps '
+              'our hearts aligned with God\'s will and our minds anchored in His '
+              'promises.\n'
+              'As we consistently call upon Him, our faith deepens because we '
+              'repeatedly witness His faithfulness. Paul encourages believers in '
+              'Epistle to the Philippians 4:6–7 to bring everything to God through '
+              'prayer and thanksgiving, promising that His peace will guard our '
+              'hearts and minds in Christ Jesus. A praying life is a trusting life.\n'
+              'The believer who learns to pray first will often discover God\'s '
+              'answers before fear has the chance to take root.',
+        ),
+      ],
+      finalRevelation:
+          'God does not say, "Figure it out on your own." He says, "Call to Me."\n'
+          'He does not promise that every road will be easy, but He promises that '
+          'He will answer, He will guide, and He will reveal what you could never '
+          'discover without Him.\n'
+          'Prayer is not the language of weakness—it is the expression of '
+          'complete dependence upon an all-powerful God.\n'
+          'When you call upon Him, He not only changes circumstances—He '
+          'transforms the one who is praying.',
+      reflectionQuestions: const [
+        'Is prayer my first response when challenges arise, or do I rely on my '
+        'own understanding first?',
+        'What situation in my life do I need to bring before God with renewed '
+        'faith today?',
+        'Am I seeking God\'s wisdom, or merely asking Him to approve my own '
+        'plans?',
+      ],
+      prayer:
+          'Heavenly Father,\n'
+          'Thank You for inviting me to call upon You with confidence. Thank You '
+          'that You are never too busy to hear my prayers and never too distant '
+          'to respond. I praise You because You are a loving Father who delights '
+          'in revealing Your wisdom, Your guidance, and Your perfect will to '
+          'those who seek You.\n'
+          'Forgive me for the times I have relied on my own understanding instead '
+          'of turning to You first. Teach me to make prayer my daily refuge and '
+          'my constant source of strength. Increase my faith so that I trust Your '
+          'answers even when they come in ways I do not expect.\n'
+          'Open my spiritual eyes to the great and hidden things You desire to '
+          'reveal. Give me wisdom beyond my own abilities, peace beyond my '
+          'circumstances, and courage to obey whatever You show me. Help me '
+          'remain patient while You work, knowing that Your plans are always '
+          'higher than mine.\n'
+          'May my heart continually seek Your presence, my ears remain attentive '
+          'to Your voice, and my life be marked by unwavering trust in Your '
+          'promises.\n'
+          'Teach me to call upon You in every season, to wait expectantly for '
+          'Your answer, and to walk faithfully in the revelation You provide, '
+          'until the day I stand before You, where every mystery is made clear, '
+          'and I rejoice forever in the fullness of Your glorious presence.\n'
+          'Amen. 🙏🌿',
+      createdAt: DateTime(2024, 5, 2),
+    ),
+
+    // ── 124. BECOMING ──────────────────────────────────────────────────
+    DevotionalModel(
+      id: 'becoming_a_dwelling',
+      theme: 'Becoming',
+      title: 'Becoming a Dwelling Place for God',
+      scripture:
+          'Jesus answered and said to him, ‘If anyone loves Me, he will keep My '
+          'word; and My Father will love him, and We will come to him and make '
+          'Our home with him.',
+      scriptureReference: 'John 14:23',
+      sections: const [
+        DevotionalSection(
+          icon: '🔑',
+          heading:
+              'Genuine Love for Christ Produces Obedience',
+          body:
+              'Jesus connects love with obedience. He does not describe love merely '
+              'as an emotion, a confession, or a moment of spiritual excitement. '
+              'Genuine love for Christ is revealed when His words are treasured, '
+              'trusted, and obeyed. Obedience becomes the visible expression of an '
+              'inward relationship with Him.\n'
+              'This does not mean believers obey in order to earn God\'s love. Rather, '
+              'obedience flows from having already encountered His love. As Jesus '
+              'also teaches in John 14:15, those who love Him will keep His '
+              'commandments. The heart that truly loves Christ begins to desire what '
+              'pleases Him, even when obedience requires sacrifice.\n'
+              'Love for Jesus becomes most visible in the choices we make when no one '
+              'else is watching.',
+        ),
+        DevotionalSection(
+          icon: '🔍',
+          heading:
+              'Keeping God\'s Word Means Allowing It to Govern Your Life',
+          body:
+              'To keep Christ\'s word means more than remembering His teachings. It '
+              'means holding them closely, guarding them within the heart, and '
+              'allowing them to shape thoughts, relationships, priorities, and '
+              'decisions. God\'s Word is not meant to remain on the pages of '
+              'Scripture; it is meant to become the foundation of daily life.\n'
+              'Many people hear God\'s Word without giving it authority over them. Yet '
+              'Jesus teaches in Matthew 7:24–25 that the person who hears and obeys '
+              'His words is like someone who builds a house upon a rock. Storms may '
+              'still come, but a life governed by truth remains standing.\n'
+              'The Word of God becomes powerful in us when it moves from being '
+              'something we admire to something we obey.',
+        ),
+        DevotionalSection(
+          icon: '⚔️',
+          heading:
+              'Obedience Deepens Fellowship with God',
+          body:
+              'Jesus promises that the Father will lovingly reveal His presence to '
+              'those who walk in obedient love. This does not suggest that God loves '
+              'obedient people more than others in a selfish or conditional way. It '
+              'reveals that obedience creates deeper fellowship because it removes '
+              'the resistance that often dulls spiritual sensitivity.\n'
+              'Sin and rebellion do not make God disappear, but they can make the '
+              'heart less aware of His presence. Obedience keeps the conscience '
+              'tender and the spirit responsive to Him. As James 4:8 teaches, those '
+              'who draw near to God discover that He draws near to them.\n'
+              'The closer your life aligns with God\'s Word, the more deeply your '
+              'heart becomes aware of His presence.',
+        ),
+        DevotionalSection(
+          icon: '🌱',
+          heading:
+              'God Desires to Make His Home Within You',
+          body:
+              'Jesus gives an astonishing promise: “We will come to him and make Our '
+              'home with him.” God does not desire to be an occasional visitor in the '
+              'believer\'s life. He desires to dwell, remain, and establish His '
+              'presence within the heart. Through the Holy Spirit, every believer '
+              'becomes a living temple of God.\n'
+              'A home is a place of intimacy, belonging, rest, and continual '
+              'fellowship. God desires access not merely to our public worship but '
+              'also to the hidden rooms of our hearts—our fears, ambitions, memories, '
+              'habits, and desires. As 1 Corinthians 6:19 teaches, the believer\'s '
+              'body is the temple of the Holy Spirit.\n'
+              'God does not want one room in your life; He desires to make your whole '
+              'heart His dwelling place.',
+        ),
+        DevotionalSection(
+          icon: '🚶',
+          heading:
+              'A Life Filled with God\'s Presence Reflects His Character',
+          body:
+              'When God makes His home within a surrendered heart, His presence '
+              'begins transforming that person\'s life. His love softens harshness, '
+              'His peace calms anxiety, His holiness confronts sin, and His '
+              'compassion changes the way others are treated. The evidence of God\'s '
+              'indwelling presence becomes visible through Christlike character.\n'
+              'The purpose of intimacy with God is not merely personal comfort but '
+              'transformation. As Galatians 5:22–23 reveals, the Holy Spirit produces '
+              'love, joy, peace, patience, kindness, goodness, faithfulness, '
+              'gentleness, and self-control. A heart that hosts God\'s presence '
+              'becomes a life through which His nature is revealed.\n'
+              'When God is truly at home within you, others will begin to encounter '
+              'Him through you.',
+        ),
+      ],
+      finalRevelation:
+          'God does not merely desire your attendance, your religious activity, '
+          'or your outward profession. He desires your heart.\n'
+          'When you love Christ, keep His Word, and surrender every area of your '
+          'life, God makes His presence at home within you.\n'
+          'The greatest sanctuary is not a building—it is a heart fully yielded '
+          'to the Father, the Son, and the Holy Spirit.',
+      reflectionQuestions: const [
+        'Do my daily choices demonstrate genuine love for Christ?',
+        'Is there an area of my life that I have not fully submitted to God\'s '
+        'Word?',
+        'Would God feel welcomed in every room of my heart?',
+      ],
+      prayer:
+          'Heavenly Father,\n'
+          'Thank You for loving me and desiring such close fellowship with me. I '
+          'am humbled by the promise that You desire to make Your home within my '
+          'heart. Thank You for giving me Your Word and Your Holy Spirit so that '
+          'I may know You, obey You, and walk closely with You.\n'
+          'Forgive me for the times I have spoken of loving You while resisting '
+          'Your instructions. Reveal every area where my choices, habits, or '
+          'desires are not aligned with Your truth. Give me a humble and obedient '
+          'heart that treasures Your Word and responds willingly to Your voice.\n'
+          'Lord Jesus, let my love for You become visible through faithful '
+          'obedience. Help me surrender every hidden room of my heart to Your '
+          'authority. Remove whatever grieves Your Spirit and fill every part of '
+          'my life with Your peace, holiness, wisdom, and love.\n'
+          'Make my heart Your dwelling place. Let Your presence shape my '
+          'character, Your Word govern my decisions, and Your love flow through '
+          'my relationships.\n'
+          'May everyone who encounters my life recognize that You live within me, '
+          'and may everything I do bring honor and glory to Your holy name.\n'
+          'Amen.',
+      createdAt: DateTime(2024, 5, 3),
+    ),
+
+    // ── 125. POTTERS ──────────────────────────────────────────────────
+    DevotionalModel(
+      id: 'in_the_potters',
+      theme: 'Potters',
+      title: 'In the Potter\'s Hands',
+      scripture:
+          'O house of Israel, can I not do with you as this potter? says the '
+          'Lord. Look, as the clay is in the potter\'s hand, so are you in My '
+          'hand, O house of Israel!',
+      scriptureReference: 'Jeremiah 18:6',
+      sections: const [
+        DevotionalSection(
+          icon: '🔑',
+          heading:
+              'God Is the Master Potter of Our Lives',
+          body:
+              'God sent Jeremiah to the potter\'s house to teach a profound spiritual '
+              'lesson. As the prophet watched the potter carefully shaping clay on '
+              'the wheel, he saw that when the vessel became marred, the potter did '
+              'not throw it away. Instead, he patiently reshaped it into another '
+              'vessel according to his purpose. God then declared that His people '
+              'were like clay in His hands.\n'
+              'This picture reveals God\'s sovereign authority over our lives. He is '
+              'our Creator, and He understands every detail of our design better than '
+              'we ever could. Our lives are not shaped by chance but by the loving '
+              'hands of the One who formed us. As Isaiah declares in Book of Isaiah '
+              '64:8, "We are the clay, and You our potter; and all we are the work of '
+              'Your hand." The safest place for every believer is in the hands of the '
+              'Master Potter.\n'
+              'The hands that created you are the same hands that continue to shape '
+              'you.',
+        ),
+        DevotionalSection(
+          icon: '🔍',
+          heading:
+              'God Sees Possibility Where We See Failure',
+          body:
+              'When the clay became damaged, the potter did not abandon it. He '
+              'patiently reshaped it according to his design. Likewise, God never '
+              'gives up on those who surrender themselves to Him. Our failures, '
+              'disappointments, and brokenness never surprise Him, nor do they '
+              'prevent Him from accomplishing His purpose.\n'
+              'Many people believe their mistakes have permanently disqualified them '
+              'from God\'s plan. But Scripture repeatedly shows that God restores and '
+              'transforms broken lives. Peter failed, David sinned, Jonah ran away, '
+              'and Paul persecuted the church, yet God redeemed each of their stories '
+              'for His glory. As Paul writes in Epistle to the Romans 8:28, God works '
+              'all things together for the good of those who love Him and are called '
+              'according to His purpose.\n'
+              'God does not discard broken lives—He redeems them into testimonies of '
+              'His grace.',
+        ),
+        DevotionalSection(
+          icon: '⚔️',
+          heading:
+              'Surrender Is Essential to God\'s Shaping Process',
+          body:
+              'Clay does not shape itself; it willingly yields to the potter\'s hands. '
+              'In the same way, spiritual growth requires humble surrender to God\'s '
+              'will. The Holy Spirit patiently molds our character, removes sinful '
+              'attitudes, and forms the likeness of Christ within us. This process is '
+              'often uncomfortable, but it is always motivated by God\'s perfect love.\n'
+              'There are moments when God allows pressure, correction, or waiting to '
+              'reshape our hearts. Rather than resisting His work, we are called to '
+              'trust His wisdom. As Solomon teaches in Book of Proverbs 3:5–6, we are '
+              'to trust in the Lord with all our heart and not lean on our own '
+              'understanding. The Potter always knows what the clay cannot yet see.\n'
+              'The more completely you surrender to God, the more beautifully He '
+              'shapes your life.',
+        ),
+        DevotionalSection(
+          icon: '🌱',
+          heading:
+              'God\'s Purpose Is Greater Than Our Present Circumstances',
+          body:
+              'The potter shaped each vessel according to the purpose he intended it '
+              'to fulfill. Likewise, God is not simply interested in making our lives '
+              'comfortable—He is preparing us for His eternal purposes. Every season '
+              'of waiting, every trial, and every moment of refinement becomes part '
+              'of His divine craftsmanship.\n'
+              'Often we focus on the pain of the process while God focuses on the '
+              'beauty of the finished work. He sees the completed masterpiece long '
+              'before we do. As Paul assures believers in Epistle to the Philippians '
+              '1:6, the One who began a good work in us will faithfully carry it to '
+              'completion until the day of Christ Jesus.\n'
+              'God is more concerned with who you are becoming than with what you are '
+              'currently experiencing.',
+        ),
+        DevotionalSection(
+          icon: '🚶',
+          heading:
+              'Trust the Potter\'s Hands Every Day',
+          body:
+              'Being in the Potter\'s hands is not a one-time experience but a '
+              'lifelong journey. Every day God continues to teach, refine, '
+              'strengthen, and prepare His children for greater usefulness. Even when '
+              'we cannot understand His methods, we can trust His heart because every '
+              'touch of the Potter is guided by perfect wisdom, holiness, and love.\n'
+              'Our responsibility is not to understand every detail of God\'s plan but '
+              'to remain soft and responsive to His leading. Hardened clay cannot be '
+              'shaped, but a surrendered heart remains teachable. As David prayed in '
+              'Book of Psalms 139:23–24, "Search me, O God, and know my heart...and '
+              'lead me in the way everlasting." A teachable heart becomes a beautiful '
+              'vessel for God\'s glory.\n'
+              'The most beautiful vessels are not those that resist the Potter, but '
+              'those that remain in His hands.',
+        ),
+      ],
+      finalRevelation:
+          'Your life is not being shaped by accident—it is being shaped by the '
+          'Master Potter.\n'
+          'Every trial, every delay, every correction, and every season of '
+          'waiting is part of His loving craftsmanship.\n'
+          'He sees what you cannot yet see. He knows what you have not yet '
+          'become. And He will never abandon the work His hands have begun.\n'
+          'The Potter\'s hands may sometimes press, but they never cease to love.',
+      reflectionQuestions: const [
+        'Am I resisting God\'s shaping work, or am I willingly surrendering to '
+        'His hands?',
+        'What difficult circumstance might God be using to develop Christlike '
+        'character in me?',
+        'How can I become more teachable and responsive to the Holy Spirit '
+        'today?',
+      ],
+      prayer:
+          'Heavenly Father,\n'
+          'Thank You for being the loving Potter who patiently shapes my life '
+          'according to Your perfect will. Thank You that even when I am broken '
+          'by failure, discouraged by hardship, or confused by the process, You '
+          'never abandon me. Instead, You continue Your gracious work of molding '
+          'me into the person You created me to be.\n'
+          'Forgive me for the times I have resisted Your hands, questioned Your '
+          'wisdom, or become impatient with Your timing. Soften my heart and make '
+          'me willing to surrender every area of my life to You. Remove '
+          'everything that does not reflect the character of Christ, and shape me '
+          'into a vessel that brings honor to Your name.\n'
+          'Lord, help me trust You when the process is painful and when I cannot '
+          'understand what You are doing. Give me faith to believe that every '
+          'moment of refinement is preparing me for Your greater purpose. Let my '
+          'life become a testimony of Your grace, Your patience, and Your '
+          'transforming power.\n'
+          'May I remain in the Potter\'s hands, soft enough to be shaped, humble '
+          'enough to be corrected, faithful enough to keep trusting, and '
+          'surrendered enough to fulfill the purpose for which You created me.\n'
+          'Until the day Your work in me is complete, may my life display the '
+          'beauty, holiness, and glory of the Master Potter.\n'
+          'Amen. 🙏🌿',
+      createdAt: DateTime(2024, 5, 4),
+    ),
+
+    // ── 126. PERFECT ──────────────────────────────────────────────────
+    DevotionalModel(
+      id: 'the_perfect_word',
+      theme: 'Perfect',
+      title: 'The Perfect Word That Transforms the Soul',
+      scripture:
+          'The law of the Lord is perfect, converting the soul; the testimony of '
+          'the Lord is sure, making wise the simple.',
+      scriptureReference: 'Psalms 19:7',
+      sections: const [
+        DevotionalSection(
+          icon: '🔑',
+          heading:
+              'God\'s Word Is Perfect Because God Is Perfect',
+          body:
+              'David begins by declaring that "the law of the Lord is perfect." The '
+              'perfection of Scripture flows from the perfection of its Author. '
+              'Unlike human wisdom, which is limited and often flawed, God\'s Word is '
+              'completely trustworthy, without error in its purpose, and sufficient '
+              'for everything necessary for life and godliness. It reveals God\'s '
+              'character, exposes our condition, and directs us toward His will.\n'
+              'In a world filled with conflicting opinions, changing philosophies, '
+              'and uncertain guidance, God\'s Word remains constant. It never becomes '
+              'outdated because it reflects the eternal nature of God Himself. As '
+              'Isaiah declares in Book of Isaiah 40:8, "The grass withers, the flower '
+              'fades, but the word of our God stands forever." Every generation may '
+              'change, but God\'s truth remains unchanged.\n'
+              'The most reliable foundation for your life is the unchanging Word of '
+              'the unchanging God.',
+        ),
+        DevotionalSection(
+          icon: '🔍',
+          heading:
+              'God\'s Word Revives the Soul',
+          body:
+              'David says that God\'s perfect law "converts" or restores the soul. Sin '
+              'leaves the human heart spiritually weary, broken, and separated from '
+              'God. But His Word brings life where there was death, hope where there '
+              'was despair, and strength where there was weakness. Through Scripture, '
+              'the Holy Spirit continually renews and restores the believer from the '
+              'inside out.\n'
+              'Many people seek renewal through entertainment, success, or temporary '
+              'pleasures, only to find themselves spiritually empty again. True '
+              'restoration comes only from God\'s presence through His Word. Jesus '
+              'declared in Gospel of John 6:63, "The words that I speak to you are '
+              'spirit, and they are life." God\'s Word does not merely inform the '
+              'mind—it transforms the soul.\n'
+              'A heart continually nourished by God\'s Word will continually be '
+              'renewed by God\'s Spirit.',
+        ),
+        DevotionalSection(
+          icon: '⚔️',
+          heading:
+              'God\'s Word Gives Wisdom to the Humble',
+          body:
+              'David also declares that "the testimony of the Lord is sure, making '
+              'wise the simple." Biblical wisdom is not measured by education, '
+              'intelligence, or experience alone. It begins with reverence for God '
+              'and humble submission to His truth. The "simple" are those who '
+              'recognize their need for God\'s guidance and willingly receive His '
+              'instruction.\n'
+              'The world often celebrates human wisdom while neglecting God\'s '
+              'counsel. Yet true wisdom enables believers to make decisions that '
+              'honor God and produce lasting fruit. As Solomon teaches in Book of '
+              'Proverbs 9:10, "The fear of the Lord is the beginning of wisdom." '
+              'Those who allow Scripture to guide their lives gain insight that '
+              'surpasses human understanding.\n'
+              'The wisest person is not the one who knows the most, but the one who '
+              'faithfully lives according to God\'s Word.',
+        ),
+        DevotionalSection(
+          icon: '🌱',
+          heading:
+              'God\'s Word Shapes Christlike Character',
+          body:
+              'The purpose of Scripture extends beyond knowledge—it transforms '
+              'character. As believers consistently meditate upon and obey God\'s '
+              'Word, the Holy Spirit gradually reshapes their thoughts, desires, '
+              'attitudes, and actions. God\'s truth confronts pride, strengthens '
+              'faith, corrects error, and nurtures spiritual maturity.\n'
+              'Transformation does not occur through occasional reading but through '
+              'continual submission to God\'s truth. Every encounter with Scripture '
+              'becomes an opportunity for God to refine His people. As Paul writes in '
+              'Second Epistle to Timothy 3:16–17, all Scripture is inspired by God '
+              'and equips believers for every good work. The Word prepares God\'s '
+              'people not only to know the truth but to live it.\n'
+              'The more God\'s Word fills your heart, the more Christ\'s character '
+              'shapes your life.',
+        ),
+        DevotionalSection(
+          icon: '🚶',
+          heading:
+              'Build Your Life Upon God\'s Word Every Day',
+          body:
+              'God never intended His Word to remain confined to church services or '
+              'occasional devotionals. It is to become the daily guide for every '
+              'decision, every relationship, every trial, and every opportunity. '
+              'Those who continually walk according to Scripture discover stability '
+              'even when life becomes uncertain.\n'
+              'Jesus compared obedience to God\'s Word to building a house upon solid '
+              'rock. Storms will come, but the life established upon His truth will '
+              'remain secure. As Jesus teaches in Gospel of Matthew 7:24–25, those '
+              'who hear His words and put them into practice cannot be shaken because '
+              'their foundation is secure. God\'s Word anchors believers through every '
+              'season.\n'
+              'A Bible that shapes your daily life will steady your heart through '
+              'every storm.',
+        ),
+      ],
+      finalRevelation:
+          'God\'s Word is not merely a book to be read—it is the voice of God to '
+          'be believed, the truth to be obeyed, and the life to be lived.\n'
+          'It restores the weary, strengthens the weak, guides the uncertain, '
+          'corrects the wandering, and transforms those who humbly receive it.\n'
+          'The more deeply God\'s Word lives within you, the more clearly God\'s '
+          'character will be seen through you.',
+      reflectionQuestions: const [
+        'Do I approach God\'s Word as my greatest source of truth and wisdom?',
+        'Am I allowing Scripture to transform my heart or merely increase my '
+        'knowledge?',
+        'What step of obedience is God calling me to take through His Word '
+        'today?',
+      ],
+      prayer:
+          'Heavenly Father,\n'
+          'Thank You for the priceless gift of Your perfect Word. Thank You that '
+          'through the Scriptures You reveal Your heart, Your truth, and Your '
+          'will for my life. Your Word has brought light to my darkness, hope to '
+          'my discouragement, and life to my weary soul.\n'
+          'Forgive me for the times I have neglected Your Word or valued human '
+          'wisdom above Your eternal truth. Create within me a deep hunger to '
+          'know You through the Scriptures. Open my heart to receive Your '
+          'instruction, and give me the humility to obey whatever You reveal.\n'
+          'Holy Spirit, use Your Word to transform my mind, renew my soul, and '
+          'shape me into the likeness of Jesus Christ. Let every verse I read '
+          'produce greater faith, deeper love, stronger obedience, and unwavering '
+          'hope. Help me build every part of my life upon the solid foundation of '
+          'Your truth.\n'
+          'May Your Word be the light that guides my path, the strength that '
+          'sustains my soul, the wisdom that directs my decisions, and the '
+          'treasure that fills my heart.\n'
+          'May I delight in Your truth every day, walk faithfully according to '
+          'Your commands, and become a living testimony of the transforming power '
+          'of Your perfect and eternal Word.\n'
+          'Amen. 🙏🌿',
+      createdAt: DateTime(2024, 5, 5),
+    ),
+
+    // ── 127. STAND ──────────────────────────────────────────────────
+    DevotionalModel(
+      id: 'stand_firm_and',
+      theme: 'Stand',
+      title: 'Stand Firm and Stay Humble',
+      scripture:
+          'Therefore let him who thinks he stands take heed lest he fall.',
+      scriptureReference: '1 Corinthians 10:12',
+      sections: const [
+        DevotionalSection(
+          icon: '🔑',
+          heading:
+              'Spiritual Confidence Must Never Become Spiritual Pride',
+          body:
+              'Paul wrote these words after reminding the Corinthian believers about '
+              'Israel\'s history. Although the Israelites experienced God\'s miracles, '
+              'many became complacent, disobedient, and ultimately fell into sin. '
+              'Their story serves as a warning that spiritual privileges alone do not '
+              'guarantee spiritual faithfulness. Every believer must remain watchful.\n'
+              'One of the greatest dangers in the Christian life is becoming overly '
+              'confident in our own strength. Pride quietly convinces us that we are '
+              'beyond temptation or spiritual failure. Yet Scripture consistently '
+              'teaches that humility is the pathway to safety. As Solomon warns in '
+              'Book of Proverbs 16:18, "Pride goes before destruction, and a haughty '
+              'spirit before a fall." The strongest believers are those who never '
+              'stop depending on God.\n'
+              'The greatest danger is not knowing you are weak—it is believing you '
+              'are strong without God.',
+        ),
+        DevotionalSection(
+          icon: '🔍',
+          heading:
+              'Every Believer Must Remain Spiritually Alert',
+          body:
+              'Paul says, "Take heed." This is a call to continual vigilance. The '
+              'Christian life is not lived on spiritual autopilot. The enemy '
+              'continually seeks opportunities to distract, deceive, and discourage '
+              'God\'s people. Remaining spiritually alert means guarding our hearts, '
+              'examining our motives, and staying close to Christ each day.\n'
+              'Complacency often develops gradually. Small compromises, neglected '
+              'prayer, reduced time in God\'s Word, or hidden sin can slowly weaken a '
+              'believer\'s spiritual life. Jesus warned His disciples in Gospel of '
+              'Matthew 26:41, "Watch and pray, lest you enter into temptation. The '
+              'spirit indeed is willing, but the flesh is weak." Spiritual alertness '
+              'grows through continual fellowship with God.\n'
+              'A guarded heart is far less likely to become a wandering heart.',
+        ),
+        DevotionalSection(
+          icon: '⚔️',
+          heading:
+              'Victory Comes Through Dependence on God',
+          body:
+              'Paul does not encourage believers to trust their own determination but '
+              'to recognize their need for God\'s sustaining grace. No one is immune '
+              'to temptation. The greatest victories are won not through '
+              'self-confidence but through complete dependence upon the Holy Spirit.\n'
+              'When believers acknowledge their weakness, they position themselves to '
+              'receive God\'s strength. As Paul later testifies in Second Epistle to '
+              'the Corinthians 12:9, God\'s grace is sufficient, and His strength is '
+              'made perfect in weakness. The Christian who continually relies on God '
+              'will discover strength that human effort alone can never produce.\n'
+              'The safest believer is the one who never stops leaning on God\'s '
+              'strength.',
+        ),
+        DevotionalSection(
+          icon: '🌱',
+          heading:
+              'Humility Protects the Heart',
+          body:
+              'Humility is not thinking less of yourself—it is recognizing your '
+              'continual need for God\'s grace. A humble believer remains teachable, '
+              'welcomes correction, and quickly repents when convicted by the Holy '
+              'Spirit. Pride resists correction, but humility embraces God\'s '
+              'transforming work.\n'
+              'God delights in giving grace to humble hearts. James reminds believers '
+              'in Epistle of James 4:6 that "God resists the proud, but gives grace '
+              'to the humble." Every day presents an opportunity to humble ourselves '
+              'before the Lord, seeking His wisdom rather than relying upon our own '
+              'understanding.\n'
+              'Humility does not weaken your faith—it strengthens your dependence '
+              'upon God.',
+        ),
+        DevotionalSection(
+          icon: '🚶',
+          heading:
+              'Stand Firm by Remaining Close to Christ',
+          body:
+              'The goal of Paul\'s warning is not to produce fear but faithful '
+              'perseverance. God desires His people to stand firm until the end, and '
+              'He provides everything necessary for that victory. Immediately after '
+              'this verse, Paul assures believers that God is faithful and will '
+              'provide a way of escape during temptation. Our confidence rests not in '
+              'ourselves but in the faithfulness of God.\n'
+              'Remaining close to Christ through prayer, His Word, worship, and '
+              'obedience keeps our hearts anchored. As Jesus teaches in Gospel of '
+              'John 15:4–5, those who abide in Him will bear much fruit, for apart '
+              'from Him they can do nothing. Lasting stability comes from continual '
+              'fellowship with the Savior.\n'
+              'The believer who stays close to Christ can stand firm even when life\'s '
+              'fiercest temptations come.',
+        ),
+      ],
+      finalRevelation:
+          'The greatest threat to spiritual maturity is not always open '
+          'rebellion—it is quiet self-confidence.\n'
+          'The moment you believe you no longer need God\'s help, you become '
+          'vulnerable to falling.\n'
+          'But the heart that remains humble, watchful, and dependent upon Christ '
+          'will continually discover the strength of His sustaining grace. Stand '
+          'firmly—but never stand alone. Stand in Christ.',
+      reflectionQuestions: const [
+        'Have I become spiritually complacent or overly confident in my own '
+        'strength?',
+        'Are there areas of my life where I need to become more watchful and '
+        'prayerful?',
+        'How can I cultivate greater humility and dependence upon God each day?',
+      ],
+      prayer:
+          'Heavenly Father,\n'
+          'Thank You for Your loving warnings that protect me from spiritual '
+          'danger. Thank You for reminding me that my strength is never found in '
+          'myself but in You alone. I confess that without Your grace, I am '
+          'vulnerable to temptation and unable to remain faithful on my own.\n'
+          'Forgive me for every trace of pride, self-reliance, and spiritual '
+          'complacency. Search my heart and reveal anything that keeps me from '
+          'walking closely with You. Give me a humble spirit that is quick to '
+          'listen, eager to obey, and willing to receive Your correction.\n'
+          'Strengthen me through Your Holy Spirit to remain spiritually alert. '
+          'Help me guard my heart, resist temptation, and stand firm in every '
+          'trial. Teach me to depend upon You every moment of every day, knowing '
+          'that Your grace is sufficient and Your faithfulness never fails.\n'
+          'May I never trust in my own strength, but always rest in Yours. Keep '
+          'my heart humble, my eyes fixed on Jesus, and my feet firmly planted '
+          'upon Your truth.\n'
+          'Help me finish my race with unwavering faith, standing strong, not '
+          'because of my ability, but because of the power and faithfulness of my '
+          'Lord Jesus Christ.\n'
+          'Amen. 🙏🌿',
+      createdAt: DateTime(2024, 5, 6),
+    ),
+
+    // ── 128. WHEN ──────────────────────────────────────────────────
+    DevotionalModel(
+      id: 'when_the_living',
+      theme: 'When',
+      title: 'When the Living Word Opens the Hidden Heart',
+      scripture:
+          'For the word of God is living and powerful, and sharper than any '
+          'two-edged sword, piercing even to the division of soul and spirit, and '
+          'of joints and marrow, and is a discerner of the thoughts and intents '
+          'of the heart.',
+      scriptureReference: 'Hebrews 4:12',
+      sections: const [
+        DevotionalSection(
+          icon: '🔑',
+          heading:
+              'The Word of God Carries the Life of God',
+          body:
+              'The Word of God is described as living because it proceeds from the '
+              'living God. Scripture is not merely a record of what God once said; it '
+              'is one of the primary ways through which He continues to reveal His '
+              'truth, confront the conscience, strengthen faith, and bring the heart '
+              'into fellowship with Him. The Bible may be printed with ink on paper, '
+              'but its message carries divine breath and spiritual life.\n'
+              'This is why the same passage can speak differently to us in different '
+              'seasons. A verse we have read many times can suddenly illuminate a '
+              'hidden fear, answer a deep question, or expose an attitude we had '
+              'never recognized. The words have not changed, but the Holy Spirit '
+              'makes their truth alive within our present condition. Jesus declared '
+              'in John 6:63, “The words that I speak to you are spirit, and they are '
+              'life.”\n'
+              'God’s Word does not merely describe spiritual life; it awakens, '
+              'nourishes, and sustains it.',
+        ),
+        DevotionalSection(
+          icon: '🔍',
+          heading:
+              'The Word Reveals the True Condition of the Heart',
+          body:
+              'Hebrews 4:12 appears in a passage warning believers against unbelief '
+              'and disobedience. Israel heard God’s promise of rest, but many failed '
+              'to enter because the Word they received was not united with faith. '
+              'This reveals that hearing Scripture is not enough. God’s Word tests '
+              'whether the heart truly believes, trusts, and submits to Him.\n'
+              'We may appear strong outwardly while carrying unbelief within. We may '
+              'speak faithfully while secretly resisting God’s will. We may perform '
+              'religious duties while our hearts remain distant from Him. Yet '
+              'Scripture passes through appearances and reveals the spiritual '
+              'condition beneath them. Like a divine mirror, it shows us not merely '
+              'how we present ourselves but who we are before God.\n'
+              'The Word does not expose us to humiliate us; it exposes us so that '
+              'deception will no longer keep us from healing.',
+        ),
+        DevotionalSection(
+          icon: '⚔️',
+          heading:
+              'The Sword of the Spirit Cuts Through Every False Refuge',
+          body:
+              'The Word is sharper than any two-edged sword because it reaches places '
+              'that human reasoning, emotional persuasion, and outward discipline '
+              'cannot reach. It cuts through excuses, traditions, self-righteousness, '
+              'false beliefs, hidden compromise, and the carefully constructed '
+              'stories we tell ourselves to avoid repentance.\n'
+              'A two-edged sword cuts in every direction. In the same way, Scripture '
+              'both confronts and comforts, wounds and heals, tears down and '
+              'rebuilds. It destroys false confidence while establishing genuine '
+              'faith. It cuts away what is corrupt so that what is holy may grow. '
+              'Jeremiah 23:29 compares God’s Word to a fire and a hammer that breaks '
+              'the rock in pieces. No hardened heart is beyond its reach when the '
+              'Holy Spirit applies its truth.\n'
+              'The sword of the Word is not placed in God’s hand to destroy the '
+              'repentant, but to destroy what is destroying them.',
+        ),
+        DevotionalSection(
+          icon: '🌱',
+          heading:
+              'The Word Separates What We Cannot Distinguish',
+          body:
+              'Hebrews says that the Word pierces even to the division of soul and '
+              'spirit, joints and marrow. This language does not merely describe '
+              'physical depth; it reveals the perfect precision of God’s discernment. '
+              'Human beings often struggle to distinguish between spiritual '
+              'conviction and emotional impulse, between faith and presumption, '
+              'between godly desire and selfish ambition.\n'
+              'We may call something “peace” when it is actually avoidance. We may '
+              'call something “wisdom” when it is fear. We may call something “zeal” '
+              'when it is pride, or “discernment” when it is suspicion. But the Word '
+              'of God separates what appears inseparable. It reveals whether our '
+              'choices are flowing from the Holy Spirit or from wounded emotions, '
+              'personal desires, and natural reasoning.\n'
+              'God’s Word brings clarity where the human heart creates confusion.',
+        ),
+        DevotionalSection(
+          icon: '🚶',
+          heading:
+              'Transformation Comes Through Receiving and Obeying the Word',
+          body:
+              'The purpose of God’s Word is not merely information but '
+              'transformation. We can know biblical language, memorize verses, and '
+              'understand doctrine while remaining unchanged if we resist obedience. '
+              'James 1:22 warns against hearing the Word without doing it because '
+              'knowledge without submission can produce self-deception.\n'
+              'True spiritual growth occurs when the Word moves from the page into '
+              'the heart and from the heart into daily conduct. It changes how we '
+              'speak, forgive, work, respond to pressure, handle temptation, and '
+              'treat others. Each act of obedience allows truth to become part of our '
+              'character. Jesus said in John 8:31–32 that those who continue in His '
+              'Word will know the truth, and the truth will make them free.\n'
+              'The Word transforms us most deeply when we stop merely admiring it and '
+              'begin arranging our lives around it.',
+        ),
+      ],
+      finalRevelation:
+          'The Word of God is alive because God is alive. It sees beneath '
+          'appearances. It enters the places we hide from others, and even the '
+          'places we hide from ourselves. It separates faith from presumption, '
+          'conviction from emotion, obedience from performance, and love from '
+          'selfish ambition.\n'
+          'It wounds pride, but it does not destroy the humble. It exposes sin, '
+          'but it also reveals the way to mercy. It cuts deeply, because shallow '
+          'healing cannot cure a deeply wounded heart.\n'
+          'When the Word searches you, do not run from its light. Remain before '
+          'God. Let truth uncover you. Let grace cleanse you. Let obedience '
+          'reshape you. The same Word that reveals what you are also reveals what '
+          'you can become through Jesus Christ.',
+      reflectionQuestions: const [
+        'Do I approach Scripture to be transformed, or only to gain '
+        'information?',
+        'What attitude, motive, or hidden compromise might God’s Word be '
+        'exposing in me?',
+        'What truth has God already shown me that now requires obedience?',
+      ],
+      prayer:
+          'Heavenly Father,\n'
+          'Thank You for Your living and powerful Word. Thank You that You have '
+          'not left me to be guided by my emotions, opinions, or limited '
+          'understanding. You have given me truth that is perfect, eternal, and '
+          'able to reach the deepest places of my heart.\n'
+          'Lord, I surrender myself beneath the authority of Your Word. Search me '
+          'completely. Examine my thoughts, desires, intentions, and hidden '
+          'motives. Reveal every place where unbelief, pride, fear, bitterness, '
+          'selfish ambition, or secret compromise has taken root within me.\n'
+          'Let Your Word cut away everything that does not reflect Jesus. '
+          'Separate truth from deception within me. Distinguish Your voice from '
+          'my emotions. Expose every false refuge, every impure motive, every '
+          'hidden wound, and every pattern that keeps me from spiritual freedom.\n'
+          'But Lord, as You reveal my condition, help me not to hide in shame. '
+          'Lead me boldly to the throne of grace. Remind me that Jesus is my '
+          'compassionate High Priest, that His blood is sufficient, and that Your '
+          'mercy is greater than every failure I confess.\n'
+          'Holy Spirit, make the Scriptures alive whenever I read them. Give me '
+          'understanding beyond human knowledge. Let Your Word renew my mind, '
+          'purify my heart, govern my choices, strengthen my faith, and shape my '
+          'character.\n'
+          'Let Your Word become the light in my darkness, the sword in my '
+          'spiritual battles, the mirror for my heart, the food for my soul, and '
+          'the foundation of my entire life. Continue Your work within me until '
+          'every hidden place is surrendered, every motive is purified, and the '
+          'character of Jesus is clearly revealed through me.\n'
+          'Amen. 🙏🌿',
+      createdAt: DateTime(2024, 5, 7),
+    ),
+
+    // ── 129. RIGHT ──────────────────────────────────────────────────
+    DevotionalModel(
+      id: 'the_right_to',
+      theme: 'Right',
+      title: 'The Right to Become Children of God',
+      scripture:
+          'But as many as received Him, to them He gave the right to become '
+          'children of God, to those who believe in His name.',
+      scriptureReference: 'John 1:12',
+      sections: const [
+        DevotionalSection(
+          icon: '🔑',
+          heading:
+              'Salvation Begins by Receiving Christ Personally',
+          body:
+              'John does not say that people become children of God merely because '
+              'they admire Jesus, know facts about Him, attend church, or inherit a '
+              'religious background. He says, “As many as received Him.” Salvation is '
+              'personal. Christ must not only be known about; He must be welcomed, '
+              'trusted, and received as Lord and Savior.\n'
+              'To receive Christ means opening the heart to who He truly is—the '
+              'eternal Son of God, the Savior who died for sin, and the risen Lord '
+              'who deserves complete surrender. It is possible to be surrounded by '
+              'Christian truth and still remain spiritually distant from Christ. The '
+              'people of His own time saw His works and heard His words, yet many '
+              'refused Him. Receiving Him requires more than exposure; it requires '
+              'faith.\n'
+              'The greatest decision of life is not simply what you think about '
+              'Jesus, but whether you have truly received Him.',
+        ),
+        DevotionalSection(
+          icon: '🔍',
+          heading:
+              'Believing in His Name Means Trusting His Whole Person',
+          body:
+              'John explains that receiving Christ means believing in His name. In '
+              'Scripture, a name represents identity, nature, authority, and '
+              'character. To believe in the name of Jesus is to trust in all that He '
+              'is—the Son of God, the promised Messiah, the Lamb who takes away sin, '
+              'and the only Savior of humanity.\n'
+              'Biblical faith is more than agreeing that Jesus existed. It is placing '
+              'the full weight of your hope upon Him. It means trusting His sacrifice '
+              'instead of your goodness, His righteousness instead of your '
+              'achievements, and His grace instead of your ability to save yourself. '
+              'Acts 4:12 declares that salvation is found in no other name. Faith '
+              'rests entirely in Christ because only Christ can reconcile sinners to '
+              'God.\n'
+              'Saving faith does not merely acknowledge Jesus; it entrusts the whole '
+              'life to Him.',
+        ),
+        DevotionalSection(
+          icon: '⚔️',
+          heading:
+              'Becoming God’s Child Is a Gift of Grace',
+          body:
+              'John says that Christ gives believers “the right” to become children '
+              'of God. This right is not earned through moral effort, religious '
+              'discipline, or personal merit. It is given. Adoption into God’s family '
+              'is an act of undeserved grace made possible through the saving work of '
+              'Jesus Christ.\n'
+              'Sin separated humanity from God, but Christ came to restore what was '
+              'lost. Through His death and resurrection, those who believe are '
+              'forgiven, reconciled, and welcomed into the Father’s household. '
+              'Ephesians 2:8–9 reminds us that salvation is by grace through faith, '
+              'not by works. The believer does not stand before God as a tolerated '
+              'stranger but as a beloved child.\n'
+              'You are not accepted by God because you performed well; you are '
+              'accepted because Christ has brought you near.',
+        ),
+        DevotionalSection(
+          icon: '🌱',
+          heading:
+              'Your Identity Changes When You Belong to God',
+          body:
+              'To become a child of God is more than receiving a future promise of '
+              'heaven. It is receiving a new identity in the present. The believer is '
+              'no longer defined primarily by past failures, rejection, family '
+              'history, social position, or human opinion. In Christ, a new spiritual '
+              'relationship begins: God becomes Father, and the believer becomes part '
+              'of His family.\n'
+              'This identity brings both comfort and transformation. A child of God '
+              'is loved, disciplined, protected, guided, and shaped by the Father. '
+              'Romans 8:15 teaches that believers have received the Spirit of '
+              'adoption, by whom they cry, “Abba, Father.” This means intimacy '
+              'replaces fear, belonging replaces alienation, and hope replaces '
+              'spiritual insecurity.\n'
+              'When you know whose child you are, the opinions of the world lose '
+              'their power to define you.',
+        ),
+        DevotionalSection(
+          icon: '🚶',
+          heading:
+              'Children of God Are Called to Reflect Their Father',
+          body:
+              'God’s children are not only given a new position; they are also called '
+              'into a new way of life. The family likeness of God should increasingly '
+              'appear in the character of those who belong to Him. His love, '
+              'holiness, mercy, truth, and compassion should become visible through '
+              'their conduct.\n'
+              'This transformation is not produced by human effort alone. The Holy '
+              'Spirit works within believers, forming the character of Christ and '
+              'teaching them to walk in obedience. Ephesians 5:1 urges believers to '
+              'imitate God as dearly loved children. We do not live righteously to '
+              'become His children; we pursue righteousness because we already belong '
+              'to Him.\n'
+              'A true understanding of adoption does not produce careless living—it '
+              'awakens a desire to honor the Father who has loved us.',
+        ),
+      ],
+      finalRevelation:
+          'Jesus did not come merely to improve your life. He came to bring you '
+          'into God’s family.\n'
+          'Through faith in His name, the rejected are welcomed, the guilty are '
+          'forgiven, the distant are brought near, and spiritual orphans become '
+          'beloved children.\n'
+          'Your deepest identity is no longer found in what you have done, what '
+          'others have called you, or what you have lost.\n'
+          'In Christ, you are received, you are known, you are loved, and you '
+          'belong to the Father.',
+      reflectionQuestions: const [
+        'Have I truly received Christ, or have I only become familiar with '
+        'Christian truth?',
+        'Am I resting in the grace of God, or still trying to earn His '
+        'acceptance?',
+        'Does my daily life reflect the character of the Father whose child I '
+        'have become?',
+      ],
+      prayer:
+          'Heavenly Father,\n'
+          'Thank You for sending Jesus Christ so that I could be forgiven, '
+          'reconciled, and welcomed into Your family. Thank You that salvation is '
+          'not something I could earn but a gift of grace received through faith '
+          'in Your Son.\n'
+          'Lord Jesus, I receive You afresh as my Savior, my Lord, and my only '
+          'hope. I place my trust not in my goodness, religious efforts, or '
+          'personal achievements, but in Your finished work on the cross and Your '
+          'victorious resurrection.\n'
+          'Forgive me for the times I have allowed failure, rejection, fear, or '
+          'human opinion to define me. Teach me to live from the truth that I am '
+          'Your child. Let the assurance of Your love silence every lie of '
+          'insecurity, condemnation, and spiritual abandonment.\n'
+          'Holy Spirit, form the character of Christ within me. Teach me to '
+          'reflect the love of my Father, to walk in holiness, to extend mercy, '
+          'to obey Your Word, and to live with the confidence of one who truly '
+          'belongs to God. May my life reveal the beauty of adoption, the power '
+          'of grace, and the transforming love of Jesus Christ.\n'
+          'Help me remember each day that I am not a stranger, not an outsider, '
+          'and not forgotten. Through Christ, I am received, I am redeemed, and I '
+          'am a beloved child of God.\n'
+          'Amen. 🙏🌿',
+      createdAt: DateTime(2024, 5, 8),
+    ),
+
+    // ── 130. LIVING ──────────────────────────────────────────────────
+    DevotionalModel(
+      id: 'living_the_abundant',
+      theme: 'Living',
+      title: 'Living the Abundant Life in Christ',
+      scripture:
+          'The thief does not come except to steal, and to kill, and to destroy. '
+          'I have come that they may have life, and that they may have it more '
+          'abundantly.',
+      scriptureReference: 'John 10:10',
+      sections: const [
+        DevotionalSection(
+          icon: '🔑',
+          heading:
+              'Recognize the Enemy\'s True Mission',
+          body:
+              'In this verse, Jesus clearly contrasts two opposing kingdoms. The '
+              'thief, referring ultimately to Satan and all that belongs to his '
+              'kingdom, has a destructive mission: to steal, to kill, and to destroy. '
+              'He seeks to steal our joy, peace, faith, hope, purpose, and intimacy '
+              'with God. He desires to kill our spiritual passion and destroy '
+              'everything that reflects God\'s design for our lives.\n'
+              'The enemy often works subtly. He uses deception, temptation, fear, '
+              'bitterness, pride, compromise, and discouragement to draw believers '
+              'away from God\'s will. Jesus described Satan as "a liar and the father '
+              'of lies" (John 8:44), reminding us that many spiritual battles begin '
+              'with believing falsehood instead of God\'s truth. The enemy cannot '
+              'separate God\'s children from His love, but he continually attempts to '
+              'weaken their faith and hinder their spiritual growth.\n'
+              'Victory begins when we recognize that not every battle is physical. '
+              'Many of life\'s greatest struggles are spiritual, requiring '
+              'discernment, prayer, and unwavering trust in Christ.',
+        ),
+        DevotionalSection(
+          icon: '🔍',
+          heading:
+              'Jesus Came to Give True Life',
+          body:
+              'Jesus did not merely come to rescue humanity from sin\'s penalty; He '
+              'came to impart life itself. The life He offers is far greater than '
+              'physical existence. It is eternal life—a restored relationship with '
+              'God that begins the moment we place our faith in Him and continues '
+              'forever.\n'
+              'This new life transforms every aspect of our being. Through Christ we '
+              'receive forgiveness instead of condemnation, hope instead of despair, '
+              'peace instead of fear, and purpose instead of emptiness. As Paul '
+              'declares in Second Epistle to the Corinthians 5:17, anyone who is in '
+              'Christ is a new creation. The old has passed away, and everything '
+              'becomes new.\n'
+              'Jesus did not come simply to improve your old life—He came to give you '
+              'an entirely new life.',
+        ),
+        DevotionalSection(
+          icon: '⚔️',
+          heading:
+              'Abundant Life Is Found in Relationship, Not Possessions',
+          body:
+              'Many misunderstand Jesus\' promise of abundant life as a guarantee of '
+              'material prosperity or a life free from hardship. Yet Jesus Himself '
+              'experienced rejection, suffering, and the cross. The abundance He '
+              'promised is far deeper than earthly success. It is the fullness of '
+              'life found in intimate fellowship with God.\n'
+              'Abundant life is marked by joy that circumstances cannot steal, peace '
+              'that survives life\'s storms, hope that overcomes despair, and love '
+              'that reflects the heart of Christ. Paul experienced imprisonment, '
+              'persecution, and hardship, yet he testified that he had learned to be '
+              'content in every situation because Christ was his strength '
+              '(Philippians 4:11–13).\n'
+              'True abundance is not measured by what you possess but by the presence '
+              'of Christ within you.',
+        ),
+        DevotionalSection(
+          icon: '🌱',
+          heading:
+              'Christ Restores What Sin Has Broken',
+          body:
+              'Sin damages every area of human life—our relationship with God, our '
+              'relationships with others, our thinking, our emotions, and our '
+              'purpose. Jesus came as the Good Shepherd to restore what the enemy and '
+              'sin have broken. His grace heals wounded hearts, His truth renews '
+              'confused minds, and His mercy restores those who have fallen.\n'
+              'Throughout the Gospels, Jesus continually restored broken lives. He '
+              'forgave sinners, healed the sick, welcomed the outcast, and gave hope '
+              'to the hopeless. His ministry reveals that no life is beyond His '
+              'transforming power. As the prophet Joel declared in Book of Joel 2:25, '
+              'God is able to restore the years that have been consumed by loss.\n'
+              'Your past may explain your wounds, but it does not determine your '
+              'future when Christ is your Shepherd.',
+        ),
+        DevotionalSection(
+          icon: '🚶',
+          heading:
+              'Live Daily in the Fullness Christ Provides',
+          body:
+              'The abundant life is not experienced automatically. It is enjoyed as '
+              'believers remain closely connected to Jesus through prayer, His Word, '
+              'worship, obedience, and continual dependence upon the Holy Spirit. '
+              'Just as sheep remain safe by staying near the shepherd, believers '
+              'flourish by abiding in Christ.\n'
+              'Every day presents a choice: listen to the voice of the Shepherd or '
+              'become distracted by competing voices. Jesus later says in John 15:5, '
+              '"He who abides in Me, and I in him, bears much fruit." A life that '
+              'remains rooted in Christ becomes fruitful, resilient, and filled with '
+              'His peace, even during difficult seasons.\n'
+              'The abundant life is not the absence of trials—it is the continual '
+              'presence of Christ in every trial.',
+        ),
+      ],
+      finalRevelation:
+          'Two voices call to every heart. One seeks to steal your joy, destroy '
+          'your peace, and separate you from God\'s purpose.\n'
+          'The other calls you into life—not merely existence, but life '
+          'overflowing with grace, hope, peace, purpose, and eternal fellowship '
+          'with God. Jesus did not come simply to rescue you from destruction.\n'
+          'He came to restore you, renew you, and fill every part of your life '
+          'with His own divine presence.\n'
+          'The fullest life is not found in having more—it is found in knowing '
+          'Christ more deeply.',
+      reflectionQuestions: const [
+        'Are there areas of my life where I have believed the enemy\'s lies '
+        'instead of God\'s truth?',
+        'Am I seeking abundance through worldly success or through a deeper '
+        'relationship with Christ?',
+        'What practical step can I take today to remain more closely connected '
+        'to my Good Shepherd?',
+      ],
+      prayer:
+          'Heavenly Father,\n'
+          'Thank You for sending Your Son, Jesus Christ, to rescue me from the '
+          'power of sin and to give me life in all its fullness. Thank You that '
+          'through Him I have received forgiveness, hope, peace, purpose, and the '
+          'promise of eternal life. I praise You because Your desire is not '
+          'merely to save me from destruction but to draw me into the richness of '
+          'a daily relationship with You.\n'
+          'Lord Jesus, help me recognize every lie, temptation, and distraction '
+          'the enemy uses to steal my joy and weaken my faith. Give me spiritual '
+          'discernment to hear Your voice above every competing influence. '
+          'Strengthen me to resist temptation and to stand firmly upon the truth '
+          'of Your Word.\n'
+          'Restore every area of my life that has been damaged by sin, fear, '
+          'disappointment, or failure. Heal my heart where it has been wounded, '
+          'renew my mind where it has become discouraged, and fill me afresh with '
+          'the joy and peace that only Your Spirit can provide.\n'
+          'Teach me to abide in You every day, to trust You in every '
+          'circumstance, to follow You with wholehearted obedience, and to find '
+          'my greatest satisfaction in Your presence.\n'
+          'May my life reflect the abundance that only You can give—an abundance '
+          'of faith, hope, love, wisdom, holiness, and unwavering confidence in '
+          'Your goodness.\n'
+          'May others see in me the transforming power of the Good Shepherd, '
+          'until the day I dwell forever in Your presence, where abundant life '
+          'reaches its perfect and eternal fullness.\n'
+          'Amen. 🙏🌿',
+      createdAt: DateTime(2024, 5, 9),
+    ),
+
+    // ── 131. CREATION ──────────────────────────────────────────────────
+    DevotionalModel(
+      id: 'a_new_creation',
+      theme: 'Creation',
+      title: 'A New Creation in Christ',
+      scripture:
+          'Therefore, if anyone is in Christ, he is a new creation; old things '
+          'have passed away; behold, all things have become new.',
+      scriptureReference: '2 Corinthians 5:17',
+      sections: const [
+        DevotionalSection(
+          icon: '🔑',
+          heading:
+              'New Life Begins by Being “In Christ”',
+          body:
+              'Paul does not say that anyone who tries harder, becomes more '
+              'religious, or improves their behavior becomes a new creation. He says, '
+              '“If anyone is in Christ.” The foundation of transformation is not '
+              'self-improvement but spiritual union with Jesus Christ. To be in '
+              'Christ means to belong to Him, trust in His finished work, and receive '
+              'a new identity through faith.\n'
+              'Outside Christ, humanity remains under the power and consequences of '
+              'sin. But in Christ, the believer is brought into a new relationship '
+              'with God. Christ’s righteousness becomes the basis of our acceptance, '
+              'His life becomes the source of our strength, and His victory becomes '
+              'the foundation of our hope. As Romans 8:1 declares, there is now no '
+              'condemnation for those who are in Christ Jesus.\n'
+              'Christian transformation begins not with changing what you do, but '
+              'with changing whom you belong to.',
+        ),
+        DevotionalSection(
+          icon: '🔍',
+          heading:
+              'Salvation Is More Than Improvement—it Is New Creation',
+          body:
+              'Paul uses the language of creation because salvation is a work only '
+              'God can accomplish. Just as God spoke light into darkness at the '
+              'beginning of creation, He brings spiritual life into hearts once '
+              'darkened by sin. Christianity is not about repairing the old nature '
+              'until it becomes acceptable; it is about receiving new life from God.\n'
+              'Human effort may change outward habits, but only the Holy Spirit can '
+              'transform the heart. God gives new desires, new spiritual '
+              'understanding, and a new capacity to love and obey Him. Ezekiel 36:26 '
+              'describes this miracle as receiving a new heart and a new spirit. The '
+              'believer is not merely a better version of the old person but the '
+              'beginning of something entirely new.\n'
+              'Grace does not simply renovate your old life; it creates a new life '
+              'within you.\n'
+              '--',
+        ),
+        DevotionalSection(
+          icon: '⚔️',
+          heading:
+              'The Old Life Has Lost Its Right to Rule You',
+          body:
+              'The phrase “old things have passed away” refers to the believer’s '
+              'former spiritual condition under sin. The guilt, condemnation, '
+              'separation, and controlling authority of the old life have been broken '
+              'through Christ. Your past may still influence your memories, but it no '
+              'longer possesses the right to define your identity or determine your '
+              'future.\n'
+              'This does not mean old habits and temptations disappear instantly. '
+              'Spiritual growth is a daily process of learning to live according to '
+              'the new life God has already given. The old nature may still attempt '
+              'to speak, but it is no longer your rightful master. Romans 6:6 teaches '
+              'that our old self was crucified with Christ so that we should no '
+              'longer be slaves to sin.\n'
+              'You may remember the person you were, but you are no longer required '
+              'to live as that person.',
+        ),
+        DevotionalSection(
+          icon: '🌱',
+          heading:
+              'Your Identity Must Be Rooted in What Christ Has Done',
+          body:
+              'Many believers continue to define themselves by failure, rejection, '
+              'shame, addiction, weakness, or the opinions of others. Yet 2 '
+              'Corinthians 5:17 declares that your deepest identity is now found in '
+              'Christ. You are forgiven, reconciled, accepted, and being renewed by '
+              'the Holy Spirit.\n'
+              'When God looks at those who are in Christ, He does not relate to them '
+              'primarily through their past. He sees them through the finished work '
+              'of His Son. This does not excuse sin, but it removes condemnation and '
+              'gives the believer courage to repent and grow. Colossians 3:3 says '
+              'that the believer’s life is hidden with Christ in God. Your true '
+              'identity is secure because it is anchored in Him.\n'
+              'The past may be part of your testimony, but it is no longer the title '
+              'of your life.',
+        ),
+        DevotionalSection(
+          icon: '🚶',
+          heading:
+              'New Creation Must Become New Conduct',
+          body:
+              'The new life received in Christ is meant to become visible in the way '
+              'we live. New identity produces new desires, new priorities, new '
+              'relationships, and new patterns of obedience. The believer begins to '
+              'reject what once controlled them and pursue what reflects the '
+              'character of Christ.\n'
+              'This transformation is progressive. There may be struggles, setbacks, '
+              'and seasons of slow growth, but the Holy Spirit remains at work. '
+              'Philippians 1:6 assures us that the God who began a good work will '
+              'carry it to completion. We cooperate with this work by renewing our '
+              'minds through Scripture, surrendering to the Spirit, resisting sin, '
+              'and walking in daily obedience.\n'
+              'You do not live differently in order to become new; you live '
+              'differently because Christ has made you new.\n'
+              '--',
+        ),
+      ],
+      finalRevelation:
+          'In Christ, your past is no longer your prison. Your failures are no '
+          'longer your identity. Your shame is no longer your covering.\n'
+          'Your old life no longer has the final word. God has not merely offered '
+          'you another chance to improve yourself.\n'
+          'He has given you a new beginning, a new heart, a new standing, a new '
+          'purpose, and a new future.\n'
+          'The old has passed away. The new has begun. And the One who created '
+          'this new life in you will faithfully continue His work until Christ is '
+          'fully revealed through you.',
+      reflectionQuestions: const [
+        'Am I still defining myself by something Christ has already forgiven '
+        'and redeemed?',
+        'What old habit, attitude, or identity am I being called to leave '
+        'behind?',
+        'In what area of my life should the reality of being a new creation '
+        'become more visible?',
+      ],
+      prayer:
+          'Heavenly Father,\n'
+          'Thank You for the miracle of new life in Jesus Christ. Thank You that '
+          'through His death and resurrection, my sins can be forgiven, my '
+          'relationship with You can be restored, and my entire identity can be '
+          'made new.\n'
+          'Forgive me for the times I have continued to live under the weight of '
+          'what You have already removed. Forgive me for allowing past failures, '
+          'shame, fear, and human opinions to define me more strongly than Your '
+          'Word. Help me believe what You declare about me.\n'
+          'Lord Jesus, teach me to live from my position in You. Let the old '
+          'patterns of sin, bitterness, fear, pride, and unbelief lose their '
+          'influence over my life. Remind me that they are no longer my master '
+          'because I now belong to You.\n'
+          'Help me not to return to what You have called me out of. Give me '
+          'strength to walk in the newness of life, courage to release the past, '
+          'and faith to embrace the future You have prepared.\n'
+          'May the life of Christ become increasingly visible in me, until '
+          'everything I am reflects the beauty, freedom, and hope of a true new '
+          'creation.\n'
+          'Amen. 🙏🌿',
+      createdAt: DateTime(2024, 5, 10),
+    ),
+
+    // ── 132. APPROVED ──────────────────────────────────────────────────
+    DevotionalModel(
+      id: 'approved_by_god',
+      theme: 'Approved',
+      title: 'Approved by God, Faithful with His Word',
+      scripture:
+          'Be diligent to present yourself approved to God, a worker who does not '
+          'need to be ashamed, rightly dividing the word of truth.',
+      scriptureReference: '2 Timothy 2:15',
+      sections: const [
+        DevotionalSection(
+          icon: '🔑',
+          heading:
+              'The Greatest Approval to Seek Is God’s Approval',
+          body:
+              'Paul tells Timothy to present himself “approved to God.” This '
+              'immediately shifts the focus away from human applause, public '
+              'recognition, and outward reputation. The Christian life is not '
+              'primarily about appearing impressive before people but about being '
+              'found faithful before God, who sees the heart, motives, private '
+              'choices, and hidden labor.\n'
+              'Human approval is unstable. People may praise today and criticize '
+              'tomorrow. God’s approval, however, is rooted in truth, obedience, and '
+              'faithfulness. Galatians 1:10 reminds us that if our deepest goal is to '
+              'please people, we cannot fully serve Christ. This does not mean we '
+              'ignore wise counsel, but it does mean that God’s judgment must carry '
+              'more weight than human opinion.\n'
+              'A life approved by God may not always be celebrated by people, but it '
+              'will never be wasted.',
+        ),
+        DevotionalSection(
+          icon: '🔍',
+          heading:
+              'Spiritual Diligence Requires Intentional Effort',
+          body:
+              'Paul says, “Be diligent.” Spiritual maturity does not develop through '
+              'carelessness or occasional interest. It requires discipline, '
+              'consistency, humility, and a sincere willingness to grow. Grace does '
+              'not remove the need for effort; it empowers us to pursue God '
+              'faithfully.\n'
+              'Timothy was called to study, teach, endure hardship, resist error, and '
+              'remain faithful in a difficult ministry. In the same way, believers '
+              'must intentionally cultivate prayer, Scripture meditation, obedience, '
+              'and spiritual discernment. First Timothy 4:15 urges believers to give '
+              'themselves entirely to spiritual growth so that their progress becomes '
+              'evident.\n'
+              'God supplies the grace, but we must faithfully respond to that grace '
+              'with disciplined devotion.',
+        ),
+        DevotionalSection(
+          icon: '⚔️',
+          heading:
+              'Every Believer Is a Worker in God’s Kingdom',
+          body:
+              'Paul describes Timothy as “a worker.” This language reminds us that '
+              'the Christian life involves responsibility. Salvation is a gift, but '
+              'discipleship includes labor. Every believer has been entrusted with '
+              'time, gifts, truth, opportunities, relationships, and a sphere of '
+              'influence in which to serve God.\n'
+              'A faithful worker does not treat God’s assignment carelessly. Whether '
+              'serving publicly or quietly, the goal is to carry out each '
+              'responsibility with integrity. Colossians 3:23 teaches us to work '
+              'wholeheartedly as unto the Lord rather than merely for people. God '
+              'notices hidden faithfulness that others may overlook.\n'
+              'There is dignity in every task done sincerely for the glory of God.',
+        ),
+        DevotionalSection(
+          icon: '🌱',
+          heading:
+              'Rightly Handling the Word Requires Accuracy and Humility',
+          body:
+              'The command to “rightly divide the word of truth” means handling '
+              'Scripture accurately, carefully, and faithfully. God’s Word must not '
+              'be twisted to support personal opinions, ambitions, prejudices, or '
+              'emotional preferences. It must be understood in context and allowed to '
+              'speak with its own authority.\n'
+              'This requires humility because we must approach Scripture as learners, '
+              'not masters. Second Peter 3:16 warns that Scripture can be distorted '
+              'by the unstable and unlearned. A faithful student asks what the '
+              'passage truly means, how it fits within the whole message of '
+              'Scripture, and how it points to God’s redemptive purpose in Christ.\n'
+              'We honor God’s Word not merely by quoting it, but by understanding it '
+              'honestly and applying it faithfully.',
+        ),
+        DevotionalSection(
+          icon: '🚶',
+          heading:
+              'Truth Must Shape Both Teaching and Living',
+          body:
+              'Paul was not only concerned that Timothy explain Scripture correctly. '
+              'He also wanted him to become a person whose life agreed with the truth '
+              'he taught. Knowledge without obedience can produce pride, but truth '
+              'received with humility produces transformation.\n'
+              'A worker who has no reason to be ashamed is one whose doctrine and '
+              'conduct are increasingly aligned. James 1:22 warns us not to be '
+              'hearers only, deceiving ourselves. The Word of God must influence our '
+              'speech, relationships, integrity, priorities, and private decisions.\n'
+              'The most convincing explanation of Scripture is a life that has been '
+              'transformed by it.',
+        ),
+      ],
+      finalRevelation:
+          'God is not merely looking for gifted speakers, impressive teachers, or '
+          'knowledgeable students.\n'
+          'He is looking for faithful workers—people who seek His approval, study '
+          'His truth carefully, handle His Word honestly, and live what they '
+          'teach.\n'
+          'The goal is not to know enough Scripture to impress others. The goal '
+          'is to know God through His Word, to be shaped by its truth, and to '
+          'become useful in His hands.\n'
+          'Study deeply. Live faithfully. Serve humbly. And let God’s approval '
+          'become the reward your heart values most.',
+      reflectionQuestions: const [
+        'Am I more concerned with pleasing God or impressing people?',
+        'Do I approach Scripture with discipline, humility, and a willingness '
+        'to be corrected?',
+        'Is there any area where my life contradicts the truth I claim to '
+        'believe?',
+      ],
+      prayer:
+          'Heavenly Father,\n'
+          'Thank You for entrusting me with Your Word of truth. Thank You that '
+          'through Scripture You reveal Your character, Your will, and the saving '
+          'work of Jesus Christ. Give me a deeper hunger to know You and a '
+          'stronger desire to handle Your truth faithfully.\n'
+          'Forgive me for the times I have sought human approval more than Yours. '
+          'Forgive me for spiritual laziness, careless interpretation, selective '
+          'obedience, and every attempt to make Your Word agree with my '
+          'preferences instead of allowing it to correct me.\n'
+          'Teach me to be diligent in prayer, study, and obedience. Give me '
+          'wisdom to understand Scripture in its proper context, humility to '
+          'admit when I am wrong, and discernment to recognize teaching that '
+          'distorts Your truth.\n'
+          'Make me a faithful worker in Your kingdom. Let my motives be pure, my '
+          'doctrine sound, my character sincere, and my service wholehearted.\n'
+          'Help me present myself before You without shame, not because I am '
+          'perfect, but because I have walked honestly, repented quickly, served '
+          'faithfully, and depended continually upon Your grace.\n'
+          'May everything I study, everything I teach, and everything I do bring '
+          'honor to Jesus Christ and receive Your approval.\n'
+          'Amen. 🙏🌿',
+      createdAt: DateTime(2024, 5, 11),
+    ),
+
+    // ── 133. KNOWN ──────────────────────────────────────────────────
+    DevotionalModel(
+      id: 'known_by_god',
+      theme: 'Known',
+      title: 'Known by God and Set Apart for Him',
+      scripture:
+          'Nevertheless the solid foundation of God stands, having this seal: '
+          '‘The Lord knows those who are His,’ and, ‘Let everyone who names the '
+          'name of Christ depart from iniquity.',
+      scriptureReference: '2 Timothy 2:19',
+      sections: const [
+        DevotionalSection(
+          icon: '🔑',
+          heading:
+              'God’s Foundation Remains Firm When Everything Else Shakes',
+          body:
+              'Paul begins with the word “Nevertheless.” He had just spoken about '
+              'false teaching spreading like a destructive disease and about people '
+              'whose faith had been overthrown. Yet even in the presence of '
+              'confusion, deception, and spiritual decline, Paul declares that God’s '
+              'solid foundation still stands.\n'
+              'This is deeply reassuring. Human leaders may fail, churches may face '
+              'disorder, and popular teachings may drift from truth, but God’s saving '
+              'purpose cannot be overturned. His truth is not fragile, and His '
+              'kingdom is not threatened by the instability of people. Jesus said in '
+              'Matthew 16:18 that He would build His church and that the gates of '
+              'Hades would not prevail against it.\n'
+              'Your faith must not rest on the perfection of people but on the '
+              'unchanging faithfulness of God.',
+        ),
+        DevotionalSection(
+          icon: '🔍',
+          heading:
+              '“The Lord Knows Those Who Are His”',
+          body:
+              'The first inscription on God’s foundation is this: “The Lord knows '
+              'those who are His.” This speaks of more than God’s general awareness. '
+              'In Scripture, to be known by God points to relationship, love, '
+              'recognition, and belonging. He does not merely know facts about His '
+              'children; He knows them personally and claims them as His own.\n'
+              'This truth provides security in seasons when you feel unseen, '
+              'misunderstood, or forgotten. Others may misjudge your motives, '
+              'overlook your faithfulness, or fail to recognize your struggles, but '
+              'God knows exactly who belongs to Him. Jesus declared in John 10:14, “I '
+              'am the good shepherd; and I know My sheep, and am known by My own.”\n'
+              'Your identity is secure not because everyone understands you, but '
+              'because the Lord knows you as His own.',
+        ),
+        DevotionalSection(
+          icon: '⚔️',
+          heading:
+              'Belonging to Christ Must Produce Separation from Sin',
+          body:
+              'The second inscription says, “Let everyone who names the name of '
+              'Christ depart from iniquity.” This reveals the inseparable connection '
+              'between identity and conduct. Those who claim the name of Christ are '
+              'called to turn away from everything that contradicts His holiness.\n'
+              'Grace does not give us permission to remain comfortable in sin. Grace '
+              'forgives us, but it also trains us to reject ungodliness. Titus '
+              '2:11–12 teaches that the grace of God instructs believers to deny '
+              'worldly desires and live soberly, righteously, and godly. A true '
+              'relationship with Christ creates a growing desire to leave behind what '
+              'dishonors Him.\n'
+              'We do not depart from sin in order to make ourselves God’s children; '
+              'we depart from sin because we belong to Him.',
+        ),
+        DevotionalSection(
+          icon: '🌱',
+          heading:
+              'God’s Seal Speaks of Both Security and Responsibility',
+          body:
+              'A seal in the ancient world marked ownership, authenticity, '
+              'protection, and authority. Paul uses this image to show that God '
+              'places His mark upon those who are truly His. The believer is secure '
+              'in God’s knowledge and care, yet that security carries a holy '
+              'responsibility.\n'
+              'The Christian life holds these two truths together: God keeps His '
+              'people, and His people are called to pursue holiness. We must never '
+              'use divine security as an excuse for spiritual carelessness. '
+              'Philippians 2:12–13 teaches believers to work out their salvation with '
+              'reverence because God is working within them. His grace empowers the '
+              'obedience He requires.\n'
+              'God’s seal upon your life is not only a promise of protection; it is '
+              'also a call to represent Him faithfully.',
+        ),
+        DevotionalSection(
+          icon: '🚶',
+          heading:
+              'True Faith Is Revealed Through Persevering Holiness',
+          body:
+              'Paul was addressing a situation where some professed faith but spread '
+              'destructive teaching and departed from truth. His words remind us that '
+              'verbal confession alone is not enough. A genuine relationship with '
+              'Christ will produce continuing repentance, growing obedience, and '
+              'perseverance in truth.\n'
+              'This does not mean believers never stumble. Christians may fail, but '
+              'they do not make peace with sin. The Holy Spirit convicts, corrects, '
+              'and leads them back to obedience. Second Corinthians 7:1 urges '
+              'believers to cleanse themselves from everything that contaminates body '
+              'and spirit, perfecting holiness in the fear of God.\n'
+              'The evidence of belonging to Christ is not sinless perfection, but a '
+              'life that refuses to stop turning toward holiness.',
+        ),
+      ],
+      finalRevelation:
+          'When falsehood spreads, when people fail, and when spiritual confusion '
+          'increases, God’s foundation still stands. He knows those who are His. '
+          'He sees beyond appearances. He recognizes genuine faith.\n'
+          'He remembers every hidden act of obedience. But the seal of belonging '
+          'carries a call: those who bear the name of Christ must turn away from '
+          'what dishonors Christ.\n'
+          'You are known by God, owned by God, and called to reflect the holiness '
+          'of God. Security in His love should never produce carelessness. It '
+          'should produce gratitude, reverence, and a life increasingly set apart '
+          'for Him.',
+      reflectionQuestions: const [
+        'Is my confidence rooted in God’s unchanging foundation or in people '
+        'and circumstances?',
+        'Does my daily conduct reflect the name of Christ that I profess?',
+        'What sin, compromise, or ungodly pattern is God calling me to leave '
+        'behind?',
+      ],
+      prayer:
+          'Heavenly Father,\n'
+          'Thank You that Your solid foundation stands firm even when the world '
+          'around me feels uncertain. Thank You that falsehood, failure, and '
+          'spiritual confusion cannot overturn Your truth or cancel Your purpose.\n'
+          'I am deeply grateful that You know those who are Yours. Thank You for '
+          'seeing me completely, knowing my heart, understanding my struggles, '
+          'and calling me Your own through Jesus Christ. When I feel overlooked '
+          'or misunderstood, help me rest in the assurance that I am fully known '
+          'by You.\n'
+          'Lord, forgive me for every way I have carried the name of Christ while '
+          'tolerating attitudes, habits, or desires that dishonor Him. Search my '
+          'heart and reveal every hidden compromise. Give me courage to depart '
+          'from iniquity and strength to resist whatever seeks to draw me away '
+          'from holiness.\n'
+          'Holy Spirit, purify my thoughts, guard my words, direct my choices, '
+          'and reshape my desires. Let my life reflect the One whose name I bear. '
+          'Keep me humble in Your grace, steadfast in Your truth, and faithful '
+          'through every season.\n'
+          'May the assurance that I belong to You never make me careless, but '
+          'move me to deeper obedience, greater reverence, and wholehearted '
+          'devotion. When others fall away, help me remain faithful. When truth '
+          'is distorted, help me stand firm.\n'
+          'When temptation comes, remind me that I am Yours. May my life testify '
+          'that the Lord knows me, has sealed me, and is transforming me into a '
+          'vessel prepared for His glory.\n'
+          'Amen. 🙏🌿',
+      createdAt: DateTime(2024, 5, 12),
+    ),
+
+    // ── 134. VESSEL ──────────────────────────────────────────────────
+    DevotionalModel(
+      id: 'a_vessel_prepared',
+      theme: 'Vessel',
+      title: 'A Vessel Prepared for the Master’s Use',
+      scripture:
+          'Therefore if anyone cleanses himself from the latter, he will be a '
+          'vessel for honor, sanctified and useful for the Master, prepared for '
+          'every good work.',
+      scriptureReference: '2 Timothy 2:21',
+      sections: const [
+        DevotionalSection(
+          icon: '🔑',
+          heading:
+              'God Desires More Than Availability—He Desires Purity',
+          body:
+              'Paul uses the picture of vessels in a great house. Some vessels are '
+              'used for honorable purposes, while others are used for ordinary or '
+              'dishonorable purposes. His point is not that some believers are '
+              'naturally more valuable than others, but that usefulness in God’s '
+              'hands is deeply connected to spiritual purity.\n'
+              'God can call, gift, and position a person, but hidden compromise can '
+              'limit how freely that person can be used. Talent may open doors, yet '
+              'character determines whether a person can remain trustworthy within '
+              'them. Psalm 24:3–4 asks who may stand in God’s holy place and answers: '
+              'the one with clean hands and a pure heart.\n'
+              'God is not searching only for gifted vessels. He is seeking clean '
+              'vessels through whom His life can flow without continual resistance.',
+        ),
+        DevotionalSection(
+          icon: '🔍',
+          heading:
+              'Cleansing Requires Deliberate Separation from What Defiles',
+          body:
+              'Paul says, “If anyone cleanses himself from the latter.” In context, '
+              'this includes separation from false teaching, empty arguments, '
+              'ungodliness, and influences that lead people away from truth. '
+              'Cleansing is not passive. It involves identifying what contaminates '
+              'the heart and intentionally turning away from it.\n'
+              'This does not mean we purify ourselves apart from God’s grace. Only '
+              'the blood of Christ can cleanse us from sin, and only the Holy Spirit '
+              'can transform the heart. Yet grace calls for a response. First John '
+              '1:9 teaches that when we confess our sins, God is faithful to forgive '
+              'and cleanse us. We bring our sin into the light, renounce it, and '
+              'cooperate with the Spirit’s work.\n'
+              'You cannot continually embrace what defiles you and still expect to '
+              'remain fully prepared for holy use.',
+        ),
+        DevotionalSection(
+          icon: '⚔️',
+          heading:
+              'A Vessel of Honor Is Set Apart for God',
+          body:
+              'Paul says the cleansed vessel becomes “sanctified.” To be sanctified '
+              'means to be set apart for God’s possession and purposes. Holiness is '
+              'not merely avoiding obvious sin; it is a life increasingly reserved '
+              'for the One who owns it.\n'
+              'A sanctified believer begins to ask different questions. Instead of '
+              'asking, “Is this permitted?” the deeper question becomes, “Does this '
+              'honor Christ?” Instead of living at the edge of compromise, the heart '
+              'desires to remain near God. Romans 12:1 calls believers to present '
+              'themselves as living sacrifices, holy and acceptable to God.\n'
+              'Holiness is not simply what you separate from. It is what—and Whom—you '
+              'separate yourself unto.',
+        ),
+        DevotionalSection(
+          icon: '🌱',
+          heading:
+              'Usefulness Flows from Surrendered Character',
+          body:
+              'Paul describes the honorable vessel as “useful for the Master.” Many '
+              'people desire to be used by God, but fewer are willing to undergo the '
+              'cleansing, correction, waiting, and hidden preparation that usefulness '
+              'requires. God’s work must first go deeply within us before it can flow '
+              'powerfully through us.\n'
+              'Usefulness in God’s kingdom is not measured only by public visibility. '
+              'A believer can be useful through prayer, compassion, integrity, '
+              'encouragement, generosity, faithful parenting, quiet service, or '
+              'courageous truthfulness. Second Timothy 2:20 reminds us that the '
+              'Master determines the purpose of each vessel. Our responsibility is '
+              'not to compete with others but to remain clean, available, and '
+              'obedient.\n'
+              'The vessel does not choose how important the assignment appears; it '
+              'simply remains ready for the Master’s hand.',
+        ),
+        DevotionalSection(
+          icon: '🚶',
+          heading:
+              'God Prepares Clean Vessels for Every Good Work',
+          body:
+              'The verse ends with the words “prepared for every good work.” '
+              'Preparation often occurs before opportunity becomes visible. God uses '
+              'seasons of obscurity, correction, discipline, study, prayer, and '
+              'waiting to form the character required for future assignments.\n'
+              'We may feel that nothing significant is happening, yet God may be '
+              'cleansing motives, strengthening endurance, deepening humility, and '
+              'teaching obedience. David was prepared in the fields before facing '
+              'Goliath. Joseph was shaped in slavery and prison before leading Egypt. '
+              'Moses spent years in the wilderness before returning to Pharaoh.\n'
+              'What feels like delay may actually be preparation. God often shapes '
+              'the vessel before revealing the work.',
+        ),
+      ],
+      finalRevelation:
+          'God can use ordinary people, but He does not treat holiness as '
+          'optional. He is not merely looking for those who say, “Use me.”\n'
+          'He is looking for those willing to pray, “Clean me.” A vessel may be '
+          'beautiful on the outside and still be unfit for sacred use.\n'
+          'But when the heart is cleansed, the life is surrendered, and the '
+          'believer is set apart, the Master finds a vessel He can trust with His '
+          'purpose.\n'
+          'The question is not only, “Am I gifted?” It is, “Am I clean, '
+          'available, and prepared for whatever the Master desires?”',
+      reflectionQuestions: const [
+        'Is there any habit, relationship, belief, or hidden compromise that is '
+        'reducing my usefulness to God?',
+        'Do I desire God’s assignment more than I desire the cleansing that '
+        'prepares me for it?',
+        'Am I willing to serve faithfully even when the work appears small or '
+        'unnoticed?',
+      ],
+      prayer:
+          'Heavenly Father,\n'
+          'Thank You for calling me to belong to You and to participate in Your '
+          'work. I am humbled that You desire to use ordinary people as vessels '
+          'through whom Your grace, truth, and love can reach others.\n'
+          'Search me and reveal anything within me that dishonors You. Expose '
+          'every hidden sin, unhealthy influence, false belief, selfish motive, '
+          'and compromising habit. Give me the humility to confess what You '
+          'reveal and the courage to turn away from it completely.\n'
+          'Lord Jesus, thank You that Your blood cleanses me from all sin. Do not '
+          'allow me to treat casually what cost You the cross. Purify my heart, '
+          'renew my mind, and bring every area of my life under Your authority.\n'
+          'Holy Spirit, sanctify me for the Master’s use. Cleanse my motives, '
+          'discipline my desires, guard my thoughts, direct my words, and '
+          'strengthen my obedience.\n'
+          'Make me a vessel of honor—not seeking recognition, not comparing '
+          'myself with others, and not resisting the assignments You choose.\n'
+          'May my life remain clean, my heart remain surrendered, and my hands '
+          'remain ready for every good work You have prepared. Use me for Your '
+          'glory, according to Your wisdom, in Your timing, and for the honor of '
+          'Jesus Christ.\n'
+          'Amen. 🙏🌿',
+      createdAt: DateTime(2024, 5, 13),
+    ),
+
+    // ── 135. DOING ──────────────────────────────────────────────────
+    DevotionalModel(
+      id: 'god_is_doing',
+      theme: 'Doing',
+      title: 'God Is Doing a New Thing',
+      scripture:
+          'Do not remember the former things, nor consider the things of old. '
+          'Behold, I will do a new thing, now it shall spring forth; shall you '
+          'not know it? I will even make a road in the wilderness and rivers in '
+          'the desert.',
+      scriptureReference: 'Isaiah 43:18–19',
+      sections: const [
+        DevotionalSection(
+          icon: '🔑',
+          heading:
+              'God Calls Us to Release the Past',
+          body:
+              'Through the prophet Isaiah, God spoke these words to Israel while they '
+              'were facing the consequences of their disobedience and looking toward '
+              'a future restoration. The Lord reminded them not to remain trapped by '
+              'the memories of former things. This included not only their painful '
+              'failures and captivity but even their past victories. God wanted them '
+              'to stop living solely on yesterday\'s experiences so they could '
+              'recognize what He was about to do.\n'
+              'Many believers become prisoners of the past. Some are bound by regret, '
+              'guilt, disappointment, or painful memories. Others become so attached '
+              'to previous blessings that they fail to recognize God\'s fresh work in '
+              'the present. While remembering God\'s faithfulness strengthens our '
+              'faith, living in the past can prevent us from embracing His new '
+              'purposes. Paul reflected this attitude in Epistle to the Philippians '
+              '3:13–14 when he spoke of forgetting what lay behind and pressing '
+              'toward what was ahead in Christ.\n'
+              'God never asks us to deny the past, but He does ask us not to allow it '
+              'to limit our future with Him.',
+        ),
+        DevotionalSection(
+          icon: '🔍',
+          heading:
+              'God Is Always Working Beyond What We Can See',
+          body:
+              'The Lord declares, "Behold, I will do a new thing." God\'s work is '
+              'never confined to human expectations or limited by present '
+              'circumstances. Even when His people could not yet see deliverance, God '
+              'had already begun preparing it. His plans often begin quietly before '
+              'they become visible.\n'
+              'There are seasons when heaven appears silent, yet God is actively '
+              'arranging circumstances, opening unseen doors, and preparing hearts. '
+              'Because His ways are higher than ours, His work often unfolds in '
+              'unexpected ways. As He declares later in Book of Isaiah 55:8–9, His '
+              'thoughts and ways far exceed our own. Faith learns to trust God\'s '
+              'activity even before visible evidence appears.\n'
+              'God\'s greatest works often begin beneath the surface long before they '
+              'appear before our eyes.',
+        ),
+        DevotionalSection(
+          icon: '⚔️',
+          heading:
+              'God Makes a Way Where None Exists',
+          body:
+              'The promise of "a road in the wilderness and rivers in the desert" '
+              'reveals God\'s unlimited power. A wilderness normally has no roads, and '
+              'a desert naturally lacks flowing rivers. Yet God specializes in '
+              'creating what human ability cannot produce. What appears impossible to '
+              'us becomes an opportunity for Him to display His glory.\n'
+              'Throughout Scripture, God repeatedly made a way where there seemed to '
+              'be none. He parted the Red Sea, fed Israel in the wilderness, '
+              'preserved Elijah during famine, and raised Jesus from the dead. '
+              'Nothing can prevent God from accomplishing His purposes. As Jeremiah '
+              'declared in Book of Jeremiah 32:27, "Behold, I am the Lord... Is there '
+              'anything too hard for Me?"\n'
+              'Where human resources end, God\'s limitless power begins.',
+        ),
+        DevotionalSection(
+          icon: '🌱',
+          heading:
+              'New Seasons Require New Trust',
+          body:
+              'God\'s new work often requires His people to leave behind familiar '
+              'places, comfortable routines, and old expectations. Israel could not '
+              'experience restoration while clinging to the mindset of captivity. '
+              'Likewise, believers must be willing to trust God even when they cannot '
+              'fully understand His direction.\n'
+              'Spiritual growth requires continual dependence upon the Lord. '
+              'Sometimes God closes one door because He is preparing another that '
+              'better fulfills His purpose. Proverbs 3:5–6 reminds us to trust in the '
+              'Lord with all our heart and not lean on our own understanding. New '
+              'seasons require fresh faith, renewed obedience, and confidence in '
+              'God\'s wisdom.\n'
+              'You cannot fully embrace God\'s new direction while refusing to release '
+              'yesterday\'s limitations.',
+        ),
+        DevotionalSection(
+          icon: '🚶',
+          heading:
+              'Expect God\'s Daily Renewal',
+          body:
+              'God\'s promise was not only for Israel but also reveals His character '
+              'toward all who belong to Him. He is continually renewing, restoring, '
+              'strengthening, and transforming His people. His mercies are new every '
+              'morning, and His grace is sufficient for every new challenge.\n'
+              'The Christian life is a continual journey of renewal. God restores '
+              'broken dreams, deepens spiritual maturity, opens unexpected '
+              'opportunities, and forms Christ within His children. As Paul writes in '
+              'Second Epistle to the Corinthians 5:17, those who are in Christ are '
+              'new creations. Because God is continually at work, believers can face '
+              'tomorrow with hope instead of fear.\n'
+              'The God who created all things is still creating new beginnings in '
+              'surrendered hearts.',
+        ),
+      ],
+      finalRevelation:
+          'God is not confined to your past successes, your past failures, or '
+          'your present limitations. While you are looking at yesterday, He is '
+          'preparing tomorrow.\n'
+          'While you see a wilderness, He sees a highway. While you see a desert, '
+          'He sees rivers of life. Do not measure God\'s future by your present '
+          'circumstances.\n'
+          'The God who made a path through the sea is still making pathways '
+          'through impossible situations today. His "new thing" may already be '
+          'unfolding—even if you cannot yet see it.',
+      reflectionQuestions: const [
+        'Am I allowing past failures or past successes to prevent me from '
+        'embracing what God is doing today?',
+        'Is there an impossible situation where I need to trust God to make a '
+        'way?',
+        'What step of faith is God asking me to take as He leads me into a new '
+        'season?',
+      ],
+      prayer:
+          'Heavenly Father,\n'
+          'Thank You for being the God of new beginnings. Thank You that Your '
+          'plans are never limited by my past, my failures, my fears, or my '
+          'present circumstances. You are the God who makes a way where there '
+          'seems to be no way, and You continue to work even when I cannot yet '
+          'see Your hand.\n'
+          'Forgive me for the times I have become trapped by regret, discouraged '
+          'by disappointment, or too comfortable with yesterday\'s blessings. Help '
+          'me release everything that keeps me from fully trusting You today. '
+          'Give me the faith to believe that Your purposes are greater than my '
+          'understanding and Your plans are better than my own.\n'
+          'Lord, open my spiritual eyes to recognize the new thing You are doing '
+          'in my life. When the path seems unclear, teach me to trust Your '
+          'wisdom. When the wilderness feels lonely, remind me that You are '
+          'preparing a road. When my soul feels dry like a desert, let the rivers '
+          'of Your Spirit refresh, strengthen, and sustain me.\n'
+          'Lead me into every new season with courage instead of fear, with faith '
+          'instead of doubt, and with hope instead of discouragement. Help me '
+          'walk forward without clinging to the past, follow You without '
+          'hesitation, and embrace every opportunity You place before me.\n'
+          'Until the day I stand in Your eternal presence, keep my heart '
+          'expectant, my spirit surrendered, and my eyes fixed on the glorious '
+          'future You have prepared for those who trust in You.\n'
+          'Amen. 🙏🌿',
+      createdAt: DateTime(2024, 5, 14),
+    ),
+
+    // ── 136. RESTORED ──────────────────────────────────────────────────
+    DevotionalModel(
+      id: 'restored_to_greater',
+      theme: 'Restored',
+      title: 'Restored to Greater Honor',
+      scripture:
+          'You shall increase my greatness, and comfort me on every side.',
+      scriptureReference: 'Psalm 71:21',
+      sections: const [
+        DevotionalSection(
+          icon: '🔑',
+          heading:
+              'God’s Work in Your Life Is Not Finished',
+          body:
+              'Psalm 71 is the prayer of someone who has walked with God through many '
+              'years, many trials, and many deliverances. The writer has experienced '
+              'opposition, weakness, and seasons when hope seemed distant, yet he '
+              'still speaks with confidence about what God will do next. His faith is '
+              'not anchored only in past victories but in the conviction that God’s '
+              'purpose for his life is still unfolding.\n'
+              'This is a powerful reminder that age, delay, hardship, or previous '
+              'disappointment cannot cancel the work of God. As long as God gives '
+              'life, He still has purpose. Philippians 1:6 assures us that the One '
+              'who began a good work will continue it until completion. Your present '
+              'chapter may feel difficult, but it is not the conclusion of your '
+              'story.\n'
+              'God has not preserved you this far merely to abandon you now.',
+        ),
+        DevotionalSection(
+          icon: '🔍',
+          heading:
+              'True Greatness Comes from God',
+          body:
+              'The psalmist says, “You shall increase my greatness.” He does not '
+              'speak as though greatness can be manufactured through ambition, human '
+              'influence, or self-promotion. He recognizes that whatever honor, '
+              'usefulness, or enlargement comes into his life must come from God.\n'
+              'Biblical greatness is not mainly about fame or public recognition. It '
+              'is about becoming increasingly useful in God’s hands, growing in '
+              'spiritual maturity, and carrying greater influence for His glory. '
+              'Jesus taught in Matthew 20:26 that true greatness is expressed through '
+              'service. When God increases a person, He often enlarges their capacity '
+              'to bless, endure, lead, and reflect His character.\n'
+              'Godly greatness is not about becoming more important in the eyes of '
+              'people, but more surrendered in the hands of God.',
+        ),
+        DevotionalSection(
+          icon: '⚔️',
+          heading:
+              'God Can Restore What Adversity Has Diminished',
+          body:
+              'The context of Psalm 71 includes affliction, enemies, weakness, and '
+              'repeated trouble. Yet the psalmist believes that God can reverse '
+              'decline and bring renewed strength, dignity, and purpose. What life '
+              'has reduced, God is able to rebuild.\n'
+              'There are seasons when suffering seems to strip away confidence, '
+              'opportunity, relationships, or visible fruitfulness. But God is a '
+              'Restorer. Joel 2:25 reveals His ability to restore years that seemed '
+              'consumed by loss. Restoration does not always mean returning '
+              'everything exactly as it was. Often, God brings something deeper, '
+              'wiser, and more fruitful than what existed before.\n'
+              'The enemy may reduce your circumstances, but he cannot cancel what God '
+              'has ordained.',
+        ),
+        DevotionalSection(
+          icon: '🌱',
+          heading:
+              'God’s Comfort Surrounds Us Completely',
+          body:
+              'The psalmist adds, “and comfort me on every side.” This speaks of '
+              'comfort that is not partial or temporary. God is able to meet His '
+              'children from every direction—emotionally, spiritually, mentally, and '
+              'practically. Even when pain comes from many sides, His presence is '
+              'sufficient on every side.\n'
+              'Divine comfort does not always remove hardship immediately. Sometimes '
+              'God comforts us by strengthening us within it. Second Corinthians '
+              '1:3–4 describes Him as the God of all comfort, who comforts us in '
+              'every trouble. His comfort may come through Scripture, prayer, the '
+              'Holy Spirit, faithful people, renewed hope, or the quiet assurance '
+              'that we are not alone.\n'
+              'When trouble surrounds you, God’s comfort can surround the trouble.',
+        ),
+        DevotionalSection(
+          icon: '🚶',
+          heading:
+              'Past Faithfulness Gives Courage for Future Hope',
+          body:
+              'Throughout Psalm 71, the writer repeatedly remembers how God helped '
+              'him from youth. Those memories become evidence for present faith. '
+              'Because God had been faithful before, the psalmist could confidently '
+              'expect Him to act again.\n'
+              'Remembering God’s faithfulness is not living in the past; it is using '
+              'the past to strengthen trust for the future. David followed this '
+              'pattern when facing Goliath, recalling how God had delivered him from '
+              'the lion and the bear. Every previous deliverance becomes a testimony '
+              'that the same God is still present.\n'
+              'Your history with God should become fuel for your hope, not merely '
+              'material for your memories.',
+        ),
+      ],
+      finalRevelation:
+          'God is able to bring increase after seasons of reduction, honor after '
+          'humiliation, strength after weakness, and comfort after prolonged '
+          'sorrow.\n'
+          'He can enlarge your influence, deepen your character, restore your '
+          'dignity, and surround you with comfort.\n'
+          'Your latter days do not have to be empty. In God’s hands, they can '
+          'become richer, wiser, stronger, and more fruitful than before.',
+      reflectionQuestions: const [
+        'Have I begun to believe that my most meaningful days are behind me?',
+        'In what area do I need to trust God for restoration, renewed strength, '
+        'or greater usefulness?',
+        'How has God’s past faithfulness given me evidence to trust Him today?',
+      ],
+      prayer:
+          'Heavenly Father,\n'
+          'Thank You for being faithful through every season of my life. Thank '
+          'You that Your purpose for me is not cancelled by age, hardship, '
+          'disappointment, failure, or delay. You have carried me through many '
+          'difficulties, and I trust that You are not finished with me.\n'
+          'Forgive me for the times I have allowed loss or discouragement to '
+          'define my expectations. Forgive me for assuming that because something '
+          'has decreased, it can never rise again. Renew my faith in Your power '
+          'to restore, strengthen, and enlarge according to Your perfect will.\n'
+          'Lord, increase my greatness in the way that honors You. Do not make me '
+          'merely more visible; make me more useful. Enlarge my capacity to love, '
+          'serve, endure, lead, encourage, and reflect the character of Christ. '
+          'Let every increase in my life become an opportunity to glorify Your '
+          'name.\n'
+          'Surround me with Your presence until fear gives way to peace, sorrow '
+          'gives way to strength, and uncertainty gives way to confidence in You. '
+          'Help me remember all the times You have sustained me. Let yesterday’s '
+          'faithfulness become today’s assurance.\n'
+          'Restore what You desire to restore, renew what has grown weak, and '
+          'prepare me for every purpose still ahead. May the remaining chapters '
+          'of my life display greater wisdom, deeper faith, stronger character, '
+          'and richer fruitfulness for the glory of Jesus Christ.\n'
+          'Amen. 🙏🌿',
+      createdAt: DateTime(2024, 5, 15),
+    ),
+
+    // ── 137. LIVING ──────────────────────────────────────────────────
+    DevotionalModel(
+      id: 'living_in_the_2',
+      theme: 'Living',
+      title: 'Living in the Light of Eternity',
+      scripture:
+          'Therefore, since all these things will be dissolved, what manner of '
+          'persons ought you to be in holy conduct and godliness?',
+      scriptureReference: '2 Peter 3:11',
+      sections: const [
+        DevotionalSection(
+          icon: '🔑',
+          heading:
+              'Everything Earthly Is Temporary',
+          body:
+              'Peter points believers toward a sobering reality: the present world, '
+              'with all its possessions, systems, achievements, and attractions, will '
+              'not last forever. Everything people often treat as permanent is '
+              'temporary. Wealth fades, reputations change, buildings decay, and '
+              'earthly accomplishments eventually pass away.\n'
+              'This truth is not meant to create fear, but perspective. When we '
+              'remember that this world is temporary, we become less controlled by '
+              'material things and more focused on what has eternal value. Jesus gave '
+              'the same warning in Matthew 6:19–20 when He told His followers not to '
+              'store up treasures on earth, but in heaven.\n'
+              'What is temporary should never receive the devotion that belongs to '
+              'what is eternal.',
+        ),
+        DevotionalSection(
+          icon: '🔍',
+          heading:
+              'The Return of Christ Should Shape How We Live',
+          body:
+              'Peter does not present the future merely as information to satisfy '
+              'curiosity. He turns prophecy into a personal question: “What manner of '
+              'persons ought you to be?” The knowledge that Christ will return should '
+              'affect our character, priorities, decisions, and relationships.\n'
+              'Biblical hope is not passive waiting. It produces faithful living. A '
+              'believer who expects to meet Christ should desire to be found walking '
+              'in obedience, serving others, and remaining spiritually alert. First '
+              'John 3:3 teaches that everyone who has this hope in Christ purifies '
+              'himself. True expectation of Christ’s return leads to preparation, not '
+              'speculation.\n'
+              'The purpose of knowing what is coming is to transform how we live now.',
+        ),
+        DevotionalSection(
+          icon: '⚔️',
+          heading:
+              'Holiness Is the Proper Response to Eternity',
+          body:
+              'Peter says believers should live in “holy conduct.” Holiness means '
+              'being separated from sin and devoted to God. It is not limited to '
+              'public worship or religious activity; it includes our thoughts, '
+              'speech, habits, relationships, finances, entertainment, and private '
+              'choices.\n'
+              'The coming judgment reveals that sin is never insignificant. Every '
+              'compromise matters because God is holy and our lives belong to Him. '
+              'Yet holiness is not produced through fear alone. It grows from love '
+              'for Christ and gratitude for His grace. First Peter 1:15–16 calls '
+              'believers to be holy in all their conduct because the One who called '
+              'them is holy.\n'
+              'Holiness is not preparation for a religious image; it is preparation '
+              'to stand before a holy God.\n'
+              '--',
+        ),
+        DevotionalSection(
+          icon: '🌱',
+          heading:
+              'Godliness Means Reflecting God’s Character Daily',
+          body:
+              'Peter also calls believers to godliness. Godliness is a life shaped by '
+              'reverence for God and a growing resemblance to His character. It '
+              'appears in humility, love, patience, truthfulness, mercy, purity, '
+              'faithfulness, and self-control.\n'
+              'A godly person does not merely speak about God; their conduct reveals '
+              'that God is influencing their life. Titus 2:11–12 teaches that grace '
+              'trains believers to reject ungodliness and live soberly, righteously, '
+              'and godly in the present age. Grace does not excuse careless living. '
+              'It empowers transformed living.\n'
+              'Godliness is the visible evidence that eternity has taken root in the '
+              'heart.',
+        ),
+        DevotionalSection(
+          icon: '🚶',
+          heading:
+              'Live Today as Someone Who Will Meet Christ',
+          body:
+              'Peter’s question is deeply personal. Since everything temporary will '
+              'pass away, what kind of person should you become? The answer is not '
+              'merely a person who knows doctrine, but one whose life is being '
+              'transformed by truth.\n'
+              'Each day is an opportunity to prepare for eternity through faithful '
+              'obedience. We prepare by forgiving quickly, serving humbly, resisting '
+              'sin, sharing the gospel, loving deeply, and walking closely with '
+              'Christ. Second Corinthians 5:10 reminds us that everyone will appear '
+              'before the judgment seat of Christ. This should not drive believers '
+              'into despair, but into sincere and purposeful living.\n'
+              'The best way to prepare for Christ’s return is to be faithful to '
+              'Christ today.',
+        ),
+      ],
+      finalRevelation:
+          'One day, everything people trusted in will be stripped away. '
+          'Possessions will not matter. Status will not matter. Human applause '
+          'will not matter.\n'
+          'Only what was done in faith, love, obedience, and surrender to Christ '
+          'will remain.\n'
+          'The question is not merely, “When will the end come?” The deeper '
+          'question is, “Who am I becoming before it comes?” Live so that when '
+          'earthly things pass away, your life will reveal that you were already '
+          'anchored in the eternal kingdom of God.',
+      reflectionQuestions: const [
+        'Am I living as though this present world is permanent?',
+        'What area of my life needs to become more holy and surrendered to God?',
+        'If I knew I would meet Christ soon, what would I change today?',
+      ],
+      prayer:
+          'Heavenly Father,\n'
+          'Thank You for reminding me that this world is temporary and that '
+          'eternity is real. Help me not to become so attached to earthly things '
+          'that I neglect the condition of my soul or the purpose for which You '
+          'created me.\n'
+          'Forgive me for the times I have lived carelessly, pursued temporary '
+          'rewards, or allowed worldly desires to become more important than '
+          'obedience to You. Give me wisdom to invest my life in what has eternal '
+          'value.\n'
+          'Lord Jesus, keep the hope of Your return alive in my heart. Let it '
+          'produce holiness, faithfulness, courage, and spiritual alertness. '
+          'Teach me to live each day as someone who expects to see You.\n'
+          'Holy Spirit, purify my conduct and develop godliness within me. Make '
+          'my thoughts pleasing to You, my words truthful and gracious, my '
+          'choices obedient, and my relationships marked by love.\n'
+          'Help me resist compromise, repent quickly, forgive freely, serve '
+          'humbly, and remain faithful in every assignment You give me. Do not '
+          'allow the temporary things of this world to capture the devotion of my '
+          'heart.\n'
+          'Fix my eyes on eternity. Prepare me to stand before Christ with joy '
+          'rather than regret, with faithfulness rather than shame, and with a '
+          'life that has brought glory to Your name. May I live today in the '
+          'light of that coming day, until I see my Savior face to face.\n'
+          'Amen. 🙏🌿',
+      createdAt: DateTime(2024, 5, 16),
+    ),
+
+    // ── 138. JOY ──────────────────────────────────────────────────
+    DevotionalModel(
+      id: 'joy_comes_with',
+      theme: 'Joy',
+      title: 'Joy Comes with the Morning',
+      scripture:
+          'For His anger is but for a moment, His favor is for life; weeping may '
+          'endure for a night, but joy comes in the morning.',
+      scriptureReference: 'Psalms 30:5',
+      sections: const [
+        DevotionalSection(
+          icon: '🔑',
+          heading:
+              'God\'s Anger Is Temporary, but His Favor Is Lasting',
+          body:
+              'David begins by revealing the heart of God. Although the Lord is holy '
+              'and disciplines His children when they wander, His anger is never '
+              'driven by uncontrolled emotion or a desire to destroy. His discipline '
+              'is purposeful, restorative, and rooted in love. God\'s correction lasts '
+              'only for a season, but His favor rests upon His people throughout '
+              'their lives.\n'
+              'Many believers wrongly imagine that every hardship is a sign that God '
+              'has abandoned them. Yet Scripture teaches otherwise. God\'s discipline '
+              'is evidence of His fatherly love, not His rejection. As Epistle to the '
+              'Hebrews 12:6 reminds us, "For whom the Lord loves He disciplines." His '
+              'correction is meant to restore us to deeper fellowship, stronger '
+              'faith, and greater holiness.\n'
+              'God\'s discipline may touch your circumstances for a season, but His '
+              'love never leaves your life.',
+        ),
+        DevotionalSection(
+          icon: '🔍',
+          heading:
+              'Seasons of Weeping Are Part of the Journey of Faith',
+          body:
+              'David honestly acknowledges that "weeping may endure for a night." The '
+              'Bible never denies the reality of sorrow. God\'s people experience '
+              'grief, disappointment, sickness, betrayal, unanswered questions, and '
+              'painful losses. Faith does not remove tears; it gives purpose and hope '
+              'in the midst of them.\n'
+              'Throughout Scripture, many faithful servants experienced nights of '
+              'weeping. Joseph wept before his brothers, Hannah wept in her '
+              'barrenness, Jeremiah wept over Jerusalem, and even Jesus wept at the '
+              'tomb of Lazarus. Their tears were not signs of weak faith but '
+              'expressions of genuine human dependence upon God. As Book of Psalms '
+              '56:8 beautifully declares, God keeps count of every tear His children '
+              'shed.\n'
+              'Your tears are never ignored by the Father who sees every sorrow and '
+              'understands every burden.',
+        ),
+        DevotionalSection(
+          icon: '⚔️',
+          heading:
+              'Every Night Has an Appointed Morning',
+          body:
+              'David does not say that the night will last forever. He declares with '
+              'confidence that "joy comes in the morning." This is one of Scripture\'s '
+              'greatest messages of hope. Darkness has an expiration date because God '
+              'remains faithful. The morning may not arrive according to our '
+              'timetable, but it always arrives according to God\'s perfect timing.\n'
+              'The resurrection of Jesus Christ is the greatest picture of this '
+              'truth. Friday brought suffering, Saturday brought silence, but Sunday '
+              'morning brought victory over sin and death. What appeared to be the '
+              'end became the beginning of eternal hope. As Book of Lamentations '
+              '3:22–23 reminds us, God\'s mercies are new every morning because His '
+              'faithfulness is great.\n'
+              'God does not promise that the night will never come, but He does '
+              'promise that the night will never have the final word.',
+        ),
+        DevotionalSection(
+          icon: '🌱',
+          heading:
+              'Joy Is Rooted in God\'s Presence, Not in Circumstances',
+          body:
+              'The joy David speaks about is far deeper than temporary happiness. '
+              'Happiness often depends upon favorable circumstances, but biblical joy '
+              'flows from confidence in God\'s presence and faithfulness. Even when '
+              'life remains difficult, the believer can possess inward peace because '
+              'God has not changed.\n'
+              'Paul demonstrated this truth while imprisoned, encouraging believers '
+              'to rejoice in the Lord always. His circumstances were painful, yet his '
+              'joy remained secure because Christ remained with him. As David wrote '
+              'elsewhere in Book of Psalms 16:11, "In Your presence is fullness of '
+              'joy." The greatest source of joy is not the removal of every problem '
+              'but the assurance that God walks with us through every trial.\n'
+              'Lasting joy is not found in perfect circumstances but in the '
+              'unchanging presence of a faithful God.',
+        ),
+        DevotionalSection(
+          icon: '🚶',
+          heading:
+              'Live with Hope Because God Is Faithful',
+          body:
+              'Psalm 30:5 teaches believers to become people of hope. Hope is not '
+              'wishful thinking or blind optimism. It is confident expectation based '
+              'upon God\'s character and His promises. Even when today\'s circumstances '
+              'seem overwhelming, hope looks beyond the present because it trusts the '
+              'God who controls the future.\n'
+              'Every believer will experience nights of sorrow, but none of those '
+              'nights are wasted in God\'s hands. He uses suffering to deepen faith, '
+              'strengthen perseverance, produce compassion, and draw His children '
+              'closer to Himself. As Paul writes in Epistle to the Romans 8:28, God '
+              'works all things together for the good of those who love Him and are '
+              'called according to His purpose.\n'
+              'Hope does not deny today\'s pain—it believes that God\'s faithfulness is '
+              'already preparing tomorrow\'s joy.',
+        ),
+      ],
+      finalRevelation:
+          'The night may feel long, the tears may feel endless, and the burden '
+          'may seem too heavy to bear. But the night is not permanent. The sorrow '
+          'is not final. The silence is not abandonment. God is still working '
+          'while you are waiting.\n'
+          'He is strengthening your faith, shaping your character, and preparing '
+          'a morning that will reveal His goodness.\n'
+          'Do not build your expectations around the darkness of the night. Build '
+          'them upon the faithfulness of the God who brings the sunrise.\n'
+          'The same God who carried you through the night will greet you with joy '
+          'in the morning.',
+      reflectionQuestions: const [
+        'Am I allowing today\'s sorrow to make me doubt God\'s lasting favor?',
+        'How has God remained faithful to me during previous seasons of '
+        'difficulty?',
+        'What promise of God can I hold onto while I wait for my "morning" to '
+        'come?',
+      ],
+      prayer:
+          'Heavenly Father,\n'
+          'Thank You for Your unfailing love and enduring favor. Thank You that '
+          'even when You lovingly discipline me, Your purpose is always to '
+          'restore, strengthen, and draw me closer to Yourself. I praise You '
+          'because Your mercy is greater than my failures and Your faithfulness '
+          'never comes to an end.\n'
+          'Lord, You know every tear I have shed, every burden I have carried, '
+          'and every silent struggle hidden within my heart. Thank You that none '
+          'of my pain is wasted in Your hands. When the night feels long and hope '
+          'seems distant, remind me that You are still present, still working, '
+          'and still fulfilling Your perfect plan.\n'
+          'Help me trust You in seasons of waiting. Strengthen my faith when I '
+          'cannot yet see the morning. Fill my heart with the joy that comes from '
+          'Your presence rather than from changing circumstances. Teach me to '
+          'worship You not only after You answer my prayers but also while I am '
+          'waiting for Your answer.\n'
+          'Renew my hope with each new day. Let Your peace quiet my fears, Your '
+          'promises strengthen my faith, and Your Spirit comfort my weary soul. '
+          'May every season of weeping draw me closer to Your heart, and may '
+          'every morning of joy bring greater glory to Your name.\n'
+          'Until the day when every tear is wiped away forever, help me walk '
+          'confidently, knowing that You are faithful, Your favor endures, Your '
+          'mercy is new every morning, and Your joy will always be greater than '
+          'my darkest night.\n'
+          'Amen. 🙏🌿',
+      createdAt: DateTime(2024, 5, 17),
+    ),
+
+    // ── 139. BEYOND ──────────────────────────────────────────────────
+    DevotionalModel(
+      id: 'beyond_what_eye',
+      theme: 'Beyond',
+      title: 'Beyond What Eye Has Seen',
+      scripture:
+          'But as it is written: ‘Eye has not seen, nor ear heard, nor have '
+          'entered into the heart of man the things which God has prepared for '
+          'those who love Him.',
+      scriptureReference: '1 Corinthians 2:9',
+      sections: const [
+        DevotionalSection(
+          icon: '🔑',
+          heading:
+              'God’s Plans Exceed the Limits of Human Perception',
+          body:
+              'Paul begins by exposing the boundaries of finite human understanding. '
+              'The human eye can only see what is visible in the physical realm, and '
+              'the human ear can only catch what is audible. Yet, God’s greatest '
+              'works and eternal design operate far beyond the reach of human senses. '
+              'God is active in spaces your physical sight cannot trace and your '
+              'natural mind cannot fully measure.\n'
+              'Believers often fall into the trap of measuring God’s goodness solely '
+              'by what they can immediately observe around them. If they cannot see '
+              'progress, they assume nothing is happening; if they cannot hear an '
+              'answer, they assume God is silent. Yet, faith calls us to look beyond '
+              'the natural horizon. God’s divine blueprint for your life is not '
+              'restricted by your current line of sight.\n'
+              'God is not limited by what you can see; His work begins right where '
+              'your vision ends.',
+        ),
+        DevotionalSection(
+          icon: '🔍',
+          heading:
+              'God’s Goodness Outpaces Human Imagination',
+          body:
+              'Paul declares that the fullness of what God has in store has not even '
+              '"entered into the heart of man." The human imagination is vast—capable '
+              'of dreaming up grand achievements, deep desires, and monumental '
+              'possibilities. Yet, the divine orchestrations of God surpass the very '
+              'highest heights of human thought.\n'
+              'Throughout salvation history, God regularly surprised those who sought '
+              'Him. Abraham could not have fully pictured a lineage as numerous as '
+              'the stars, nor could the disciples have imagined that the heartbreak '
+              'of the cross would unlock eternal salvation for the world. What we '
+              'imagine as "the best-case scenario" is often just the baseline of what '
+              'God is capable of unfolding.\n'
+              'Your greatest dream for your life is still only a small fragment of '
+              'God’s grander vision for you.',
+        ),
+        DevotionalSection(
+          icon: '⚔️',
+          heading:
+              'Preparation Is Taking Place in the Unseen',
+          body:
+              'Notice the active nature of the word prepared. God is not hastily '
+              'reacting to your current situation or scrambling to figure out your '
+              'future. He has already gone ahead of you, thoughtfully preparing '
+              'blessings, doors of opportunity, spiritual endurance, and grace '
+              'specifically tailored for your journey.\n'
+              'When you go through seasons of waiting, silence, or uncertainty, it '
+              'does not mean God has stopped working. Much like a seed growing in the '
+              'dark soil long before it breaks through the surface, God’s most '
+              'profound preparations take place out of sight. The delay you '
+              'experience is rarely a denial; it is often the quiet room where God is '
+              'preparing both the promise for you and you for the promise.\n'
+              'God’s silence is never a sign of inactivity—He is actively preparing '
+              'what you cannot yet see.',
+        ),
+        DevotionalSection(
+          icon: '🌱',
+          heading:
+              'Deep Revelation Is Reserved for Those Who Love Him',
+          body:
+              'This extraordinary promise carries a specific condition: it is for '
+              '"those who love Him." God does not reveal His deepest truths and '
+              'richest mysteries to the curious onlooker, but to the devoted heart. '
+              'Love for God is the doorway through which spiritual insight, trust, '
+              'and intimacy are unlocked.\n'
+              'To love God means to choose Him above the outcome, trusting His '
+              'character even when His timeline feels long. When your heart is '
+              'tethered to Him in love, your perspective shifts. You stop asking God '
+              'merely to fit into your plans and begin asking Him to align your heart '
+              'with His divine preparation.\n'
+              'The depth of your love for God determines the depth of your trust in '
+              'His unseen promises.',
+        ),
+        DevotionalSection(
+          icon: '🚶',
+          heading:
+              'Walk by Faith in What Is Prepared, Not What Is Present',
+          body:
+              'Paul’s words call believers to live with an eternal, Spirit-led '
+              'perspective. If you only build your confidence on today\'s tangible '
+              'circumstances, your faith will fluctuate with every shift in life. But '
+              'when you root your hope in what God has already prepared, you gain an '
+              'anchor that remains steady through every storm.\n'
+              'Living with this hope changes how you face daily obstacles. Trial, '
+              'disappointment, and closed doors are no longer seen as the final '
+              'chapter, but merely as temporary scenery on the way to God\'s ultimate '
+              'purpose. As Paul notes just one verse later in 1 Corinthians 2:10, God '
+              'reveals these unseen riches to us through His Spirit.\n'
+              'Faith does not require you to see the entire path ahead; it only asks '
+              'you to trust the God who prepared it.',
+        ),
+      ],
+      finalRevelation:
+          'Do not measure the goodness of your future by the limitations of your '
+          'present view. What you are currently experiencing is not the full '
+          'story, and what you can see right now is not all that exists.\n'
+          'God is orchestrating details behind the scenes that your eyes have not '
+          'yet witnessed and your mind cannot yet fully fathom. He is weaving '
+          'every detail, every season of waiting, and every moment of trust into '
+          'a masterpiece that will ultimately display His glory and His love for '
+          'you.',
+      reflectionQuestions: const [
+        'Am I currently measuring God’s faithfulness by what I can see, or by '
+        'what He has promised?',
+        'In what area of my life do I need to stop relying on human imagination '
+        'and start trusting God’s preparation?',
+        'How can I cultivate a deeper love for God that focuses on His presence '
+        'rather than just His gifts?',
+      ],
+      prayer:
+          'Heavenly Father,\n'
+          'Thank You that Your wisdom and plans far exceed anything my eyes have '
+          'seen, my ears have heard, or my mind has ever imagined. I praise You '
+          'because You are an infinite God whose goodness cannot be contained by '
+          'my limited human understanding.\n'
+          'Lord, forgive me for the times I have judged Your faithfulness based '
+          'solely on my immediate circumstances. Forgive me for doubting Your '
+          'work simply because I could not see the progress taking place behind '
+          'the scenes. Today, I choose to surrender my limited vision and place '
+          'my trust entirely in Your divine preparation.\n'
+          'Help me to love You with all my heart, soul, and mind—not just for '
+          'what You give, but for who You are. Teach me to walk by faith and not '
+          'by sight. When the season of waiting feels long and the future seems '
+          'unclear, remind me by Your Holy Spirit that You are actively at work, '
+          'preparing things far greater than I could ever ask or think.\n'
+          'Anchor my heart in Your unchanging truth. Give me spiritual eyes to '
+          'see Beyond the natural, a heart that yields to Your divine timing, and '
+          'a faith that stands firm in Your promises. May my life bring glory to '
+          'Your name as I trust You with all my tomorrows.\n'
+          'In Jesus\' precious and mighty name,\n'
+          'Amen. 🙏🌿',
+      createdAt: DateTime(2024, 5, 18),
     ),
   ];
 }

@@ -436,10 +436,12 @@ class _DailyPlanVerseTileState extends State<DailyPlanVerseTile> {
   bool _loading = false;
   bool _loaded = false;
   String? _commentary;
+  int _commentaryRequestToken = 0;
 
   Future<void> _loadCommentary() async {
     if (_loaded || _loading) return;
 
+    final requestToken = ++_commentaryRequestToken;
     setState(() => _loading = true);
 
     try {
@@ -451,7 +453,7 @@ class _DailyPlanVerseTileState extends State<DailyPlanVerseTile> {
         bookName: widget.bookName,
       );
 
-      if (!mounted) return;
+      if (!mounted || requestToken != _commentaryRequestToken) return;
       setState(() {
         _commentary = text != null && text.trim().isNotEmpty
             ? BibleTextSanitizer.clean(text)
@@ -461,7 +463,7 @@ class _DailyPlanVerseTileState extends State<DailyPlanVerseTile> {
       });
     } catch (e, st) {
       debugPrint('DailyPlanVerseTile: failed to load commentary: $e\n$st');
-      if (!mounted) return;
+      if (!mounted || requestToken != _commentaryRequestToken) return;
       setState(() {
         _commentary = _missingInsightMessage;
         _loaded = true;
@@ -479,6 +481,7 @@ class _DailyPlanVerseTileState extends State<DailyPlanVerseTile> {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.translation != widget.translation ||
         oldWidget.verse.ref.key != widget.verse.ref.key) {
+      _commentaryRequestToken++;
       _expanded = false;
       _loading = false;
       _loaded = false;
@@ -561,6 +564,7 @@ class _DailyPlanVerseTileState extends State<DailyPlanVerseTile> {
                     child: _loading
                         ? const LinearProgressIndicator()
                         : VerseInsightPanel(
+                            translation: widget.translation,
                             rawText: _commentary ?? _missingInsightMessage,
                             accentColor: scheme.primary,
                             baseTextStyle: readingStyles.commentaryTextStyle,

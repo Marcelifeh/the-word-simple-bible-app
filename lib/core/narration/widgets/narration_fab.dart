@@ -24,6 +24,7 @@ class NarrationFab extends StatelessWidget {
         final hasActiveSession = session != null && session.status != NarrationStatus.idle;
 
         return FloatingActionButton.extended(
+          heroTag: 'narration-fab',
           onPressed: () {
             if (hasActiveSession) {
               if (isPlaying) {

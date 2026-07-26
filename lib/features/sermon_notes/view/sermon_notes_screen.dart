@@ -86,10 +86,10 @@ class _SermonNotesScreenState extends State<SermonNotesScreen> {
                 final note = notes[index];
                 final scriptureCount =
                     ScriptureParser.extractScriptures(note.content).length;
-                final hasAudio = note.audioPath?.isNotEmpty ?? false;
-                final audioLabel = note.audioDuration == null
+                final hasAudio = note.hasRecording;
+                final audioLabel = note.totalDurationMs == 0
                     ? 'Audio'
-                    : 'Audio ${_formatDuration(note.audioDuration!)}';
+                    : 'Audio ${_formatDuration(note.totalRecordingDuration)}';
                 return Card(
                   elevation: 0,
                   color: theme.colorScheme.surfaceContainerLow,
@@ -141,6 +141,7 @@ class _SermonNotesScreenState extends State<SermonNotesScreen> {
                       AppRouter.push(
                         context,
                         SermonEditorScreen(note: note),
+                        rootNavigator: true,
                       );
                     },
                     trailing: Row(
@@ -188,10 +189,12 @@ class _SermonNotesScreenState extends State<SermonNotesScreen> {
     );
 
     final fab = FloatingActionButton.extended(
+      heroTag: 'new-note-fab',
       onPressed: () {
         AppRouter.push(
           context,
           const SermonEditorScreen(),
+          rootNavigator: true,
         );
       },
       icon: const Icon(Icons.add),

@@ -1,8 +1,9 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
-import '../../../core/config/app_branding.dart';
+import 'package:uuid/uuid.dart';
 import '../../../core/navigation/app_router.dart' show AppRouter;
 import '../../../data/bible/book_catalog.dart';
 
@@ -44,19 +45,24 @@ class _SermonEditorScreenState extends State<SermonEditorScreen> {
   bool _didCheckDraft = false;
   bool _skipDraftPersistOnDispose = false;
   bool _isRecording = false;
-  bool _isPlaybackReady = false;
   bool _isPlayingAudio = false;
+  bool _isSaving = false;
   bool _isDisposing = false;
   bool _previewMode = false;
+  bool _isClosing = false;
   TextAlign? _textAlign;
   Duration _recordingElapsed = Duration.zero;
   Duration _playbackPosition = Duration.zero;
   DateTime? _recordingStartedAt;
-  String? _loadedAudioPath;
+
+  SermonRecordingClip? _pendingRecordingClip;
+  int _currentClipIndex = 0;
+  Duration _positionInCurrentClip = Duration.zero;
+  String? _loadedClipsSignature;
+
   Future<void>? _repositoriesReadyFuture;
   ValueNotifier<List<ResolvedScriptureMatch>>? _scriptureMatchesNotifier;
   ValueNotifier<bool>? _hasUnsavedChangesNotifier;
-  ValueNotifier<DateTime?>? _lastSavedAtNotifier;
   late AppState _appState;
   late SermonNoteRepository _noteRepository;
   late SermonDraftRepository _draftRepository;
@@ -68,10 +74,6 @@ class _SermonEditorScreenState extends State<SermonEditorScreen> {
 
   ValueNotifier<bool> get _hasUnsavedChangesListenable {
     return _hasUnsavedChangesNotifier ??= ValueNotifier(false);
-  }
-
-  ValueNotifier<DateTime?> get _lastSavedAtListenable {
-    return _lastSavedAtNotifier ??= ValueNotifier<DateTime?>(null);
   }
 
   TextAlign get _activeTextAlign => _textAlign ?? TextAlign.left;
@@ -104,9 +106,26 @@ class _SermonEditorScreenState extends State<SermonEditorScreen> {
     );
     _textAlign = _safeTextAlignFromNote(_workingNote);
     _audioPlayer.playerStateStream.listen(_handlePlayerState);
+
+    _audioPlayer.currentIndexStream.listen((index) {
+      if (!mounted) return;
+      final clips = _workingNote.playableClips;
+      setState(() {
+        _currentClipIndex =
+            kIsWeb && clips.length > 1 ? clips.length - 1 : index ?? 0;
+      });
+    });
+
     _audioPlayer.positionStream.listen((position) {
       if (!mounted) return;
-      setState(() => _playbackPosition = position);
+      setState(() {
+        _positionInCurrentClip = position;
+        _playbackPosition = calculateSermonGlobalPosition(
+          clips: _workingNote.playableClips,
+          currentIndex: _currentClipIndex,
+          positionInClip: _positionInCurrentClip,
+        );
+      });
     });
 
     if (_contentController.text.isNotEmpty) {
@@ -155,7 +174,6 @@ class _SermonEditorScreenState extends State<SermonEditorScreen> {
     _contentController.dispose();
     _scriptureMatchesNotifier?.dispose();
     _hasUnsavedChangesNotifier?.dispose();
-    _lastSavedAtNotifier?.dispose();
     _contentFocusNode.dispose();
     _inputScrollController.dispose();
     super.dispose();
@@ -167,11 +185,6 @@ class _SermonEditorScreenState extends State<SermonEditorScreen> {
       ..preacher = _preacherController.text.trim()
       ..content = _removeMarkdownFormatting(_contentController.text)
       ..textAlign = _activeTextAlign
-      ..audioPath = _workingNote.audioPath
-      ..audioDuration = _workingNote.audioDuration
-      ..audioSizeBytes = _workingNote.audioSizeBytes
-      ..audioMimeType = _workingNote.audioMimeType
-      ..recordedAt = _workingNote.recordedAt
       ..timestampedNotes = _workingNote.timestampedNotes
       ..lastModified = DateTime.now();
     return _workingNote;
@@ -181,20 +194,30 @@ class _SermonEditorScreenState extends State<SermonEditorScreen> {
     return note.title.isNotEmpty ||
         note.preacher.isNotEmpty ||
         note.content.trim().isNotEmpty ||
-        (note.audioPath?.isNotEmpty ?? false);
+        note.hasRecording ||
+        note.recordingClips.any((clip) => clip.filePath.trim().isNotEmpty) ||
+        _pendingRecordingClip != null;
   }
 
   Future<void> _saveNote() async {
-    if (_isRecording) {
-      await _stopRecording();
+    if (_isSaving) return;
+    setState(() => _isSaving = true);
+    try {
+      final note = _buildCurrentNote();
+      if (_hasMeaningfulContent(note)) {
+        await _noteRepository.saveNote(note);
+      }
+
+      if (_isRecording) {
+        await _persistDraft(clearIfEmpty: false);
+      } else {
+        _skipDraftPersistOnDispose = true;
+        await _draftRepository.clearActiveDraft();
+        _markDraftSaved();
+      }
+    } finally {
+      if (mounted) setState(() => _isSaving = false);
     }
-    final note = _buildCurrentNote();
-    if (_hasMeaningfulContent(note)) {
-      await _noteRepository.saveNote(note);
-    }
-    _skipDraftPersistOnDispose = true;
-    await _draftRepository.clearActiveDraft();
-    _markDraftSaved();
   }
 
   void _scheduleDraftAutosave(
@@ -213,21 +236,28 @@ class _SermonEditorScreenState extends State<SermonEditorScreen> {
   Future<void> _persistDraft({required bool clearIfEmpty}) async {
     if (!_didBindRepositories) return;
     final note = _buildCurrentNote();
-    if (!_hasMeaningfulContent(note)) {
+
+    SermonNote draftNote = note;
+    if (_pendingRecordingClip != null) {
+      draftNote = note.copyWith(
+        recordingClips: [...note.recordingClips, _pendingRecordingClip!],
+      );
+    }
+
+    if (!_hasMeaningfulContent(draftNote)) {
       if (clearIfEmpty) {
         await _draftRepository.clearActiveDraft();
       }
       _markDraftSaved();
       return;
     }
-    await _draftRepository.saveActiveDraft(note);
+    await _draftRepository.saveActiveDraft(draftNote);
     _markDraftSaved();
   }
 
   void _markDraftSaved() {
     if (_isDisposing) return;
     _hasUnsavedChangesListenable.value = false;
-    _lastSavedAtListenable.value = DateTime.now();
   }
 
   Future<void> _maybeRestoreDraft() async {
@@ -249,8 +279,11 @@ class _SermonEditorScreenState extends State<SermonEditorScreen> {
       return;
     }
 
-    final mayHaveUnfinishedRecording =
-        (draft.audioPath?.isNotEmpty ?? false) && draft.audioDuration == null;
+    final mayHaveUnfinishedRecording = draft.recordingClips.any(
+      (c) =>
+          c.status == SermonRecordingClipStatus.recording ||
+          c.status == SermonRecordingClipStatus.interrupted,
+    );
 
     final shouldRestore = await showDialog<bool>(
       context: context,
@@ -285,7 +318,14 @@ class _SermonEditorScreenState extends State<SermonEditorScreen> {
     if (!mounted) return;
 
     if (shouldRestore == true) {
-      _workingNote = draft;
+      final normalizedClips = draft.recordingClips.map((c) {
+        if (c.status == SermonRecordingClipStatus.recording) {
+          return c.copyWith(status: SermonRecordingClipStatus.interrupted);
+        }
+        return c;
+      }).toList();
+
+      _workingNote = draft.copyWith(recordingClips: normalizedClips);
       _titleController.text = draft.title;
       _preacherController.text = draft.preacher;
       final cleanContent = _removeMarkdownFormatting(draft.content);
@@ -317,6 +357,16 @@ class _SermonEditorScreenState extends State<SermonEditorScreen> {
     _contentFocusNode.requestFocus();
   }
 
+  void _invalidateLoadedSource() {
+    _loadedClipsSignature = null;
+  }
+
+  Duration get _globalRecordingOffset {
+    final completedMs =
+        _workingNote.playableClips.fold(0, (sum, c) => sum + c.durationMs);
+    return Duration(milliseconds: completedMs) + _recordingElapsed;
+  }
+
   Future<void> _toggleRecording() async {
     if (_isRecording) {
       await _stopRecording();
@@ -334,32 +384,49 @@ class _SermonEditorScreenState extends State<SermonEditorScreen> {
     }
 
     try {
-      final previousPath = _workingNote.audioPath;
+      final nextSequence = nextSermonRecordingClipSequence(
+        _workingNote.recordingClips,
+      );
+
+      final clipId = const Uuid().v4();
+      final tempClip = SermonRecordingClip(
+        id: clipId,
+        filePath: '',
+        createdAtUtc: DateTime.now().toUtc(),
+        durationMs: 0,
+        sequence: nextSequence,
+        status: SermonRecordingClipStatus.recording,
+      );
+
+      _pendingRecordingClip = tempClip;
+
       final path = await _recordingService.start(sermonId: _workingNote.id);
-      if (previousPath != null && previousPath != path) {
-        await _audioFileService.delete(previousPath);
+      if (path.isEmpty) {
+        _pendingRecordingClip = null;
+        throw StateError('Recorder returned an empty file path');
       }
+
+      _pendingRecordingClip = tempClip.copyWith(filePath: path);
+
       _recordingStartedAt = DateTime.now();
       _recordingElapsed = Duration.zero;
       _recordingTimer?.cancel();
       _recordingTimer = Timer.periodic(const Duration(seconds: 1), (_) {
         final startedAt = _recordingStartedAt;
         if (!mounted || startedAt == null) return;
-        setState(
-            () => _recordingElapsed = DateTime.now().difference(startedAt));
+        setState(() {
+          _recordingElapsed = DateTime.now().difference(startedAt);
+        });
       });
+
       setState(() {
         _isRecording = true;
-        _workingNote.audioPath = path;
-        _workingNote.audioDuration = null;
-        _workingNote.audioSizeBytes = null;
-        _workingNote.audioMimeType = 'audio/mp4';
-        _workingNote.recordedAt = _recordingStartedAt;
-        _isPlaybackReady = false;
       });
+
       await _persistDraft(clearIfEmpty: false);
       _scheduleDraftAutosave();
     } catch (e) {
+      _pendingRecordingClip = null;
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Recording could not start: $e')),
@@ -368,31 +435,91 @@ class _SermonEditorScreenState extends State<SermonEditorScreen> {
   }
 
   Future<void> _stopRecording() async {
+    final pending = _pendingRecordingClip;
+    if (pending == null) return;
+    final startedAt = _recordingStartedAt;
+    final elapsed = startedAt == null
+        ? _recordingElapsed
+        : DateTime.now().difference(startedAt);
+
     try {
       final path = await _recordingService.stop();
       _recordingTimer?.cancel();
-      final recordedAt = _recordingStartedAt;
-      final duration = _recordingElapsed;
-      final effectivePath =
-          path != null && path.isNotEmpty ? path : _workingNote.audioPath;
-      final sizeBytes = await _audioFileService.sizeBytes(effectivePath);
+      _recordingElapsed = elapsed;
+
+      if (path == null || path.trim().isEmpty) {
+        final interruptedClip = pending.copyWith(
+          status: SermonRecordingClipStatus.interrupted,
+        );
+        setState(() {
+          _isRecording = false;
+          _workingNote = _workingNote.copyWith(
+            recordingClips: [
+              ..._workingNote.recordingClips,
+              interruptedClip,
+            ],
+          );
+          _pendingRecordingClip = null;
+        });
+        debugPrint('Recording stopped but no valid path was returned');
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Recording stopped without a playable audio file.'),
+            ),
+          );
+        }
+        _scheduleDraftAutosave();
+        return;
+      }
+
+      final sizeBytes = await _tryReadFileSize(path);
+      final completed = pending.copyWith(
+        filePath: path,
+        durationMs: elapsed.inMilliseconds,
+        sizeBytes: sizeBytes,
+        status: SermonRecordingClipStatus.completed,
+      );
+
       setState(() {
         _isRecording = false;
-        if (path != null && path.isNotEmpty) {
-          _workingNote.audioPath = path;
-        }
-        _workingNote.audioDuration = duration;
-        _workingNote.audioSizeBytes = sizeBytes;
-        _workingNote.audioMimeType = 'audio/mp4';
-        _workingNote.recordedAt = recordedAt ?? DateTime.now();
-        _isPlaybackReady = _workingNote.audioPath != null;
+        _workingNote = _workingNote.copyWith(
+          recordingClips: [..._workingNote.recordingClips, completed],
+        );
+        _pendingRecordingClip = null;
+        _invalidateLoadedSource();
       });
+
       _scheduleDraftAutosave();
     } catch (e) {
-      if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Recording could not stop cleanly: $e')),
+      _recordingTimer?.cancel();
+      final interruptedClip = pending.copyWith(
+        status: SermonRecordingClipStatus.interrupted,
       );
+      if (mounted) {
+        setState(() {
+          _isRecording = false;
+          _workingNote = _workingNote.copyWith(
+            recordingClips: [
+              ..._workingNote.recordingClips,
+              interruptedClip,
+            ],
+          );
+          _pendingRecordingClip = null;
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Recording could not stop cleanly: $e')),
+        );
+      }
+      _scheduleDraftAutosave();
+    }
+  }
+
+  Future<int?> _tryReadFileSize(String path) async {
+    try {
+      return await _audioFileService.sizeBytes(path);
+    } catch (_) {
+      return null;
     }
   }
 
@@ -441,12 +568,80 @@ class _SermonEditorScreenState extends State<SermonEditorScreen> {
     );
 
     if (shouldStopAndSave != true) return false;
+    await _stopRecording();
     await _saveNote();
     return true;
   }
 
+  Future<void> _saveAndClose() async {
+    if (_isClosing) return;
+    _isClosing = true;
+    try {
+      if (_isRecording) {
+        final shouldLeave = await _confirmLeaveWhileRecording();
+        if (!shouldLeave) return;
+      } else {
+        await _saveNote();
+      }
+      if (mounted) Navigator.of(context).pop();
+    } finally {
+      _isClosing = false;
+    }
+  }
+
+  Future<void> _deleteCurrentNote() async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Delete this note?'),
+          content: const Text(
+            'The note and its saved recording will be removed permanently.',
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context, false),
+              child: const Text('Cancel'),
+            ),
+            FilledButton(
+              onPressed: () => Navigator.pop(context, true),
+              child: const Text('Delete'),
+            ),
+          ],
+        );
+      },
+    );
+    if (confirmed != true || !mounted) return;
+
+    if (_isRecording) await _stopRecording();
+    await _audioPlayer.stop();
+
+    await _noteRepository.deleteNote(_workingNote.id);
+    await _draftRepository.clearActiveDraft();
+    _skipDraftPersistOnDispose = true;
+
+    final paths = {
+      ..._workingNote.recordingClips.map((c) => c.filePath),
+      if (_pendingRecordingClip != null) _pendingRecordingClip!.filePath,
+    }.where((p) => p.trim().isNotEmpty).toSet();
+
+    for (final path in paths) {
+      try {
+        await _recordingService.deleteFile(path);
+      } catch (e) {
+        debugPrint('Audio cleanup failed for $path: $e');
+      }
+    }
+
+    if (mounted) Navigator.of(context).pop();
+  }
+
   void _insertTimestampMarker() {
-    final offset = _isRecording ? _recordingElapsed : _playbackPosition;
+    if (!_isRecording) return;
+
+    final offset = _globalRecordingOffset;
+    final pending = _pendingRecordingClip;
+
     final marker = '[${_formatDuration(offset)}] ';
     final current = _contentController.value;
     final text = current.text;
@@ -463,15 +658,44 @@ class _SermonEditorScreenState extends State<SermonEditorScreen> {
       text: nextText,
       selection: TextSelection.collapsed(offset: nextOffset),
     );
-    _workingNote.timestampedNotes.add(SermonTimestampedNote(offset: offset));
+
+    final ts = SermonTimestampedNote(
+      offset: offset,
+      clipId: pending?.id,
+      positionInClipMs: _recordingElapsed.inMilliseconds,
+    );
+
+    _workingNote = _workingNote.copyWith(
+      timestampedNotes: [..._workingNote.timestampedNotes, ts],
+    );
+
     setState(() {});
     _onContentChanged(nextText);
     _contentFocusNode.requestFocus();
   }
 
+  Future<void> _ensureAudioSourceLoaded() async {
+    final clips = _workingNote.playableClips;
+    final sig = buildSermonClipSignature(clips);
+    if (sig == _loadedClipsSignature) return;
+
+    if (clips.isEmpty) return;
+
+    if (kIsWeb) {
+      await _audioPlayer.setUrl(clips.last.filePath);
+    } else if (clips.length == 1) {
+      await _audioPlayer.setFilePath(clips.single.filePath);
+    } else {
+      await _audioPlayer.setAudioSources(
+        clips.map((clip) => AudioSource.file(clip.filePath)).toList(),
+      );
+    }
+    _loadedClipsSignature = sig;
+  }
+
   Future<void> _togglePlayback() async {
-    final audioPath = _workingNote.audioPath;
-    if (audioPath == null || audioPath.isEmpty) return;
+    final clips = _workingNote.playableClips;
+    if (clips.isEmpty) return;
 
     try {
       if (_isPlayingAudio) {
@@ -479,20 +703,10 @@ class _SermonEditorScreenState extends State<SermonEditorScreen> {
         return;
       }
 
-      if (_loadedAudioPath != audioPath) {
-        if (audioPath.startsWith('http://') ||
-            audioPath.startsWith('https://') ||
-            audioPath.startsWith('blob:')) {
-          await _audioPlayer.setUrl(audioPath);
-        } else {
-          await _audioPlayer.setFilePath(audioPath);
-        }
-        _loadedAudioPath = audioPath;
-        _isPlaybackReady = true;
-      }
+      await _ensureAudioSourceLoaded();
 
       if (_audioPlayer.processingState == ProcessingState.completed) {
-        await _audioPlayer.seek(Duration.zero);
+        await _audioPlayer.seek(Duration.zero, index: 0);
       }
       await _audioPlayer.play();
     } catch (e) {
@@ -504,25 +718,62 @@ class _SermonEditorScreenState extends State<SermonEditorScreen> {
   }
 
   Future<void> _seekToTimestamp(SermonTimestampedNote note) async {
-    final audioPath = _workingNote.audioPath;
-    if (audioPath == null || audioPath.isEmpty) return;
-    if (_loadedAudioPath != audioPath) {
-      await _togglePlayback();
-      await _audioPlayer.pause();
+    final clips = _workingNote.playableClips;
+    if (clips.isEmpty) return;
+
+    await _ensureAudioSourceLoaded();
+
+    if (note.clipId != null) {
+      final clipIndex = clips.indexWhere((c) => c.id == note.clipId);
+      if (clipIndex >= 0) {
+        if (kIsWeb && clipIndex != clips.length - 1) {
+          _showWebPlaybackLimitation();
+          return;
+        }
+        await _audioPlayer.seek(
+          Duration(milliseconds: note.positionInClipMs ?? 0),
+          index: kIsWeb ? 0 : clipIndex,
+        );
+        return;
+      }
     }
-    await _audioPlayer.seek(note.offset);
+
+    var remaining = note.offset.inMilliseconds;
+    for (var i = 0; i < clips.length; i++) {
+      if (remaining <= clips[i].durationMs || i == clips.length - 1) {
+        if (kIsWeb && i != clips.length - 1) {
+          _showWebPlaybackLimitation();
+          return;
+        }
+        await _audioPlayer.seek(
+          Duration(milliseconds: remaining.clamp(0, clips[i].durationMs)),
+          index: kIsWeb ? 0 : i,
+        );
+        return;
+      }
+      remaining -= clips[i].durationMs;
+    }
   }
 
   void _handlePlayerState(PlayerState state) {
     if (!mounted) return;
     setState(() {
       _isPlayingAudio = state.playing;
-      _isPlaybackReady = _workingNote.audioPath != null &&
-          state.processingState != ProcessingState.idle;
       if (state.processingState == ProcessingState.completed) {
         _isPlayingAudio = false;
       }
     });
+  }
+
+  void _showWebPlaybackLimitation() {
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text(
+          'That timestamp is in an earlier clip. Web currently plays only the latest clip.',
+        ),
+      ),
+    );
   }
 
   void _parseContent(String text) {
@@ -580,10 +831,43 @@ class _SermonEditorScreenState extends State<SermonEditorScreen> {
     }
   }
 
+  Future<void> _showNoteToolsSheet() async {
+    FocusScope.of(context).unfocus();
+    final hasAudio = _workingNote.hasRecording;
+
+    await showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      useSafeArea: true,
+      showDragHandle: true,
+      builder: (sheetContext) {
+        return Padding(
+          padding: EdgeInsets.only(
+            bottom: MediaQuery.viewInsetsOf(sheetContext).bottom,
+          ),
+          child: _SermonNoteDetailsSheet(
+            preacherController: _preacherController,
+            previewMode: _previewMode,
+            onTogglePreview: _togglePreviewMode,
+            hasAudio: hasAudio,
+            clipCount: _workingNote.clipCount,
+            totalDuration: _workingNote.totalRecordingDuration,
+            onDeleteNote: _deleteCurrentNote,
+            timestampedNotes: _workingNote.timestampedNotes,
+            onSeekToTimestamp: (note) => unawaited(_seekToTimestamp(note)),
+            onSaveAndClose: _saveAndClose,
+            onMetadataChanged: _onMetadataChanged,
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final readingScale = AppScope.of(context).fontScale;
+    final keyboardVisible = MediaQuery.viewInsetsOf(context).bottom > 0;
     final noteTextStyle = TextStyle(
       fontSize: 16 * readingScale,
       height: 1.45,
@@ -596,25 +880,23 @@ class _SermonEditorScreenState extends State<SermonEditorScreen> {
     );
 
     return PopScope(
-      canPop: !_isRecording,
+      canPop: false,
       onPopInvokedWithResult: (didPop, _) async {
-        if (didPop || !_isRecording) return;
-        final shouldLeave = await _confirmLeaveWhileRecording();
-        if (!shouldLeave || !context.mounted) return;
-        Navigator.pop(context);
+        if (!didPop) await _saveAndClose();
       },
       child: Scaffold(
+        resizeToAvoidBottomInset: true,
         appBar: AppBar(
-          title: const Text(AppBranding.logosNotes,
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+          toolbarHeight: 56,
+          titleSpacing: 0,
+          leading: BackButton(onPressed: _saveAndClose),
+          title: const Text('LOGOS Notes'),
           actions: [
+            _buildCompactSaveStatus(theme),
             IconButton(
-              icon: const Icon(Icons.check),
-              onPressed: () async {
-                await _saveNote();
-                if (!context.mounted) return;
-                Navigator.pop(context);
-              },
+              tooltip: 'Note details',
+              icon: const Icon(Icons.more_vert_rounded),
+              onPressed: _showNoteToolsSheet,
             ),
           ],
         ),
@@ -647,96 +929,73 @@ class _SermonEditorScreenState extends State<SermonEditorScreen> {
             }
 
             return SafeArea(
+              top: false,
               child: Column(
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        TextField(
-                          controller: _titleController,
-                          onChanged: _onMetadataChanged,
-                          style: theme.textTheme.headlineMedium?.copyWith(
-                            fontWeight: FontWeight.bold,
-                          ),
-                          decoration: const InputDecoration(
-                            hintText: 'Sermon Title...',
-                            border: InputBorder.none,
-                          ),
-                        ),
-                        TextField(
-                          controller: _preacherController,
-                          onChanged: _onMetadataChanged,
-                          style: theme.textTheme.titleMedium?.copyWith(
-                            color: theme.colorScheme.onSurfaceVariant,
-                          ),
-                          decoration: const InputDecoration(
-                            hintText: 'Preacher / Speaker (optional)',
-                            border: InputBorder.none,
-                            prefixIcon: Icon(Icons.person_outline),
-                            prefixIconConstraints: BoxConstraints(minWidth: 40),
-                          ),
-                        ),
-                        const Divider(),
-                        _buildSermonIntelligencePanel(theme),
-                        _buildFormattingToolbar(theme),
-                      ],
-                    ),
+                  AnimatedSize(
+                    duration: const Duration(milliseconds: 180),
+                    curve: Curves.easeOut,
+                    child: _isRecording
+                        ? Padding(
+                            padding: const EdgeInsets.fromLTRB(16, 8, 16, 4),
+                            child: _buildActiveRecordingBar(theme),
+                          )
+                        : const SizedBox.shrink(),
                   ),
+                  _buildCompactTitleField(theme),
+                  const Divider(height: 1),
                   Expanded(
                     child: Padding(
-                      padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20),
-                          color: theme.colorScheme.surfaceContainerHighest
-                              .withValues(alpha: 0.22),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(16),
-                          child: _previewMode
-                              ? SermonNotePreview(
-                                  controller: _contentController,
-                                  matchesListenable:
-                                      _scriptureMatchesListenable,
-                                  textAlign: _activeTextAlign,
-                                  textStyle: noteTextStyle,
-                                  strutStyle: noteStrutStyle,
-                                  textScaler: TextScaler.noScaling,
-                                  onOpenScripture: _openScripture,
-                                )
-                              : TextField(
-                                  controller: _contentController,
-                                  textAlign: _activeTextAlign,
-                                  focusNode: _contentFocusNode,
-                                  onChanged: _onContentChanged,
-                                  onTap: _maybeOpenScriptureAtCursor,
-                                  scrollController: _inputScrollController,
-                                  style: noteTextStyle,
-                                  strutStyle: noteStrutStyle,
-                                  cursorColor: theme.colorScheme.primary,
-                                  minLines: null,
-                                  maxLines: null,
-                                  expands: true,
-                                  keyboardType: TextInputType.multiline,
-                                  textInputAction: TextInputAction.newline,
-                                  textAlignVertical: TextAlignVertical.top,
-                                  scrollPadding:
-                                      const EdgeInsets.only(bottom: 160),
-                                  decoration: InputDecoration.collapsed(
-                                    hintText:
-                                        'Take notes here... Type "John 3:16" to auto-detect scripture references.',
-                                    hintStyle: noteTextStyle.copyWith(
-                                      color: theme.colorScheme.onSurfaceVariant,
-                                    ),
+                      padding: const EdgeInsets.fromLTRB(16, 12, 16, 6),
+                      child: AnimatedSwitcher(
+                        duration: const Duration(milliseconds: 160),
+                        child: _previewMode
+                            ? SermonNotePreview(
+                                key: const ValueKey('preview'),
+                                controller: _contentController,
+                                matchesListenable: _scriptureMatchesListenable,
+                                textAlign: _activeTextAlign,
+                                textStyle: noteTextStyle,
+                                strutStyle: noteStrutStyle,
+                                textScaler: TextScaler.noScaling,
+                                onOpenScripture: _openScripture,
+                              )
+                            : TextField(
+                                key: const ValueKey('editor'),
+                                controller: _contentController,
+                                textAlign: _activeTextAlign,
+                                focusNode: _contentFocusNode,
+                                onChanged: _onContentChanged,
+                                onTap: _maybeOpenScriptureAtCursor,
+                                scrollController: _inputScrollController,
+                                style: noteTextStyle,
+                                strutStyle: noteStrutStyle,
+                                cursorColor: theme.colorScheme.primary,
+                                minLines: null,
+                                maxLines: null,
+                                expands: true,
+                                keyboardType: TextInputType.multiline,
+                                textInputAction: TextInputAction.newline,
+                                textAlignVertical: TextAlignVertical.top,
+                                scrollPadding:
+                                    const EdgeInsets.only(bottom: 120),
+                                decoration: InputDecoration.collapsed(
+                                  hintText:
+                                      'Take notes here... Type "John 3:16" to auto-detect scripture references.',
+                                  hintStyle: noteTextStyle.copyWith(
+                                    color: theme.colorScheme.onSurfaceVariant,
                                   ),
                                 ),
-                        ),
+                              ),
                       ),
                     ),
                   ),
-                  _buildTimestampBar(theme),
+                  if (kIsWeb && _workingNote.clipCount > 1)
+                    _buildWebPlaybackBanner(theme),
+                  _buildFormattingToolbar(
+                    theme,
+                    keyboardVisible: keyboardVisible,
+                  ),
                 ],
               ),
             );
@@ -746,67 +1005,257 @@ class _SermonEditorScreenState extends State<SermonEditorScreen> {
     );
   }
 
-  Widget _buildFormattingToolbar(ThemeData theme) {
-    final activeColor = theme.colorScheme.primary;
-    return Container(
-      margin: const EdgeInsets.only(top: 8, bottom: 10),
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
-      decoration: BoxDecoration(
-        color:
-            theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.18),
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: theme.colorScheme.outlineVariant.withValues(alpha: 0.35),
+  Widget _buildCompactTitleField(ThemeData theme) {
+    return TextField(
+      controller: _titleController,
+      onChanged: _onMetadataChanged,
+      maxLines: 1,
+      textInputAction: TextInputAction.next,
+      onSubmitted: (_) => _contentFocusNode.requestFocus(),
+      style: theme.textTheme.titleLarge?.copyWith(
+        fontWeight: FontWeight.w700,
+      ),
+      decoration: const InputDecoration(
+        hintText: 'Sermon title',
+        border: InputBorder.none,
+        isDense: true,
+        contentPadding: EdgeInsets.symmetric(
+          horizontal: 20,
+          vertical: 12,
         ),
       ),
-      child: Row(
-        children: [
+    );
+  }
+
+  Widget _buildCompactSaveStatus(ThemeData theme) {
+    return ValueListenableBuilder<bool>(
+      valueListenable: _hasUnsavedChangesListenable,
+      builder: (context, hasUnsavedChanges, _) {
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 4),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                _isSaving
+                    ? Icons.sync_rounded
+                    : hasUnsavedChanges
+                        ? Icons.save_rounded
+                        : Icons.check_circle_outline_rounded,
+                size: 16,
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
+              const SizedBox(width: 4),
+              Text(
+                _isSaving
+                    ? 'Saving'
+                    : hasUnsavedChanges
+                        ? 'Unsaved'
+                        : 'Saved',
+                style: theme.textTheme.labelSmall?.copyWith(
+                  color: theme.colorScheme.onSurfaceVariant,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildFormattingToolbar(
+    ThemeData theme, {
+    required bool keyboardVisible,
+  }) {
+    final activeColor = theme.colorScheme.primary;
+
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final textScale = MediaQuery.textScalerOf(context).scale(1);
+        final isCompact = constraints.maxWidth < 430 || textScale > 1.2;
+
+        final alignmentControls = <Widget>[
           IconButton(
             tooltip: 'Align left',
-            icon: const Icon(Icons.format_align_left),
+            icon: const Icon(Icons.format_align_left_rounded),
             color: _activeTextAlign == TextAlign.left ? activeColor : null,
             onPressed: () => _setTextAlign(TextAlign.left),
           ),
           IconButton(
             tooltip: 'Center',
-            icon: const Icon(Icons.format_align_center),
+            icon: const Icon(Icons.format_align_center_rounded),
             color: _activeTextAlign == TextAlign.center ? activeColor : null,
             onPressed: () => _setTextAlign(TextAlign.center),
           ),
           IconButton(
             tooltip: 'Justify',
-            icon: const Icon(Icons.format_align_justify),
+            icon: const Icon(Icons.format_align_justify_rounded),
             color: _activeTextAlign == TextAlign.justify ? activeColor : null,
             onPressed: () => _setTextAlign(TextAlign.justify),
           ),
-          IconButton(
-            tooltip: _previewMode ? 'Edit notes' : 'Preview notes',
-            icon: Icon(_previewMode ? Icons.edit : Icons.visibility),
-            color: _previewMode ? activeColor : null,
-            onPressed: _togglePreviewMode,
-          ),
-          const SizedBox(width: 4),
-          Flexible(
-            child: Align(
-              alignment: Alignment.centerRight,
-              child: ValueListenableBuilder<bool>(
-                valueListenable: _hasUnsavedChangesListenable,
-                builder: (context, hasUnsavedChanges, _) {
-                  return ValueListenableBuilder<DateTime?>(
-                    valueListenable: _lastSavedAtListenable,
-                    builder: (context, lastSavedAt, __) {
-                      return Text(
-                        hasUnsavedChanges
-                            ? 'Saving...'
-                            : _formatSavedStatus(lastSavedAt),
-                        overflow: TextOverflow.ellipsis,
-                        style: theme.textTheme.labelSmall?.copyWith(
-                          color: theme.colorScheme.onSurfaceVariant,
+        ];
+
+        Widget buildAlignmentSelector() {
+          if (isCompact) {
+            IconData alignIcon;
+            switch (_activeTextAlign) {
+              case TextAlign.center:
+                alignIcon = Icons.format_align_center_rounded;
+                break;
+              case TextAlign.justify:
+                alignIcon = Icons.format_align_justify_rounded;
+                break;
+              default:
+                alignIcon = Icons.format_align_left_rounded;
+            }
+            return PopupMenuButton<TextAlign>(
+              tooltip: 'Align text',
+              icon: Icon(alignIcon, color: activeColor),
+              onSelected: _setTextAlign,
+              itemBuilder: (context) => [
+                const PopupMenuItem(
+                  value: TextAlign.left,
+                  child: Row(
+                    children: [
+                      Icon(Icons.format_align_left_rounded),
+                      SizedBox(width: 8),
+                      Text('Left'),
+                    ],
+                  ),
+                ),
+                const PopupMenuItem(
+                  value: TextAlign.center,
+                  child: Row(
+                    children: [
+                      Icon(Icons.format_align_center_rounded),
+                      SizedBox(width: 8),
+                      Text('Center'),
+                    ],
+                  ),
+                ),
+                const PopupMenuItem(
+                  value: TextAlign.justify,
+                  child: Row(
+                    children: [
+                      Icon(Icons.format_align_justify_rounded),
+                      SizedBox(width: 8),
+                      Text('Justify'),
+                    ],
+                  ),
+                ),
+              ],
+            );
+          } else {
+            return Row(
+              mainAxisSize: MainAxisSize.min,
+              children: alignmentControls,
+            );
+          }
+        }
+
+        return Material(
+          color: theme.colorScheme.surfaceContainer,
+          child: SafeArea(
+            top: false,
+            child: SizedBox(
+              height: 54,
+              child: Row(
+                children: [
+                  const SizedBox(width: 4),
+                  buildAlignmentSelector(),
+                  const Spacer(),
+                  IconButton(
+                    tooltip: _isRecording ? 'Stop recording' : 'Record audio',
+                    icon: Icon(
+                      _isRecording
+                          ? Icons.stop_circle_rounded
+                          : Icons.mic_rounded,
+                    ),
+                    color: _isRecording ? theme.colorScheme.error : null,
+                    onPressed: _toggleRecording,
+                  ),
+                  IconButton(
+                    tooltip: 'Insert timestamp',
+                    icon: const Icon(Icons.bookmark_add_rounded),
+                    onPressed: _isRecording ? _insertTimestampMarker : null,
+                  ),
+                  IconButton(
+                    tooltip: _isPlayingAudio
+                        ? 'Pause playback'
+                        : _playbackPosition > Duration.zero
+                            ? 'Resume playback at ${_formatDuration(_playbackPosition)}'
+                            : 'Play recording',
+                    icon: Icon(
+                      _isPlayingAudio
+                          ? Icons.pause_circle_rounded
+                          : Icons.play_circle_rounded,
+                    ),
+                    onPressed: (_workingNote.hasRecording && !_isRecording)
+                        ? _togglePlayback
+                        : null,
+                  ),
+                  ValueListenableBuilder<bool>(
+                    valueListenable: _hasUnsavedChangesListenable,
+                    builder: (context, hasUnsavedChanges, _) {
+                      return IconButton(
+                        tooltip: _isSaving
+                            ? 'Saving'
+                            : hasUnsavedChanges
+                                ? 'Save changes'
+                                : 'Save',
+                        icon: AnimatedRotation(
+                          turns: _isSaving ? 1 : 0,
+                          duration: const Duration(milliseconds: 700),
+                          child: Icon(
+                            _isSaving
+                                ? Icons.sync_rounded
+                                : hasUnsavedChanges
+                                    ? Icons.save_rounded
+                                    : Icons.check_circle_outline_rounded,
+                          ),
                         ),
+                        onPressed: _isSaving ? null : _saveNote,
                       );
                     },
-                  );
-                },
+                  ),
+                  if (keyboardVisible)
+                    IconButton(
+                      tooltip: 'Hide keyboard',
+                      icon: const Icon(Icons.keyboard_hide_rounded),
+                      onPressed: () => FocusScope.of(context).unfocus(),
+                    ),
+                  const SizedBox(width: 4),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildWebPlaybackBanner(ThemeData theme) {
+    final clips = _workingNote.playableClips;
+    return Container(
+      width: double.infinity,
+      color: theme.colorScheme.tertiaryContainer,
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      child: Row(
+        children: [
+          Icon(
+            Icons.info_outline_rounded,
+            size: 20,
+            color: theme.colorScheme.onTertiaryContainer,
+          ),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Text(
+              'Multi-clip playback is not yet available on web. '
+              '${clips.length} clips · Clip ${clips.length} is playing.',
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: theme.colorScheme.onTertiaryContainer,
+                fontWeight: FontWeight.w600,
               ),
             ),
           ),
@@ -815,85 +1264,86 @@ class _SermonEditorScreenState extends State<SermonEditorScreen> {
     );
   }
 
-  String _formatSavedStatus(DateTime? savedAt) {
-    if (savedAt == null) return 'Saved';
-    final hour = savedAt.hour.toString().padLeft(2, '0');
-    final minute = savedAt.minute.toString().padLeft(2, '0');
-    return 'Saved $hour:$minute';
-  }
-
-  Widget _buildSermonIntelligencePanel(ThemeData theme) {
-    final hasAudio = _workingNote.audioPath?.isNotEmpty ?? false;
-    return Padding(
-      padding: const EdgeInsets.only(top: 4, bottom: 8),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Wrap(
-            spacing: 8,
-            runSpacing: 8,
-            crossAxisAlignment: WrapCrossAlignment.center,
-            children: [
-              FilledButton.tonalIcon(
-                onPressed: _toggleRecording,
-                icon: Icon(_isRecording ? Icons.stop : Icons.mic),
-                label: Text(_isRecording ? 'Stop' : 'Record'),
-              ),
-              OutlinedButton.icon(
-                onPressed: _isRecording || _isPlaybackReady
-                    ? _insertTimestampMarker
-                    : null,
-                icon: const Icon(Icons.bookmark_add_outlined),
-                label: const Text('Timestamp'),
-              ),
-              if (_isRecording)
-                _StatusPill(
-                  icon: Icons.fiber_manual_record,
-                  label: _formatDuration(_recordingElapsed),
-                  color: theme.colorScheme.error,
-                )
-              else if (hasAudio)
-                OutlinedButton.icon(
-                  onPressed: _togglePlayback,
-                  icon: Icon(_isPlayingAudio ? Icons.pause : Icons.play_arrow),
-                  label: Text(_formatDuration(_playbackPosition)),
-                ),
-            ],
+  Widget _buildActiveRecordingBar(ThemeData theme) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final compact = constraints.maxWidth < 380;
+        final clipLabel = 'Clip ${_workingNote.clipCount + 1}';
+        return Card(
+          elevation: 0,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8),
+            side: BorderSide(
+              color: theme.colorScheme.error.withValues(alpha: 0.15),
+              width: 1,
+            ),
           ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildTimestampBar(ThemeData theme) {
-    if (_workingNote.timestampedNotes.isEmpty) {
-      return const SizedBox.shrink();
-    }
-
-    final hasAudio = _workingNote.audioPath?.isNotEmpty ?? false;
-    return SafeArea(
-      top: false,
-      child: SizedBox(
-        height: 56,
-        child: ListView.separated(
-          padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
-          scrollDirection: Axis.horizontal,
-          itemCount: _workingNote.timestampedNotes.length,
-          separatorBuilder: (_, __) => const SizedBox(width: 8),
-          itemBuilder: (context, index) {
-            final note = _workingNote.timestampedNotes[index];
-            return ActionChip(
-              avatar: const Icon(Icons.schedule, size: 16),
-              label: Text(_formatDuration(note.offset)),
-              onPressed: hasAudio ? () => _seekToTimestamp(note) : null,
-              backgroundColor:
-                  theme.colorScheme.surfaceContainerHighest.withValues(
-                alpha: 0.65,
-              ),
-            );
-          },
-        ),
-      ),
+          color: theme.colorScheme.errorContainer.withValues(alpha: 0.25),
+          margin: EdgeInsets.zero,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 12,
+              vertical: 8,
+            ),
+            child: Row(
+              children: [
+                Icon(
+                  Icons.fiber_manual_record_rounded,
+                  size: 18,
+                  color: theme.colorScheme.error,
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Row(
+                    children: [
+                      Text(
+                        'Recording ($clipLabel)',
+                        style: theme.textTheme.labelLarge?.copyWith(
+                          fontWeight: FontWeight.w800,
+                          color: theme.colorScheme.onErrorContainer,
+                        ),
+                      ),
+                      const SizedBox(width: 6),
+                      Text(
+                        _formatDuration(_globalRecordingOffset),
+                        style: theme.textTheme.labelLarge?.copyWith(
+                          fontFeatures: const [FontFeature.tabularFigures()],
+                          fontWeight: FontWeight.w700,
+                          color: theme.colorScheme.onErrorContainer,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                if (compact)
+                  IconButton(
+                    tooltip: 'Timestamp',
+                    onPressed: _insertTimestampMarker,
+                    icon: const Icon(Icons.bookmark_add_outlined),
+                    style: IconButton.styleFrom(
+                      foregroundColor: theme.colorScheme.onErrorContainer,
+                    ),
+                  )
+                else
+                  TextButton.icon(
+                    onPressed: _insertTimestampMarker,
+                    icon: const Icon(Icons.bookmark_add_outlined),
+                    label: const Text('Timestamp'),
+                    style: TextButton.styleFrom(
+                      foregroundColor: theme.colorScheme.onErrorContainer,
+                    ),
+                  ),
+                IconButton(
+                  tooltip: 'Stop recording',
+                  onPressed: _stopRecording,
+                  icon: const Icon(Icons.stop_rounded),
+                  color: theme.colorScheme.error,
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 
@@ -979,35 +1429,148 @@ class _SermonContentController extends TextEditingController {
   }
 }
 
-class _StatusPill extends StatelessWidget {
-  const _StatusPill({
-    required this.icon,
-    required this.label,
-    required this.color,
+class _SermonNoteDetailsSheet extends StatefulWidget {
+  final TextEditingController preacherController;
+  final bool previewMode;
+  final VoidCallback onTogglePreview;
+  final bool hasAudio;
+  final int clipCount;
+  final Duration totalDuration;
+  final VoidCallback onDeleteNote;
+  final List<SermonTimestampedNote> timestampedNotes;
+  final ValueChanged<SermonTimestampedNote> onSeekToTimestamp;
+  final VoidCallback onSaveAndClose;
+  final Function(String) onMetadataChanged;
+
+  const _SermonNoteDetailsSheet({
+    required this.preacherController,
+    required this.previewMode,
+    required this.onTogglePreview,
+    required this.hasAudio,
+    required this.clipCount,
+    required this.totalDuration,
+    required this.onDeleteNote,
+    required this.timestampedNotes,
+    required this.onSeekToTimestamp,
+    required this.onSaveAndClose,
+    required this.onMetadataChanged,
   });
 
-  final IconData icon;
-  final String label;
-  final Color color;
+  @override
+  State<_SermonNoteDetailsSheet> createState() =>
+      _SermonNoteDetailsSheetState();
+}
+
+class _SermonNoteDetailsSheetState extends State<_SermonNoteDetailsSheet> {
+  String _formatDuration(Duration duration) {
+    final totalSeconds = duration.inSeconds;
+    final minutes = (totalSeconds ~/ 60).toString().padLeft(2, '0');
+    final seconds = (totalSeconds % 60).toString().padLeft(2, '0');
+    return '$minutes:$seconds';
+  }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return Container(
-      height: 40,
-      padding: const EdgeInsets.symmetric(horizontal: 12),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20),
-        color: color.withValues(alpha: 0.12),
-      ),
-      child: Row(
+    final hasAudio = widget.hasAudio;
+
+    return SingleChildScrollView(
+      padding: const EdgeInsets.fromLTRB(20, 8, 20, 24),
+      child: Column(
         mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(icon, size: 14, color: color),
-          const SizedBox(width: 6),
           Text(
-            label,
-            style: theme.textTheme.labelLarge?.copyWith(color: color),
+            'Note Details',
+            style: theme.textTheme.titleLarge?.copyWith(
+              fontWeight: FontWeight.w900,
+            ),
+          ),
+          const SizedBox(height: 16),
+          TextField(
+            controller: widget.preacherController,
+            onChanged: widget.onMetadataChanged,
+            textInputAction: TextInputAction.done,
+            decoration: const InputDecoration(
+              labelText: 'Preacher / Speaker',
+              prefixIcon: Icon(Icons.person_outline_rounded),
+              border: OutlineInputBorder(),
+            ),
+          ),
+          if (hasAudio) ...[
+            const SizedBox(height: 14),
+            ListTile(
+              contentPadding: EdgeInsets.zero,
+              leading: const Icon(Icons.mic_rounded),
+              title: const Text('Recording'),
+              subtitle: Text(
+                '${widget.clipCount} clip${widget.clipCount == 1 ? "" : "s"} · ${_formatDuration(widget.totalDuration)} total',
+              ),
+            ),
+          ],
+          if (widget.timestampedNotes.isNotEmpty) ...[
+            const SizedBox(height: 14),
+            Text(
+              'Saved timestamps',
+              style: theme.textTheme.titleSmall?.copyWith(
+                fontWeight: FontWeight.w800,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: [
+                for (final note in widget.timestampedNotes)
+                  ActionChip(
+                    avatar: const Icon(Icons.schedule_rounded, size: 16),
+                    label: Text(_formatDuration(note.offset)),
+                    onPressed: hasAudio
+                        ? () {
+                            Navigator.pop(context);
+                            widget.onSeekToTimestamp(note);
+                          }
+                        : null,
+                  ),
+              ],
+            ),
+          ],
+          const SizedBox(height: 8),
+          ListTile(
+            contentPadding: EdgeInsets.zero,
+            leading: Icon(
+              widget.previewMode
+                  ? Icons.edit_rounded
+                  : Icons.visibility_rounded,
+            ),
+            title: Text(
+              widget.previewMode ? 'Return to writing' : 'Preview note',
+            ),
+            onTap: () {
+              Navigator.pop(context);
+              widget.onTogglePreview();
+            },
+          ),
+          const Divider(height: 24),
+          ListTile(
+            contentPadding: EdgeInsets.zero,
+            leading: const Icon(Icons.save_outlined),
+            title: const Text('Save and close'),
+            onTap: () {
+              Navigator.pop(context);
+              widget.onSaveAndClose();
+            },
+          ),
+          ListTile(
+            contentPadding: EdgeInsets.zero,
+            textColor: theme.colorScheme.error,
+            iconColor: theme.colorScheme.error,
+            leading: const Icon(Icons.delete_outline_rounded),
+            title: const Text('Delete note'),
+            onTap: () {
+              Navigator.pop(context);
+              widget.onDeleteNote();
+            },
           ),
         ],
       ),

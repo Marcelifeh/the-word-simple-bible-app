@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 
@@ -28,24 +29,24 @@ class SermonAudioPlayerCardState extends State<SermonAudioPlayerCard> {
 
   Future<void> seekTo(Duration position) async {
     if (!_ready) return;
-    await _player.seek(position);
+    await _seekToGlobalPosition(position);
     await _player.play();
   }
 
   Future<void> _loadAudio() async {
-    final path = widget.note.audioPath;
-    if (path == null || path.isEmpty) {
+    final clips = widget.note.playableClips;
+    if (clips.isEmpty) {
       setState(() => _error = 'No sermon audio is attached to this note.');
       return;
     }
 
     try {
-      if (path.startsWith('http://') ||
-          path.startsWith('https://') ||
-          path.startsWith('blob:')) {
-        await _player.setUrl(path);
+      if (kIsWeb) {
+        await _loadSinglePath(clips.last.filePath);
       } else {
-        await _player.setFilePath(path);
+        await _player.setAudioSources(
+          clips.map((clip) => _audioSourceFor(clip.filePath)).toList(),
+        );
       }
       if (!mounted) return;
       setState(() {
@@ -58,6 +59,48 @@ class SermonAudioPlayerCardState extends State<SermonAudioPlayerCard> {
         _ready = false;
         _error = 'Audio not available for playback.';
       });
+    }
+  }
+
+  Future<void> _loadSinglePath(String path) async {
+    if (_isRemotePath(path)) {
+      await _player.setUrl(path);
+    } else {
+      await _player.setFilePath(path);
+    }
+  }
+
+  AudioSource _audioSourceFor(String path) {
+    return _isRemotePath(path)
+        ? AudioSource.uri(Uri.parse(path))
+        : AudioSource.file(path);
+  }
+
+  bool _isRemotePath(String path) {
+    return path.startsWith('http://') ||
+        path.startsWith('https://') ||
+        path.startsWith('blob:');
+  }
+
+  Future<void> _seekToGlobalPosition(Duration position) async {
+    final clips = widget.note.playableClips;
+    if (clips.isEmpty) return;
+
+    var remainingMs = position.inMilliseconds;
+    for (var i = 0; i < clips.length; i++) {
+      final isTarget =
+          remainingMs <= clips[i].durationMs || i == clips.length - 1;
+      if (isTarget) {
+        if (kIsWeb && i != clips.length - 1) return;
+        await _player.seek(
+          Duration(
+            milliseconds: remainingMs.clamp(0, clips[i].durationMs),
+          ),
+          index: kIsWeb ? 0 : i,
+        );
+        return;
+      }
+      remainingMs -= clips[i].durationMs;
     }
   }
 
@@ -144,36 +187,50 @@ class SermonAudioPlayerCardState extends State<SermonAudioPlayerCard> {
                 ),
               ],
             ),
-            StreamBuilder<Duration>(
-              stream: _player.positionStream,
-              builder: (context, snapshot) {
-                final position = snapshot.data ?? Duration.zero;
-                final duration = widget.note.audioDuration ??
-                    _player.duration ??
-                    Duration.zero;
-                final maxMs = duration.inMilliseconds <= 0
-                    ? 1.0
-                    : duration.inMilliseconds.toDouble();
-                final value =
-                    position.inMilliseconds.clamp(0, maxMs.toInt()).toDouble();
+            StreamBuilder<int?>(
+              stream: _player.currentIndexStream,
+              builder: (context, indexSnapshot) {
+                return StreamBuilder<Duration>(
+                  stream: _player.positionStream,
+                  builder: (context, positionSnapshot) {
+                    final clips = widget.note.playableClips;
+                    final currentIndex = kIsWeb && clips.length > 1
+                        ? clips.length - 1
+                        : indexSnapshot.data ?? 0;
+                    final position = calculateSermonGlobalPosition(
+                      clips: clips,
+                      currentIndex: currentIndex,
+                      positionInClip: positionSnapshot.data ?? Duration.zero,
+                    );
+                    final duration = widget.note.totalRecordingDuration;
+                    final maxMs = duration.inMilliseconds <= 0
+                        ? 1.0
+                        : duration.inMilliseconds.toDouble();
+                    final value = position.inMilliseconds
+                        .clamp(0, maxMs.toInt())
+                        .toDouble();
 
-                return Column(
-                  children: [
-                    Slider(
-                      value: value,
-                      max: maxMs,
-                      onChanged: (value) {
-                        _player.seek(Duration(milliseconds: value.toInt()));
-                      },
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    return Column(
                       children: [
-                        Text(_formatDuration(position)),
-                        Text(_formatDuration(duration)),
+                        Slider(
+                          value: value,
+                          max: maxMs,
+                          onChanged: (value) {
+                            _seekToGlobalPosition(
+                              Duration(milliseconds: value.toInt()),
+                            );
+                          },
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(_formatDuration(position)),
+                            Text(_formatDuration(duration)),
+                          ],
+                        ),
                       ],
-                    ),
-                  ],
+                    );
+                  },
                 );
               },
             ),

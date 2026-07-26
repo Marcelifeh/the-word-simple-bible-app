@@ -1,4 +1,7 @@
+import 'dart:async';
 import 'dart:math';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 import '../../../core/config/app_branding.dart';
@@ -80,56 +83,50 @@ class _SplashScreenState extends State<SplashScreen>
     }
 
     _controller.addStatusListener((status) {
-      if (status == AnimationStatus.completed && !_navigated) {
-        _navigated = true;
-        if (!mounted) return;
-        Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (_) => widget.nextScreen),
-        );
+      if (status == AnimationStatus.completed) {
+        _finishSplash();
       }
     });
 
-    // Try to initialize and play the bundled MP4 first; fall back
-    // to the original animation if the asset is missing or fails.
-    _attemptPlayVideo();
+    // The web video plugin can retain browser callbacks across hot restarts.
+    // Use the lightweight animated splash there and keep video on mobile.
+    if (kIsWeb) {
+      _controller.forward();
+    } else {
+      _attemptPlayVideo();
+    }
   }
 
   Future<void> _attemptPlayVideo() async {
+    VideoPlayerController? videoController;
     try {
-      _videoController = VideoPlayerController.asset(
+      videoController = VideoPlayerController.asset(
           'assets/videos/the_word_landing_page.mp4');
-      await _videoController!.initialize();
+      _videoController = videoController;
+      await videoController.initialize();
       // Mute to allow autoplay on web and other platforms
-      await _videoController!.setVolume(0.0);
-      await _videoController!.setLooping(false);
+      await videoController.setVolume(0.0);
+      await videoController.setLooping(false);
 
       // Determine a cutoff so we never show the splash longer than [_maxSplashDuration].
-      final dur = _videoController!.value.duration;
+      final dur = videoController.value.duration;
       _videoCutoff = (dur > Duration.zero && dur < _maxSplashDuration)
           ? dur
           : _maxSplashDuration;
 
-      if (!mounted) return;
+      if (!mounted || !identical(_videoController, videoController)) return;
       setState(() {
         _isVideoReady = true;
       });
 
-      await _videoController!.play();
-      _videoController!.addListener(() {
-        final v = _videoController!;
-        if (!_navigated && v.value.isInitialized) {
-          final pos = v.value.position;
-          if (pos >= _videoCutoff - const Duration(milliseconds: 200)) {
-            _navigated = true;
-            if (!mounted) return;
-            Navigator.of(context).pushReplacement(
-              MaterialPageRoute(builder: (_) => widget.nextScreen),
-            );
-          }
-        }
-      });
+      videoController.addListener(_handleVideoProgress);
+      await videoController.play();
     } catch (_) {
-      // asset not found or failed to initialize — fall back to original animation
+      videoController?.removeListener(_handleVideoProgress);
+      if (identical(_videoController, videoController)) {
+        _videoController = null;
+        await videoController?.dispose();
+      }
       if (!mounted) return;
       setState(() {
         _isVideoReady = false;
@@ -138,10 +135,40 @@ class _SplashScreenState extends State<SplashScreen>
     }
   }
 
+  void _handleVideoProgress() {
+    final videoController = _videoController;
+    if (videoController == null || !videoController.value.isInitialized) return;
+
+    final endThreshold = _videoCutoff - const Duration(milliseconds: 200);
+    if (videoController.value.position >= endThreshold) {
+      _finishSplash();
+    }
+  }
+
+  void _finishSplash() {
+    if (_navigated || !mounted) return;
+    _navigated = true;
+
+    final videoController = _videoController;
+    if (videoController != null) {
+      videoController.removeListener(_handleVideoProgress);
+      unawaited(videoController.pause());
+    }
+
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute(builder: (_) => widget.nextScreen),
+    );
+  }
+
   @override
   void dispose() {
+    final videoController = _videoController;
+    _videoController = null;
+    videoController?.removeListener(_handleVideoProgress);
     _controller.dispose();
-    _videoController?.dispose();
+    if (videoController != null) {
+      unawaited(videoController.dispose());
+    }
     super.dispose();
   }
 

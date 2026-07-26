@@ -70,8 +70,10 @@ class _SermonReviewScreenState extends State<SermonReviewScreen> {
   }
 
   Future<void> _generateTranscript() async {
-    final path = _note.audioPath;
-    if (path == null || path.isEmpty || _isTranscribing) return;
+    final playableClips = _note.playableClips;
+    if (playableClips.isEmpty || _isTranscribing) return;
+    final sourceClip = playableClips.first;
+    final path = sourceClip.filePath;
     if (!Env.transcriptionEnabled) {
       _showCloudTranscriptionUnavailable();
       return;
@@ -90,7 +92,16 @@ class _SermonReviewScreenState extends State<SermonReviewScreen> {
       final updated = _note.copyWith(
         transcript: result.transcript,
         transcriptSegments: result.segments,
-        audioDuration: result.duration ?? _note.audioDuration,
+        recordingClips: _note.recordingClips
+            .map(
+              (clip) => clip.id == sourceClip.id
+                  ? clip.copyWith(
+                      durationMs:
+                          result.duration?.inMilliseconds ?? clip.durationMs,
+                    )
+                  : clip,
+            )
+            .toList(),
         clearSummary: true,
         clearInsight: true,
         clearOutline: true,
@@ -373,7 +384,7 @@ class _SermonReviewScreenState extends State<SermonReviewScreen> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final note = _note;
-    final hasAudio = note.audioPath?.isNotEmpty ?? false;
+    final hasAudio = note.hasRecording;
     final hasTranscript = note.transcript?.trim().isNotEmpty ?? false;
     final sermonCloudAvailable = _sermonCloudProcessingAvailable;
     final transcriptionAvailable =
@@ -592,10 +603,11 @@ class _SermonReviewScreenState extends State<SermonReviewScreen> {
   }
 
   String _recordedLabel(SermonNote note) {
-    final recordedAt = note.recordedAt;
-    if (recordedAt == null) {
+    final clips = note.playableClips;
+    if (clips.isEmpty) {
       return 'Recorded date not available';
     }
+    final recordedAt = clips.first.createdAtUtc;
     return 'Recorded ${DateFormat.yMMMd().add_jm().format(recordedAt)}';
   }
 
@@ -1347,23 +1359,28 @@ class _MetadataWrap extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final clips = note.playableClips;
+    final totalSizeBytes = clips.any((clip) => clip.sizeBytes != null)
+        ? clips.fold<int>(0, (sum, clip) => sum + (clip.sizeBytes ?? 0))
+        : null;
+    final mimeType = clips.isEmpty ? null : clips.first.mimeType;
     return Wrap(
       spacing: 8,
       runSpacing: 8,
       children: [
         _MetaChip(
           icon: Icons.timer,
-          label: _formatDuration(note.audioDuration),
+          label: _formatDuration(note.totalRecordingDuration),
         ),
-        if (note.audioSizeBytes != null)
+        if (totalSizeBytes != null)
           _MetaChip(
             icon: Icons.storage,
-            label: _formatBytes(note.audioSizeBytes!),
+            label: _formatBytes(totalSizeBytes),
           ),
-        if (note.audioMimeType != null && note.audioMimeType!.isNotEmpty)
+        if (mimeType != null && mimeType.isNotEmpty)
           _MetaChip(
             icon: Icons.audio_file,
-            label: note.audioMimeType!,
+            label: mimeType,
           ),
         _MetaChip(
           icon: Icons.menu_book,

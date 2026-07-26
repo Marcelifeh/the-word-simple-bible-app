@@ -24,6 +24,7 @@ class _NotificationSettingsScreenState extends State<NotificationSettingsScreen>
   NotificationPreferencesRepository? _repository;
   AppNotificationPermissionStatus _permissionStatus =
       AppNotificationPermissionStatus.notDetermined;
+  bool _sendingTestNotification = false;
 
   NotificationPreferences get _preferences =>
       _repository?.preferences ?? NotificationPreferences.defaults;
@@ -93,6 +94,69 @@ class _NotificationSettingsScreenState extends State<NotificationSettingsScreen>
     await AppScope.of(context)
         .appNotificationService
         .openNotificationSettings();
+  }
+
+  Future<void> _sendTestNotification() async {
+    if (_sendingTestNotification) return;
+    final state = AppScope.of(context);
+    setState(() => _sendingTestNotification = true);
+    try {
+      if (!state.notificationsAvailable) {
+        _showTestMessage(
+          'Notifications are temporarily unavailable. Restart the app and try again.',
+        );
+        return;
+      }
+
+      if (_permissionStatus == AppNotificationPermissionStatus.notDetermined) {
+        await _requestPermission();
+      }
+
+      final enabled =
+          await state.appNotificationService.areAndroidNotificationsEnabled();
+      if (!enabled ||
+          _permissionStatus == AppNotificationPermissionStatus.denied) {
+        if (mounted) {
+          setState(
+            () => _permissionStatus = AppNotificationPermissionStatus.denied,
+          );
+        }
+        _showTestMessage(
+          'Notifications are blocked on this device.',
+          actionLabel: 'Open settings',
+          onAction: _openSettings,
+        );
+        return;
+      }
+
+      await state.appNotificationService.showTestNotification();
+      _showTestMessage(
+        'Test sent. Check the Android notification panel.',
+      );
+    } catch (error) {
+      _showTestMessage('Could not send a test notification: $error');
+    } finally {
+      if (mounted) setState(() => _sendingTestNotification = false);
+    }
+  }
+
+  void _showTestMessage(
+    String message, {
+    String? actionLabel,
+    VoidCallback? onAction,
+  }) {
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        action: actionLabel == null || onAction == null
+            ? null
+            : SnackBarAction(
+                label: actionLabel,
+                onPressed: onAction,
+              ),
+      ),
+    );
   }
 
   bool get _hasLocalReminderEnabled =>
@@ -291,6 +355,52 @@ class _NotificationSettingsScreenState extends State<NotificationSettingsScreen>
             ),
             trailing: const Icon(Icons.chevron_right),
             onTap: _editQuietHours,
+          ),
+          const _SectionLabel('Device check'),
+          ListTile(
+            contentPadding: const EdgeInsets.symmetric(horizontal: 4),
+            leading: Icon(
+              _permissionStatus == AppNotificationPermissionStatus.granted
+                  ? Icons.notifications_active_outlined
+                  : Icons.notifications_off_outlined,
+            ),
+            title: const Text('Notification status'),
+            subtitle: Text(
+              switch (_permissionStatus) {
+                AppNotificationPermissionStatus.granted =>
+                  'Notifications are enabled on this device.',
+                AppNotificationPermissionStatus.denied =>
+                  'Notifications are blocked on this device.',
+                AppNotificationPermissionStatus.notDetermined =>
+                  'Send a test to allow notifications.',
+                AppNotificationPermissionStatus.unsupported =>
+                  'System notifications are unavailable on this platform.',
+              },
+            ),
+            trailing:
+                _permissionStatus == AppNotificationPermissionStatus.denied
+                    ? TextButton(
+                        onPressed: _openSettings,
+                        child: const Text('Open settings'),
+                      )
+                    : null,
+          ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(4, 4, 4, 8),
+            child: FilledButton.tonalIcon(
+              onPressed: _sendingTestNotification ||
+                      _permissionStatus ==
+                          AppNotificationPermissionStatus.unsupported
+                  ? null
+                  : _sendTestNotification,
+              icon: _sendingTestNotification
+                  ? const SizedBox.square(
+                      dimension: 18,
+                      child: CircularProgressIndicator(strokeWidth: 2),
+                    )
+                  : const Icon(Icons.send_outlined),
+              label: const Text('Send Test Notification'),
+            ),
           ),
         ],
       ),

@@ -52,84 +52,121 @@ def parse_scripture_focus(content):
 def escape_dart_string(text):
     return text.replace('\\', '\\\\').replace("'", "\\'")
 
+def normalize_paragraph_text(text):
+    """Return text with exactly one newline between paragraphs.
+
+    Devotional source files commonly put each paragraph on its own physical
+    line without an empty line between paragraphs. The old processor treated
+    those line breaks as ordinary wrapping and replaced them with spaces,
+    causing multiple paragraphs to become one long paragraph.
+    """
+    text = text.replace('\r\n', '\n').replace('\r', '\n').strip()
+    if not text:
+        return ""
+
+    # Every non-empty source line is treated as a paragraph. This matches the
+    # devotional input format and produces paragraph breaks without blank
+    # vertical lines in the rendered app.
+    paragraphs = [re.sub(r'\s+', ' ', line).strip()
+                  for line in text.split('\n') if line.strip()]
+    return "\n".join(paragraphs)
+
+
 def wrap_text_to_dart(text, indent_spaces):
-    text = text.replace('\r\n', '\n').replace('\r', '\n')
-    wrapped_lines = []
-    paragraphs = text.split('\n')
-    for p in paragraphs:
-        if not p.strip():
-            wrapped_lines.append("")
-            continue
-            
-        words = p.split(' ')
+    """Wrap Dart string literals while preserving paragraph boundaries.
+
+    Lines inside one paragraph are joined with a space. The final wrapped line
+    of a paragraph receives ``\n`` so Flutter renders the next paragraph on
+    the following line, with no additional blank line.
+    """
+    text = normalize_paragraph_text(text)
+    paragraphs = text.split('\n') if text else [""]
+    dart_lines = []
+
+    for paragraph_index, paragraph in enumerate(paragraphs):
+        words = paragraph.split()
+        wrapped = []
         current_line = []
         current_len = 0
+
         for word in words:
-            if current_len + len(word) + 1 > 70:
-                wrapped_lines.append(" ".join(current_line))
+            added_len = len(word) if not current_line else len(word) + 1
+            if current_line and current_len + added_len > 70:
+                wrapped.append(" ".join(current_line))
                 current_line = [word]
                 current_len = len(word)
             else:
                 current_line.append(word)
-                current_len += len(word) + 1
+                current_len += added_len
+
         if current_line:
-            wrapped_lines.append(" ".join(current_line))
-            
-    dart_lines = []
-    for idx, wl in enumerate(wrapped_lines):
-        wl_escaped = escape_dart_string(wl)
-        is_last = (idx == len(wrapped_lines) - 1)
-        next_wl = wrapped_lines[idx+1] if not is_last else None
-        
-        if is_last:
-            suffix = ""
-        elif wl == "" or next_wl == "":
-            suffix = "\\n"
-        else:
-            suffix = " "
-            
-        dart_lines.append(f"{' ' * indent_spaces}'{wl_escaped}{suffix}'")
-        
+            wrapped.append(" ".join(current_line))
+        elif not wrapped:
+            wrapped.append("")
+
+        for line_index, line in enumerate(wrapped):
+            is_last_wrapped_line = line_index == len(wrapped) - 1
+            is_last_paragraph = paragraph_index == len(paragraphs) - 1
+
+            if not is_last_wrapped_line:
+                suffix = " "
+            elif not is_last_paragraph:
+                suffix = "\\n"
+            else:
+                suffix = ""
+
+            escaped = escape_dart_string(line)
+            dart_lines.append(
+                f"{' ' * indent_spaces}'{escaped}{suffix}'"
+            )
+
     return "\n".join(dart_lines)
 
 def parse_single_devotional(block):
+    title_match = re.search(
+        r'^\s*🌿 Daily Devotional:\s*(.+?)\s*$',
+        block,
+        flags=re.MULTILINE,
+    )
+    title = title_match.group(1).strip() if title_match else "Unknown devotional"
+
     header_patterns = [
-        ("scripture", r'📖 Scripture Focus'),
-        ("sec1", r'(?:🔑\s*)?1\.\s+'),
-        ("sec2", r'(?:🔍\s*)?2\.\s+'),
-        ("sec3", r'(?:⚔️\s*)?3\.\s+'),
-        ("sec4", r'(?:🌱\s*)?4\.\s+'),
-        ("sec5", r'(?:🚶\s*)?5\.\s+'),
-        ("revelation", r'✨ Final Revelation'),
-        ("reflection", r'🌅 Closing Reflection'),
-        ("prayer", r'🙏 Prayer')
+        ("scripture", r'^\s*📖\s+Scripture Focus\s*$'),
+        ("sec1", r'^\s*(?:🔑\s*)?1\.\s+'),
+        ("sec2", r'^\s*(?:🔍\s*)?2\.\s+'),
+        ("sec3", r'^\s*(?:⚔️\s*)?3\.\s+'),
+        ("sec4", r'^\s*(?:🌱\s*)?4\.\s+'),
+        ("sec5", r'^\s*(?:🚶\s*)?5\.\s+'),
+        ("revelation", r'^\s*✨\s+Final Revelation\s*$'),
+        ("reflection", r'^\s*🌅\s+Closing Reflection\s*$'),
+        ("prayer", r'^\s*🙏\s+Prayer\s*$')
     ]
     
     positions = []
     for name, pattern in header_patterns:
-        match = re.search(pattern, block)
+        match = re.search(pattern, block, flags=re.MULTILINE)
         if match:
             positions.append((name, match.start(), match.end(), match.group(0)))
         else:
-            print(f"Error: Could not find header pattern '{pattern}' in block.")
-            return None
+            raise ValueError(
+                f"{title}: could not find the '{name}' header "
+                f"(pattern: {pattern})."
+            )
             
     positions.sort(key=lambda x: x[1])
     
     if len(positions) != 9:
-        print(f"Error: Found {len(positions)} headers instead of 9.")
-        return None
+        raise ValueError(
+            f"{title}: found {len(positions)} headers instead of 9."
+        )
         
-    title_text = block[:positions[0][1]].strip()
-    title_line = title_text.splitlines()[0] if title_text else ""
-    title = title_line.replace("🌿 Daily Devotional:", "").replace("🌿", "").strip()
-    
     parts = {}
     for idx in range(len(positions)):
         current_name, current_start, current_end, current_text = positions[idx]
         next_start = positions[idx+1][1] if idx + 1 < len(positions) else len(block)
         
         content = block[current_end:next_start].strip()
+        content = re.sub(r'^\s*---\s*$', '', content, flags=re.MULTILINE).strip()
         parts[current_name] = {
             'header': current_text.strip(),
             'content': content
@@ -169,8 +206,7 @@ def parse_devotionals_file(filepath):
                 sec_content = parts[sec_key]['content']
                 lines = sec_content.splitlines()
                 heading = lines[0].strip()
-                body = "\n".join(lines[1:]).strip()
-                body = re.sub(r'\n\s*\n', '\n\n', body)
+                body = normalize_paragraph_text("\n".join(lines[1:]))
                 
                 icon = parts[sec_key]['header'].split()[0]
                 sections.append({
@@ -179,8 +215,9 @@ def parse_devotionals_file(filepath):
                     'body': body
                 })
                 
-            revelation = parts['revelation']['content']
-            revelation = re.sub(r'\s+', ' ', revelation)
+            revelation = normalize_paragraph_text(
+                parts['revelation']['content']
+            )
             
             reflection_content = parts['reflection']['content']
             questions = []
@@ -196,8 +233,7 @@ def parse_devotionals_file(filepath):
                     if q:
                         questions.append(q)
                         
-            prayer = parts['prayer']['content']
-            prayer = re.sub(r'\n\s*\n', '\n\n', prayer)
+            prayer = normalize_paragraph_text(parts['prayer']['content'])
             
             parsed.append({
                 'title': title,
@@ -210,6 +246,43 @@ def parse_devotionals_file(filepath):
             })
             
     return parsed
+
+
+def deduplicate_exact_devotional_blocks(content):
+    """Remove repeated text blocks only when their content is identical."""
+    blocks = re.split(r'(?=🌿 Daily Devotional:)', content)
+    if len(blocks) <= 1:
+        return content, 0
+
+    prefix = blocks[0]
+    kept_blocks = []
+    blocks_by_title = {}
+    removed_count = 0
+
+    for block in blocks[1:]:
+        title_match = re.match(
+            r'🌿 Daily Devotional:\s*([^\r\n]+)',
+            block,
+        )
+        if not title_match:
+            kept_blocks.append(block)
+            continue
+
+        title = title_match.group(1).strip()
+        normalized_block = block.strip()
+        previous = blocks_by_title.get(title)
+        if previous is None:
+            blocks_by_title[title] = normalized_block
+            kept_blocks.append(block)
+            continue
+
+        if previous != normalized_block:
+            raise ValueError(
+                f"{title}: duplicate text blocks have different content."
+            )
+        removed_count += 1
+
+    return prefix + ''.join(kept_blocks), removed_count
 
 def extract_theme(title):
     KNOWN_THEMES = [
@@ -239,17 +312,66 @@ def extract_theme(title):
 def main():
     base_dir = r"C:\Users\hp\OneDrive\Projects\The_word_simple_bible_app"
     scratch_path = os.path.join(base_dir, "scratch_devotionals.txt")
-    parsed_devs = parse_devotionals_file(scratch_path)
+    try:
+        parsed_devs = parse_devotionals_file(scratch_path)
+    except ValueError as error:
+        print(f"Error: {error}")
+        sys.exit(1)
     print(f"Parsed {len(parsed_devs)} devotionals successfully.")
     
     if len(parsed_devs) == 0:
         print("Error: No devotionals parsed.")
         sys.exit(1)
         
-    topics_path = os.path.join(base_dir, r"lib\features\devotional\data\devotional_topics.dart")
+    topics_path = os.path.join(
+        base_dir,
+        r"lib\features\devotional\data\devotional_topics.dart",
+    )
+    devotionals_path = os.path.join(
+        base_dir,
+        r"lib\features\devotional\devotionals.txt",
+    )
+
     with open(topics_path, "r", encoding="utf-8") as f:
         topics_content = f.read()
-        
+
+    with open(devotionals_path, "r", encoding="utf-8") as f:
+        devotionals_content = f.read()
+
+    topics_content = topics_content.replace('\r\n', '\n').replace('\r', '\n')
+    devotionals_content = devotionals_content.replace(
+        '\r\n', '\n'
+    ).replace('\r', '\n')
+    devotionals_content, removed_text_duplicates = (
+        deduplicate_exact_devotional_blocks(devotionals_content)
+    )
+
+    existing_text_titles = {
+        match.group(1).strip()
+        for match in re.finditer(
+            r'^🌿 Daily Devotional:\s*(.+?)\s*$',
+            devotionals_content,
+            flags=re.MULTILINE,
+        )
+    }
+
+    new_topic_devs = []
+    new_text_devs = []
+    for d in parsed_devs:
+        title_escaped = escape_dart_string(d['title'])
+        if f"title: '{title_escaped}'" not in topics_content:
+            new_topic_devs.append(d)
+        if d['title'] not in existing_text_titles:
+            new_text_devs.append(d)
+
+    if (
+        not new_topic_devs
+        and not new_text_devs
+        and removed_text_duplicates == 0
+    ):
+        print("No new devotionals to add. They are already in the project.")
+        sys.exit(0)
+
     dates = re.findall(r'DateTime\((\d+),\s*(\d+),\s*(\d+)\)', topics_content)
     if dates:
         dates_parsed = [datetime.date(int(y), int(m), int(d)) for y, m, d in dates]
@@ -264,11 +386,24 @@ def main():
     else:
         start_seq = 1
     
+    used_ids = set(
+        re.findall(r"\bid:\s*'((?:\\.|[^'])*)'", topics_content)
+    )
     devotional_meta = []
-    for i, d in enumerate(parsed_devs):
+    for i, d in enumerate(new_topic_devs):
         curr_date = start_date + datetime.timedelta(days=i)
         title_words = [w for w in re.sub(r'[^\w\s]', '', d['title'].lower()).split() if w]
-        dev_id = "_".join(title_words[:3]) if title_words else f"devotional_{start_seq+i}"
+        base_id = (
+            "_".join(title_words[:3])
+            if title_words
+            else f"devotional_{start_seq+i}"
+        )
+        dev_id = base_id
+        suffix = 2
+        while dev_id in used_ids:
+            dev_id = f"{base_id}_{suffix}"
+            suffix += 1
+        used_ids.add(dev_id)
         theme = extract_theme(d['title'])
         
         devotional_meta.append({
@@ -279,9 +414,9 @@ def main():
             "day": curr_date.day
         })
     
-    # 1. Modify devotionals.txt
+    # Build additions for devotionals.txt independently from the Dart catalog.
     formatted_devs_txt = []
-    for d in parsed_devs:
+    for d in new_text_devs:
         sections_txt = []
         for idx, s in enumerate(d['sections'], 1):
             sections_txt.append(f"{s['icon']} {idx}. {s['heading']}\n{s['body']}")
@@ -304,24 +439,20 @@ def main():
 {d['prayer']}"""
         formatted_devs_txt.append(dev_txt)
         
-    devotionals_path = os.path.join(base_dir, r"lib\features\devotional\devotionals.txt")
-    with open(devotionals_path, "r", encoding="utf-8") as f:
-        devotionals_content = f.read()
-    
-    devotionals_content = devotionals_content.replace('\r\n', '\n').replace('\r', '\n')
-    if not devotionals_content.endswith("\n"):
-        devotionals_content += "\n"
-        
-    new_text_to_append = "\n\n\n\n\n" + "\n\n\n\n\n".join(formatted_devs_txt) + "\n"
-    modified_devotionals = devotionals_content.rstrip() + new_text_to_append
-    
-    with open(devotionals_path, "w", encoding="utf-8") as f:
-        f.write(modified_devotionals)
-    print(f"Successfully appended {len(parsed_devs)} devotionals to devotionals.txt")
-    
-    # 2. Modify devotional_topics.dart
+    modified_devotionals = devotionals_content
+    if formatted_devs_txt:
+        new_text_to_append = (
+            "\n\n\n\n\n"
+            + "\n\n\n\n\n".join(formatted_devs_txt)
+            + "\n"
+        )
+        modified_devotionals = (
+            devotionals_content.rstrip() + new_text_to_append
+        )
+
+    # Build additions for devotional_topics.dart.
     dart_blocks = []
-    for i, d in enumerate(parsed_devs):
+    for i, d in enumerate(new_topic_devs):
         meta = devotional_meta[i]
         
         sections_str = []
@@ -377,27 +508,41 @@ def main():
     ),"""
         dart_blocks.append(block_code)
         
-    dart_to_insert = "\n\n" + "\n\n".join(dart_blocks) + "\n"
-    
-    topics_path = os.path.join(base_dir, r"lib\features\devotional\data\devotional_topics.dart")
-    with open(topics_path, "r", encoding="utf-8") as f:
-        topics_content = f.read()
-        
-    topics_content = topics_content.replace('\r\n', '\n').replace('\r', '\n')
-    
+    modified_topics = topics_content
     end_marker = "  ];\n}"
-    if end_marker not in topics_content:
-        end_marker = "];\n}"
+    if dart_blocks:
         if end_marker not in topics_content:
-            print("Error: Could not locate end marker ];} in devotional_topics.dart")
-            sys.exit(1)
-            
-    split_idx = topics_content.rfind(end_marker)
-    modified_topics = topics_content[:split_idx] + dart_to_insert + "  ];\n}\n"
-    
-    with open(topics_path, "w", encoding="utf-8") as f:
-        f.write(modified_topics)
-    print(f"Successfully appended {len(parsed_devs)} devotionals to devotional_topics.dart")
+            end_marker = "];\n}"
+            if end_marker not in topics_content:
+                print(
+                    "Error: Could not locate end marker ];} in "
+                    "devotional_topics.dart"
+                )
+                sys.exit(1)
+
+        split_idx = topics_content.rfind(end_marker)
+        dart_to_insert = "\n\n" + "\n\n".join(dart_blocks) + "\n"
+        modified_topics = (
+            topics_content[:split_idx] + dart_to_insert + "  ];\n}\n"
+        )
+
+    if formatted_devs_txt or removed_text_duplicates:
+        with open(devotionals_path, "w", encoding="utf-8") as f:
+            f.write(modified_devotionals)
+    print(
+        f"Appended {len(new_text_devs)} devotional(s) to devotionals.txt"
+    )
+    print(
+        f"Removed {removed_text_duplicates} exact duplicate text block(s)"
+    )
+
+    if dart_blocks:
+        with open(topics_path, "w", encoding="utf-8") as f:
+            f.write(modified_topics)
+    print(
+        f"Appended {len(new_topic_devs)} devotional model(s) to "
+        "devotional_topics.dart"
+    )
 
 if __name__ == "__main__":
     main()

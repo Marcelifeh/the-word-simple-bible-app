@@ -33,6 +33,11 @@ class AppNotificationService {
     FlutterLocalNotificationsPlugin? plugin,
   }) : _plugin = plugin ?? FlutterLocalNotificationsPlugin();
 
+  static const androidNotificationIcon = 'ic_stat_word_app';
+  static const testNotificationId = 9901;
+  static const testNotificationChannelId = 'general_reminders_v2';
+  static const notificationCentrePayload =
+      '{"type":"notification_centre","route":"/notification-settings"}';
   static const _settingsChannel =
       MethodChannel('the_word/notification_settings');
 
@@ -55,7 +60,7 @@ class AppNotificationService {
       return;
     }
 
-    const android = AndroidInitializationSettings('ic_launcher');
+    const android = AndroidInitializationSettings(androidNotificationIcon);
     const darwin = DarwinInitializationSettings(
       requestAlertPermission: false,
       requestBadgePermission: false,
@@ -140,6 +145,42 @@ class AppNotificationService {
         false;
   }
 
+  Future<bool> areAndroidNotificationsEnabled() async {
+    if (defaultTargetPlatform != TargetPlatform.android) return true;
+    final android = _plugin.resolvePlatformSpecificImplementation<
+        AndroidFlutterLocalNotificationsPlugin>();
+    return await android?.areNotificationsEnabled() ?? true;
+  }
+
+  Future<void> showTestNotification() async {
+    if (!_initialized || !supportsLocalScheduling) return;
+    const details = NotificationDetails(
+      android: AndroidNotificationDetails(
+        testNotificationChannelId,
+        'Faith Reminders',
+        channelDescription:
+            'Daily Scripture, devotionals, prayer, and habit reminders.',
+        importance: Importance.defaultImportance,
+        priority: Priority.defaultPriority,
+        icon: androidNotificationIcon,
+        playSound: true,
+      ),
+      iOS: DarwinNotificationDetails(
+        presentAlert: true,
+        presentBadge: true,
+        presentSound: true,
+      ),
+    );
+
+    await _plugin.show(
+      id: testNotificationId,
+      title: 'Notifications are working',
+      body: 'The Word App can now send your faith reminders.',
+      notificationDetails: details,
+      payload: notificationCentrePayload,
+    );
+  }
+
   Future<void> openNotificationSettings() async {
     try {
       await _settingsChannel.invokeMethod<void>('openNotificationSettings');
@@ -194,6 +235,13 @@ class AppNotificationService {
     if (android == null) return;
 
     const channels = <AndroidNotificationChannel>[
+      AndroidNotificationChannel(
+        testNotificationChannelId,
+        'Faith Reminders',
+        description:
+            'Daily Scripture, devotionals, prayer, and habit reminders.',
+        importance: Importance.defaultImportance,
+      ),
       AndroidNotificationChannel(
         'daily_faith',
         'Daily faith',
@@ -262,6 +310,7 @@ class AppNotificationService {
         channel.id,
         channel.name,
         channelDescription: channel.description,
+        icon: androidNotificationIcon,
         importance: channel.importance,
         priority: channel.importance == Importance.low
             ? Priority.low

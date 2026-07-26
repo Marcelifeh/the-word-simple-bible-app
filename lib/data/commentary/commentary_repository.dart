@@ -7,6 +7,7 @@ import 'package:http/http.dart' as http;
 import '../../core/utils/env.dart';
 import '../../domain/entities/bible_translation.dart';
 import '../../domain/entities/verse_ref.dart';
+import 'commentary_availability.dart';
 
 class CommentaryRepository {
   CommentaryRepository();
@@ -71,21 +72,15 @@ class CommentaryRepository {
     required String verseText,
     required String bookName,
   }) async {
-    // All translations intentionally share the KJV commentary corpus.
+    if (!hasCommentaryForTranslation(translation)) return null;
+
+    // English translations share the English KJV commentary corpus.
     final effective = _effectiveCommentaryTranslation(translation);
     final native =
         await getExplanationForTranslation(translation: effective, ref: ref);
     if (native != null) return native;
 
-    // Defensive fallback for any older callers that bypassed the effective
-    // translation mapping.
-    if (effective != BibleTranslation.kjv) {
-      final englishFallback = await getExplanationForTranslation(
-          translation: BibleTranslation.kjv, ref: ref);
-      if (englishFallback != null) return englishFallback;
-    }
-
-    // Step 3: Try to generate via API (will store under the effective language).
+    // Generate via API and store only under the effective English language.
     final apiUrl = Env.commentaryApiUrl;
     if (apiUrl == null) return null;
 
@@ -103,8 +98,7 @@ class CommentaryRepository {
     return generated;
   }
 
-  /// Returns the translation used for commentary storage.
-  /// All app translations intentionally reuse KJV commentary.
+  /// English commentary is translation-neutral and stored under one corpus.
   BibleTranslation _effectiveCommentaryTranslation(BibleTranslation t) =>
       BibleTranslation.kjv;
 
@@ -115,6 +109,8 @@ class CommentaryRepository {
     required BibleTranslation translation,
     required VerseRef ref,
   }) async {
+    if (!hasCommentaryForTranslation(translation)) return null;
+
     final effectiveTranslation = _effectiveCommentaryTranslation(translation);
 
     final box = _box;
@@ -223,6 +219,8 @@ class CommentaryRepository {
     required VerseRef ref,
     required String explanation,
   }) async {
+    if (!hasCommentaryForTranslation(translation)) return;
+
     final box = _box;
     if (box == null) throw StateError('CommentaryRepository not initialized');
     await box.put(_boxKey(translation: translation, ref: ref), explanation);

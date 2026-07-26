@@ -1,8 +1,9 @@
+import 'dart:async';
 import 'dart:io' show File;
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
-import '../../../core/config/app_branding.dart';
 import 'package:flutter/services.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:share_plus/share_plus.dart';
@@ -10,7 +11,10 @@ import 'package:share_plus/share_plus.dart';
 import '../../../core/utils/app_haptics.dart';
 import '../../../core/utils/web_helper.dart';
 import '../model/tract_share_theme.dart';
+import '../model/word_studio_custom_background.dart';
+import '../repository/word_studio_custom_background_repository.dart';
 import 'widgets/tract_canvas.dart';
+import 'widgets/word_studio_top_bar.dart';
 
 class TractImageDesignerScreen extends StatefulWidget {
   final String title;
@@ -37,9 +41,20 @@ class TractImageDesignerScreen extends StatefulWidget {
 
 class _TractImageDesignerScreenState extends State<TractImageDesignerScreen> {
   final _screenshotController = ScreenshotController();
+  final _imagePicker = ImagePicker();
+  final _customBackgroundRepository = WordStudioCustomBackgroundRepository();
 
   static const double _designCanvasWidth = 360.0;
   static const double _exportPixelRatio = 3.0;
+  static const TractShareTheme _customBackgroundTheme = TractShareTheme(
+    id: 'custom_photo',
+    name: 'My Background',
+    gradientColors: <Color>[Colors.black, Color(0xFF111827)],
+    textColor: Colors.white,
+    accentColor: Color(0xFFFDE68A),
+    fontFamily: 'Poppins',
+    dark: true,
+  );
 
   // Customization state
   int _selectedThemeIndex = 0;
@@ -50,6 +65,12 @@ class _TractImageDesignerScreenState extends State<TractImageDesignerScreen> {
   TractAspectRatio _aspectRatio = TractAspectRatio.portrait;
   TractTextColumns _textColumns = TractTextColumns.one;
   bool _autoFit = true;
+  List<WordStudioCustomBackground> _customBackgrounds =
+      <WordStudioCustomBackground>[];
+  String? _selectedCustomBackgroundId;
+  bool _backgroundsLoading = true;
+  bool _backgroundImporting = false;
+  double _gestureStartScale = 1;
 
   bool _isExporting = false;
 
@@ -68,12 +89,14 @@ class _TractImageDesignerScreenState extends State<TractImageDesignerScreen> {
         TextEditingController(text: widget.hook ?? 'Written by .......');
     _invitationController =
         TextEditingController(text: 'You are invited to .......');
+    unawaited(_loadCustomBackgrounds());
   }
 
   @override
   void dispose() {
     _hookController.dispose();
     _invitationController.dispose();
+    unawaited(_customBackgroundRepository.close());
     super.dispose();
   }
 
@@ -82,7 +105,21 @@ class _TractImageDesignerScreenState extends State<TractImageDesignerScreen> {
   String get _canvasSignature =>
       '${_selectedThemeIndex}_${_selectedLayout}_${_fontSize}_${_alignment}_'
       '${_selectedPage}_${_aspectRatio}_${_textColumns}_${_autoFit}_'
+      '${_selectedCustomBackgroundId ?? 'default'}_'
       '${_hookController.text}_${_invitationController.text}';
+
+  WordStudioCustomBackground? get _selectedCustomBackground {
+    final selectedId = _selectedCustomBackgroundId;
+    if (selectedId == null) return null;
+    for (final background in _customBackgrounds) {
+      if (background.id == selectedId) return background;
+    }
+    return null;
+  }
+
+  TractShareTheme get _activeTheme => _selectedCustomBackground == null
+      ? tractThemes[_selectedThemeIndex]
+      : _customBackgroundTheme;
 
   MediaQueryData get _fixedCanvasMediaQuery => MediaQueryData(
         size: Size(_designCanvasWidth, _designCanvasHeight),
@@ -118,6 +155,7 @@ class _TractImageDesignerScreenState extends State<TractImageDesignerScreen> {
             aspectRatio: _aspectRatio,
             textColumns: _textColumns,
             autoFit: _autoFit,
+            customBackground: _selectedCustomBackground,
           ),
         ),
       ),
@@ -126,155 +164,171 @@ class _TractImageDesignerScreenState extends State<TractImageDesignerScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final activeTheme = tractThemes[_selectedThemeIndex];
+    final activeTheme = _activeTheme;
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
       backgroundColor:
           isDark ? const Color(0xFF0F172A) : const Color(0xFFF1F5F9),
       body: SafeArea(
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            // Dynamic max sheet height is 85% of available space
-            final maxSheetHeight = constraints.maxHeight * 0.85;
-            // Preview area fills remaining space
-            final previewHeight =
-                constraints.maxHeight - _sheetHeight - 56.0; // 56 = top bar
+        child: Column(
+          children: [
+            const WordStudioTopBar(),
+            Expanded(
+              child: LayoutBuilder(
+                builder: (context, constraints) {
+                  // Dynamic max sheet height is 85% of available space.
+                  final maxSheetHeight = constraints.maxHeight * 0.85;
+                  final sheetHeight =
+                      _sheetHeight.clamp(_minSheetHeight, maxSheetHeight);
+                  final previewHeight = constraints.maxHeight - sheetHeight;
 
-            return Stack(
-              children: [
-                // ── Studio Top Header ──────────────────────────────────────
-                const Positioned(
-                  top: 0,
-                  left: 0,
-                  right: 0,
-                  child: _StudioTopBar(),
-                ),
-
-                // ── Live Preview Area (dynamically sized) ──────────────────
-                Positioned(
-                  top: 56.0,
-                  left: 0,
-                  right: 0,
-                  height: previewHeight.clamp(0.0, double.infinity),
-                  child: _PreviewViewport(
-                    child: FittedBox(
-                      fit: BoxFit.contain,
-                      child: AnimatedSwitcher(
-                        duration: const Duration(milliseconds: 350),
-                        switchInCurve: Curves.easeOut,
-                        child: _buildWordStudioCanvas(
-                          activeTheme,
-                          key: ValueKey(_canvasSignature),
+                  return Stack(
+                    children: [
+                      // ── Live Preview Area (dynamically sized) ────────────
+                      Positioned(
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        height: previewHeight.clamp(0.0, double.infinity),
+                        child: _PreviewViewport(
+                          child: FittedBox(
+                            fit: BoxFit.contain,
+                            child: AnimatedSwitcher(
+                              duration: const Duration(milliseconds: 350),
+                              switchInCurve: Curves.easeOut,
+                              child: GestureDetector(
+                                key: ValueKey(_canvasSignature),
+                                onScaleStart: _selectedCustomBackground == null
+                                    ? null
+                                    : _startBackgroundGesture,
+                                onScaleUpdate: _selectedCustomBackground == null
+                                    ? null
+                                    : _updateBackgroundGesture,
+                                onScaleEnd: _selectedCustomBackground == null
+                                    ? null
+                                    : _endBackgroundGesture,
+                                child: _buildWordStudioCanvas(activeTheme),
+                              ),
+                            ),
+                          ),
                         ),
                       ),
-                    ),
-                  ),
-                ),
 
-                // ── Draggable Options Sheet ────────────────────────────────
-                Positioned(
-                  bottom: 0,
-                  left: 0,
-                  right: 0,
-                  height: _sheetHeight,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: const Color(0xFF172033),
-                      borderRadius:
-                          const BorderRadius.vertical(top: Radius.circular(28)),
-                      border: Border.all(
-                          color: Colors.white.withValues(alpha: 0.08)),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withValues(alpha: 0.35),
-                          blurRadius: 20,
-                          offset: const Offset(0, -4),
-                        ),
-                      ],
-                    ),
-                    child: Column(
-                      children: [
-                        // ── Drag Handle Area ───────────────────────────────
-                        GestureDetector(
-                          onVerticalDragUpdate: (d) {
-                            setState(() {
-                              // Dragging UP = negative delta.dy = sheet grows
-                              // Dragging Down = positive delta.dy = sheet shrinks
-                              _sheetHeight = (_sheetHeight - d.delta.dy)
-                                  .clamp(_minSheetHeight, maxSheetHeight);
-                            });
-                          },
-                          onVerticalDragEnd: (_) {
-                            // Snap to nearest anchor
-                            _snapSheet(maxSheetHeight);
-                          },
-                          behavior: HitTestBehavior.opaque,
-                          child: SizedBox(
-                            width: double.infinity,
-                            height: 40,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Container(
-                                  width: 44,
-                                  height: 4,
-                                  decoration: BoxDecoration(
-                                    color: Colors.white30,
-                                    borderRadius: BorderRadius.circular(99),
+                      // ── Draggable Options Sheet ──────────────────────────
+                      Positioned(
+                        bottom: 0,
+                        left: 0,
+                        right: 0,
+                        height: sheetHeight,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: const Color(0xFF172033),
+                            borderRadius: const BorderRadius.vertical(
+                              top: Radius.circular(28),
+                            ),
+                            border: Border.all(
+                              color: Colors.white.withValues(alpha: 0.08),
+                            ),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withValues(alpha: 0.35),
+                                blurRadius: 20,
+                                offset: const Offset(0, -4),
+                              ),
+                            ],
+                          ),
+                          child: Column(
+                            children: [
+                              // ── Drag Handle Area ─────────────────────────
+                              GestureDetector(
+                                onVerticalDragUpdate: (d) {
+                                  setState(() {
+                                    _sheetHeight =
+                                        (_sheetHeight - d.delta.dy).clamp(
+                                      _minSheetHeight,
+                                      maxSheetHeight,
+                                    );
+                                  });
+                                },
+                                onVerticalDragEnd: (_) {
+                                  _snapSheet(maxSheetHeight);
+                                },
+                                behavior: HitTestBehavior.opaque,
+                                child: SizedBox(
+                                  width: double.infinity,
+                                  height: 40,
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Container(
+                                        width: 44,
+                                        height: 4,
+                                        decoration: BoxDecoration(
+                                          color: Colors.white30,
+                                          borderRadius:
+                                              BorderRadius.circular(99),
+                                        ),
+                                      ),
+                                      if (sheetHeight <=
+                                          _minSheetHeight + 8) ...[
+                                        const SizedBox(height: 4),
+                                        const Text(
+                                          '↑ Drag to customise',
+                                          style: TextStyle(
+                                            fontSize: 9,
+                                            color: Colors.white38,
+                                            letterSpacing: 0.5,
+                                          ),
+                                        ),
+                                      ],
+                                    ],
                                   ),
                                 ),
-                                if (_sheetHeight <= _minSheetHeight + 8) ...[
-                                  const SizedBox(height: 4),
-                                  const Text(
-                                    '↑ Drag to customise',
-                                    style: TextStyle(
-                                      fontSize: 9,
-                                      color: Colors.white38,
-                                      letterSpacing: 0.5,
+                              ),
+
+                              if (sheetHeight > _minSheetHeight + 8)
+                                Expanded(
+                                  child: ListView(
+                                    padding: const EdgeInsets.fromLTRB(
+                                      20,
+                                      4,
+                                      20,
+                                      0,
                                     ),
+                                    children: [
+                                      _buildPageSelectorPanel(),
+                                      const _SheetDivider(),
+                                      _buildRatioAndColumnsPanel(),
+                                      const _SheetDivider(),
+                                      _buildThemePresetsRow(),
+                                      const _SheetDivider(),
+                                      _buildLayoutStylesRow(),
+                                      const _SheetDivider(),
+                                      _buildTextCustomizationPanel(),
+                                      const _SheetDivider(),
+                                      _buildTypographyPanel(),
+                                      const SizedBox(height: 16),
+                                    ],
                                   ),
-                                ],
-                              ],
-                            ),
+                                ),
+
+                              if (sheetHeight > _minSheetHeight + 32)
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(16, 8, 16, 16),
+                                  child: _buildActionButtons(activeTheme),
+                                ),
+                            ],
                           ),
                         ),
-
-                        // ── Scrollable Controls (hidden when nearly collapsed) ──
-                        if (_sheetHeight > _minSheetHeight + 8)
-                          Expanded(
-                            child: ListView(
-                              padding: const EdgeInsets.fromLTRB(20, 4, 20, 0),
-                              children: [
-                                _buildPageSelectorPanel(),
-                                const _SheetDivider(),
-                                _buildRatioAndColumnsPanel(),
-                                const _SheetDivider(),
-                                _buildThemePresetsRow(),
-                                const _SheetDivider(),
-                                _buildLayoutStylesRow(),
-                                const _SheetDivider(),
-                                _buildTextCustomizationPanel(),
-                                const _SheetDivider(),
-                                _buildTypographyPanel(),
-                                const SizedBox(height: 16),
-                              ],
-                            ),
-                          ),
-
-                        // ── Static Download Button (only when tall enough) ─────
-                        if (_sheetHeight > _minSheetHeight + 32)
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
-                            child: _buildActionButtons(activeTheme),
-                          ),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            );
-          },
+                      ),
+                    ],
+                  );
+                },
+              ),
+            ),
+          ],
         ),
       ),
     );
@@ -282,14 +336,230 @@ class _TractImageDesignerScreenState extends State<TractImageDesignerScreen> {
 
   /// Snaps to nearest anchor (collapsed=64, half=340, expanded=maxHeight*0.85)
   void _snapSheet(double maxH) {
-    const anchors = [_minSheetHeight, _defaultSheetHeight];
-    final allAnchors = [...anchors, maxH];
+    final allAnchors = <double>{
+      _minSheetHeight,
+      _defaultSheetHeight.clamp(_minSheetHeight, maxH),
+      maxH,
+    }.toList();
     double nearest = allAnchors.reduce((a, b) =>
         ((_sheetHeight - a).abs() < (_sheetHeight - b).abs()) ? a : b);
     setState(() => _sheetHeight = nearest);
   }
 
   // ── Builder Helpers ──────────────────────────────────────────────────────────
+
+  Future<void> _loadCustomBackgrounds() async {
+    try {
+      await _customBackgroundRepository.init();
+      if (!mounted) return;
+      setState(() {
+        _customBackgrounds = _customBackgroundRepository.backgrounds;
+        _backgroundsLoading = false;
+      });
+    } catch (error) {
+      if (!mounted) return;
+      setState(() => _backgroundsLoading = false);
+      _showBackgroundMessage('Custom backgrounds are unavailable: $error');
+    }
+  }
+
+  Future<void> _pickCustomBackground() async {
+    if (_backgroundImporting) return;
+    if (_customBackgrounds.length >=
+        WordStudioCustomBackgroundRepository.maxBackgrounds) {
+      _showBackgroundMessage('You can save up to 20 custom backgrounds.');
+      return;
+    }
+
+    if (!_customBackgroundRepository.privacyAcknowledged) {
+      final accepted = await showDialog<bool>(
+        context: context,
+        builder: (dialogContext) => AlertDialog(
+          title: const Text('Your photo stays private'),
+          content: const Text(
+            'Custom backgrounds stay on this device unless you share the '
+            'finished design.',
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(dialogContext, false),
+              child: const Text('Not now'),
+            ),
+            FilledButton(
+              onPressed: () => Navigator.pop(dialogContext, true),
+              child: const Text('Choose photo'),
+            ),
+          ],
+        ),
+      );
+      if (accepted != true) return;
+      await _customBackgroundRepository.acknowledgePrivacy();
+    }
+
+    try {
+      setState(() => _backgroundImporting = true);
+      final image = await _imagePicker.pickImage(
+        source: ImageSource.gallery,
+        imageQuality: 92,
+        maxWidth: 2400,
+      );
+      if (image == null) return;
+      final bytes = await image.readAsBytes();
+      final background = await _customBackgroundRepository.importImage(
+        bytes: bytes,
+        originalName: image.name,
+        mimeType: image.mimeType,
+      );
+      if (!mounted) return;
+      setState(() {
+        _customBackgrounds = _customBackgroundRepository.backgrounds;
+        _selectedCustomBackgroundId = background.id;
+      });
+      await HapticFeedback.selectionClick();
+    } on WordStudioBackgroundException catch (error) {
+      _showBackgroundMessage(error.message);
+    } on PlatformException catch (error) {
+      _showBackgroundMessage(
+        error.message ?? 'The photo picker could not be opened.',
+      );
+    } catch (error) {
+      _showBackgroundMessage('Could not add that image: $error');
+    } finally {
+      if (mounted) setState(() => _backgroundImporting = false);
+    }
+  }
+
+  void _startBackgroundGesture(ScaleStartDetails details) {
+    _gestureStartScale = _selectedCustomBackground?.scale ?? 1;
+  }
+
+  void _updateBackgroundGesture(ScaleUpdateDetails details) {
+    final background = _selectedCustomBackground;
+    if (background == null) return;
+    _replaceCustomBackground(
+      background.copyWith(
+        scale: _gestureStartScale * details.scale,
+        alignmentX: background.alignmentX + (details.focalPointDelta.dx / 140),
+        alignmentY: background.alignmentY + (details.focalPointDelta.dy / 140),
+      ),
+      persist: false,
+    );
+  }
+
+  void _endBackgroundGesture(ScaleEndDetails details) {
+    final background = _selectedCustomBackground;
+    if (background != null) {
+      unawaited(_customBackgroundRepository.update(background));
+    }
+  }
+
+  void _replaceCustomBackground(
+    WordStudioCustomBackground background, {
+    bool persist = true,
+  }) {
+    if (!_customBackgrounds.any((item) => item.id == background.id)) return;
+    setState(() {
+      _customBackgrounds = replaceWordStudioCustomBackground(
+        _customBackgrounds,
+        background,
+      );
+    });
+    if (persist) {
+      unawaited(_customBackgroundRepository.update(background));
+    }
+  }
+
+  Future<void> _renameCustomBackground(
+    WordStudioCustomBackground background,
+  ) async {
+    final controller = TextEditingController(text: background.displayName);
+    final name = await showDialog<String>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: const Text('Rename background'),
+        content: TextField(
+          controller: controller,
+          autofocus: true,
+          maxLength: 50,
+          decoration: const InputDecoration(labelText: 'Name'),
+          onSubmitted: (value) => Navigator.pop(dialogContext, value),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext),
+            child: const Text('Cancel'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.pop(dialogContext, controller.text),
+            child: const Text('Rename'),
+          ),
+        ],
+      ),
+    );
+    controller.dispose();
+    if (name == null || name.trim().isEmpty) return;
+    await _customBackgroundRepository.rename(background.id, name);
+    if (!mounted) return;
+    setState(() {
+      _customBackgrounds = _customBackgroundRepository.backgrounds;
+    });
+  }
+
+  Future<void> _duplicateCustomBackground(
+    WordStudioCustomBackground background,
+  ) async {
+    try {
+      final duplicate =
+          await _customBackgroundRepository.duplicate(background.id);
+      if (!mounted || duplicate == null) return;
+      setState(() {
+        _customBackgrounds = _customBackgroundRepository.backgrounds;
+        _selectedCustomBackgroundId = duplicate.id;
+      });
+    } on WordStudioBackgroundException catch (error) {
+      _showBackgroundMessage(error.message);
+    }
+  }
+
+  Future<void> _removeCustomBackground(
+    WordStudioCustomBackground background,
+  ) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: const Text('Remove background?'),
+        content: Text(
+          'Remove "${background.displayName}" from Word Studio?',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext, false),
+            child: const Text('Cancel'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.pop(dialogContext, true),
+            child: const Text('Remove'),
+          ),
+        ],
+      ),
+    );
+    if (confirmed != true) return;
+    await _customBackgroundRepository.remove(background.id);
+    if (!mounted) return;
+    setState(() {
+      _customBackgrounds = _customBackgroundRepository.backgrounds;
+      if (_selectedCustomBackgroundId == background.id) {
+        _selectedCustomBackgroundId = null;
+      }
+    });
+  }
+
+  void _showBackgroundMessage(String message) {
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(message)),
+    );
+  }
 
   Widget _buildPageSelectorPanel() {
     final chunks = TractSlideGenerator.splitBody(widget.body);
@@ -304,8 +574,11 @@ class _TractImageDesignerScreenState extends State<TractImageDesignerScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        Wrap(
+          alignment: WrapAlignment.spaceBetween,
+          crossAxisAlignment: WrapCrossAlignment.center,
+          spacing: 12,
+          runSpacing: 8,
           children: [
             const Text(
               'Canvas Slide Mode',
@@ -548,80 +821,432 @@ class _TractImageDesignerScreenState extends State<TractImageDesignerScreen> {
   }
 
   Widget _buildThemePresetsRow() {
+    final selectedCustom = _selectedCustomBackground;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Text(
-          'Visual Styles & Gradients',
+          'Background',
           style: TextStyle(
               fontWeight: FontWeight.bold, fontSize: 14, color: Colors.white),
         ),
         const SizedBox(height: 10),
         SizedBox(
-          height: 70,
-          child: ListView.builder(
+          height: 78,
+          child: ListView(
             scrollDirection: Axis.horizontal,
-            itemCount: tractThemes.length,
-            itemBuilder: (context, i) {
-              final t = tractThemes[i];
-              final isSelected = _selectedThemeIndex == i;
-              return GestureDetector(
-                onTap: () {
-                  HapticFeedback.selectionClick();
-                  setState(() => _selectedThemeIndex = i);
-                },
-                child: Container(
-                  width: 70,
-                  margin: const EdgeInsets.only(right: 10),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(14),
-                    gradient: LinearGradient(
-                      colors: t.gradientColors,
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                    ),
-                    border: Border.all(
-                      color: isSelected
-                          ? Theme.of(context).colorScheme.primary
-                          : Colors.white24,
-                      width: isSelected ? 3.0 : 1.5,
-                    ),
-                    boxShadow: isSelected
-                        ? [
-                            BoxShadow(
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .primary
-                                  .withValues(alpha: 0.4),
-                              blurRadius: 8,
-                            ),
-                          ]
-                        : [],
+            children: [
+              for (var index = 0; index < tractThemes.length; index++)
+                _buildDefaultBackgroundTile(index),
+              for (final background in _customBackgrounds)
+                _buildCustomBackgroundTile(background),
+              _buildAddBackgroundTile(),
+            ],
+          ),
+        ),
+        if (selectedCustom != null) ...[
+          const SizedBox(height: 14),
+          _buildCustomBackgroundPanel(selectedCustom),
+        ],
+      ],
+    );
+  }
+
+  Widget _buildDefaultBackgroundTile(int index) {
+    final theme = tractThemes[index];
+    final isSelected =
+        _selectedCustomBackgroundId == null && _selectedThemeIndex == index;
+    return GestureDetector(
+      onTap: () {
+        HapticFeedback.selectionClick();
+        setState(() {
+          _selectedThemeIndex = index;
+          _selectedCustomBackgroundId = null;
+        });
+      },
+      child: Container(
+        width: 70,
+        margin: const EdgeInsets.only(right: 10),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(8),
+          gradient: LinearGradient(
+            colors: theme.gradientColors,
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+          border: Border.all(
+            color: isSelected
+                ? Theme.of(context).colorScheme.primary
+                : Colors.white24,
+            width: isSelected ? 3 : 1.5,
+          ),
+          boxShadow: isSelected
+              ? [
+                  BoxShadow(
+                    color: Theme.of(context)
+                        .colorScheme
+                        .primary
+                        .withValues(alpha: 0.4),
+                    blurRadius: 8,
                   ),
-                  child: Center(
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 5, vertical: 2),
-                      decoration: BoxDecoration(
-                        color: Colors.black.withValues(alpha: 0.5),
-                        borderRadius: BorderRadius.circular(5),
-                      ),
-                      child: Text(
-                        t.name.split(' ').first,
-                        style: const TextStyle(
-                            fontSize: 9,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white),
+                ]
+              : const [],
+        ),
+        alignment: Alignment.center,
+        child: _backgroundTileLabel(theme.name.split(' ').first),
+      ),
+    );
+  }
+
+  Widget _buildCustomBackgroundTile(
+    WordStudioCustomBackground background,
+  ) {
+    final isSelected = _selectedCustomBackgroundId == background.id;
+    return GestureDetector(
+      onTap: () {
+        HapticFeedback.selectionClick();
+        setState(() => _selectedCustomBackgroundId = background.id);
+      },
+      child: Container(
+        width: 70,
+        margin: const EdgeInsets.only(right: 10),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(
+            color: isSelected
+                ? Theme.of(context).colorScheme.primary
+                : Colors.white24,
+            width: isSelected ? 3 : 1.5,
+          ),
+          boxShadow: isSelected
+              ? [
+                  BoxShadow(
+                    color: Theme.of(context)
+                        .colorScheme
+                        .primary
+                        .withValues(alpha: 0.4),
+                    blurRadius: 8,
+                  ),
+                ]
+              : const [],
+        ),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(6),
+          child: Stack(
+            fit: StackFit.expand,
+            children: [
+              Image.memory(
+                background.bytes!,
+                fit: BoxFit.cover,
+                gaplessPlayback: true,
+              ),
+              const ColoredBox(color: Color(0x42000000)),
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: _backgroundTileLabel(background.displayName),
+              ),
+              Positioned(
+                right: -3,
+                top: -3,
+                child: PopupMenuButton<_CustomBackgroundAction>(
+                  tooltip: 'Background options',
+                  padding: EdgeInsets.zero,
+                  iconSize: 17,
+                  style: IconButton.styleFrom(
+                    minimumSize: const Size(30, 30),
+                    maximumSize: const Size(30, 30),
+                    padding: EdgeInsets.zero,
+                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                  ),
+                  icon: const Icon(
+                    Icons.more_vert,
+                    color: Colors.white,
+                  ),
+                  onSelected: (action) =>
+                      _handleCustomBackgroundAction(background, action),
+                  itemBuilder: (context) => const [
+                    PopupMenuItem(
+                      value: _CustomBackgroundAction.rename,
+                      child: ListTile(
+                        contentPadding: EdgeInsets.zero,
+                        leading: Icon(Icons.edit_outlined),
+                        title: Text('Rename'),
                       ),
                     ),
-                  ),
+                    PopupMenuItem(
+                      value: _CustomBackgroundAction.duplicate,
+                      child: ListTile(
+                        contentPadding: EdgeInsets.zero,
+                        leading: Icon(Icons.copy_outlined),
+                        title: Text('Duplicate'),
+                      ),
+                    ),
+                    PopupMenuItem(
+                      value: _CustomBackgroundAction.remove,
+                      child: ListTile(
+                        contentPadding: EdgeInsets.zero,
+                        leading: Icon(Icons.delete_outline),
+                        title: Text('Remove'),
+                      ),
+                    ),
+                  ],
                 ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildAddBackgroundTile() {
+    final busy = _backgroundsLoading || _backgroundImporting;
+    return Tooltip(
+      message: 'Add background',
+      child: InkWell(
+        onTap: busy ? null : _pickCustomBackground,
+        borderRadius: BorderRadius.circular(8),
+        child: Container(
+          width: 70,
+          decoration: BoxDecoration(
+            color: Colors.white.withValues(alpha: 0.05),
+            borderRadius: BorderRadius.circular(8),
+            border: Border.all(color: Colors.white24, width: 1.5),
+          ),
+          child: busy
+              ? const Center(
+                  child: SizedBox(
+                    width: 22,
+                    height: 22,
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  ),
+                )
+              : const Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.add_photo_alternate_outlined,
+                      color: Colors.white,
+                    ),
+                    SizedBox(height: 4),
+                    Text(
+                      'My Background',
+                      textAlign: TextAlign.center,
+                      maxLines: 2,
+                      style: TextStyle(
+                        color: Colors.white70,
+                        fontSize: 8,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ],
+                ),
+        ),
+      ),
+    );
+  }
+
+  Widget _backgroundTileLabel(String label) {
+    return Container(
+      margin: const EdgeInsets.all(4),
+      padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 2),
+      decoration: BoxDecoration(
+        color: Colors.black.withValues(alpha: 0.58),
+        borderRadius: BorderRadius.circular(4),
+      ),
+      child: Text(
+        label,
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+        textAlign: TextAlign.center,
+        style: const TextStyle(
+          fontSize: 9,
+          fontWeight: FontWeight.bold,
+          color: Colors.white,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildCustomBackgroundPanel(
+    WordStudioCustomBackground background,
+  ) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          'Image fit',
+          style: TextStyle(
+            fontSize: 12,
+            color: Colors.white70,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        const SizedBox(height: 8),
+        SizedBox(
+          width: double.infinity,
+          child: SegmentedButton<BoxFit>(
+            showSelectedIcon: false,
+            style: ButtonStyle(
+              visualDensity: VisualDensity.compact,
+              foregroundColor: WidgetStateProperty.resolveWith(
+                (states) => states.contains(WidgetState.selected)
+                    ? Colors.white
+                    : Colors.white70,
+              ),
+              backgroundColor: WidgetStateProperty.resolveWith(
+                (states) => states.contains(WidgetState.selected)
+                    ? Theme.of(context)
+                        .colorScheme
+                        .primary
+                        .withValues(alpha: 0.35)
+                    : Colors.white.withValues(alpha: 0.05),
+              ),
+              side: WidgetStateProperty.resolveWith(
+                (states) => BorderSide(
+                  color: states.contains(WidgetState.selected)
+                      ? Theme.of(context).colorScheme.primary
+                      : Colors.white24,
+                ),
+              ),
+            ),
+            segments: const [
+              ButtonSegment(
+                value: BoxFit.cover,
+                label: Text('Cover'),
+                icon: Icon(Icons.crop),
+              ),
+              ButtonSegment(
+                value: BoxFit.contain,
+                label: Text('Contain'),
+                icon: Icon(Icons.fit_screen),
+              ),
+              ButtonSegment(
+                value: BoxFit.fill,
+                label: Text('Fill'),
+                icon: Icon(Icons.aspect_ratio),
+              ),
+            ],
+            selected: <BoxFit>{background.fit},
+            onSelectionChanged: (selection) {
+              _replaceCustomBackground(
+                background.copyWith(fit: selection.first),
               );
             },
           ),
         ),
+        const SizedBox(height: 14),
+        Row(
+          children: [
+            const Expanded(
+              child: Text(
+                'Dark overlay',
+                style: TextStyle(
+                  fontSize: 12,
+                  color: Colors.white70,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+            Text(
+              '${(background.overlayOpacity * 100).round()}%',
+              style: const TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ],
+        ),
+        Slider(
+          value: background.overlayOpacity,
+          min: 0,
+          max: 0.8,
+          divisions: 16,
+          label: '${(background.overlayOpacity * 100).round()}%',
+          onChanged: (value) {
+            _replaceCustomBackground(
+              background.copyWith(overlayOpacity: value),
+              persist: false,
+            );
+          },
+          onChangeEnd: (_) {
+            final selected = _selectedCustomBackground;
+            if (selected != null) {
+              unawaited(_customBackgroundRepository.update(selected));
+            }
+          },
+        ),
+        Row(
+          children: [
+            const Expanded(
+              child: Text(
+                'Zoom',
+                style: TextStyle(
+                  fontSize: 12,
+                  color: Colors.white70,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+            IconButton(
+              onPressed: () {
+                _replaceCustomBackground(
+                  background.copyWith(
+                    scale: 1,
+                    alignmentX: 0,
+                    alignmentY: 0,
+                  ),
+                );
+              },
+              tooltip: 'Reset position and zoom',
+              icon: const Icon(Icons.center_focus_strong_outlined),
+              color: Colors.white70,
+            ),
+          ],
+        ),
+        Slider(
+          value: background.scale,
+          min: 1,
+          max: 3,
+          divisions: 20,
+          label: '${background.scale.toStringAsFixed(1)}x',
+          onChanged: (value) {
+            _replaceCustomBackground(
+              background.copyWith(scale: value),
+              persist: false,
+            );
+          },
+          onChangeEnd: (_) {
+            final selected = _selectedCustomBackground;
+            if (selected != null) {
+              unawaited(_customBackgroundRepository.update(selected));
+            }
+          },
+        ),
+        Align(
+          alignment: Alignment.centerRight,
+          child: OutlinedButton.icon(
+            onPressed: () => _removeCustomBackground(background),
+            icon: const Icon(Icons.delete_outline),
+            label: const Text('Remove background'),
+          ),
+        ),
       ],
     );
+  }
+
+  void _handleCustomBackgroundAction(
+    WordStudioCustomBackground background,
+    _CustomBackgroundAction action,
+  ) {
+    switch (action) {
+      case _CustomBackgroundAction.rename:
+        unawaited(_renameCustomBackground(background));
+      case _CustomBackgroundAction.duplicate:
+        unawaited(_duplicateCustomBackground(background));
+      case _CustomBackgroundAction.remove:
+        unawaited(_removeCustomBackground(background));
+    }
   }
 
   Widget _buildLayoutStylesRow() {
@@ -1007,7 +1632,7 @@ class _TractImageDesignerScreenState extends State<TractImageDesignerScreen> {
   Future<void> _exportAndProcess({required bool share}) async {
     setState(() => _isExporting = true);
     try {
-      final activeTheme = tractThemes[_selectedThemeIndex];
+      final activeTheme = _activeTheme;
 
       final exportWidget = Material(
         color: Colors.transparent,
@@ -1110,52 +1735,9 @@ class _TractImageDesignerScreenState extends State<TractImageDesignerScreen> {
   }
 }
 
+enum _CustomBackgroundAction { rename, duplicate, remove }
+
 // ── Shared Sub-Widgets ────────────────────────────────────────────────────────
-
-class _StudioTopBar extends StatelessWidget {
-  const _StudioTopBar();
-
-  @override
-  Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    return Container(
-      height: 56,
-      padding: const EdgeInsets.symmetric(horizontal: 8),
-      child: Row(
-        children: [
-          IconButton(
-            icon: Icon(Icons.arrow_back_ios_new_rounded,
-                color: isDark ? Colors.white : Colors.black87, size: 20),
-            onPressed: () => Navigator.pop(context),
-          ),
-          const SizedBox(width: 4),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                AppBranding.wordStudio,
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w800,
-                  fontFamily: 'Poppins',
-                  color: isDark ? Colors.white : Colors.black87,
-                ),
-              ),
-              const SizedBox(height: 4),
-              Text(
-                'Create • Share • Inspire',
-                style: TextStyle(
-                  fontSize: 12,
-                  color: isDark ? Colors.white70 : Colors.black54,
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-}
 
 class _PreviewViewport extends StatelessWidget {
   final Widget child;

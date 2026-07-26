@@ -14,7 +14,7 @@ class HomeTextScale extends StatelessWidget {
   Widget build(BuildContext context) {
     return MediaQuery(
       data: MediaQuery.of(context).copyWith(
-        textScaler: TextScaler.linear(scale.clamp(0.90, 1.12)),
+        textScaler: TextScaler.linear(scale.clamp(1.00, 1.26)),
       ),
       child: child,
     );

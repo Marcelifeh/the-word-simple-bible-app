@@ -18,6 +18,7 @@ import '../../notes/model/verse_note.dart';
 import '../../scripture_memory/model/memory_verse.dart';
 import '../../scripture_memory/widgets/add_to_memory_sheet.dart';
 import '../../../core/narration/contracts/narratable_content.dart';
+import '../../../core/narration/content/narratable_verse.dart';
 import '../../../core/narration/models/narration_segment.dart';
 import '../../../core/narration/models/narration_state.dart';
 import '../../../core/narration/services/narration_controller.dart';
@@ -346,6 +347,8 @@ class _ReadingScreenState extends State<ReadingScreen> {
                 loadResult?.verses ?? _currentVerses ?? const <Verse>[];
             final effectiveTranslation =
                 loadResult?.effectiveTranslation ?? state.translation;
+            final requestedTranslation =
+                loadResult?.requestedTranslation ?? state.translation;
             final hasVerses = verses.isNotEmpty;
             final isWaiting =
                 snapshot.connectionState == ConnectionState.waiting;
@@ -522,6 +525,7 @@ class _ReadingScreenState extends State<ReadingScreen> {
                               verse: verse,
                               bookName: widget.book.name,
                               translation: effectiveTranslation,
+                              commentaryTranslation: requestedTranslation,
                               motionProfile: _motionProfile,
                               glowToken: _focusedVerseNumber == verse.ref.verse
                                   ? _focusHighlightToken
@@ -1227,6 +1231,7 @@ class _VerseTile extends StatefulWidget {
     required this.verse,
     required this.bookName,
     required this.translation,
+    required this.commentaryTranslation,
     required this.motionProfile,
     this.glowToken,
   });
@@ -1234,6 +1239,7 @@ class _VerseTile extends StatefulWidget {
   final Verse verse;
   final String bookName;
   final BibleTranslation translation;
+  final BibleTranslation commentaryTranslation;
   final _ReaderMotionProfile motionProfile;
   final int? glowToken;
 
@@ -1247,6 +1253,8 @@ class _VerseTileState extends State<_VerseTile> {
   bool loading = false;
   bool expanded = false;
   bool _focused = false;
+  bool _isStartingVerseNarration = false;
+  int _commentaryRequestToken = 0;
   int? _lastGlowToken;
 
   @override
@@ -1260,6 +1268,20 @@ class _VerseTileState extends State<_VerseTile> {
     super.didUpdateWidget(oldWidget);
     if (widget.glowToken != oldWidget.glowToken) {
       _maybeTriggerFocusGlow(widget.glowToken);
+    }
+    if (widget.commentaryTranslation != oldWidget.commentaryTranslation ||
+        widget.verse.ref != oldWidget.verse.ref) {
+      _commentaryRequestToken++;
+      explanation = null;
+      loadedExplanation = false;
+      loading = false;
+      if (expanded) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (mounted && expanded) {
+            _handleExpansionChange(true);
+          }
+        });
+      }
     }
   }
 
@@ -1286,18 +1308,19 @@ class _VerseTileState extends State<_VerseTile> {
     if (mounted) {
       setState(() => expanded = nextExpanded);
     }
-    if (!nextExpanded || loadedExplanation) return;
+    if (!nextExpanded || loadedExplanation || loading) return;
 
     final state = AppScope.of(context);
+    final requestToken = ++_commentaryRequestToken;
     setState(() => loading = true);
     try {
       final text = await state.commentaryRepo.getOrGenerateAndStore(
-        translation: widget.translation,
+        translation: widget.commentaryTranslation,
         ref: widget.verse.ref,
         verseText: widget.verse.text,
         bookName: widget.bookName,
       );
-      if (!mounted) return;
+      if (!mounted || requestToken != _commentaryRequestToken) return;
       setState(() {
         explanation = text != null ? BibleTextSanitizer.clean(text) : null;
         loadedExplanation = true;
@@ -1305,7 +1328,7 @@ class _VerseTileState extends State<_VerseTile> {
       });
     } catch (e, st) {
       debugPrint('Failed to load explanation: $e\n$st');
-      if (!mounted) return;
+      if (!mounted || requestToken != _commentaryRequestToken) return;
       setState(() {
         explanation = null;
         loadedExplanation = true;
@@ -1320,6 +1343,43 @@ class _VerseTileState extends State<_VerseTile> {
       verse: verse,
       onSavedOrDeleted: () => setState(() {}),
     );
+  }
+
+  Future<void> _narrateVerse() async {
+    if (_isStartingVerseNarration) return;
+    setState(() => _isStartingVerseNarration = true);
+
+    try {
+      final controller = AppScope.of(context).narrationController;
+      final verse = widget.verse;
+      final content = NarratableVerse(
+        bookId: verse.ref.bookId,
+        bookName: widget.bookName,
+        chapter: verse.ref.chapter,
+        verse: verse.ref.verse,
+        text: verse.text,
+      );
+      await controller.playContent(
+        content,
+        id: content.id,
+        sourceType: NarrationSourceType.bible,
+        mode: controller.preferences.mode,
+      );
+    } catch (error, stackTrace) {
+      debugPrint('Verse narration failed: $error\n$stackTrace');
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            'This device could not start narration. Check the selected voice in Audio & Narration settings.',
+          ),
+        ),
+      );
+    } finally {
+      if (mounted) {
+        setState(() => _isStartingVerseNarration = false);
+      }
+    }
   }
 
   Future<void> _memorizeVerse() async {
@@ -1433,6 +1493,7 @@ class _VerseTileState extends State<_VerseTile> {
                         if (loading) const LinearProgressIndicator(),
                         if (!loading)
                           VerseInsightPanel(
+                            translation: widget.commentaryTranslation,
                             rawText: (explanation != null &&
                                     explanation!.trim().isNotEmpty)
                                 ? explanation!
@@ -1481,32 +1542,18 @@ class _VerseTileState extends State<_VerseTile> {
                               icon: const Icon(Icons.psychology_alt_rounded),
                             ),
                             IconButton(
-                              tooltip: 'Audio',
-                              icon: const Icon(Icons.volume_up),
-                              onPressed: () async {
-                                try {
-                                  final url = await state.audioService
-                                      .getVerseAudioUrl(
-                                          widget.translation, ref);
-                                  if (url == null) {
-                                    if (!context.mounted) return;
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(
-                                          content: Text(
-                                              'Audio not configured yet. Set AUDIO_API_URL.')),
-                                    );
-                                    return;
-                                  }
-                                  await state.audioPlayer.playUrl(url);
-                                } catch (e, st) {
-                                  debugPrint('Audio playback failed: $e\n$st');
-                                  if (!context.mounted) return;
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(
-                                          content:
-                                              Text('Audio playback failed.')));
-                                }
-                              },
+                              tooltip: 'Listen to verse',
+                              onPressed: _isStartingVerseNarration
+                                  ? null
+                                  : _narrateVerse,
+                              icon: _isStartingVerseNarration
+                                  ? const SizedBox.square(
+                                      dimension: 18,
+                                      child: CircularProgressIndicator(
+                                        strokeWidth: 2,
+                                      ),
+                                    )
+                                  : const Icon(Icons.volume_up_rounded),
                             ),
                             IconButton(
                               tooltip: 'Share',

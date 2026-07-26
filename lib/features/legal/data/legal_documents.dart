@@ -22,7 +22,7 @@ The Word App may store:
 
 Most data is stored locally on your device unless cloud syncing is enabled in future updates.
 
-2. AI Features
+2. Features
 
 Some features may use AI-generated content including:
 • Devotionals
@@ -142,7 +142,7 @@ The Word App is a modern spiritual platform designed to help people engage deepl
 
 Features include:
 • Bible reading
-• AI devotionals
+• Devotionals
 • Prayer mode
 • Gospel tract sharing
 • Sermon intelligence notes

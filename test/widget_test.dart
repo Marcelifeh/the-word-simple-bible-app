@@ -12,7 +12,9 @@ import 'package:simple_bible_app/features/home/view/home_screen.dart';
 import 'package:simple_bible_app/shared/state/app_state.dart';
 
 void main() {
-  testWidgets('Home screen shows greeting', (WidgetTester tester) async {
+  testWidgets(
+      'Home screen shows a time-aware greeting and notifications action',
+      (WidgetTester tester) async {
     TestWidgetsFlutterBinding.ensureInitialized();
     final state = AppState();
 
@@ -22,8 +24,21 @@ void main() {
         child: const MaterialApp(home: HomeScreen()),
       ),
     );
-    await tester.pump();
+    await tester.pump(const Duration(seconds: 1));
 
-    expect(find.text('Peace be with you ✨'), findsOneWidget);
+    expect(
+      find.byWidgetPredicate(
+        (widget) =>
+            widget is Text &&
+            const <String>{
+              'Good Morning',
+              'Good Afternoon',
+              'Good Evening',
+              'Good Night',
+            }.contains(widget.data),
+      ),
+      findsOneWidget,
+    );
+    expect(find.byIcon(Icons.notifications_none), findsOneWidget);
   });
 }

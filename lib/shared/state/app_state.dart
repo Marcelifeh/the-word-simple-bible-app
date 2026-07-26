@@ -4,8 +4,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 
-import '../../data/audio/audio_player_controller.dart';
-import '../../data/audio/remote_audio_bible_service.dart';
 import '../../data/bible/bible_api_repository.dart';
 import '../../data/bible/bible_asset_repository.dart';
 import '../../data/bible/bible_repository.dart';
@@ -25,6 +23,7 @@ import '../../features/notifications/services/notification_navigation_service.da
 import '../../features/notifications/services/notification_scheduler.dart';
 import '../../features/reading_plan/reading_plan_service.dart';
 import '../../features/devotional/model/devotional_model.dart';
+import '../../features/daily_verse/model/promise_history_entry.dart';
 import '../../features/sermon_notes/repository/sermon_draft_repository.dart';
 import '../../features/sermon_notes/repository/sermon_note_repository.dart';
 import '../../features/scripture_memory/repository/memory_verse_repository.dart';
@@ -107,12 +106,10 @@ class AppState extends ChangeNotifier with WidgetsBindingObserver {
     scheduler: notificationScheduler,
   );
   bool _notificationsInitialized = false;
+  bool get notificationsAvailable => _notificationsInitialized;
 
   final searchIndexRepo = SearchIndexRepository();
   final smartSearchRepo = createSmartOfflineSearchRepository();
-
-  final audioService = RemoteAudioBibleService();
-  final audioPlayer = AudioPlayerController();
 
   late final narrationService = NarrationService();
   late final narrationCacheService = LocalNarrationCacheService();
@@ -141,9 +138,13 @@ class AppState extends ChangeNotifier with WidgetsBindingObserver {
   final Map<String, double> _devotionalProgressByDate = {};
   final Map<String, String> _readingPlanLastOpenedPassagesByDate = {};
   final Map<String, Set<String>> _readingPlanCompletedPassagesByDate = {};
+  final List<PromiseHistoryEntry> _promiseHistory = [];
 
   Map<String, DateTime> get devotionalReadHistory =>
       Map<String, DateTime>.unmodifiable(_devotionalReadHistory);
+
+  List<PromiseHistoryEntry> get promiseHistory =>
+      List<PromiseHistoryEntry>.unmodifiable(_promiseHistory);
 
   DevotionalModel? get currentDevotional => _currentDevotional;
 
@@ -196,6 +197,47 @@ class AppState extends ChangeNotifier with WidgetsBindingObserver {
     final passageList = passages.toList(growable: false);
     if (passageList.isEmpty) return false;
     return passageList.every(completedPassages.contains);
+  }
+
+  Future<void> recordPromiseShown({
+    required String promiseId,
+    required String theme,
+    DateTime? shownOn,
+  }) async {
+    final day = PromiseHistoryEntry.localDay(shownOn ?? DateTime.now());
+    final existingIndex = _promiseHistory.indexWhere(
+      (entry) =>
+          PromiseHistoryEntry.calendarDaysBetween(
+            entry.shownOn,
+            day,
+          ).abs() ==
+          0,
+    );
+    if (existingIndex >= 0 &&
+        _promiseHistory[existingIndex].promiseId == promiseId &&
+        _promiseHistory[existingIndex].theme == theme) {
+      return;
+    }
+
+    if (existingIndex >= 0) {
+      _promiseHistory.removeAt(existingIndex);
+    }
+    _promiseHistory.add(
+      PromiseHistoryEntry(
+        promiseId: promiseId,
+        theme: theme,
+        shownOn: day,
+      ),
+    );
+    _promiseHistory.removeWhere((entry) {
+      final age = PromiseHistoryEntry.calendarDaysBetween(day, entry.shownOn);
+      return age > 90 || age < 0;
+    });
+    _promiseHistory.sort((a, b) => a.shownOn.compareTo(b.shownOn));
+    await _saveSetting(
+      'promiseHistory',
+      PromiseHistoryEntry.encodeList(_promiseHistory),
+    );
   }
 
   void setLastRead(LastReadRef ref) {
@@ -466,20 +508,39 @@ class AppState extends ChangeNotifier with WidgetsBindingObserver {
     }
     _loadSettings();
     _scheduleDailyDevotionalRollover();
-    await notificationPreferencesRepository.init();
-    await scheduledNotificationRepository.init();
-    await notificationInboxRepository.init();
-    notificationInboxRepository.addListener(_handleNotificationInboxChange);
-    await notificationContentService.init();
-    await appNotificationService.initialize(
-      onPayload: (payload) async {
-        await notificationCoordinator.recordNotificationTap(payload);
-        await notificationNavigationService.handlePayload(payload);
-      },
-    );
-    _notificationsInitialized = true;
-    WidgetsBinding.instance.addObserver(this);
-    await notificationCoordinator.refresh();
+    await initializeNotificationsForStartup();
+  }
+
+  @visibleForTesting
+  Future<void> initializeNotificationsForStartup({
+    Future<void> Function()? initializer,
+  }) async {
+    try {
+      if (initializer != null) {
+        await initializer();
+      } else {
+        await notificationPreferencesRepository.init();
+        await scheduledNotificationRepository.init();
+        await notificationInboxRepository.init();
+        notificationInboxRepository.addListener(
+          _handleNotificationInboxChange,
+        );
+        await notificationContentService.init();
+        await appNotificationService.initialize(
+          onPayload: (payload) async {
+            await notificationCoordinator.recordNotificationTap(payload);
+            await notificationNavigationService.handlePayload(payload);
+          },
+        );
+        await notificationCoordinator.refresh();
+        WidgetsBinding.instance.addObserver(this);
+      }
+      _notificationsInitialized = true;
+    } catch (error, stackTrace) {
+      _notificationsInitialized = false;
+      debugPrint('Notifications unavailable: $error');
+      debugPrintStack(stackTrace: stackTrace);
+    }
   }
 
   void _loadSettings() {
@@ -681,6 +742,22 @@ class AppState extends ChangeNotifier with WidgetsBindingObserver {
         }
       }
     }
+
+    final today = PromiseHistoryEntry.localDay(DateTime.now());
+    _promiseHistory
+      ..clear()
+      ..addAll(
+        PromiseHistoryEntry.decodeList(
+          box.get('promiseHistory') as String?,
+        ).where((entry) {
+          final age = PromiseHistoryEntry.calendarDaysBetween(
+            today,
+            entry.shownOn,
+          );
+          return age >= 0 && age <= 90;
+        }),
+      );
+    _promiseHistory.sort((a, b) => a.shownOn.compareTo(b.shownOn));
 
     _initializeCurrentDevotional();
 
@@ -938,7 +1015,6 @@ class AppState extends ChangeNotifier with WidgetsBindingObserver {
     narrationController.dispose();
     narrationSyncEngine.dispose();
     unawaited(narrationService.dispose());
-    audioPlayer.dispose();
     super.dispose();
   }
 }

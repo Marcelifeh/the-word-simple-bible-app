@@ -38,6 +38,7 @@ class _TractsScreenState extends State<TractsScreen> {
         ),
       ),
       floatingActionButton: FloatingActionButton.extended(
+        heroTag: 'write-tract-fab',
         onPressed: () async {
           final saved = await AppRouter.push<bool>(
             context,

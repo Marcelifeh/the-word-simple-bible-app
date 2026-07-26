@@ -41,6 +41,7 @@ class _MainShellState extends State<MainShell> {
 
   @override
   Widget build(BuildContext context) {
+    final keyboardVisible = MediaQuery.viewInsetsOf(context).bottom > 0;
     const pages = <Widget>[
       HomeScreen(),
       BookScreen(),
@@ -65,6 +66,7 @@ class _MainShellState extends State<MainShell> {
         if (_index != 0) _setIndex(0);
       },
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
         body: Stack(
           children: List.generate(pages.length, (i) {
             final active = i == _index;
@@ -84,53 +86,58 @@ class _MainShellState extends State<MainShell> {
             );
           }),
         ),
-        bottomNavigationBar: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            NarrationBar(controller: AppScope.of(context).narrationController),
-            NavigationBar(
-              labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
-          animationDuration: const Duration(milliseconds: 500),
-          selectedIndex: _index,
-          onDestinationSelected: (i) {
-            if (i == _index) {
-              _navKeys[i].currentState?.popUntil((r) => r.isFirst);
-            } else {
-              _setIndex(i);
-            }
-          },
-          destinations: const [
-            NavigationDestination(
-              icon: Icon(Icons.home_outlined),
-              selectedIcon: Icon(Icons.home_rounded),
-              label: 'Home',
-            ),
-            NavigationDestination(
-              icon: Icon(Icons.menu_book_outlined),
-              selectedIcon: Icon(Icons.menu_book_rounded),
-              label: 'Bible',
-            ),
-            NavigationDestination(
-              icon: Icon(Icons.search_rounded),
-              selectedIcon: Icon(Icons.search_rounded),
-              label: 'Search',
-            ),
-            NavigationDestination(
-              icon: Icon(Icons.edit_note_outlined),
-              selectedIcon: Icon(Icons.edit_note_rounded),
-              label: 'Journal',
-            ),
-            NavigationDestination(
-              icon: Icon(Icons.share_outlined),
-              selectedIcon: Icon(Icons.share_rounded),
-              label: 'Tracts',
-            ),
-          ],
-        ),
-      ],
-    ),
-  ),
-);
+        bottomNavigationBar: keyboardVisible
+            ? null
+            : Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  NarrationBar(
+                    controller: AppScope.of(context).narrationController,
+                  ),
+                  NavigationBar(
+                    labelBehavior:
+                        NavigationDestinationLabelBehavior.onlyShowSelected,
+                    animationDuration: const Duration(milliseconds: 500),
+                    selectedIndex: _index,
+                    onDestinationSelected: (i) {
+                      if (i == _index) {
+                        _navKeys[i].currentState?.popUntil((r) => r.isFirst);
+                      } else {
+                        _setIndex(i);
+                      }
+                    },
+                    destinations: const [
+                      NavigationDestination(
+                        icon: Icon(Icons.home_outlined),
+                        selectedIcon: Icon(Icons.home_rounded),
+                        label: 'Home',
+                      ),
+                      NavigationDestination(
+                        icon: Icon(Icons.menu_book_outlined),
+                        selectedIcon: Icon(Icons.menu_book_rounded),
+                        label: 'Bible',
+                      ),
+                      NavigationDestination(
+                        icon: Icon(Icons.search_rounded),
+                        selectedIcon: Icon(Icons.search_rounded),
+                        label: 'Search',
+                      ),
+                      NavigationDestination(
+                        icon: Icon(Icons.edit_note_outlined),
+                        selectedIcon: Icon(Icons.edit_note_rounded),
+                        label: 'Journal',
+                      ),
+                      NavigationDestination(
+                        icon: Icon(Icons.share_outlined),
+                        selectedIcon: Icon(Icons.share_rounded),
+                        label: 'Tracts',
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+      ),
+    );
   }
 
   AppTransitionType _tabTransitionForIndex(int index) {
