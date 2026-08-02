@@ -48,7 +48,7 @@ class NotificationCoordinator {
         await _scheduler.synchronize(
           _preferencesRepository.preferences,
           now: now,
-          deliver: !_foreground,
+          deliver: true,
         );
       } while (_refreshAgain);
     } finally {

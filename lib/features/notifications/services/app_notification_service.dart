@@ -36,6 +36,10 @@ class AppNotificationService {
   static const androidNotificationIcon = 'ic_stat_word_app';
   static const testNotificationId = 9901;
   static const testNotificationChannelId = 'general_reminders_v2';
+  static const dailyFaithChannelId = 'daily_faith';
+  static const habitRemindersChannelId = 'habit_reminders';
+  static const prayerRemindersChannelId = 'prayer_reminders';
+  static const appUpdatesChannelId = 'app_updates';
   static const notificationCentrePayload =
       '{"type":"notification_centre","route":"/notification-settings"}';
   static const _settingsChannel =
@@ -152,6 +156,33 @@ class AppNotificationService {
     return await android?.areNotificationsEnabled() ?? true;
   }
 
+  Future<int?> pendingNotificationRequestCount() async {
+    if (!supportsLocalScheduling) return null;
+    return (await _plugin.pendingNotificationRequests()).length;
+  }
+
+  Future<List<String>> blockedAndroidReminderChannelNames() async {
+    if (defaultTargetPlatform != TargetPlatform.android) {
+      return const <String>[];
+    }
+    final android = _plugin.resolvePlatformSpecificImplementation<
+        AndroidFlutterLocalNotificationsPlugin>();
+    final channels = await android?.getNotificationChannels();
+    if (channels == null) return const <String>[];
+
+    const reminderChannelNames = <String, String>{
+      dailyFaithChannelId: 'Daily faith',
+      habitRemindersChannelId: 'Habit reminders',
+      prayerRemindersChannelId: 'Prayer reminders',
+    };
+    return <String>[
+      for (final channel in channels)
+        if (reminderChannelNames.containsKey(channel.id) &&
+            channel.importance == Importance.none)
+          reminderChannelNames[channel.id]!,
+    ];
+  }
+
   Future<void> showTestNotification() async {
     if (!_initialized || !supportsLocalScheduling) return;
     const details = NotificationDetails(
@@ -243,25 +274,25 @@ class AppNotificationService {
         importance: Importance.defaultImportance,
       ),
       AndroidNotificationChannel(
-        'daily_faith',
+        dailyFaithChannelId,
         'Daily faith',
         description: 'Daily Scripture, devotional, and reflection reminders',
         importance: Importance.defaultImportance,
       ),
       AndroidNotificationChannel(
-        'habit_reminders',
+        habitRemindersChannelId,
         'Habit reminders',
         description: 'Reading plan and Scripture Memory reminders',
         importance: Importance.defaultImportance,
       ),
       AndroidNotificationChannel(
-        'prayer_reminders',
+        prayerRemindersChannelId,
         'Prayer reminders',
         description: 'Gentle reminders to pause for prayer',
         importance: Importance.defaultImportance,
       ),
       AndroidNotificationChannel(
-        'app_updates',
+        appUpdatesChannelId,
         'App updates',
         description: 'New content, features, and important announcements',
         importance: Importance.low,
@@ -278,7 +309,7 @@ class AppNotificationService {
       NotificationType.dailyDevotional ||
       NotificationType.eveningReflection =>
         (
-          id: 'daily_faith',
+          id: dailyFaithChannelId,
           name: 'Daily faith',
           description: 'Daily Scripture, devotional, and reflection reminders',
           importance: Importance.defaultImportance,
@@ -286,19 +317,19 @@ class AppNotificationService {
       NotificationType.readingPlan ||
       NotificationType.scriptureMemoryReview =>
         (
-          id: 'habit_reminders',
+          id: habitRemindersChannelId,
           name: 'Habit reminders',
           description: 'Reading plan and Scripture Memory reminders',
           importance: Importance.defaultImportance,
         ),
       NotificationType.prayerReminder => (
-          id: 'prayer_reminders',
+          id: prayerRemindersChannelId,
           name: 'Prayer reminders',
           description: 'Gentle reminders to pause for prayer',
           importance: Importance.defaultImportance,
         ),
       NotificationType.appUpdate || NotificationType.importantAnnouncement => (
-          id: 'app_updates',
+          id: appUpdatesChannelId,
           name: 'App updates',
           description: 'New content, features, and important announcements',
           importance: Importance.low,

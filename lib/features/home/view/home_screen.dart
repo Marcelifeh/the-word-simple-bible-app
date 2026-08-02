@@ -28,6 +28,7 @@ import '../../daily_verse/services/promise_verse_service.dart';
 import '../../daily_verse/view/promise_verse_screen.dart';
 import '../model/daily_encouragement.dart';
 import '../services/daily_encouragement_service.dart';
+import '../services/weekly_sermon_progress.dart';
 import '../widgets/journey_action_tile.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -492,7 +493,7 @@ class _HomeScreenState extends State<HomeScreen> {
       readingDays: _completedDaysThisWeek(state, readingPlanService),
       chaptersRead: _completedChaptersThisWeek(state, readingPlanService),
       devotionalsCompleted: _devotionalsThisWeek(state),
-      sermonsRecorded: _sermonsRecordedThisWeek(state),
+      sermonsRecorded: _sermonsThisWeek(state),
       savedItems: _savedItemsThisWeek(state),
     );
   }
@@ -562,16 +563,9 @@ class _HomeScreenState extends State<HomeScreen> {
     return state.devotionalReadHistory.values.where(_isThisWeek).length;
   }
 
-  int _sermonsRecordedThisWeek(AppState state) {
+  int _sermonsThisWeek(AppState state) {
     try {
-      return state.sermonNoteRepo
-          .list()
-          .where(
-            (note) => note.playableClips.any(
-              (clip) => _isThisWeek(clip.createdAtUtc),
-            ),
-          )
-          .length;
+      return sermonsCapturedThisWeek(state.sermonNoteRepo.list());
     } catch (_) {
       return 0;
     }

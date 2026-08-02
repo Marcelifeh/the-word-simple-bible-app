@@ -264,6 +264,24 @@ void main() {
     expect(inboxRepository.unreadCount, 0);
     coordinator.dispose();
   });
+
+  test('foreground refresh keeps system reminders scheduled', () async {
+    final coordinator = NotificationCoordinator(
+      preferencesRepository: NotificationPreferencesRepository(),
+      scheduleRepository: scheduleRepository,
+      inboxRepository: _TrackingInboxRepository(),
+      scheduler: buildScheduler(),
+    );
+
+    coordinator.setForeground(true);
+    await coordinator.refresh(now: DateTime(2026, 7, 29, 6));
+
+    expect(
+      notificationService.scheduledById,
+      contains(AppNotificationIds.dailyVerse),
+    );
+    coordinator.dispose();
+  });
 }
 
 class _FakeNotificationService extends AppNotificationService {

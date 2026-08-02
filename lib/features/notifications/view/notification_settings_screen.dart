@@ -24,6 +24,8 @@ class _NotificationSettingsScreenState extends State<NotificationSettingsScreen>
   NotificationPreferencesRepository? _repository;
   AppNotificationPermissionStatus _permissionStatus =
       AppNotificationPermissionStatus.notDetermined;
+  int? _pendingNotificationCount;
+  List<String> _blockedChannelNames = const <String>[];
   bool _sendingTestNotification = false;
 
   NotificationPreferences get _preferences =>
@@ -60,16 +62,31 @@ class _NotificationSettingsScreenState extends State<NotificationSettingsScreen>
 
   Future<void> _refreshPermissionStatus() async {
     final state = AppScope.of(context);
-    final status = await state.appNotificationService.permissionStatus(
-      hasPrompted: _preferences.permissionPrompted,
-    );
-    if (mounted) setState(() => _permissionStatus = status);
+    try {
+      final status = await state.appNotificationService.permissionStatus(
+        hasPrompted: _preferences.permissionPrompted,
+      );
+      final pending =
+          await state.appNotificationService.pendingNotificationRequestCount();
+      final blocked = await state.appNotificationService
+          .blockedAndroidReminderChannelNames();
+      if (!mounted) return;
+      setState(() {
+        _permissionStatus = status;
+        _pendingNotificationCount = pending;
+        _blockedChannelNames = blocked;
+      });
+    } catch (_) {
+      if (!mounted) return;
+      setState(() => _pendingNotificationCount = null);
+    }
   }
 
   Future<void> _save(NotificationPreferences preferences) async {
     final state = AppScope.of(context);
     await state.notificationPreferencesRepository.save(preferences);
     await state.notificationCoordinator.refresh();
+    await _refreshPermissionStatus();
   }
 
   Future<void> _setCategoryEnabled(
@@ -86,8 +103,8 @@ class _NotificationSettingsScreenState extends State<NotificationSettingsScreen>
       _preferences.copyWith(permissionPrompted: true),
     );
     await state.appNotificationService.requestPermission();
-    await _refreshPermissionStatus();
     await state.notificationCoordinator.refresh();
+    await _refreshPermissionStatus();
   }
 
   Future<void> _openSettings() async {
@@ -130,6 +147,7 @@ class _NotificationSettingsScreenState extends State<NotificationSettingsScreen>
       }
 
       await state.appNotificationService.showTestNotification();
+      await _refreshPermissionStatus();
       _showTestMessage(
         'Test sent. Check the Android notification panel.',
       );
@@ -166,6 +184,32 @@ class _NotificationSettingsScreenState extends State<NotificationSettingsScreen>
       _preferences.scriptureMemoryEnabled ||
       _preferences.prayerEnabled ||
       _preferences.eveningReflectionEnabled;
+
+  String get _deviceStatusMessage {
+    return switch (_permissionStatus) {
+      AppNotificationPermissionStatus.denied =>
+        'Notifications are blocked on this device.',
+      AppNotificationPermissionStatus.notDetermined =>
+        'Send a test to allow notifications.',
+      AppNotificationPermissionStatus.unsupported =>
+        'System notifications are unavailable on this platform.',
+      AppNotificationPermissionStatus.granted
+          when _blockedChannelNames.isNotEmpty =>
+        '${_blockedChannelNames.join(', ')} '
+            '${_blockedChannelNames.length == 1 ? 'is' : 'are'} blocked in '
+            'Android settings.',
+      AppNotificationPermissionStatus.granted
+          when !_preferences.masterEnabled =>
+        'Reminder delivery is paused.',
+      AppNotificationPermissionStatus.granted
+          when _pendingNotificationCount != null =>
+        '$_pendingNotificationCount reminder'
+            '${_pendingNotificationCount == 1 ? '' : 's'} scheduled on this '
+            'device.',
+      AppNotificationPermissionStatus.granted =>
+        'Notifications are enabled on this device.',
+    };
+  }
 
   String _timeLabel(int minutes) {
     return MaterialLocalizations.of(context).formatTimeOfDay(
@@ -365,20 +409,10 @@ class _NotificationSettingsScreenState extends State<NotificationSettingsScreen>
                   : Icons.notifications_off_outlined,
             ),
             title: const Text('Notification status'),
-            subtitle: Text(
-              switch (_permissionStatus) {
-                AppNotificationPermissionStatus.granted =>
-                  'Notifications are enabled on this device.',
-                AppNotificationPermissionStatus.denied =>
-                  'Notifications are blocked on this device.',
-                AppNotificationPermissionStatus.notDetermined =>
-                  'Send a test to allow notifications.',
-                AppNotificationPermissionStatus.unsupported =>
-                  'System notifications are unavailable on this platform.',
-              },
-            ),
+            subtitle: Text(_deviceStatusMessage),
             trailing:
-                _permissionStatus == AppNotificationPermissionStatus.denied
+                _permissionStatus == AppNotificationPermissionStatus.denied ||
+                        _blockedChannelNames.isNotEmpty
                     ? TextButton(
                         onPressed: _openSettings,
                         child: const Text('Open settings'),
