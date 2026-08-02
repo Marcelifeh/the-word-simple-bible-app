@@ -67,7 +67,7 @@ We may update this Privacy Policy periodically. Continued use of the app indicat
 8. Contact
 
 For questions regarding privacy:
-support@thewordapp.org
+support.thewordapp@gmail.com
 ''',
   );
 
