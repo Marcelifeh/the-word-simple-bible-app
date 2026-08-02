@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import '../../../core/config/app_branding.dart';
 
@@ -28,6 +30,7 @@ import '../../daily_verse/services/promise_verse_service.dart';
 import '../../daily_verse/view/promise_verse_screen.dart';
 import '../model/daily_encouragement.dart';
 import '../services/daily_encouragement_service.dart';
+import '../services/weekly_date_utils.dart';
 import '../services/weekly_sermon_progress.dart';
 import '../widgets/journey_action_tile.dart';
 
@@ -42,28 +45,28 @@ class WeeklyHomeStats {
   const WeeklyHomeStats({
     required this.readingDays,
     required this.chaptersRead,
-    required this.devotionalsCompleted,
+    required this.devotionalDays,
     required this.sermonsRecorded,
     required this.savedItems,
   });
 
   final int readingDays;
   final int chaptersRead;
-  final int devotionalsCompleted;
+  final int devotionalDays;
   final int sermonsRecorded;
   final int savedItems;
 
   double get progress => (readingDays / 7).clamp(0.0, 1.0).toDouble();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   Verse? _dailyVerse;
   bool _verseLoading = true;
   PromiseVerse? _promiseVerse;
   WeeklyHomeStats _weeklyStats = const WeeklyHomeStats(
     readingDays: 0,
     chaptersRead: 0,
-    devotionalsCompleted: 0,
+    devotionalDays: 0,
     sermonsRecorded: 0,
     savedItems: 0,
   );
@@ -72,12 +75,15 @@ class _HomeScreenState extends State<HomeScreen> {
 
   bool _initDone = false;
   DateTime? _loadedDailyContentDate;
+  Timer? _dateRefreshTimer;
   static const _encouragementService = DailyEncouragementService();
 
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     _dashboardController = PageController(viewportFraction: 0.94);
+    _scheduleDateRefresh();
   }
 
   @override
@@ -94,8 +100,39 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void dispose() {
+    _dateRefreshTimer?.cancel();
+    WidgetsBinding.instance.removeObserver(this);
     _dashboardController.dispose();
     super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state != AppLifecycleState.resumed || !mounted) return;
+    _refreshForCurrentDate();
+    _scheduleDateRefresh();
+  }
+
+  void _scheduleDateRefresh() {
+    _dateRefreshTimer?.cancel();
+    final now = DateTime.now();
+    final tomorrow = DateTime(now.year, now.month, now.day).add(
+      const Duration(days: 1),
+    );
+    _dateRefreshTimer = Timer(tomorrow.difference(now), () {
+      if (!mounted) return;
+      _refreshForCurrentDate();
+      _scheduleDateRefresh();
+    });
+  }
+
+  void _refreshForCurrentDate() {
+    final today = _todayOnly;
+    if (_loadedDailyContentDate != today) {
+      _loadedDailyContentDate = today;
+      unawaited(_loadDailyVerse());
+    }
+    unawaited(_loadWeeklyStats());
   }
 
   Future<void> _loadDailyVerse() async {
@@ -271,7 +308,7 @@ class _HomeScreenState extends State<HomeScreen> {
     await _loadWeeklyStats();
   }
 
-  void _openAudioDevotional(DevotionalModel devotional) {
+  Future<void> _openAudioDevotional(DevotionalModel devotional) async {
     final state = AppScope.of(context);
     state.setCurrentDevotional(
       devotional,
@@ -280,12 +317,14 @@ class _HomeScreenState extends State<HomeScreen> {
           : _todayOnly,
       stage: DevotionalResumeStage.audio,
     );
-    AppRouter.push(
+    await AppRouter.push(
       context,
       DevotionalPlayerScreen(devotional: devotional),
       rootNavigator: true,
       transition: AppTransitionType.devotional,
     );
+    if (!mounted) return;
+    await _loadWeeklyStats();
   }
 
   Future<void> _openSermonNotes() async {
@@ -492,7 +531,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return WeeklyHomeStats(
       readingDays: _completedDaysThisWeek(state, readingPlanService),
       chaptersRead: _completedChaptersThisWeek(state, readingPlanService),
-      devotionalsCompleted: _devotionalsThisWeek(state),
+      devotionalDays: _devotionalDaysThisWeek(state),
       sermonsRecorded: _sermonsThisWeek(state),
       savedItems: _savedItemsThisWeek(state),
     );
@@ -503,7 +542,7 @@ class _HomeScreenState extends State<HomeScreen> {
     ReadingPlanService readingPlanService,
   ) {
     final today = _todayOnly;
-    final weekStart = today.subtract(Duration(days: today.weekday - 1));
+    final weekStart = startOfSundayWeek(today);
     var count = 0;
 
     for (var offset = 0; offset < 7; offset += 1) {
@@ -523,7 +562,7 @@ class _HomeScreenState extends State<HomeScreen> {
     ReadingPlanService readingPlanService,
   ) {
     final today = _todayOnly;
-    final weekStart = today.subtract(Duration(days: today.weekday - 1));
+    final weekStart = startOfSundayWeek(today);
     var count = 0;
 
     for (var offset = 0; offset < 7; offset += 1) {
@@ -553,14 +592,14 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   bool _isThisWeek(DateTime date) {
-    final today = _todayOnly;
-    final normalized = DateTime(date.year, date.month, date.day);
-    final weekStart = today.subtract(Duration(days: today.weekday - 1));
-    return !normalized.isBefore(weekStart) && !normalized.isAfter(today);
+    return isWithinSundayWeek(date, DateTime.now());
   }
 
-  int _devotionalsThisWeek(AppState state) {
-    return state.devotionalReadHistory.values.where(_isThisWeek).length;
+  int _devotionalDaysThisWeek(AppState state) {
+    return countWeeklyDevotionalDays(
+      completedDevotionalDates: state.devotionalReadHistory.values,
+      now: DateTime.now(),
+    );
   }
 
   int _sermonsThisWeek(AppState state) {
@@ -1336,7 +1375,7 @@ class _WeeklyInsightsCard extends StatelessWidget {
                     Text(
                       stats.readingDays >= 7
                           ? 'Week completed'
-                          : '${stats.readingDays} of 7 reading days',
+                          : '${stats.readingDays} of 7 Bible reading days',
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: theme.textTheme.bodySmall?.copyWith(
@@ -1363,9 +1402,9 @@ class _WeeklyInsightsCard extends StatelessWidget {
               _WeekMetricChip(
                 icon: Icons.history_edu_rounded,
                 label: _countLabel(
-                  stats.devotionalsCompleted,
-                  'Devotional',
-                  'Devotionals',
+                  stats.devotionalDays,
+                  'Devotional Day',
+                  'Devotional Days',
                 ),
                 accent: accent,
                 onTap: onOpenDevotionals,

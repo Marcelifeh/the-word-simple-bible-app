@@ -3,7 +3,7 @@ import 'package:simple_bible_app/features/home/services/weekly_sermon_progress.d
 import 'package:simple_bible_app/features/sermon_notes/model/sermon_note.dart';
 
 void main() {
-  test('counts sermon notes from Monday through today', () {
+  test('counts sermon notes from Sunday through today', () {
     final notes = <SermonNote>[
       SermonNote(
         id: 'monday-note-only',
@@ -11,14 +11,14 @@ void main() {
         date: DateTime(2026, 7, 27, 9),
       ),
       SermonNote(
-        id: 'previous-sunday',
+        id: 'current-sunday',
         title: 'Hope',
         date: DateTime(2026, 7, 26, 18),
       ),
       SermonNote(
-        id: 'future-thursday',
+        id: 'next-sunday',
         title: 'Faith',
-        date: DateTime(2026, 7, 30, 9),
+        date: DateTime(2026, 8, 2, 9),
       ),
     ];
 
@@ -26,6 +26,29 @@ void main() {
       sermonsCapturedThisWeek(
         notes,
         now: DateTime(2026, 7, 29, 12),
+      ),
+      2,
+    );
+  });
+
+  test('previous Saturday is excluded after the Sunday reset', () {
+    final notes = <SermonNote>[
+      SermonNote(
+        id: 'previous-saturday',
+        title: 'Before the boundary',
+        date: DateTime(2026, 8, 1, 18),
+      ),
+      SermonNote(
+        id: 'current-sunday',
+        title: 'A new week',
+        date: DateTime(2026, 8, 2, 9),
+      ),
+    ];
+
+    expect(
+      sermonsCapturedThisWeek(
+        notes,
+        now: DateTime(2026, 8, 2, 12),
       ),
       1,
     );
