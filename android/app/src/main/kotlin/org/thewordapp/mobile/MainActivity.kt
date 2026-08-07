@@ -1,4 +1,4 @@
-package com.example.simple_bible_app
+package org.thewordapp.mobile
 
 import android.content.Intent
 import android.provider.Settings

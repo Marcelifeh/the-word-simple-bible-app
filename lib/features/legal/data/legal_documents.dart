@@ -4,67 +4,68 @@ class LegalDocuments {
   static const privacyPolicy = LegalDocument(
     title: 'Privacy Policy',
     content: '''
-Last Updated: August 2026
+Last Updated: August 6, 2026
 
 Welcome to The Word App.
 
-Your privacy is important to us. This Privacy Policy explains how The Word App collects, uses, and protects your information.
+This Privacy Policy explains how The Word App handles information when you use the mobile application and its optional online services.
 
-1. Information We Collect
+1. Overview
 
-The Word App may store:
-• Favorites and bookmarks
-• Journal entries and sermon notes
-• Prayer reflections
-• User-created tracts
-• Reading progress
-• App preferences
+The Word App does not currently require an account. The app does not contain advertising or third-party analytics SDKs. Most app data remains on your device.
 
-Most data is stored locally on your device unless cloud syncing is enabled in future updates.
+2. Information Stored on Your Device
 
-2. Features
+The app may store Bible-reading progress, favorites, bookmarks, highlights, notes, sermon notes and recordings, journal entries, devotional progress, Scripture Memory content and review history, prayer reflections, notification preferences and inbox items, custom Word Studio backgrounds, generated exports, and app settings.
 
-Some features may use AI-generated content including:
-• Devotionals
-• Commentary insights
-• Prayer assistance
-• Scripture reflections
+This information is stored locally unless you deliberately use a sharing or online-processing feature. Uninstalling the app generally removes app-managed local data, subject to Android backup or files you exported elsewhere.
 
-AI-generated responses are designed to support spiritual growth but should not replace personal discernment, pastoral counsel, or direct study of Scripture.
+3. Custom Images and Shared Content
 
-3. Sharing Content
+Images selected for Word Studio are copied into app storage and are not uploaded by the custom-background feature. A finished design leaves the device only when you choose to share or export it using Android or another selected app.
 
-Users may share:
-• Gospel tracts
-• Notes
-• Scripture images
-• Devotional reflections
+Content you choose to share is handled by the destination app or service under its own privacy terms.
 
-Please avoid sharing sensitive personal information publicly.
+4. Device Permissions
 
-4. Data Security
+The app may request:
+- Microphone access when you choose to record sermon audio.
+- Notification access when you enable reminders.
+- Access to a user-selected image through Android's photo picker for custom backgrounds.
 
-We aim to protect your information using secure storage practices. However, no system can guarantee complete security.
+The app does not need broad photo-library access to select a custom background.
 
-5. Third-Party Services
+5. Optional Online Services
 
-Future versions may integrate:
-• Cloud backup services
-• AI providers
-• Audio narration services
-• Analytics tools
+The release version may connect to The Word App backend hosted on Render when you request supported online features. Depending on the feature, requests may include a Bible translation and Scripture reference, sermon transcript text, or other content you deliberately submit for processing.
 
-Any future integrations will comply with applicable privacy standards.
+Sermon audio is uploaded only when you explicitly request cloud transcription and that feature is enabled. The current release configuration disables cloud transcription. When enabled, the backend writes the upload to a temporary file for transcription and deletes that temporary file after processing.
 
-6. Children's Privacy
+The hosting provider may process standard technical information such as IP addresses, request timestamps, and error logs to operate and protect the service. The app does not use these services to build advertising profiles.
 
-The Word App is designed for general audiences and does not knowingly collect personal data from children.
+6. Narration
 
-7. Changes to This Policy
+On-device narration may use voices and speech services supplied by your device manufacturer or operating system. Remote Bible-audio requests contain a Scripture reference and translation, not your notes or account information.
 
-We may update this Privacy Policy periodically. Continued use of the app indicates acceptance of updates.
+7. Retention and Deletion
 
-8. Contact
+Local information remains until you delete it in the app, remove exported files, clear app storage, or uninstall the app. Temporary transcription uploads are deleted after processing as described above.
+
+Because the app does not currently provide accounts or cloud synchronization, there is no account-deletion process. For questions or requests concerning information submitted to an online service, contact us.
+
+8. Security
+
+We use reasonable safeguards and HTTPS for configured production API connections. No storage or transmission method can be guaranteed completely secure. Avoid placing highly sensitive personal information in content you plan to share or submit online.
+
+9. Children's Privacy
+
+The Word App is intended for a general audience and is not specifically directed to children. We do not knowingly collect personal information from children through an account system.
+
+10. Changes to This Policy
+
+We may update this policy as features or legal requirements change. The current version will be available in the app and on the public privacy-policy page.
+
+11. Contact
 
 For questions regarding privacy:
 support.thewordapp@gmail.com

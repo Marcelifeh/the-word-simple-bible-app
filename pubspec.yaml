@@ -2,7 +2,7 @@ name: simple_bible_app
 description: Simple Bible app (KJV/WEB) with offline commentary, favorites, and audio hooks.
 publish_to: "none"
 
-version: 0.1.0+1
+version: 1.0.0+1
 
 environment:
   sdk: ">=3.3.0 <4.0.0"
@@ -681,6 +681,7 @@ flutter:
 flutter_icons:
   android: true
   ios: true
-  image_path: assets/images/the_word_logo_full.png
+  remove_alpha_ios: true
+  image_path: assets/images/the_word_app_icon.png
 
 
