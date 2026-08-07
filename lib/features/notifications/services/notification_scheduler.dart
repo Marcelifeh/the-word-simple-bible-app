@@ -42,8 +42,10 @@ class NotificationScheduler {
     DateTime? now,
     bool deliver = true,
   }) async {
-    await cancelAllFaithReminders();
     if (!preferences.masterEnabled) {
+      if (deliver) {
+        await cancelAllFaithReminders();
+      }
       await _scheduleRepository.replaceAll(
         const <ScheduledNotificationRecord>[],
       );
@@ -123,12 +125,26 @@ class NotificationScheduler {
       );
     }
 
+    if (deliver) {
+      await _cancelObsoleteReminders(records);
+    }
     await _scheduleRepository.replaceAll(records);
   }
 
   Future<void> cancelAllFaithReminders() async {
     for (final id in AppNotificationIds.allFaithReminderIds) {
       await _notificationService.cancel(id);
+    }
+  }
+
+  Future<void> _cancelObsoleteReminders(
+    Iterable<ScheduledNotificationRecord> desiredRecords,
+  ) async {
+    final desiredIds = desiredRecords.map((record) => record.id).toSet();
+    for (final id in AppNotificationIds.allFaithReminderIds) {
+      if (!desiredIds.contains(id)) {
+        await _notificationService.cancel(id);
+      }
     }
   }
 

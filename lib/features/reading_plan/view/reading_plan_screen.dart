@@ -61,7 +61,7 @@ class _ReadingPlanScreenState extends State<ReadingPlanScreen> {
                 ? null
                 : () async {
                     await state.markReadingPlanCompleted(
-                      completedAt: _selectedDate,
+                      planDate: _selectedDate,
                       passages: plan.passages,
                     );
                     if (!context.mounted) return;
@@ -204,7 +204,7 @@ class _ReadingPlanScreenState extends State<ReadingPlanScreen> {
                           onPressed: () async {
                             await state.markReadingPlanPassageCompleted(
                               p,
-                              completedAt: _selectedDate,
+                              planDate: _selectedDate,
                               completed: !isCompleted,
                             );
                           },

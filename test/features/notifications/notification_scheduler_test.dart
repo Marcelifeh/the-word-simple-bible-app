@@ -113,11 +113,71 @@ void main() {
     expect(first.scheduledDate.hour, 7);
     expect(replacement.scheduledDate.hour, 9);
     expect(
-      notificationService.cancelledIds
-          .where((id) => id == AppNotificationIds.dailyVerse)
-          .length,
-      2,
+      notificationService.cancelledIds,
+      isNot(contains(AppNotificationIds.dailyVerse)),
     );
+  });
+
+  test('refresh schedules replacements before cancelling obsolete alarms',
+      () async {
+    final scheduler = buildScheduler();
+    notificationService.scheduledById[AppNotificationIds.prayerReminder] =
+        _ScheduledCall(
+      scheduledDate: tz.TZDateTime(tz.local, 2026, 7, 24, 8),
+      payload: '{"type":"prayer_reminder"}',
+    );
+
+    await scheduler.synchronize(
+      dailyVerseOnly(),
+      now: DateTime(2026, 7, 24, 6),
+    );
+
+    expect(
+      notificationService.scheduledById,
+      contains(AppNotificationIds.dailyVerse),
+    );
+    expect(
+      notificationService.scheduledById,
+      isNot(contains(AppNotificationIds.prayerReminder)),
+    );
+    expect(
+      notificationService.cancelledIds,
+      contains(AppNotificationIds.prayerReminder),
+    );
+    expect(
+      notificationService.operations.indexOf(
+        'schedule:${AppNotificationIds.dailyVerse}',
+      ),
+      lessThan(
+        notificationService.operations.indexOf(
+          'cancel:${AppNotificationIds.prayerReminder}',
+        ),
+      ),
+    );
+  });
+
+  test('failed replacement leaves existing alarms intact', () async {
+    final scheduler = buildScheduler();
+    notificationService.scheduledById[AppNotificationIds.prayerReminder] =
+        _ScheduledCall(
+      scheduledDate: tz.TZDateTime(tz.local, 2026, 7, 24, 8),
+      payload: '{"type":"prayer_reminder"}',
+    );
+    notificationService.failingScheduleId = AppNotificationIds.dailyVerse;
+
+    await expectLater(
+      scheduler.synchronize(
+        dailyVerseOnly(),
+        now: DateTime(2026, 7, 24, 6),
+      ),
+      throwsStateError,
+    );
+
+    expect(
+      notificationService.scheduledById,
+      contains(AppNotificationIds.prayerReminder),
+    );
+    expect(notificationService.cancelledIds, isEmpty);
   });
 
   test('does not schedule completed reading or empty memory reviews', () async {
@@ -287,9 +347,12 @@ void main() {
 class _FakeNotificationService extends AppNotificationService {
   final List<int> cancelledIds = <int>[];
   final Map<int, _ScheduledCall> scheduledById = <int, _ScheduledCall>{};
+  final List<String> operations = <String>[];
+  int? failingScheduleId;
 
   @override
   Future<void> cancel(int id) async {
+    operations.add('cancel:$id');
     cancelledIds.add(id);
     scheduledById.remove(id);
   }
@@ -304,6 +367,10 @@ class _FakeNotificationService extends AppNotificationService {
     required String payload,
     DateTimeComponents? matchDateTimeComponents,
   }) async {
+    operations.add('schedule:$id');
+    if (id == failingScheduleId) {
+      throw StateError('temporary scheduling failure');
+    }
     scheduledById[id] = _ScheduledCall(
       scheduledDate: scheduledDate,
       payload: payload,

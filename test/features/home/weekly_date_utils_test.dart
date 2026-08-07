@@ -43,6 +43,46 @@ void main() {
     );
   });
 
+  test('multiple Bible readings on one date count as one reading day', () {
+    expect(
+      countWeeklyReadingDays(
+        completedReadingDates: [
+          DateTime(2026, 8, 2, 8),
+          DateTime(2026, 8, 2, 12),
+          DateTime(2026, 8, 2, 20),
+        ],
+        now: DateTime(2026, 8, 4),
+      ),
+      1,
+    );
+  });
+
+  test('Bible readings on two dates count as two reading days', () {
+    expect(
+      countWeeklyReadingDays(
+        completedReadingDates: [
+          DateTime(2026, 8, 2, 8),
+          DateTime(2026, 8, 3, 9),
+        ],
+        now: DateTime(2026, 8, 4),
+      ),
+      2,
+    );
+  });
+
+  test('plan and Bible activity on the same date count once', () {
+    expect(
+      countWeeklyReadingDays(
+        completedReadingDates: [
+          DateTime(2026, 8, 3, 8),
+          DateTime(2026, 8, 3, 19),
+        ],
+        now: DateTime(2026, 8, 4),
+      ),
+      1,
+    );
+  });
+
   test('installation date does not affect the calendar week', () {
     final installedOn = DateTime(2026, 8, 5);
     final now = DateTime(2026, 8, 5);

@@ -106,6 +106,8 @@ class AppState extends ChangeNotifier with WidgetsBindingObserver {
     scheduler: notificationScheduler,
   );
   bool _notificationsInitialized = false;
+  bool _notificationInboxListenerAttached = false;
+  bool _notificationLifecycleObserverAttached = false;
   bool get notificationsAvailable => _notificationsInitialized;
 
   final searchIndexRepo = SearchIndexRepository();
@@ -138,6 +140,7 @@ class AppState extends ChangeNotifier with WidgetsBindingObserver {
   final Map<String, double> _devotionalProgressByDate = {};
   final Map<String, String> _readingPlanLastOpenedPassagesByDate = {};
   final Map<String, Set<String>> _readingPlanCompletedPassagesByDate = {};
+  final Set<String> _readingPlanCompletionActivityDates = {};
   final List<PromiseHistoryEntry> _promiseHistory = [];
 
   Map<String, DateTime> get devotionalReadHistory =>
@@ -171,6 +174,12 @@ class AppState extends ChangeNotifier with WidgetsBindingObserver {
 
   Set<String> get readingPlanCompletedPassagesToday =>
       readingPlanCompletedPassagesForDate(DateTime.now());
+
+  List<DateTime> get readingPlanCompletionActivityDates =>
+      _readingPlanCompletionActivityDates
+          .map(DateTime.tryParse)
+          .whereType<DateTime>()
+          .toList(growable: false);
 
   String? readingPlanLastOpenedPassageForDate(DateTime date) =>
       _readingPlanLastOpenedPassagesByDate[_dateKey(date)];
@@ -433,11 +442,11 @@ class AppState extends ChangeNotifier with WidgetsBindingObserver {
 
   Future<void> markReadingPlanPassageCompleted(
     String passage, {
+    DateTime? planDate,
     DateTime? completedAt,
     bool completed = true,
   }) async {
-    final effectiveDate = completedAt ?? DateTime.now();
-    final dateKey = _dateKey(effectiveDate);
+    final dateKey = _dateKey(planDate ?? DateTime.now());
     final completedPassages = _readingPlanCompletedPassagesByDate.putIfAbsent(
       dateKey,
       () => <String>{},
@@ -445,6 +454,7 @@ class AppState extends ChangeNotifier with WidgetsBindingObserver {
 
     if (completed) {
       completedPassages.add(passage);
+      _recordReadingPlanCompletionActivity(completedAt ?? DateTime.now());
     } else {
       completedPassages.remove(passage);
       if (completedPassages.isEmpty) {
@@ -458,11 +468,11 @@ class AppState extends ChangeNotifier with WidgetsBindingObserver {
   }
 
   Future<void> markReadingPlanCompleted({
+    DateTime? planDate,
     DateTime? completedAt,
     Iterable<String>? passages,
   }) async {
-    final effectiveDate = completedAt ?? DateTime.now();
-    final dateKey = _dateKey(effectiveDate);
+    final dateKey = _dateKey(planDate ?? DateTime.now());
 
     if (passages != null) {
       final completedPassages = passages.toSet();
@@ -470,6 +480,7 @@ class AppState extends ChangeNotifier with WidgetsBindingObserver {
         _readingPlanCompletedPassagesByDate.remove(dateKey);
       } else {
         _readingPlanCompletedPassagesByDate[dateKey] = completedPassages;
+        _recordReadingPlanCompletionActivity(completedAt ?? DateTime.now());
       }
     }
 
@@ -514,7 +525,12 @@ class AppState extends ChangeNotifier with WidgetsBindingObserver {
   @visibleForTesting
   Future<void> initializeNotificationsForStartup({
     Future<void> Function()? initializer,
+    Future<void> Function()? refresher,
   }) async {
+    if (!_notificationLifecycleObserverAttached) {
+      WidgetsBinding.instance.addObserver(this);
+      _notificationLifecycleObserverAttached = true;
+    }
     try {
       if (initializer != null) {
         await initializer();
@@ -522,9 +538,12 @@ class AppState extends ChangeNotifier with WidgetsBindingObserver {
         await notificationPreferencesRepository.init();
         await scheduledNotificationRepository.init();
         await notificationInboxRepository.init();
-        notificationInboxRepository.addListener(
-          _handleNotificationInboxChange,
-        );
+        if (!_notificationInboxListenerAttached) {
+          notificationInboxRepository.addListener(
+            _handleNotificationInboxChange,
+          );
+          _notificationInboxListenerAttached = true;
+        }
         await notificationContentService.init();
         await appNotificationService.initialize(
           onPayload: (payload) async {
@@ -532,13 +551,21 @@ class AppState extends ChangeNotifier with WidgetsBindingObserver {
             await notificationNavigationService.handlePayload(payload);
           },
         );
-        await notificationCoordinator.refresh();
-        WidgetsBinding.instance.addObserver(this);
       }
       _notificationsInitialized = true;
     } catch (error, stackTrace) {
       _notificationsInitialized = false;
       debugPrint('Notifications unavailable: $error');
+      debugPrintStack(stackTrace: stackTrace);
+      return;
+    }
+
+    try {
+      await (refresher ?? notificationCoordinator.refresh)();
+    } catch (error, stackTrace) {
+      // The plugin and permission flow remain usable. A later lifecycle event
+      // retries scheduling without treating a transient alarm error as fatal.
+      debugPrint('Notification schedule refresh failed: $error');
       debugPrintStack(stackTrace: stackTrace);
     }
   }
@@ -743,6 +770,30 @@ class AppState extends ChangeNotifier with WidgetsBindingObserver {
       }
     }
 
+    final readingPlanActivityDatesRaw =
+        box.get('readingPlanCompletionActivityDates') as String?;
+    _readingPlanCompletionActivityDates.clear();
+    if (readingPlanActivityDatesRaw != null &&
+        readingPlanActivityDatesRaw.isNotEmpty) {
+      try {
+        final decoded = jsonDecode(readingPlanActivityDatesRaw);
+        if (decoded is List) {
+          _readingPlanCompletionActivityDates.addAll(
+            decoded.whereType<String>().where(
+                  (value) => DateTime.tryParse(value) != null,
+                ),
+          );
+        }
+      } catch (_) {
+        _readingPlanCompletionActivityDates.clear();
+      }
+    } else if (_hasReadingPlanCompletionInCurrentWeek()) {
+      // Legacy progress stored plan dates, not completion timestamps. Collapse
+      // current-week records to today rather than inflating reading-day totals.
+      _recordReadingPlanCompletionActivity(DateTime.now());
+      unawaited(_persistReadingPlanProgress());
+    }
+
     final today = PromiseHistoryEntry.localDay(DateTime.now());
     _promiseHistory
       ..clear()
@@ -821,6 +872,9 @@ class AppState extends ChangeNotifier with WidgetsBindingObserver {
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (!_notificationsInitialized) {
+      if (state == AppLifecycleState.resumed) {
+        unawaited(initializeNotificationsForStartup());
+      }
       return;
     }
     if (state == AppLifecycleState.resumed) {
@@ -921,6 +975,27 @@ class AppState extends ChangeNotifier with WidgetsBindingObserver {
     return '${value.year}-$month-$day';
   }
 
+  void _recordReadingPlanCompletionActivity(DateTime completedAt) {
+    _readingPlanCompletionActivityDates.add(_dateKey(completedAt.toLocal()));
+  }
+
+  bool _hasReadingPlanCompletionInCurrentWeek() {
+    final today = _dateOnly(DateTime.now());
+    final weekStart = today.subtract(
+      Duration(days: today.weekday % DateTime.daysPerWeek),
+    );
+    final nextWeekStart = weekStart.add(
+      const Duration(days: DateTime.daysPerWeek),
+    );
+
+    return _readingPlanCompletedPassagesByDate.entries.any((entry) {
+      if (entry.value.isEmpty) return false;
+      final planDate = DateTime.tryParse(entry.key);
+      if (planDate == null) return false;
+      return !planDate.isBefore(weekStart) && planDate.isBefore(nextWeekStart);
+    });
+  }
+
   Future<void> _persistReadingPlanProgress() async {
     await _saveSetting(
       'readingPlanLastOpenedByDate',
@@ -933,6 +1008,10 @@ class AppState extends ChangeNotifier with WidgetsBindingObserver {
           (key, value) => MapEntry(key, value.toList()..sort()),
         ),
       ),
+    );
+    await _saveSetting(
+      'readingPlanCompletionActivityDates',
+      jsonEncode(_readingPlanCompletionActivityDates.toList()..sort()),
     );
   }
 
@@ -1004,10 +1083,16 @@ class AppState extends ChangeNotifier with WidgetsBindingObserver {
   @override
   void dispose() {
     _dailyDevotionalRolloverTimer?.cancel();
-    WidgetsBinding.instance.removeObserver(this);
-    notificationInboxRepository.removeListener(
-      _handleNotificationInboxChange,
-    );
+    if (_notificationLifecycleObserverAttached) {
+      WidgetsBinding.instance.removeObserver(this);
+      _notificationLifecycleObserverAttached = false;
+    }
+    if (_notificationInboxListenerAttached) {
+      notificationInboxRepository.removeListener(
+        _handleNotificationInboxChange,
+      );
+      _notificationInboxListenerAttached = false;
+    }
     notificationCoordinator.dispose();
     memoryVerseRepo.removeListener(_handleMemoryVerseChange);
     memoryVerseRepo.dispose();

@@ -529,7 +529,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     ReadingPlanService readingPlanService,
   ) {
     return WeeklyHomeStats(
-      readingDays: _completedDaysThisWeek(state, readingPlanService),
+      readingDays: _completedDaysThisWeek(state),
       chaptersRead: _completedChaptersThisWeek(state, readingPlanService),
       devotionalDays: _devotionalDaysThisWeek(state),
       sermonsRecorded: _sermonsThisWeek(state),
@@ -537,24 +537,11 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     );
   }
 
-  int _completedDaysThisWeek(
-    AppState state,
-    ReadingPlanService readingPlanService,
-  ) {
-    final today = _todayOnly;
-    final weekStart = startOfSundayWeek(today);
-    var count = 0;
-
-    for (var offset = 0; offset < 7; offset += 1) {
-      final date = weekStart.add(Duration(days: offset));
-      if (date.isAfter(today)) break;
-      final reading = readingPlanService.getReadingForDate(date);
-      if (state.isReadingPlanCompletedForDate(date, reading.passages)) {
-        count += 1;
-      }
-    }
-
-    return count;
+  int _completedDaysThisWeek(AppState state) {
+    return countWeeklyReadingDays(
+      completedReadingDates: state.readingPlanCompletionActivityDates,
+      now: DateTime.now(),
+    );
   }
 
   int _completedChaptersThisWeek(
