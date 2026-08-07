@@ -538,8 +538,11 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   }
 
   int _completedDaysThisWeek(AppState state) {
-    return countWeeklyReadingDays(
-      completedReadingDates: state.readingPlanCompletionActivityDates,
+    final completedAtDates = <DateTime>[
+      ...state.readingPlanCompletionActivityDates,
+    ];
+    return calculateBibleReadingDays(
+      completedAtDates: completedAtDates,
       now: DateTime.now(),
     );
   }
