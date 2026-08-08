@@ -9,8 +9,8 @@ Package: `org.thewordapp.mobile`
 - [x] Confirm `build/app/outputs/bundle/release/app-release.aab` exists.
 - [x] Confirm version code `1`, version name `1.0.0`, target SDK `36`, and package `org.thewordapp.mobile`.
 - [x] Inspect the final merged Android manifest and dependency graph.
-- [ ] Install the matching signed release APK on the Samsung phone.
-- [ ] Test update installation without losing local data.
+- [x] Install the matching signed release APK on the Samsung phone.
+- [x] Test update installation without losing local data.
 
 ## Privacy and Data Safety
 
@@ -41,9 +41,11 @@ Package: `org.thewordapp.mobile`
 - [x] Full description prepared.
 - [x] 512x512 32-bit Play icon prepared.
 - [x] 1024x500 24-bit feature graphic prepared.
-- [ ] Six compliant `1080x1920` phone screenshots prepared.
-- [ ] Bible Reader screenshot captured.
-- [ ] Screenshot alt text entered.
+- [x] Six compliant `1080x1920` phone screenshots prepared.
+- [x] Bible Reader screenshot captured.
+- [x] All six screenshots framed and visually checked.
+- [x] Keyboard-free LOGOS Notes screenshot captured.
+- [x] Screenshot descriptions prepared for Play Console.
 - [ ] Support email verified and monitored.
 
 ## Internal testing
@@ -54,6 +56,7 @@ Package: `org.thewordapp.mobile`
 - [ ] Verify cold launch, offline Bible, Search, Devotional, LOGOS Notes, recording, notifications, Word Studio, Scripture Memory, and sharing.
 - [ ] Verify notification taps from foreground, background, and terminated states.
 - [ ] Verify update installation preserves Hive data and local files.
+- [ ] Re-test a Render-backed workflow before enabling cloud AI or transcription in a later build.
 
 ## Closed testing and production
 

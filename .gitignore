@@ -70,3 +70,6 @@ server/tmp/
 server/uploads/
 server/models/
 server/.cache/
+
+# Local phone captures may contain status-bar notification details.
+docs/play-store/screenshots/raw/
