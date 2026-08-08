@@ -33,6 +33,8 @@ import '../services/daily_encouragement_service.dart';
 import '../services/weekly_date_utils.dart';
 import '../services/weekly_sermon_progress.dart';
 import '../widgets/journey_action_tile.dart';
+import '../activity/model/daily_faith_activity.dart';
+import '../activity/model/faith_activity_type.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -43,32 +45,80 @@ class HomeScreen extends StatefulWidget {
 
 class WeeklyHomeStats {
   const WeeklyHomeStats({
+    required this.weekStart,
+    required this.nextWeekStart,
+    required this.calendarDay,
     required this.readingDays,
     required this.chaptersRead,
     required this.devotionalDays,
-    required this.sermonsRecorded,
-    required this.savedItems,
+    required this.sermonsCreated,
+    required this.savedVerses,
+    required this.weeklyRhythm,
+    required this.todayDailyVerse,
+    required this.todayPromise,
+    required this.todayScriptureMemory,
   });
 
+  /// The Sunday that opens this week (00:00 local time).
+  final DateTime weekStart;
+
+  /// The Sunday that opens the *next* week (00:00 local time).
+  /// Use for half-open filtering: weekStart <= date < nextWeekStart.
+  final DateTime nextWeekStart;
+
+  /// Ordinal position in the current week: Sunday = 1 … Saturday = 7.
+  final int calendarDay;
+
+  /// Number of distinct local dates this week with completed Bible reading.
   final int readingDays;
+
   final int chaptersRead;
   final int devotionalDays;
-  final int sermonsRecorded;
-  final int savedItems;
+  final int sermonsCreated;
+  final int savedVerses;
 
-  double get progress => (readingDays / 7).clamp(0.0, 1.0).toDouble();
+  /// Pre-computed weekly rhythm ring value (0.0–1.0).
+  /// Each calendar day contributes at most 1/7 of this total.
+  final double weeklyRhythm;
+
+  /// Whether Today's Verse screen was opened today.
+  final bool todayDailyVerse;
+
+  /// Whether Today's Promise screen was opened today.
+  final bool todayPromise;
+
+  /// Whether a Scripture Memory review was completed today.
+  final bool todayScriptureMemory;
+
+  /// The inclusive last day of the week (Saturday 00:00), for display only.
+  DateTime get weekEndDate =>
+      nextWeekStart.subtract(const Duration(days: 1));
+
+  /// Fraction of days with Bible reading completed this week.
+  /// Kept separate so a dedicated reading-consistency screen can use it.
+  double get readingConsistency =>
+      (readingDays / 7.0).clamp(0.0, 1.0);
 }
 
 class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   Verse? _dailyVerse;
   bool _verseLoading = true;
   PromiseVerse? _promiseVerse;
-  WeeklyHomeStats _weeklyStats = const WeeklyHomeStats(
+  // Initialised with the actual current week boundaries so the ring shows
+  // the correct calendar position even before _loadWeeklyStats() completes.
+  WeeklyHomeStats _weeklyStats = WeeklyHomeStats(
+    weekStart: startOfSundayWeek(DateTime.now()),
+    nextWeekStart: endOfSundayWeek(DateTime.now()),
+    calendarDay: calendarDayOfSundayWeek(DateTime.now()),
     readingDays: 0,
     chaptersRead: 0,
     devotionalDays: 0,
-    sermonsRecorded: 0,
-    savedItems: 0,
+    sermonsCreated: 0,
+    savedVerses: 0,
+    weeklyRhythm: 0.0,
+    todayDailyVerse: false,
+    todayPromise: false,
+    todayScriptureMemory: false,
   );
   late final PageController _dashboardController;
   int _dashboardPage = 0;
@@ -183,6 +233,9 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   }
 
   void _openDailyVerse() {
+    unawaited(
+      AppScope.of(context).recordFaithActivity(FaithActivityType.dailyVerse),
+    );
     AppRouter.push(
       context,
       DailyVerseScreen(initialVerse: _dailyVerse),
@@ -528,14 +581,92 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     AppState state,
     ReadingPlanService readingPlanService,
   ) {
+    final now = DateTime.now();
+    final today = normalizeLocalDate(now);
+    final weekStart = startOfSundayWeek(now);
+    final nextWeekStart = endOfSundayWeek(now);
+    final repo = state.faithActivityRepo;
+
+    // Build one DailyFaithActivity for every day of the week.
+    // Future days get all-false values so they contribute 0 to the ring.
+    final weekDays = List.generate(7, (index) {
+      final date = weekStart.add(Duration(days: index));
+      return DailyFaithActivity(
+        date: date,
+        bibleReading: _hasBibleReadingOn(state, date),
+        devotional: _hasDevotionalOn(state, date),
+        dailyVerse: repo.hasActivityOn(FaithActivityType.dailyVerse, date),
+        promise: repo.hasActivityOn(FaithActivityType.promise, date),
+        scriptureMemory:
+            repo.hasActivityOn(FaithActivityType.scriptureMemory, date),
+        sermon: _hasSermonOn(state, date),
+        saved: _hasSavedVerseOn(state, date),
+      );
+    });
+
     return WeeklyHomeStats(
+      weekStart: weekStart,
+      nextWeekStart: nextWeekStart,
+      calendarDay: calendarDayOfSundayWeek(now),
       readingDays: _completedDaysThisWeek(state),
       chaptersRead: _completedChaptersThisWeek(state, readingPlanService),
       devotionalDays: _devotionalDaysThisWeek(state),
-      sermonsRecorded: _sermonsThisWeek(state),
-      savedItems: _savedItemsThisWeek(state),
+      sermonsCreated: _sermonsThisWeek(state),
+      savedVerses: _savedItemsThisWeek(state),
+      weeklyRhythm: calculateWeeklyRhythm(weekDays),
+      todayDailyVerse: repo.hasActivityOn(FaithActivityType.dailyVerse, today),
+      todayPromise: repo.hasActivityOn(FaithActivityType.promise, today),
+      todayScriptureMemory:
+          repo.hasActivityOn(FaithActivityType.scriptureMemory, today),
     );
   }
+
+  // ── Per-day boolean helpers (used by DailyFaithActivity construction) ───
+
+  bool _hasBibleReadingOn(AppState state, DateTime date) {
+    final key = _localDateKey(date);
+    return state.readingPlanCompletionActivityDates.any(
+      (d) => _localDateKey(d) == key,
+    );
+  }
+
+  bool _hasDevotionalOn(AppState state, DateTime date) {
+    final key = _localDateKey(date);
+    return state.devotionalReadHistory.values.any(
+      (d) => _localDateKey(d) == key,
+    );
+  }
+
+  bool _hasSermonOn(AppState state, DateTime date) {
+    final key = _localDateKey(date);
+    try {
+      return state.sermonNoteRepo
+          .list()
+          .any((n) => _localDateKey(n.date) == key);
+    } catch (_) {
+      return false;
+    }
+  }
+
+  bool _hasSavedVerseOn(AppState state, DateTime date) {
+    final key = _localDateKey(date);
+    try {
+      return state.notesRepo
+          .getAll()
+          .any((n) => _localDateKey(n.createdAt) == key);
+    } catch (_) {
+      return false;
+    }
+  }
+
+  String _localDateKey(DateTime value) {
+    final local = value.toLocal();
+    return '${local.year.toString().padLeft(4, '0')}-'
+        '${local.month.toString().padLeft(2, '0')}-'
+        '${local.day.toString().padLeft(2, '0')}';
+  }
+
+  // ── Aggregate weekly count helpers (for chip display) ───────────────────
 
   int _completedDaysThisWeek(AppState state) {
     final completedAtDates = <DateTime>[
@@ -705,6 +836,11 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                     ? _PromisePill(
                         promise: _promiseVerse!,
                         onTap: () {
+                          unawaited(
+                            AppScope.of(context).recordFaithActivity(
+                              FaithActivityType.promise,
+                            ),
+                          );
                           AppRouter.push(
                             context,
                             PromiseVerseScreen(
@@ -774,6 +910,24 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                   onOpenDevotionals: _openDevotionalHistory,
                   onOpenSermons: _openSermonNotes,
                   onOpenSaved: _openSavedNotes,
+                  onOpenDailyVerse: _openDailyVerse,
+                  onOpenPromise: () {
+                    if (_promiseVerse != null) {
+                      unawaited(
+                        AppScope.of(context).recordFaithActivity(
+                          FaithActivityType.promise,
+                        ),
+                      );
+                      AppRouter.push(
+                        context,
+                        PromiseVerseScreen(promise: _promiseVerse!),
+                      );
+                    }
+                  },
+                  onOpenScriptureMemory: () => AppRouter.push(
+                    context,
+                    const ScriptureMemoryScreen(),
+                  ),
                 ),
               ),
               if (showContinueDevotional) ...[
@@ -1258,6 +1412,9 @@ class _WeeklyInsightsCard extends StatelessWidget {
     required this.onOpenDevotionals,
     required this.onOpenSermons,
     required this.onOpenSaved,
+    required this.onOpenDailyVerse,
+    required this.onOpenPromise,
+    required this.onOpenScriptureMemory,
   });
 
   final WeeklyHomeStats stats;
@@ -1265,9 +1422,21 @@ class _WeeklyInsightsCard extends StatelessWidget {
   final VoidCallback onOpenDevotionals;
   final VoidCallback onOpenSermons;
   final VoidCallback onOpenSaved;
+  final VoidCallback onOpenDailyVerse;
+  final VoidCallback onOpenPromise;
+  final VoidCallback onOpenScriptureMemory;
 
   String _countLabel(int count, String singular, String plural) {
     return '$count ${count == 1 ? singular : plural}';
+  }
+
+  /// Formats a DateTime as e.g. "Aug 2".
+  String _shortDate(DateTime d) {
+    const months = [
+      'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+      'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
+    ];
+    return '${months[d.month - 1]} ${d.day}';
   }
 
   @override
@@ -1275,12 +1444,20 @@ class _WeeklyInsightsCard extends StatelessWidget {
     final theme = Theme.of(context);
     final isLight = theme.brightness == Brightness.light;
     const accent = Color(0xFF06B6D4);
-    final dayProgress = stats.progress;
-    final progressLabel = '${(dayProgress * 100).round()}%';
+    final activityProgress = stats.weeklyRhythm;
+    final calendarDay = stats.calendarDay;
     final titleColor = isLight ? const Color(0xFF172033) : Colors.white;
     final bodyColor = isLight
         ? const Color(0xFF526070)
         : Colors.white.withValues(alpha: 0.64);
+    final dividerColor = accent.withValues(alpha: isLight ? 0.20 : 0.15);
+
+    // Date-range label: "Aug 2–8"
+    final dateRange =
+        '${_shortDate(stats.weekStart)}–${stats.weekEndDate.day}';
+
+    // Percentage label inside the ring
+    final progressLabel = '${(activityProgress * 100).round()}%';
 
     return Container(
       padding: const EdgeInsets.all(14),
@@ -1312,20 +1489,55 @@ class _WeeklyInsightsCard extends StatelessWidget {
         ],
       ),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // ── Header: title · date range ─────────────────────────────────
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'This Week',
+                style: theme.textTheme.titleMedium?.copyWith(
+                  color: titleColor,
+                  fontWeight: FontWeight.w900,
+                ),
+              ),
+              _FixedHomeTextScale(
+                child: Text(
+                  dateRange,
+                  style: theme.textTheme.labelSmall?.copyWith(
+                    color: bodyColor,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 2),
+          // Calendar position — context only, not a progress metric
+          Text(
+            'Day $calendarDay of 7',
+            style: theme.textTheme.bodySmall?.copyWith(
+              color: bodyColor,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+
+          const SizedBox(height: 12),
+          // ── Activity ring + Weekly Activity label ───────────────────────
           Row(
             children: [
               SizedBox(
-                width: 46,
-                height: 46,
+                width: 50,
+                height: 50,
                 child: Stack(
                   alignment: Alignment.center,
                   children: [
                     SizedBox(
-                      width: 46,
-                      height: 46,
+                      width: 50,
+                      height: 50,
                       child: CircularProgressIndicator(
-                        value: dayProgress,
+                        value: activityProgress,
                         strokeWidth: 5,
                         color: accent,
                         backgroundColor: isLight
@@ -1348,29 +1560,40 @@ class _WeeklyInsightsCard extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 12),
-              Expanded(
+              Text(
+                'Weekly Rhythm',
+                style: theme.textTheme.titleSmall?.copyWith(
+                  color: titleColor,
+                  fontWeight: FontWeight.w800,
+                ),
+              ),
+            ],
+          ),
+
+          // ── Bible Reading – highlighted row ────────────────────────────
+          const SizedBox(height: 12),
+          Divider(height: 1, color: dividerColor),
+          const SizedBox(height: 10),
+          Row(
+            children: [
+              Icon(Icons.auto_stories_rounded, size: 15, color: accent),
+              const SizedBox(width: 6),
+              _FixedHomeTextScale(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'This Week',
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: theme.textTheme.titleMedium?.copyWith(
-                        color: titleColor,
-                        fontWeight: FontWeight.w900,
-                      ),
-                    ),
-                    const SizedBox(height: 2),
-                    Text(
-                      stats.readingDays >= 7
-                          ? 'Week completed'
-                          : '${stats.readingDays} of 7 Bible reading days',
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: theme.textTheme.bodySmall?.copyWith(
+                      'Bible Reading',
+                      style: theme.textTheme.labelSmall?.copyWith(
                         color: bodyColor,
                         fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    Text(
+                      '${stats.readingDays} of 7 days',
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: titleColor,
+                        fontWeight: FontWeight.w900,
                       ),
                     ),
                   ],
@@ -1378,7 +1601,11 @@ class _WeeklyInsightsCard extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: 10),
+          Divider(height: 1, color: dividerColor),
+
+          // ── Metric chips ────────────────────────────────────────────────
+          const SizedBox(height: 10),
           Wrap(
             spacing: 8,
             runSpacing: 8,
@@ -1401,15 +1628,59 @@ class _WeeklyInsightsCard extends StatelessWidget {
               ),
               _WeekMetricChip(
                 icon: Icons.mic_rounded,
-                label: _countLabel(stats.sermonsRecorded, 'Sermon', 'Sermons'),
+                label:
+                    _countLabel(stats.sermonsCreated, 'Sermon', 'Sermons'),
                 accent: accent,
                 onTap: onOpenSermons,
               ),
               _WeekMetricChip(
                 icon: Icons.bookmark_rounded,
-                label: '${stats.savedItems} Saved',
+                label: '${stats.savedVerses} Saved',
                 accent: accent,
                 onTap: onOpenSaved,
+              ),
+            ],
+          ),
+
+          // ── Daily Habits ────────────────────────────────────────────────
+          const SizedBox(height: 10),
+          Divider(height: 1, color: dividerColor),
+          const SizedBox(height: 10),
+          _FixedHomeTextScale(
+            child: Text(
+              'Daily Habits',
+              style: theme.textTheme.labelSmall?.copyWith(
+                color: bodyColor,
+                fontWeight: FontWeight.w700,
+                letterSpacing: 0.6,
+              ),
+            ),
+          ),
+          const SizedBox(height: 8),
+          Row(
+            children: [
+              _HabitIndicator(
+                icon: Icons.wb_sunny_rounded,
+                label: 'Daily Verse',
+                completed: stats.todayDailyVerse,
+                accent: accent,
+                onTap: onOpenDailyVerse,
+              ),
+              const SizedBox(width: 8),
+              _HabitIndicator(
+                icon: Icons.local_florist_rounded,
+                label: 'Promise',
+                completed: stats.todayPromise,
+                accent: accent,
+                onTap: onOpenPromise,
+              ),
+              const SizedBox(width: 8),
+              _HabitIndicator(
+                icon: Icons.psychology_rounded,
+                label: 'Memory',
+                completed: stats.todayScriptureMemory,
+                accent: accent,
+                onTap: onOpenScriptureMemory,
               ),
             ],
           ),
@@ -1418,6 +1689,8 @@ class _WeeklyInsightsCard extends StatelessWidget {
     );
   }
 }
+
+
 
 class _WeekMetricChip extends StatelessWidget {
   const _WeekMetricChip({
@@ -1473,6 +1746,99 @@ class _WeekMetricChip extends StatelessWidget {
               ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+/// A compact tappable indicator showing whether a daily habit was completed.
+///
+/// Displays a filled check-circle when [completed], an open circle otherwise.
+/// Tapping always navigates to the feature so the user can complete it.
+class _HabitIndicator extends StatelessWidget {
+  const _HabitIndicator({
+    required this.icon,
+    required this.label,
+    required this.completed,
+    required this.accent,
+    required this.onTap,
+  });
+
+  final IconData icon;
+  final String label;
+  final bool completed;
+  final Color accent;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isLight = theme.brightness == Brightness.light;
+    final completedBg = accent.withValues(alpha: isLight ? 0.14 : 0.20);
+    final pendingBg = isLight
+        ? Colors.white.withValues(alpha: 0.50)
+        : Colors.white.withValues(alpha: 0.05);
+    final labelColor = completed
+        ? (isLight ? const Color(0xFF0E7490) : accent)
+        : (isLight
+            ? const Color(0xFF526070)
+            : Colors.white.withValues(alpha: 0.50));
+    final iconColor = completed
+        ? (isLight ? accent : accent)
+        : (isLight
+            ? const Color(0xFFB0C4D0)
+            : Colors.white.withValues(alpha: 0.30));
+
+    return Expanded(
+      child: InkWell(
+        borderRadius: BorderRadius.circular(12),
+        onTap: onTap,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 220),
+          curve: Curves.easeOut,
+          padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 6),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(12),
+            color: completed ? completedBg : pendingBg,
+            border: Border.all(
+              color: completed
+                  ? accent.withValues(alpha: 0.30)
+                  : (isLight
+                      ? const Color(0xFFD0E8EE)
+                      : Colors.white.withValues(alpha: 0.08)),
+            ),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              AnimatedSwitcher(
+                duration: const Duration(milliseconds: 200),
+                child: Icon(
+                  completed
+                      ? Icons.check_circle_rounded
+                      : Icons.radio_button_unchecked_rounded,
+                  key: ValueKey(completed),
+                  size: 18,
+                  color: iconColor,
+                ),
+              ),
+              const SizedBox(height: 4),
+              _FixedHomeTextScale(
+                child: Text(
+                  label,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  textAlign: TextAlign.center,
+                  style: theme.textTheme.labelSmall?.copyWith(
+                    color: labelColor,
+                    fontWeight: FontWeight.w700,
+                    fontSize: 10,
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

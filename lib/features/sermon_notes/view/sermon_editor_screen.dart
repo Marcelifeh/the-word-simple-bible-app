@@ -19,7 +19,6 @@ import '../widgets/sermon_note_preview.dart';
 
 class SermonEditorScreen extends StatefulWidget {
   final SermonNote? note;
-  // TODO: Add save callback
 
   const SermonEditorScreen({super.key, this.note});
 

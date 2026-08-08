@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import '../../../shared/state/app_state.dart';
+import '../../../features/home/activity/model/faith_activity_type.dart';
+
 import '../../../shared/widgets/reading_text_scale.dart';
 import '../model/interactive_recall_result.dart';
 import '../model/memory_review_event.dart';
@@ -405,6 +407,15 @@ class _MemorySessionScreenState extends State<MemorySessionScreen>
       hintCount: result.hintCount,
       duration: result.duration,
     );
+
+    // Record one scripture-memory activity day (idempotent — FaithActivityRepository
+    // deduplicates multiple reviews on the same local calendar date).
+    if (mounted) {
+      unawaited(
+        AppScope.of(context)
+            .recordFaithActivity(FaithActivityType.scriptureMemory),
+      );
+    }
 
     final results = Map<String, MemoryDraftResult>.from(_draft!.results)
       ..[_current.id] = result.copyWith(committed: true);

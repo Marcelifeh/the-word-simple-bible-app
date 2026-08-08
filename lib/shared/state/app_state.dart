@@ -39,6 +39,8 @@ import '../../core/narration/services/narration_preferences_service.dart';
 import '../../core/narration/services/narration_sync_engine.dart';
 import '../../domain/entities/bible_translation.dart';
 import '../settings/home_text_size.dart';
+import '../../features/home/activity/model/faith_activity_type.dart';
+import '../../features/home/activity/repository/faith_activity_repository.dart';
 
 /// Tracks the last chapter position so Home can show "Continue Reading".
 /// [version] lets us safely discard stale Hive data when the schema changes.
@@ -83,6 +85,10 @@ class AppState extends ChangeNotifier with WidgetsBindingObserver {
   final userTractRepo = UserTractRepository();
   final devotionalJournalRepo = DevotionalJournalRepository();
   final devotionalService = const DevotionalService();
+
+  /// Repository for the three new faith activities: Daily Verse, Promise,
+  /// and Scripture Memory. Persisted in the settings Hive box.
+  final faithActivityRepo = FaithActivityRepository();
   final notificationPreferencesRepository = NotificationPreferencesRepository();
   final scheduledNotificationRepository = ScheduledNotificationRepository();
   final notificationInboxRepository = NotificationInboxRepository();
@@ -206,6 +212,25 @@ class AppState extends ChangeNotifier with WidgetsBindingObserver {
     final passageList = passages.toList(growable: false);
     if (passageList.isEmpty) return false;
     return passageList.every(completedPassages.contains);
+  }
+
+  /// Records a faith activity event for today.
+  ///
+  /// Only [FaithActivityType.dailyVerse], [FaithActivityType.promise], and
+  /// [FaithActivityType.scriptureMemory] are persisted; all other types are
+  /// derived from their existing repositories at calculation time.
+  ///
+  /// Returns without writing to Hive if the same type was already recorded
+  /// today (deduplication is free via [FaithActivityRepository.record]).
+  Future<void> recordFaithActivity(FaithActivityType type) async {
+    final changed = faithActivityRepo.record(type, DateTime.now());
+    if (!changed) return;
+
+    final box = _settingsBox;
+    if (box != null) {
+      await box.put('faithActivityDates', faithActivityRepo.encode());
+    }
+    notifyListeners();
   }
 
   Future<void> recordPromiseShown({
@@ -809,6 +834,9 @@ class AppState extends ChangeNotifier with WidgetsBindingObserver {
         }),
       );
     _promiseHistory.sort((a, b) => a.shownOn.compareTo(b.shownOn));
+
+    // Faith activity dates (Daily Verse, Promise, Scripture Memory)
+    faithActivityRepo.decode(box.get('faithActivityDates') as String?);
 
     _initializeCurrentDevotional();
 
