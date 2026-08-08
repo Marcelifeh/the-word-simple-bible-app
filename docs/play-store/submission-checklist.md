@@ -17,7 +17,7 @@ Package: `org.thewordapp.mobile`
 - [x] Code-level privacy and network audit completed.
 - [x] In-app Privacy Policy updated for release behavior.
 - [x] Hosted Privacy Policy prepared at the Play Console URL.
-- [ ] Push the policy update and verify the public page in an incognito browser.
+- [x] Push the policy update and verify the public HTTPS page.
 - [ ] Confirm Render access-log retention and deletion controls.
 - [ ] Complete Data Safety from `data-safety-notes.md`.
 - [ ] Recheck the declaration after any SDK, backend, or build-flag change.
