@@ -1,3 +1,9 @@
+databases:
+  - name: the-word-app-db
+    plan: free
+    databaseName: the_word_app
+    user: the_word_app
+
 services:
   - type: web
     name: the-word-app-api
@@ -23,6 +29,8 @@ services:
       - key: SERMON_WHISPER_COMPUTE_TYPE
         value: int8
       - key: DATABASE_URL
-        sync: false
+        fromDatabase:
+          name: the-word-app-db
+          property: connectionString
       - key: LLM_API_KEY
         sync: false
