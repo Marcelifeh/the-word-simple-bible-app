@@ -8,6 +8,28 @@ param(
 
 $ErrorActionPreference = 'Stop'
 
+function Assert-ProductionApiUrl([string]$Name, [string]$Value, [bool]$Required) {
+    if ([string]::IsNullOrWhiteSpace($Value)) {
+        if ($Required) { throw "$Name is required for a production build." }
+        return
+    }
+    $uri = $null
+    if (-not [Uri]::TryCreate($Value, [UriKind]::Absolute, [ref]$uri)) {
+        throw "$Name must be an absolute HTTPS URL."
+    }
+    $blocked = @('localhost', '127.0.0.1', '::1', '10.0.2.2')
+    if ($uri.Scheme -ne 'https' -or $blocked -contains $uri.Host.ToLowerInvariant()) {
+        throw "$Name must use HTTPS and must not use a local or loopback host."
+    }
+}
+
+Assert-ProductionApiUrl 'SERMON_API_URL' $SermonApiUrl $true
+Assert-ProductionApiUrl 'BIBLE_API_URL' $BibleApiUrl $false
+Assert-ProductionApiUrl 'COMMENTARY_API_URL' $CommentaryApiUrl $false
+if ($TranscriptionEnabled) {
+    throw 'SERMON_TRANSCRIPTION_ENABLED must be false for this production release.'
+}
+
 $flutter = 'C:\flutter\bin\flutter.bat'
 $arguments = @(
     'build',

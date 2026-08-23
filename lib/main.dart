@@ -10,6 +10,7 @@ import 'features/devotional/model/devotional_journal_entry.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  Env.validateCurrentBuild();
   assert(() {
     debugPrint('The Word App API: ${Env.sermonApiUrl}');
     return true;

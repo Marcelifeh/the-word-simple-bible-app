@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import '../../../core/config/app_branding.dart';
 import '../../../core/navigation/app_router.dart';
 import '../../../core/utils/color_utils.dart';
@@ -8,6 +9,7 @@ import '../../../shared/state/app_state.dart';
 import '../../legal/data/legal_documents.dart';
 import '../../legal/view/legal_document_screen.dart';
 import 'audio_narration_settings.dart';
+import '../backup/backup_restore_screen.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -204,10 +206,28 @@ class _SettingsScreenState extends State<SettingsScreen> {
             },
           ),
           const Divider(),
+          if (!kReleaseMode) ...[
+            ListTile(
+              leading: const Icon(Icons.cloud_outlined),
+              title: const Text('Cloud API (debug)'),
+              subtitle: SelectableText(Env.sermonApiUrl),
+            ),
+            const Divider(),
+          ],
           ListTile(
-            leading: const Icon(Icons.cloud_outlined),
-            title: const Text('Cloud API'),
-            subtitle: SelectableText(Env.sermonApiUrl),
+            leading: const Icon(Icons.backup_outlined),
+            title: const Text('Backup & Restore'),
+            subtitle:
+                const Text('Export or restore your private local app data'),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => const BackupRestoreScreen(),
+                ),
+              );
+            },
           ),
           const Divider(),
           const SizedBox(height: 32),

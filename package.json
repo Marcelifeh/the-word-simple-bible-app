@@ -5,9 +5,10 @@
   "scripts": {
     "dev": "flutter run --dart-define-from-file=.env",
     "dev:web": "flutter run -d chrome --web-renderer html --dart-define-from-file=.env",
-    "build": "flutter build apk --release --dart-define-from-file=.env",
+    "build": "flutter build apk --release --dart-define=SERMON_API_URL=https://the-word-app-api.onrender.com --dart-define=SERMON_TRANSCRIPTION_ENABLED=false",
     "build:web": "flutter build web --web-renderer html --dart-define-from-file=.env",
-    "build:apk": "flutter build apk --release --dart-define-from-file=.env",
+    "build:apk": "flutter build apk --release --dart-define=SERMON_API_URL=https://the-word-app-api.onrender.com --dart-define=SERMON_TRANSCRIPTION_ENABLED=false",
+    "build:aab": "flutter build appbundle --release --dart-define=SERMON_API_URL=https://the-word-app-api.onrender.com --dart-define=SERMON_TRANSCRIPTION_ENABLED=false",
     "server:dev": "cd server && .\\.venv\\Scripts\\python.exe -m uvicorn app.main:app --host 127.0.0.1 --port 8000"
   }
 }

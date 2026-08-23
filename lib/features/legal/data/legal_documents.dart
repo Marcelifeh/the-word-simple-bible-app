@@ -4,92 +4,84 @@ class LegalDocuments {
   static const privacyPolicy = LegalDocument(
     title: 'Privacy Policy',
     content: '''
-Effective Date: August 8, 2026
-Last Updated: August 8, 2026
+Effective Date: August 23, 2026
+Last Updated: August 23, 2026
 
-The Word App (package org.thewordapp.mobile) is published by The Word App. This Privacy Policy explains how the mobile application and its optional online services access, use, store, and share information.
+The Word App (package org.thewordapp.mobile) is published by The Word App. This policy describes the corrected production release and its optional online services.
 
 Public policy: https://marcelifeh.github.io/the-word-simple-bible-app/privacy/
 
 1. Privacy at a Glance
 
-No account is required. The app contains no advertising, analytics, crash-reporting, attribution, or Firebase Cloud Messaging SDKs. Most personal and spiritual activity is processed and stored only on your device.
+No account is required. This release contains no advertising, analytics, attribution, crash-reporting, authentication, or Firebase Cloud Messaging SDK. We do not sell data or use it for advertising, behavioral marketing, or analytics profiling.
 
-2. Information Stored on Your Device
+2. Information Stored Locally
 
-The app may store Bible-reading progress and history, favorites, bookmarks, highlights, verse notes, devotional progress and journal entries, reading-plan completion, Scripture Memory verses and review history, prayer reflections, sermon notes and recordings, notification preferences and inbox items, custom Word Studio backgrounds, generated exports, and app settings.
+The app may store notes, highlights, favorites, saved prayers, devotional journals and reflections, reading and devotional progress, Scripture Memory progress, sermon notes, transcripts and recordings, user-created tracts, selected Word Studio backgrounds, notification settings and inbox items, narration and other settings, and a commentary cache. This data is stored in Android app-private storage. It is not encrypted by a separate application-layer encryption system and relies on normal Android sandbox and device protections. No security method is absolute.
 
-This information stays in app-managed storage unless you deliberately use a sharing or online-processing feature. It is not used for advertising or sold.
+3. Optional Commentary Processing
 
-3. Bible Reading and Spiritual Activity
+When requested commentary is not bundled or cached, the app may send Scripture reference fields—such as translation, book, chapter, verse, style, and language—to the first-party HTTPS backend at https://the-word-app-api.onrender.com. The backend may send the public Scripture text and reference to its configured OpenAI-compatible model service provider to generate the requested insight. The app does not add an account ID, advertising ID, or device identifier to this request. Provider configuration, operational logs, and retention are governed by the applicable operational settings and provider terms.
 
-Reading history, devotional completion, saved Scripture, prayer content, weekly activity, and Scripture Memory activity are processed locally. The production release does not synchronize this information to an account or cloud profile.
+4. Sermon Transcript Processing and Microphone
 
-4. LOGOS Notes and Sermon Recordings
+Recording is started only when you choose it and grant microphone permission. Recordings are stored locally and may be included in a portable backup. Cloud audio transcription is disabled in this production release, so sermon recordings are not uploaded for transcription.
 
-Sermon notes, timestamps, and audio recordings are stored locally. Microphone access is requested only after you choose to record. Deleting a sermon note also deletes its app-managed recording files.
+If an existing transcript is available, you may explicitly request a summary or outline. Immediately before submission, the app explains that the transcript text will be sent over HTTPS to The Word App backend; nothing is sent if you cancel. Summary and outline processing is optional. The current server processes the request to return the result and does not intentionally store the transcript body in its application database.
 
-Cloud transcription is disabled in release 1.0.0+1. Therefore, this release does not upload sermon audio for transcription. If a future release enables cloud transcription, the app will disclose that change before audio is uploaded.
+5. Photos and Word Studio
 
-5. AI, Commentary, and Transcript Processing
+A Word Studio image you select through the Android photo picker is copied into app-private storage. It is not uploaded automatically. The source copy may be included in a user-created portable backup, and a completed design may leave the device when you explicitly share it. Removing a custom background deletes the app-managed copy, not the original gallery item.
 
-When you request an online commentary that is not bundled with the app, the app may send the Bible translation and Scripture reference to The Word App backend on Render. The backend may send the public Bible verse and reference to an OpenAI-compatible language-model provider to create the commentary. Personal notes, reading history, and account information are not included in that request.
+6. Notifications and Narration
 
-If transcript text is available and you choose sermon summary or outline processing, that transcript is sent to The Word App backend. The current server processes summary and outline requests in memory and does not intentionally store transcript bodies in its database. Generated results are returned to and stored on your device.
+Notifications are scheduled locally using the device timezone. The app has no FCM token or remote push system. Android notification and text-to-speech engines may process notification or narration requests under the operating-system or selected engine's terms.
 
-6. Narration and Remote Bible Audio
+7. Backup & Restore
 
-On-device narration may use voices and speech services supplied by your device manufacturer or operating system. When you request remote Bible audio, the app sends a Bible translation and Scripture reference to The Word App backend. The backend may send the public verse text to ElevenLabs and may cache the generated Bible audio. Your notes and recordings are not included.
+Backup creates a local, integrity-checked snapshot of supported app Documents data. It may include highly personal spiritual notes, journals, audio recordings, selected photos and images, Scripture study data, settings, and caches. The ZIP is NOT encrypted; anyone with the file may be able to read it. The app does not upload the ZIP automatically. The Android share/save chooser lets you select a destination, and that receiving provider controls its copy, privacy, and retention. Store backups securely.
 
-7. Notifications
+Restore validates the archive, manifest paths, sizes, SHA-256 checksums, and safety limits before replacing current local Documents data. A temporary safety snapshot is created for rollback. It is deleted after confirmed success; if automatic rollback fails, it is preserved temporarily for recovery. Android automatic cloud and device-transfer backup is disabled because this explicit user-controlled backup is available.
 
-Reminder preferences, schedules, and notification inbox items are stored locally. Notifications are scheduled on the device and do not require an account, a Firebase token, or Render to deliver. Notification permission is requested only after you enable reminders.
+8. Sharing and Exporting
 
-8. Scripture Memory, Saved Content, and Journals
+Sharing or export occurs only after your action. The receiving application or service governs its copy, which may remain until you or that provider deletes it. Temporary app-created share files are periodically cleaned, but a destination copy is outside the app's control.
 
-Memory verses, review results, notes, favorites, devotional journals, and saved content remain on the device unless you choose to share them or submit supported content for online processing.
+9. Services and Providers
 
-9. Word Studio Images
+The optional first-party backend is hosted on Render. Missing commentary may use the backend's configured OpenAI-compatible model provider. Android supplies the photo picker, notification facilities, and text-to-speech engine. You select any share or storage provider used for exports or backups. Remote ElevenLabs audio is not an active production client feature in this release.
 
-Images selected for Word Studio are copied into app storage and are not uploaded by the custom-background feature. The app uses the system photo picker where supported and does not request broad photo-library access on Android. Removing a custom background deletes the app-managed copy, not your original gallery image.
+10. Network and Technical Data
 
-10. Sharing and Exporting
+HTTPS is required for active production endpoints. Render and ordinary hosting infrastructure necessarily receive network information such as IP address, request time, endpoint, response status, and errors when an online feature is used. Production application logs are designed not to print transcript bodies, notes, prayers, audio contents, or API secrets. We do not use this information for advertising or behavioral profiles.
 
-Content leaves the app through another application only after you choose Share or Export. The destination app or service handles that content under its own privacy terms. Exported files remain until you delete them from their saved location.
+11. Permissions
 
-11. Third-Party Services
+The app may request microphone permission for user-initiated sermon recording and notification permission after you enable reminders. It uses the Android photo picker for a selected image and network access for optional commentary, transcript-text processing, and backend availability checks.
 
-Optional online features may use Render for hosting, an OpenAI-compatible provider for missing commentary generation, and ElevenLabs for remote Bible narration. Operating-system services provide notifications, speech, photo selection, and sharing. These providers process information under their own terms and privacy policies.
+12. Purposes and Data Safety
 
-The app does not include third-party advertising, analytics, crash-reporting, or social-login SDKs.
+Information is processed to provide app functionality, maintain reliability and security, and complete actions you request. Locally-only data is not transmitted merely because it exists on the device. User-directed sharing destinations receive data only as part of the sharing action you initiate.
 
-12. Permissions
+13. Retention and Deletion
 
-The app may request microphone permission for user-initiated sermon recording and notification permission for reminders. It uses the system photo picker for a user-selected Word Studio image. Network access supports optional online Scripture, commentary, audio, and backend availability requests.
+Local content remains until you delete it using available feature controls, clear Android app data, or uninstall the app. Clearing app data or uninstalling removes app-private local data. Exported files and backups may remain wherever you saved or shared them. Generated commentary, provider processing, server security logs, and related deletion options depend on operational and provider policies; no fixed retention duration is promised here. Contact us about server-held information that can reasonably be identified.
 
-13. Technical and Network Data
+14. International Processing
 
-When the app connects to the production backend, Render and standard server access logs may process an IP address, request time, endpoint, response status, and error information. Some feature logs may include the requested Bible translation and reference. This information supports service delivery, reliability, abuse prevention, and security. It is not used for advertising profiles.
+Optional online processing may occur where Render and the configured service providers operate. Their deployment locations and terms may change; contact us for current operational details.
 
-14. Security
+15. Children's Privacy
 
-Production API connections use HTTPS. We use reasonable technical and organizational safeguards, but no storage or transmission method can be guaranteed completely secure. Avoid submitting highly sensitive personal information through sharing or optional online-processing features.
+The Word App is a general teen and adult Bible-study and reference product and is not specifically designed for young children. It has no child account system and no account-based collection.
 
-15. Retention and Deletion
+16. Changes
 
-Local information remains until you delete it in a feature screen, clear app storage, remove exported files, or uninstall the app, subject to operating-system backups. The app has no account or cloud synchronization, so there is no account-deletion process.
+We may update this policy when features, providers, or legal requirements change. The effective and last-updated dates identify the current version, which remains available in the app and at the public policy URL.
 
-The server does not intentionally store sermon summary or outline request bodies in its database. Hosting and security logs are retained according to operational and provider settings. To request deletion of server-held information that can reasonably be identified, contact the address below.
+17. Contact
 
-16. Children's Privacy
-
-The Word App is intended for a general audience and is not specifically directed to children. It does not knowingly collect children's personal information through an account system.
-
-17. Changes and Contact
-
-We may update this policy when features, providers, or legal requirements change. The current version is available in the app and at the public policy URL above.
-
-For questions regarding privacy:
+For privacy questions, requests, or deletion inquiries:
 support.thewordapp@gmail.com
 ''',
   );

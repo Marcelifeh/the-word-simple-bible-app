@@ -45,6 +45,11 @@ server/app/.env
 .env.*
 !.env.example
 
+# Local release/deployment archives
+/The_word_simple_bible_app.zip
+/server/Server.zip
+/server/app/app.zip
+
 # Symbolication related
 app.*.symbols
 

@@ -377,8 +377,9 @@ class _TractImageDesignerScreenState extends State<TractImageDesignerScreen> {
         builder: (dialogContext) => AlertDialog(
           title: const Text('Your photo stays private'),
           content: const Text(
-            'Custom backgrounds stay on this device unless you share the '
-            'finished design.',
+            'The selected image is copied into app-private storage and is not '
+            'uploaded automatically. It may be included in a portable backup, '
+            'and the finished design leaves the app only when you share it.',
           ),
           actions: [
             TextButton(

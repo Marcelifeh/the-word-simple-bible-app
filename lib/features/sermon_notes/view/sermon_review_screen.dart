@@ -139,6 +139,7 @@ class _SermonReviewScreenState extends State<SermonReviewScreen> {
       );
       return;
     }
+    if (!await _confirmTranscriptCloudProcessing()) return;
     if (!await _ensureBackendAvailable()) return;
     if (!mounted) return;
 
@@ -184,6 +185,7 @@ class _SermonReviewScreenState extends State<SermonReviewScreen> {
       );
       return;
     }
+    if (!await _confirmTranscriptCloudProcessing()) return;
     if (!await _ensureBackendAvailable()) return;
     if (!mounted) return;
 
@@ -213,6 +215,33 @@ class _SermonReviewScreenState extends State<SermonReviewScreen> {
         setState(() => _isGeneratingOutline = false);
       }
     }
+  }
+
+  Future<bool> _confirmTranscriptCloudProcessing() async {
+    if (!mounted) return false;
+    return await showDialog<bool>(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text('Send transcript for processing?'),
+            content: const Text(
+              'Your sermon transcript will be sent over HTTPS to The Word App '
+              'backend to create the summary or outline you requested. The '
+              'recording itself is not uploaded. This is optional and nothing '
+              'is sent unless you choose Continue.',
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context, false),
+                child: const Text('Cancel'),
+              ),
+              FilledButton(
+                onPressed: () => Navigator.pop(context, true),
+                child: const Text('Continue'),
+              ),
+            ],
+          ),
+        ) ??
+        false;
   }
 
   Future<void> _copyInsight() async {

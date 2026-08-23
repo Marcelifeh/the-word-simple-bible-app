@@ -186,7 +186,6 @@ async def health() -> dict[str, str]:
     return {"status": "healthy"}
 
 
-@app.get("/debug/info")
 def debug_info(db=Depends(db_session)):
     """Lightweight diagnostic endpoint for local dev.
 
@@ -247,6 +246,11 @@ def debug_info(db=Depends(db_session)):
         "web_romans7_count_by_bookname": int(romans7),
         "web_psalm23_count_by_bookname": int(psalm23),
     }
+
+
+environment = os.getenv("ENVIRONMENT", os.getenv("APP_ENV", "development"))
+if environment.strip().lower() != "production":
+    app.add_api_route("/debug/info", debug_info, methods=["GET"])
 
 
 @app.get("/verse", response_model=VerseOut)
@@ -545,7 +549,12 @@ async def get_audio(from_req: Request, req: AudioRequest, db=Depends(db_session)
 
     # 2. Generate or fetch cached audio
     text = _clean_client_text(v.text)
-    logger.info(f"[AUDIO] Verse text for {v.book_id} {v.chapter}:{v.verse}: \"{text[:50]}...\"")
+    logger.info(
+        "[AUDIO] Verse resolved: bookId=%s, chapter=%s, verse=%s",
+        v.book_id,
+        v.chapter,
+        v.verse,
+    )
     path_segment = await generate_verse_audio(
         book_id=v.book_id, chapter=v.chapter, verse=v.verse, text=text
     )
