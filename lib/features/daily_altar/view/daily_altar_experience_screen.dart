@@ -14,27 +14,32 @@ import '../model/daily_altar_reflection_response.dart';
 import '../model/daily_altar_session.dart';
 import '../model/daily_altar_stage.dart';
 import '../model/daily_altar_user_response.dart';
+import '../persistence/daily_altar_repository.dart';
+import '../persistence/daily_altar_stored_record.dart';
+import '../persistence/hive_daily_altar_repository.dart';
 import '../services/daily_altar_journey_engine.dart';
 
 /// Internal end-to-end experience for My Daily Altar.
 ///
-/// MDA-2E intentionally does not register this screen with production
-/// navigation. It has no persistence, billing, network, AI, notification,
-/// Journal, Prayer, or Scripture Memory dependency.
+/// MDA-2F2 adds isolated local persistence and session restoration.
 ///
-/// User responses live only in memory during this phase.
+/// This screen is still NOT registered with production Home/navigation.
+/// It has no billing, network, AI, notification, Journal, Prayer, Scripture
+/// Memory, or AppState dependency.
 class DailyAltarExperienceScreen extends StatefulWidget {
   const DailyAltarExperienceScreen({
     super.key,
     this.contentProvider = const CuratedDailyAltarContentProvider(),
     this.accessPolicy = const OpenDailyAltarAccessPolicy(),
     this.journeyEngine = const DailyAltarJourneyEngine(),
+    this.repository = const HiveDailyAltarRepository(),
     this.now,
   });
 
   final DailyAltarContentProvider contentProvider;
   final DailyAltarAccessPolicy accessPolicy;
   final DailyAltarJourneyEngine journeyEngine;
+  final DailyAltarRepository repository;
 
   /// Optional deterministic clock used by tests.
   final DateTime Function()? now;
@@ -53,7 +58,10 @@ class _DailyAltarExperienceScreenState
   DailyAltarSession? _session;
   DailyAltarUserResponse? _response;
 
+  bool _initializing = true;
   bool _obedienceCompleted = false;
+
+  String? _storageMessage;
 
   final _aboutGodController = TextEditingController();
   final _aboutMeController = TextEditingController();
@@ -71,7 +79,7 @@ class _DailyAltarExperienceScreenState
   @override
   void initState() {
     super.initState();
-    _evaluateAccess();
+    _initialize();
   }
 
   @override
@@ -94,19 +102,84 @@ class _DailyAltarExperienceScreenState
 
   DateTime _now() => widget.now?.call() ?? DateTime.now();
 
-  Future<void> _evaluateAccess() async {
+  Future<void> _initialize() async {
     final decision = await widget.accessPolicy.evaluate();
 
     if (!mounted) {
       return;
     }
 
+    if (!decision.isAllowed) {
+      setState(() {
+        _accessDecision = decision;
+        _initializing = false;
+      });
+
+      return;
+    }
+
+    DailyAltarStoredRecord? restored;
+    String? restoreMessage;
+
+    final now = _now();
+    final localDate = DateTime(
+      now.year,
+      now.month,
+      now.day,
+    );
+
+    final sessionId = _sessionId(localDate);
+
+    try {
+      restored = await widget.repository.load(sessionId);
+    } catch (_) {
+      restoreMessage = 'Saved Daily Altar progress could not be restored. '
+          'You can begin a fresh session.';
+    }
+
+    DailyAltarContent? restoredContent;
+
+    if (restored != null) {
+      try {
+        restoredContent = widget.contentProvider.getById(
+          restored.contentId,
+        );
+      } catch (_) {
+        restoreMessage = 'Saved Daily Altar content is no longer available. '
+            'Your saved record was left untouched.';
+        restored = null;
+      }
+    }
+
+    if (!mounted) {
+      return;
+    }
+
+    if (restored != null && restoredContent != null) {
+      _hydrateControllers(restored.response);
+
+      setState(() {
+        _accessDecision = decision;
+        _selectedPosture = restored!.session.posture;
+        _content = restoredContent;
+        _session = restored.session;
+        _response = restored.response;
+        _obedienceCompleted = restored.response.obedience?.completed ?? false;
+        _storageMessage = restoreMessage;
+        _initializing = false;
+      });
+
+      return;
+    }
+
     setState(() {
       _accessDecision = decision;
+      _storageMessage = restoreMessage;
+      _initializing = false;
     });
   }
 
-  void _start() {
+  Future<void> _start() async {
     final posture = _selectedPosture;
 
     if (posture == null) {
@@ -114,9 +187,16 @@ class _DailyAltarExperienceScreenState
     }
 
     final now = _now();
-    final localDate = DateTime(now.year, now.month, now.day);
 
-    final content = widget.contentProvider.getForPosture(posture);
+    final localDate = DateTime(
+      now.year,
+      now.month,
+      now.day,
+    );
+
+    final content = widget.contentProvider.getForPosture(
+      posture,
+    );
 
     final session = widget.journeyEngine.start(
       sessionId: _sessionId(localDate),
@@ -125,13 +205,19 @@ class _DailyAltarExperienceScreenState
       posture: posture,
     );
 
+    final response = DailyAltarUserResponse(
+      sessionId: session.id,
+      updatedAt: now,
+    );
+
     setState(() {
       _content = content;
       _session = session;
-      _response = DailyAltarUserResponse(
-        sessionId: session.id,
-      );
+      _response = response;
+      _storageMessage = null;
     });
+
+    await _persist();
   }
 
   String _sessionId(DateTime date) {
@@ -141,15 +227,17 @@ class _DailyAltarExperienceScreenState
     return 'altar-${date.year}-$month-$day';
   }
 
-  void _advance() {
+  Future<void> _advance() async {
     final session = _session;
 
     if (session == null) {
-      _start();
+      await _start();
       return;
     }
 
-    _captureCurrentResponse(session.stage);
+    _captureCurrentResponse(
+      session.stage,
+    );
 
     if (session.stage == DailyAltarStage.completed) {
       return;
@@ -163,9 +251,13 @@ class _DailyAltarExperienceScreenState
     setState(() {
       _session = advanced;
     });
+
+    await _persist();
   }
 
-  void _captureCurrentResponse(DailyAltarStage stage) {
+  void _captureCurrentResponse(
+    DailyAltarStage stage,
+  ) {
     final current = _response;
 
     if (current == null) {
@@ -176,36 +268,58 @@ class _DailyAltarExperienceScreenState
 
     switch (stage) {
       case DailyAltarStage.abide:
-        _response = current.copyWith(
+        _response = DailyAltarUserResponse(
+          sessionId: current.sessionId,
           reflection: DailyAltarReflectionResponse(
-            aboutGod: _clean(_aboutGodController.text),
-            aboutMe: _clean(_aboutMeController.text),
-            response: _clean(_responseController.text),
+            aboutGod: _clean(
+              _aboutGodController.text,
+            ),
+            aboutMe: _clean(
+              _aboutMeController.text,
+            ),
+            response: _clean(
+              _responseController.text,
+            ),
           ),
+          personalPrayer: current.personalPrayer,
+          obedience: current.obedience,
+          evening: current.evening,
           updatedAt: now,
         );
 
       case DailyAltarStage.pray:
-        final prayerText = _clean(_personalPrayerController.text);
+        final prayerText = _clean(
+          _personalPrayerController.text,
+        );
 
-        _response = current.copyWith(
+        _response = DailyAltarUserResponse(
+          sessionId: current.sessionId,
+          reflection: current.reflection,
           personalPrayer: prayerText == null
               ? null
               : DailyAltarPersonalPrayer(
                   text: prayerText,
                 ),
+          obedience: current.obedience,
+          evening: current.evening,
           updatedAt: now,
         );
 
       case DailyAltarStage.obey:
-        final commitment = _clean(_obedienceController.text);
+        final commitment = _clean(
+          _obedienceController.text,
+        );
 
-        _response = current.copyWith(
+        _response = DailyAltarUserResponse(
+          sessionId: current.sessionId,
+          reflection: current.reflection,
+          personalPrayer: current.personalPrayer,
           obedience: commitment == null
               ? null
               : DailyAltarObedienceResponse(
                   commitment: commitment,
                 ),
+          evening: current.evening,
           updatedAt: now,
         );
 
@@ -216,14 +330,27 @@ class _DailyAltarExperienceScreenState
           obedience = obedience.markCompleted(now);
         }
 
-        _response = current.copyWith(
+        _response = DailyAltarUserResponse(
+          sessionId: current.sessionId,
+          reflection: current.reflection,
+          personalPrayer: current.personalPrayer,
           obedience: obedience,
           evening: DailyAltarEveningResponse(
-            rememberedWord: _clean(_rememberedWordController.text),
-            obedienceReflection: _clean(_obedienceReflectionController.text),
-            relevanceReflection: _clean(_relevanceController.text),
-            heartResponse: _clean(_heartResponseController.text),
-            carryForward: _clean(_carryForwardController.text),
+            rememberedWord: _clean(
+              _rememberedWordController.text,
+            ),
+            obedienceReflection: _clean(
+              _obedienceReflectionController.text,
+            ),
+            relevanceReflection: _clean(
+              _relevanceController.text,
+            ),
+            heartResponse: _clean(
+              _heartResponseController.text,
+            ),
+            carryForward: _clean(
+              _carryForwardController.text,
+            ),
           ),
           updatedAt: now,
         );
@@ -235,6 +362,70 @@ class _DailyAltarExperienceScreenState
       case DailyAltarStage.completed:
         break;
     }
+  }
+
+  Future<void> _persist() async {
+    final session = _session;
+    final content = _content;
+    final response = _response;
+
+    if (session == null || content == null || response == null) {
+      return;
+    }
+
+    try {
+      await widget.repository.save(
+        DailyAltarStoredRecord(
+          session: session,
+          contentId: content.id,
+          response: response,
+        ),
+      );
+
+      if (mounted && _storageMessage != null) {
+        setState(() {
+          _storageMessage = null;
+        });
+      }
+    } catch (_) {
+      if (!mounted) {
+        return;
+      }
+
+      setState(() {
+        _storageMessage =
+            'Your Daily Altar progress could not be saved locally. '
+            'You may continue, but do not close the app until storage '
+            'is available.';
+      });
+    }
+  }
+
+  void _hydrateControllers(
+    DailyAltarUserResponse response,
+  ) {
+    _aboutGodController.text = response.reflection?.aboutGod ?? '';
+
+    _aboutMeController.text = response.reflection?.aboutMe ?? '';
+
+    _responseController.text = response.reflection?.response ?? '';
+
+    _personalPrayerController.text = response.personalPrayer?.text ?? '';
+
+    _obedienceController.text = response.obedience?.commitment ?? '';
+
+    _rememberedWordController.text = response.evening?.rememberedWord ?? '';
+
+    _obedienceReflectionController.text =
+        response.evening?.obedienceReflection ?? '';
+
+    _relevanceController.text = response.evening?.relevanceReflection ?? '';
+
+    _heartResponseController.text = response.evening?.heartResponse ?? '';
+
+    _carryForwardController.text = response.evening?.carryForward ?? '';
+
+    _obedienceCompleted = response.obedience?.completed ?? false;
   }
 
   String? _clean(String value) {
@@ -249,6 +440,14 @@ class _DailyAltarExperienceScreenState
 
   @override
   Widget build(BuildContext context) {
+    if (_initializing) {
+      return const Scaffold(
+        body: Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+    }
+
     final access = _accessDecision;
 
     if (access == null) {
@@ -285,9 +484,32 @@ class _DailyAltarExperienceScreenState
       body: SafeArea(
         child: Column(
           children: [
+            if (_storageMessage != null)
+              Container(
+                key: const Key(
+                  'dailyAltarStorageMessage',
+                ),
+                width: double.infinity,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 10,
+                ),
+                child: Text(
+                  _storageMessage!,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    fontSize: 13,
+                  ),
+                ),
+              ),
             Expanded(
               child: SingleChildScrollView(
-                padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
+                padding: const EdgeInsets.fromLTRB(
+                  20,
+                  16,
+                  20,
+                  24,
+                ),
                 child: session == null
                     ? _buildComeStage()
                     : _buildJourney(session),
@@ -333,16 +555,22 @@ class _DailyAltarExperienceScreenState
           ),
           child: DropdownButtonHideUnderline(
             child: DropdownButton<DailyAltarPosture>(
-              key: const Key('dailyAltarPostureDropdown'),
+              key: const Key(
+                'dailyAltarPostureDropdown',
+              ),
               value: _selectedPosture,
               isExpanded: true,
               hint: const Text('Select one'),
-              items: DailyAltarPosture.values.map((posture) {
-                return DropdownMenuItem(
-                  value: posture,
-                  child: Text(posture.label),
-                );
-              }).toList(),
+              items: DailyAltarPosture.values.map(
+                (posture) {
+                  return DropdownMenuItem(
+                    value: posture,
+                    child: Text(
+                      posture.label,
+                    ),
+                  );
+                },
+              ).toList(),
               onChanged: (value) {
                 setState(() {
                   _selectedPosture = value;
@@ -364,17 +592,23 @@ class _DailyAltarExperienceScreenState
     );
   }
 
-  Widget _buildJourney(DailyAltarSession session) {
+  Widget _buildJourney(
+    DailyAltarSession session,
+  ) {
     final content = _content!;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildProgress(session.stage),
+        _buildProgress(
+          session.stage,
+        ),
         const SizedBox(height: 24),
         Text(
           session.stage.label,
-          key: const Key('dailyAltarStageLabel'),
+          key: const Key(
+            'dailyAltarStageLabel',
+          ),
           style: const TextStyle(
             fontSize: 25,
             fontWeight: FontWeight.w700,
@@ -389,7 +623,9 @@ class _DailyAltarExperienceScreenState
     );
   }
 
-  Widget _buildProgress(DailyAltarStage stage) {
+  Widget _buildProgress(
+    DailyAltarStage stage,
+  ) {
     final progress = switch (stage) {
       DailyAltarStage.receive => 1 / 8,
       DailyAltarStage.understand => 2 / 8,
@@ -442,7 +678,9 @@ class _DailyAltarExperienceScreenState
     }
   }
 
-  Widget _buildReceive(DailyAltarContent content) {
+  Widget _buildReceive(
+    DailyAltarContent content,
+  ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -455,7 +693,8 @@ class _DailyAltarExperienceScreenState
         ),
         const SizedBox(height: 6),
         Text(
-          'Scripture • ${content.scripture.translationId.toUpperCase()}',
+          'Scripture • '
+          '${content.scripture.translationId.toUpperCase()}',
           style: const TextStyle(
             fontSize: 13,
             fontWeight: FontWeight.w600,
@@ -478,7 +717,9 @@ class _DailyAltarExperienceScreenState
     );
   }
 
-  Widget _buildUnderstand(DailyAltarContent content) {
+  Widget _buildUnderstand(
+    DailyAltarContent content,
+  ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -505,7 +746,9 @@ class _DailyAltarExperienceScreenState
     );
   }
 
-  Widget _buildAbide(DailyAltarContent content) {
+  Widget _buildAbide(
+    DailyAltarContent content,
+  ) {
     return Column(
       children: [
         _reflectionField(
@@ -527,7 +770,9 @@ class _DailyAltarExperienceScreenState
     );
   }
 
-  Widget _buildPray(DailyAltarContent content) {
+  Widget _buildPray(
+    DailyAltarContent content,
+  ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -547,7 +792,9 @@ class _DailyAltarExperienceScreenState
         ),
         const SizedBox(height: 26),
         TextField(
-          key: const Key('dailyAltarPersonalPrayer'),
+          key: const Key(
+            'dailyAltarPersonalPrayer',
+          ),
           controller: _personalPrayerController,
           minLines: 4,
           maxLines: 8,
@@ -562,7 +809,9 @@ class _DailyAltarExperienceScreenState
     );
   }
 
-  Widget _buildObey(DailyAltarContent content) {
+  Widget _buildObey(
+    DailyAltarContent content,
+  ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -590,7 +839,9 @@ class _DailyAltarExperienceScreenState
         ),
         const SizedBox(height: 26),
         TextField(
-          key: const Key('dailyAltarObedienceCommitment'),
+          key: const Key(
+            'dailyAltarObedienceCommitment',
+          ),
           controller: _obedienceController,
           minLines: 3,
           maxLines: 6,
@@ -605,7 +856,9 @@ class _DailyAltarExperienceScreenState
     );
   }
 
-  Widget _buildCarry(DailyAltarContent content) {
+  Widget _buildCarry(
+    DailyAltarContent content,
+  ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -633,22 +886,25 @@ class _DailyAltarExperienceScreenState
         ),
         const SizedBox(height: 28),
         const Text(
-          'Your morning journey is complete. In the finished experience, '
-          'you will return later in the day to reflect on how you walked with '
-          'the Word. MDA-2E allows the evening stage to open immediately for '
-          'internal testing.',
+          'Your morning journey is complete. Your progress has been saved '
+          'locally so you can return later and reflect on how you walked '
+          'with the Word.',
         ),
       ],
     );
   }
 
-  Widget _buildReturn(DailyAltarContent content) {
+  Widget _buildReturn(
+    DailyAltarContent content,
+  ) {
     final prompts = content.eveningReflection;
 
     return Column(
       children: [
         CheckboxListTile(
-          key: const Key('dailyAltarObedienceCompleted'),
+          key: const Key(
+            'dailyAltarObedienceCompleted',
+          ),
           value: _obedienceCompleted,
           contentPadding: EdgeInsets.zero,
           title: const Text(
@@ -703,7 +959,9 @@ class _DailyAltarExperienceScreenState
         const SizedBox(height: 18),
         const Text(
           'Today’s Altar Is Complete',
-          key: Key('dailyAltarCompletedTitle'),
+          key: Key(
+            'dailyAltarCompletedTitle',
+          ),
           style: TextStyle(
             fontSize: 25,
             fontWeight: FontWeight.w700,
@@ -717,12 +975,11 @@ class _DailyAltarExperienceScreenState
         const SizedBox(height: 20),
         if (response?.hasAnyResponse ?? false)
           const Text(
-            'Your personal responses were captured for this session.',
+            'Your personal responses have been saved locally on this device.',
           ),
         const SizedBox(height: 12),
         const Text(
-          'During this development phase, responses remain in memory only '
-          'and are not saved when this screen closes.',
+          'Your Daily Altar record remains private local app data.',
           style: TextStyle(
             fontSize: 13,
             fontStyle: FontStyle.italic,
@@ -732,9 +989,14 @@ class _DailyAltarExperienceScreenState
     );
   }
 
-  Widget _section(String title, String body) {
+  Widget _section(
+    String title,
+    String body,
+  ) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 24),
+      padding: const EdgeInsets.only(
+        bottom: 24,
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -764,9 +1026,13 @@ class _DailyAltarExperienceScreenState
     required String keyName,
   }) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 22),
+      padding: const EdgeInsets.only(
+        bottom: 22,
+      ),
       child: TextField(
-        key: Key('dailyAltarField_$keyName'),
+        key: Key(
+          'dailyAltarField_$keyName',
+        ),
         controller: controller,
         minLines: 3,
         maxLines: 7,
@@ -800,14 +1066,23 @@ class _DailyAltarExperienceScreenState
     return SafeArea(
       top: false,
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(20, 10, 20, 16),
+        padding: const EdgeInsets.fromLTRB(
+          20,
+          10,
+          20,
+          16,
+        ),
         child: SizedBox(
           width: double.infinity,
           child: FilledButton(
-            key: const Key('dailyAltarPrimaryAction'),
+            key: const Key(
+              'dailyAltarPrimaryAction',
+            ),
             onPressed: enabled ? _advance : null,
             child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 14),
+              padding: const EdgeInsets.symmetric(
+                vertical: 14,
+              ),
               child: Text(label),
             ),
           ),
