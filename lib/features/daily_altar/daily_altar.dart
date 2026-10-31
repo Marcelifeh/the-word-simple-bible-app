@@ -1,3 +1,4 @@
+export 'view/daily_altar_experience_screen.dart';
 export 'data/curated_daily_altar_content_provider.dart';
 export 'data/daily_altar_content_not_found_exception.dart';
 export 'data/daily_altar_content_provider.dart';
