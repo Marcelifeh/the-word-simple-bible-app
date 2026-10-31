@@ -12,6 +12,9 @@ import '../../../domain/entities/verse.dart';
 import '../../../shared/state/app_state.dart';
 import '../../../shared/widgets/home_text_scale.dart';
 import '../../../shared/widgets/section_header.dart';
+import '../../daily_altar/config/daily_altar_feature_flags.dart';
+import '../../daily_altar/view/daily_altar_experience_screen.dart';
+import '../../daily_altar/view/daily_altar_home_slot.dart';
 import '../../daily_verse/view/daily_verse_screen.dart';
 import '../../devotional/model/devotional_model.dart';
 import '../../devotional/view/devotional_detail_screen.dart';
@@ -983,6 +986,19 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                   children: [
                     const SectionHeader(title: 'Grow in Faith'),
                     const SizedBox(height: 10),
+                    DailyAltarHomeSlot(
+                      enabled: DailyAltarFeatureFlags.enabled,
+                      onOpen: () async {
+                        await AppRouter.push(
+                          context,
+                          const DailyAltarExperienceScreen(),
+                          rootNavigator: true,
+                          transition: AppTransitionType.devotional,
+                        );
+                      },
+                    ),
+                    if (DailyAltarFeatureFlags.enabled)
+                      const SizedBox(height: 12),
                     _DevotionalHistoryCard(
                       readCount: devotionalHistory.length,
                       onTap: _openDevotionalHistory,

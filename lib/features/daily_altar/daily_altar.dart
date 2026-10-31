@@ -1,3 +1,4 @@
+export 'view/daily_altar_home_slot.dart';
 export 'view/daily_altar_home_card.dart';
 export 'services/daily_altar_today_status_exception.dart';
 export 'services/daily_altar_today_status.dart';
