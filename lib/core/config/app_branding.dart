@@ -1,11 +1,11 @@
 class AppBranding {
-  static const appName = 'The Word App';
+  static const appName = 'The Word Bible App';
   static const appStoreName = 'The Word Bible App';
   static const tagline = 'Experience the Living Word';
   static const poweredBy = 'Powered by LOGOS';
 
   // Asset paths
-  static const logoAsset = 'assets/images/the_word_logo.png';
+  static const logoAsset = 'assets/images/the_word_app_icon.png';
 
   // Internal systems
   static const logosInsight = 'LOGOS Insight';

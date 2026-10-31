@@ -118,12 +118,12 @@ class NotificationContentService {
             'body': 'What did God teach you today?',
           },
         NotificationType.appUpdate => const <String, String>{
-            'title': 'New in The Word App',
+            'title': 'New in The Word Bible App',
             'body': 'New content is ready to explore.',
           },
         NotificationType.importantAnnouncement => const <String, String>{
             'title': 'Important announcement',
-            'body': 'Open The Word App to learn more.',
+            'body': 'Open The Word Bible App to learn more.',
           },
       };
 }

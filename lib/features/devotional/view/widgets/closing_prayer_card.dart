@@ -71,7 +71,7 @@ class ClosingPrayerCard extends StatelessWidget {
             child: TextButton.icon(
               onPressed: () => Share.share(
                 '🙏 A prayer for $devotionalTitle:\n\n$prayer\n\n'
-                '📖 The Word – The Word App\n'
+                '📖 The Word – The Word Bible App\n'
                 'https://play.google.com/store/apps/details?id=com.theword.simplebible',
                 subject: 'A prayer for $devotionalTitle',
               ),

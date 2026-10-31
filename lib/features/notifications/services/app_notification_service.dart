@@ -206,7 +206,7 @@ class AppNotificationService {
     await _plugin.show(
       id: testNotificationId,
       title: 'Notifications are working',
-      body: 'The Word App can now send your faith reminders.',
+      body: 'The Word Bible App can now send your faith reminders.',
       notificationDetails: details,
       payload: notificationCentrePayload,
     );

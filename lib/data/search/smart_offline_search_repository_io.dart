@@ -22,9 +22,17 @@ class SqliteFtsSmartOfflineSearchRepository
     required BibleTranslation translation,
     required BibleAssetRepository bibleRepo,
   }) {
-    return _inFlight.putIfAbsent(
-      translation,
-      () async {
+    final existing = _inFlight[translation];
+    if (existing != null) return existing;
+    final future = _buildIfNeeded(translation, bibleRepo);
+    _inFlight[translation] = future;
+    future.then((_) => _inFlight.remove(translation),
+        onError: (Object _) => _inFlight.remove(translation));
+    return future;
+  }
+
+  Future<void> _buildIfNeeded(
+      BibleTranslation translation, BibleAssetRepository bibleRepo) async {
         final db = await _openDb(translation);
         _dbByTranslation[translation] = db;
 
@@ -37,8 +45,6 @@ class SqliteFtsSmartOfflineSearchRepository
         await _buildIndex(
             db: db, translation: translation, bibleRepo: bibleRepo);
         _markBuilt(db);
-      },
-    );
   }
 
   @override
@@ -221,8 +227,8 @@ class SqliteFtsSmartOfflineSearchRepository
     }
 
     if (groups.isEmpty) return null;
-    // AND groups together to keep results relevant.
-    return groups.join(' ');
+    // OR supports partial major-keyword matches; BM25 ranks stronger hits first.
+    return groups.join(' OR ');
   }
 
   static Iterable<String> _tokenize(String input) sync* {

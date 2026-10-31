@@ -1,4 +1,4 @@
-# The Word App — Privacy & Google Play Data Safety Audit
+# The Word Bible App — Privacy & Google Play Data Safety Audit
 
 Audit date: 2026-08-22
 Audited package: `org.thewordapp.mobile`
@@ -352,7 +352,7 @@ Security-practice answers:
 
 The policy should contain these exact factual sections/statements after the blockers are fixed:
 
-1. **Identity and contact:** The Word App, package `org.thewordapp.mobile`, publisher entity exactly matching the Play listing, privacy contact placeholder, effective-date placeholder, and public policy URL.
+1. **Identity and contact:** The Word Bible App, package `org.thewordapp.mobile`, publisher entity exactly matching the Play listing, privacy contact placeholder, effective-date placeholder, and public policy URL.
 2. **No account/ads/analytics:** No account is required; no advertising, analytics, crash-reporting, attribution, or FCM SDK is included in this release.
 3. **Local data:** Enumerate notes/highlights/favorites, saved prayers, devotional journal, reading/devotional/faith history, Scripture Memory progress, sermon notes/transcripts/recordings, user tracts, notification state, selected backgrounds, narration/settings, and local caches. State they are app-private and not application-layer encrypted.
 4. **Optional first-party network:** State the production backend domain; HTTPS requirement; missing-commentary Scripture fields; optional remote Bible chapter/search fields only if enabled; sermon transcript processing; and ordinary IP/request metadata visible to hosting.

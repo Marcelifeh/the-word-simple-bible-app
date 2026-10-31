@@ -338,13 +338,16 @@ class TractCanvas extends StatelessWidget {
         totalHeight += 10.0;
         totalHeight += _estimateInvitationHeight(widthPerCol);
       } else if (selectedPage >= 1 && selectedPage <= chunks.length) {
-        totalHeight += 6.0;
-      } else if (selectedPage == chunks.length + 1) {
-        if (hasScripture) {
+        // The opening content slide carries the Scripture card; later slides
+        // contain only the devotional body.
+        if (selectedPage == 1 && hasScripture) {
           totalHeight +=
               _estimateScriptureCardHeight(cardFontSize, widthPerCol, isQuote);
-          totalHeight += 10.0;
+          totalHeight += size * 0.6;
         }
+        totalHeight += 6.0;
+      } else if (selectedPage == chunks.length + 1) {
+        // Invitation is a call to action, not a duplicate Scripture slide.
         totalHeight += _estimateInvitationHeight(widthPerCol);
       }
     } else {
@@ -768,6 +771,10 @@ class TractCanvas extends StatelessWidget {
           _buildSectionDivider(),
         ],
         const SizedBox(height: 8),
+        if (hasScripture) ...[
+          _buildScriptureCard(activeFontSize),
+          const SizedBox(height: 10),
+        ],
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: bodyColumns
@@ -776,10 +783,6 @@ class TractCanvas extends StatelessWidget {
             ..removeLast(),
         ),
         const SizedBox(height: 18),
-        if (hasScripture) ...[
-          _buildScriptureCard(activeFontSize),
-          const SizedBox(height: 10),
-        ],
         _buildInvitationBlock(activeFontSize),
         const SizedBox(
             height: 36.0), // Spacer reserving room for fixed branding footer
@@ -799,11 +802,11 @@ class TractCanvas extends StatelessWidget {
             : CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
-          _buildBodyText(body, activeFontSize),
           if (hasScripture) ...[
-            SizedBox(height: activeFontSize * 0.6),
             _buildScriptureCard(activeFontSize),
+            SizedBox(height: activeFontSize * 0.6),
           ],
+          _buildBodyText(body, activeFontSize),
           SizedBox(height: activeFontSize * 0.6),
           _buildInvitationBlock(activeFontSize),
         ],
@@ -817,6 +820,10 @@ class TractCanvas extends StatelessWidget {
             : CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
+          if (selectedPage == 1 && hasScripture) ...[
+            _buildScriptureCard(activeFontSize),
+            SizedBox(height: activeFontSize * 0.6),
+          ],
           SizedBox(height: activeFontSize * 0.35),
           _buildBodyText(chunks[selectedPage - 1], activeFontSize),
         ],
@@ -829,13 +836,7 @@ class TractCanvas extends StatelessWidget {
             ? CrossAxisAlignment.center
             : CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
-        children: [
-          if (hasScripture) ...[
-            _buildScriptureCard(activeFontSize),
-            SizedBox(height: activeFontSize * 0.6),
-          ],
-          _buildInvitationBlock(activeFontSize),
-        ],
+        children: [_buildInvitationBlock(activeFontSize)],
       );
     }
 
@@ -1016,8 +1017,8 @@ class TractCanvas extends StatelessWidget {
         Flexible(
           child: Text(
             isUserTract
-                ? 'Created with The Word App'
-                : 'Shared from The Word App • Read • Grow • Share',
+                ? 'Created with The Word Bible App'
+                : 'Shared from The Word Bible App • Read • Grow • Share',
             style: TextStyle(
                 fontSize: 9,
                 fontWeight: FontWeight.w600,

@@ -31,7 +31,7 @@ from .schemas import (
 )
 from fastapi.responses import FileResponse
 
-app = FastAPI(title="The Word App API", version="1.0.0")
+app = FastAPI(title="The Word Bible App API", version="1.0.0")
 app.include_router(sermon.router)
 
 # Allow Flutter Web (and other local dev clients) to call this API.
@@ -178,7 +178,7 @@ def db_session():
 
 @app.get("/")
 async def root() -> dict[str, str]:
-    return {"name": "The Word App API", "status": "online"}
+    return {"name": "The Word Bible App API", "status": "online"}
 
 
 @app.get("/health")

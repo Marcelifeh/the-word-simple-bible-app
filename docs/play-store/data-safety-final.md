@@ -1,4 +1,4 @@
-# The Word App — Final Google Play Data Safety Mapping
+# The Word Bible App — Final Google Play Data Safety Mapping
 
 Release candidate: `1.0.3+4`
 Package: `org.thewordapp.mobile`

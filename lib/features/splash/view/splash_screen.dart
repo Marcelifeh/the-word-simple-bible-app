@@ -26,6 +26,7 @@ class _SplashScreenState extends State<SplashScreen>
   VideoPlayerController? _videoController;
   bool _isVideoReady = false;
   bool _navigated = false;
+  Timer? _splashDeadline;
 
   // Maximum splash duration (video or animation)
   final Duration _maxSplashDuration = const Duration(seconds: 9);
@@ -38,6 +39,9 @@ class _SplashScreenState extends State<SplashScreen>
   @override
   void initState() {
     super.initState();
+    // Playback may never start while a call owns audio focus. Navigation must
+    // depend on elapsed time, never on video initialization or position alone.
+    _splashDeadline = Timer(_maxSplashDuration, _finishSplash);
 
     _controller = AnimationController(
       vsync: this,
@@ -101,9 +105,16 @@ class _SplashScreenState extends State<SplashScreen>
     VideoPlayerController? videoController;
     try {
       videoController = VideoPlayerController.asset(
-          'assets/videos/the_word_landing_page.mp4');
+        'assets/videos/the_word_landing_page.mp4',
+        videoPlayerOptions: VideoPlayerOptions(mixWithOthers: true),
+      );
       _videoController = videoController;
       await videoController.initialize();
+      if (!mounted ||
+          _navigated ||
+          !identical(_videoController, videoController)) {
+        return;
+      }
       // Mute to allow autoplay on web and other platforms
       await videoController.setVolume(0.0);
       await videoController.setLooping(false);
@@ -114,7 +125,11 @@ class _SplashScreenState extends State<SplashScreen>
           ? dur
           : _maxSplashDuration;
 
-      if (!mounted || !identical(_videoController, videoController)) return;
+      if (!mounted ||
+          _navigated ||
+          !identical(_videoController, videoController)) {
+        return;
+      }
       setState(() {
         _isVideoReady = true;
       });
@@ -127,7 +142,7 @@ class _SplashScreenState extends State<SplashScreen>
         _videoController = null;
         await videoController?.dispose();
       }
-      if (!mounted) return;
+      if (!mounted || _navigated) return;
       setState(() {
         _isVideoReady = false;
       });
@@ -148,6 +163,7 @@ class _SplashScreenState extends State<SplashScreen>
   void _finishSplash() {
     if (_navigated || !mounted) return;
     _navigated = true;
+    _splashDeadline?.cancel();
 
     final videoController = _videoController;
     if (videoController != null) {
@@ -162,6 +178,7 @@ class _SplashScreenState extends State<SplashScreen>
 
   @override
   void dispose() {
+    _splashDeadline?.cancel();
     final videoController = _videoController;
     _videoController = null;
     videoController?.removeListener(_handleVideoProgress);

@@ -15,22 +15,27 @@ class SearchIndexRepository {
     return box.get(_versionKey) == _version;
   }
 
-  Future<void> ensureBuilt(
-      {required BibleTranslation translation,
-      required BibleAssetRepository bibleRepo}) {
-    return _inFlight.putIfAbsent(
-      translation,
-      () async {
-        final box = await _openBox(translation);
-        final built = box.get(_versionKey) == _version;
-        if (built) return;
+  Future<void> ensureBuilt({
+    required BibleTranslation translation,
+    required BibleAssetRepository bibleRepo,
+  }) {
+    final existing = _inFlight[translation];
+    if (existing != null) return existing;
+    final future = _buildIfNeeded(translation, bibleRepo);
+    _inFlight[translation] = future;
+    future.then((_) => _inFlight.remove(translation),
+        onError: (Object _) => _inFlight.remove(translation));
+    return future;
+  }
 
-        await box.clear();
-        await _buildIndex(
-            box: box, translation: translation, bibleRepo: bibleRepo);
-        await box.put(_versionKey, _version);
-      },
-    );
+  Future<void> _buildIfNeeded(
+      BibleTranslation translation, BibleAssetRepository bibleRepo) async {
+    final box = await _openBox(translation);
+    if (box.get(_versionKey) == _version) return;
+    await box.clear();
+    await _buildIndex(
+        box: box, translation: translation, bibleRepo: bibleRepo);
+    await box.put(_versionKey, _version);
   }
 
   Future<List<VerseRef>> lookup(
@@ -42,25 +47,22 @@ class SearchIndexRepository {
 
     final box = await _openBox(translation);
 
-    Set<String>? intersection;
-    for (final t in tokens) {
-      final raw = box.get(t);
-      final list = (raw is List) ? raw.whereType<String>().toSet() : <String>{};
-
-      if (intersection == null) {
-        intersection = list;
-      } else {
-        intersection = intersection.intersection(list);
+    // Score by the number of distinctive query words found in each verse.
+    // A partial match is preferable to losing a verse because of one variant.
+    final scores = <String, int>{};
+    for (final token in tokens.toSet()) {
+      final raw = box.get(token);
+      if (raw is! List) continue;
+      for (final key in raw.whereType<String>()) {
+        scores.update(key, (score) => score + 1, ifAbsent: () => 1);
       }
-
-      if (intersection.isEmpty) break;
     }
-
-    final keys =
-        (intersection ?? <String>{}).take(limit).toList(growable: false);
-    return keys
-        .map(_parseVerseKey)
-        .whereType<VerseRef>()
+    final ranked = scores.keys.toList()
+      ..sort((a, b) {
+        final score = scores[b]!.compareTo(scores[a]!);
+        return score != 0 ? score : a.compareTo(b);
+      });
+    return ranked.take(limit).map(_parseVerseKey).whereType<VerseRef>()
         .toList(growable: false);
   }
 
@@ -147,7 +149,6 @@ class SearchIndexRepository {
     'it',
     'this',
     'but',
-    'not',
     'his',
     'her',
     'their',
@@ -175,7 +176,6 @@ class SearchIndexRepository {
     'up',
     'down',
     'so',
-    'no',
     'yes',
   };
 }

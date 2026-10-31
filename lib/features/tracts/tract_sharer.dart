@@ -9,7 +9,7 @@ class TractSharer {
   static const _appLink =
       'https://play.google.com/store/apps/details?id=com.theword.simplebible';
 
-  static const _footer = '📖 Download The Word – The Word App\n$_appLink';
+  static const _footer = '📖 Download The Word – The Word Bible App\n$_appLink';
 
   /// Full share text for an **official** seeded tract.
   ///

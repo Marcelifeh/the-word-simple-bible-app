@@ -520,6 +520,23 @@ class SermonNote {
     );
   }
 
+  /// Corrections invalidate generated interpretations and old word timings.
+  /// Audio clips and timestamped user notes remain attached to this sermon.
+  SermonNote withEditedTranscript(String text) {
+    final corrected = text.trim();
+    if (corrected.isEmpty) {
+      throw ArgumentError.value(text, 'text', 'Transcript cannot be empty');
+    }
+    if (corrected == transcript?.trim()) return this;
+    return copyWith(
+      transcript: corrected,
+      transcriptSegments: const [],
+      clearSummary: true,
+      clearInsight: true,
+      clearOutline: true,
+    );
+  }
+
   SermonNote copyWith({
     String? title,
     String? preacher,

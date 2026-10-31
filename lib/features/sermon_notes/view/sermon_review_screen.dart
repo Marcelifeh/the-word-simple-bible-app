@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/foundation.dart';
 import 'package:intl/intl.dart';
 import 'package:share_plus/share_plus.dart';
 
@@ -14,11 +15,16 @@ import '../../notes/model/verse_note.dart';
 import '../model/sermon_note.dart';
 import '../model/sermon_outline.dart';
 import '../services/sermon_ai_service.dart';
+import '../services/android_whisper_transcription_engine.dart';
+import '../services/sermon_recording_transcription_coordinator.dart';
 import '../services/sermon_document_export_service.dart';
 import '../services/sermon_document_file_saver.dart';
 import '../utils/scripture_parser.dart';
 import '../widgets/sermon_audio_player_card.dart';
 import '../widgets/timestamped_note_tile.dart';
+import '../widgets/whisper_model_card.dart';
+import '../services/whisper_model_installer.dart';
+import 'sermon_transcript_editor_screen.dart';
 
 class SermonReviewScreen extends StatefulWidget {
   const SermonReviewScreen({
@@ -40,6 +46,22 @@ class _SermonReviewScreenState extends State<SermonReviewScreen> {
       GlobalKey<SermonAudioPlayerCardState>();
   late SermonNote _note;
   bool _isTranscribing = false;
+  bool _isEditingTranscript = false;
+  bool get _processing =>
+      _isTranscribing ||
+      _isSummarizing ||
+      _isGeneratingOutline ||
+      _isEditingTranscript;
+  static const _insightsUnavailableMessage =
+      'Online summaries and outlines are unavailable in this build. '
+      'You can still edit your transcript and transcribe offline.';
+  final AndroidWhisperTranscriptionEngine _offlineEngine =
+      AndroidWhisperTranscriptionEngine();
+  late final WhisperModelInstaller _modelInstaller =
+      WhisperModelInstaller(_offlineEngine);
+  late final SermonRecordingTranscriptionCoordinator _offlineCoordinator =
+      SermonRecordingTranscriptionCoordinator(_offlineEngine);
+  String _offlineProgress = '';
   bool _isSummarizing = false;
   bool _isGeneratingOutline = false;
   bool _isExportingDocument = false;
@@ -56,22 +78,56 @@ class _SermonReviewScreenState extends State<SermonReviewScreen> {
     super.initState();
     _note = widget.note;
     Future.microtask(_warmBackend);
+    if (!kIsWeb && defaultTargetPlatform == TargetPlatform.android) {
+      Future.microtask(_modelInstaller.check);
+    }
   }
 
   @override
   void dispose() {
+    _modelInstaller.dispose();
     _backendHealthService.dispose();
     _sermonAiService.dispose();
     super.dispose();
   }
 
   Future<void> _warmBackend() async {
+    if (!_sermonCloudProcessingAvailable) return;
     await _backendHealthService.check();
+  }
+
+  Future<void> _editTranscript() async {
+    if (_processing) return;
+    final repository = AppScope.of(context).sermonNoteRepo;
+    setState(() => _isEditingTranscript = true);
+    try {
+      final saved = await Navigator.of(context, rootNavigator: true).push<bool>(
+        MaterialPageRoute(
+            builder: (_) => SermonTranscriptEditorScreen(
+                  transcript: _note.transcript ?? '',
+                  onSave: (text) async {
+                    final updated = _note.withEditedTranscript(text);
+                    await repository.updateNote(updated);
+                    if (mounted) {
+                      setState(() {
+                        _note = updated;
+                        _transcriptSearchQuery = '';
+                      });
+                    }
+                  },
+                )),
+      );
+      if (saved == true && mounted) {
+        _offlineMessage('Transcript saved on this device.');
+      }
+    } finally {
+      if (mounted) setState(() => _isEditingTranscript = false);
+    }
   }
 
   Future<void> _generateTranscript() async {
     final playableClips = _note.playableClips;
-    if (playableClips.isEmpty || _isTranscribing) return;
+    if (playableClips.isEmpty || _processing) return;
     final sourceClip = playableClips.first;
     final path = sourceClip.filePath;
     if (!Env.transcriptionEnabled) {
@@ -126,11 +182,76 @@ class _SermonReviewScreenState extends State<SermonReviewScreen> {
     }
   }
 
+  void _offlineMessage(String message) {
+    if (!mounted) return;
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text(message)));
+  }
+
+  Future<void> _transcribeOffline() async {
+    if (_processing || _modelInstaller.busy || _note.playableClips.isEmpty) {
+      return;
+    }
+    if (!await _offlineEngine.isReady()) {
+      if (mounted) {
+        _offlineMessage(_modelInstaller.state == WhisperModelState.ready
+            ? 'The offline model is installed, but the native transcription engine is unavailable on this device.'
+            : 'Install the offline English model first.');
+      }
+      return;
+    }
+    if (!mounted) return;
+    if (_processing) return;
+    final repository = AppScope.of(context).sermonNoteRepo;
+    setState(() {
+      _isTranscribing = true;
+      _offlineProgress = 'Preparing recordings...';
+    });
+    try {
+      final output = await _offlineCoordinator.transcribeClips(
+        clips: _note.playableClips,
+        onProgress: (progress) {
+          if (!mounted) return;
+          setState(() => _offlineProgress = progress.message ??
+              '${progress.status.name}: ${progress.processed.inSeconds}s processed');
+        },
+      );
+      if (!mounted) return;
+      if (output.text.trim().isEmpty) {
+        _offlineMessage(
+            'No speech was recognized. Existing transcript was preserved.');
+        return;
+      }
+      final updated = _note.copyWith(
+          transcript: output.text,
+          transcriptSegments: output.segments,
+          clearSummary: true,
+          clearInsight: true,
+          clearOutline: true);
+      await repository.updateNote(updated);
+      if (!mounted) return;
+      setState(() => _note = updated);
+      _offlineMessage('Offline transcript saved from all recorded clips.');
+    } on SermonTranscriptionCancelled {
+      _offlineMessage(
+          'Transcription cancelled. Existing notes were preserved.');
+    } catch (error) {
+      _offlineMessage('Offline transcription failed: $error');
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isTranscribing = false;
+          _offlineProgress = '';
+        });
+      }
+    }
+  }
+
   Future<void> _generateSummary() async {
     final transcript = _note.transcript?.trim();
-    if (_isSummarizing) return;
+    if (_processing) return;
     if (!_sermonCloudProcessingAvailable) {
-      _showCloudTranscriptionUnavailable();
+      _offlineMessage(_insightsUnavailableMessage);
       return;
     }
     if (transcript == null || transcript.isEmpty) {
@@ -139,13 +260,11 @@ class _SermonReviewScreenState extends State<SermonReviewScreen> {
       );
       return;
     }
-    if (!await _confirmTranscriptCloudProcessing()) return;
-    if (!await _ensureBackendAvailable()) return;
-    if (!mounted) return;
-
     final repository = AppScope.of(context).sermonNoteRepo;
     setState(() => _isSummarizing = true);
     try {
+      if (!await _confirmTranscriptCloudProcessing()) return;
+      if (!await _ensureBackendAvailable() || !mounted) return;
       final result = await _sermonAiService.generateSummary(transcript);
       final updated = _note.copyWith(
         summary: result.summary,
@@ -174,9 +293,9 @@ class _SermonReviewScreenState extends State<SermonReviewScreen> {
 
   Future<void> _generateOutline() async {
     final transcript = _note.transcript?.trim();
-    if (_isGeneratingOutline) return;
+    if (_processing) return;
     if (!_sermonCloudProcessingAvailable) {
-      _showCloudTranscriptionUnavailable();
+      _offlineMessage(_insightsUnavailableMessage);
       return;
     }
     if (transcript == null || transcript.isEmpty) {
@@ -185,13 +304,11 @@ class _SermonReviewScreenState extends State<SermonReviewScreen> {
       );
       return;
     }
-    if (!await _confirmTranscriptCloudProcessing()) return;
-    if (!await _ensureBackendAvailable()) return;
-    if (!mounted) return;
-
     final repository = AppScope.of(context).sermonNoteRepo;
     setState(() => _isGeneratingOutline = true);
     try {
+      if (!await _confirmTranscriptCloudProcessing()) return;
+      if (!await _ensureBackendAvailable() || !mounted) return;
       final outline = await _sermonAiService.generateOutline(
         transcript: transcript,
         insight: _note.insight,
@@ -224,7 +341,7 @@ class _SermonReviewScreenState extends State<SermonReviewScreen> {
           builder: (context) => AlertDialog(
             title: const Text('Send transcript for processing?'),
             content: const Text(
-              'Your sermon transcript will be sent over HTTPS to The Word App '
+              'Your sermon transcript will be sent over HTTPS to The Word Bible App '
               'backend to create the summary or outline you requested. The '
               'recording itself is not uploaded. This is optional and nothing '
               'is sent unless you choose Continue.',
@@ -421,13 +538,11 @@ class _SermonReviewScreenState extends State<SermonReviewScreen> {
     final transcriptDisabledText = !hasAudio
         ? 'No audio recording found. Record a sermon first to generate transcript.'
         : _cloudTranscriptionUnavailableMessage;
-    final insightDisabledText = !hasAudio
-        ? 'No audio recording found. Record a sermon first to generate sermon insights.'
-        : !sermonCloudAvailable
-            ? _cloudTranscriptionUnavailableMessage
-            : 'Generate a transcript first to create sermon insights.';
+    final insightDisabledText = !sermonCloudAvailable
+        ? _insightsUnavailableMessage
+        : 'Generate a transcript first to create sermon insights.';
     final outlineDisabledText = !sermonCloudAvailable
-        ? _cloudTranscriptionUnavailableMessage
+        ? _insightsUnavailableMessage
         : 'Generate transcript first before creating a sermon outline.';
     final scriptures = ScriptureParser.extractScriptures(
       _scriptureDetectionText(note),
@@ -533,15 +648,48 @@ class _SermonReviewScreenState extends State<SermonReviewScreen> {
                       ? 'Generate Transcript'
                       : 'Unavailable in Beta',
               disabledText: transcriptDisabledText,
-              onPressed: hasAudio && transcriptionAvailable && !_isTranscribing
+              onPressed: hasAudio && transcriptionAvailable && !_processing
                   ? _generateTranscript
                   : null,
               onSeek: (position) => _audioKey.currentState?.seekTo(position),
               onSearchChanged: (value) {
                 setState(() => _transcriptSearchQuery = value);
               },
+              onEdit: _processing ? null : _editTranscript,
             ),
           ),
+          const SizedBox(height: 12),
+          if (!kIsWeb && defaultTargetPlatform == TargetPlatform.android) ...[
+            WhisperModelCard(installer: _modelInstaller, enabled: !_processing),
+            Wrap(spacing: 8, runSpacing: 8, children: [
+              ListenableBuilder(
+                  listenable: _modelInstaller,
+                  builder: (context, _) => FilledButton.icon(
+                        onPressed: hasAudio &&
+                                !_processing &&
+                                !_modelInstaller.busy &&
+                                _modelInstaller.state == WhisperModelState.ready
+                            ? _transcribeOffline
+                            : null,
+                        icon: const Icon(Icons.offline_bolt_outlined),
+                        label: const Text('Transcribe Offline'),
+                      )),
+              if (_isTranscribing)
+                OutlinedButton.icon(
+                  onPressed: () => _offlineCoordinator.cancel(),
+                  icon: const Icon(Icons.stop_circle_outlined),
+                  label: const Text('Cancel'),
+                ),
+            ]),
+            if (_offlineProgress.isNotEmpty) ...[
+              const SizedBox(height: 8),
+              Text(_offlineProgress),
+              const LinearProgressIndicator(),
+            ],
+            const SizedBox(height: 8),
+            const Text(
+                'Offline transcription stays on this device. No cloud fallback.'),
+          ],
           const SizedBox(height: 16),
           ReadingTextScale(
             child: _SermonInsightCard(
@@ -555,10 +703,7 @@ class _SermonReviewScreenState extends State<SermonReviewScreen> {
                       ? 'Regenerate Summary'
                       : 'Generate Summary',
               disabledText: insightDisabledText,
-              onPressed: hasAudio &&
-                      sermonCloudAvailable &&
-                      !_isSummarizing &&
-                      hasTranscript
+              onPressed: sermonCloudAvailable && !_processing && hasTranscript
                   ? _generateSummary
                   : null,
               onCopy: (note.insight?.hasContent ?? false) ||
@@ -583,10 +728,9 @@ class _SermonReviewScreenState extends State<SermonReviewScreen> {
               hasTranscript: hasTranscript,
               disabledText: outlineDisabledText,
               isGenerating: _isGeneratingOutline,
-              onGenerate:
-                  hasTranscript && sermonCloudAvailable && !_isGeneratingOutline
-                      ? _generateOutline
-                      : null,
+              onGenerate: hasTranscript && sermonCloudAvailable && !_processing
+                  ? _generateOutline
+                  : null,
               onCopy: note.outline?.hasContent ?? false ? _copyOutline : null,
               onShare: note.outline?.hasContent ?? false ? _shareOutline : null,
             ),
@@ -664,11 +808,7 @@ class _SermonReviewScreenState extends State<SermonReviewScreen> {
   }
 
   bool get _sermonCloudProcessingAvailable {
-    final explicit = Env.sermonApiUrl.trim();
-    if (explicit.isEmpty) return false;
-
-    final uri = Uri.tryParse(explicit);
-    return uri != null && uri.hasScheme && uri.host.isNotEmpty;
+    return Env.hasConfiguredSermonBackend;
   }
 
   Future<bool> _ensureBackendAvailable() async {
@@ -677,7 +817,8 @@ class _SermonReviewScreenState extends State<SermonReviewScreen> {
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         content: Text(
-          'Cloud services are waking up. This may take up to a minute.',
+          'The online sermon service could not be reached. Check your connection and try again. '
+          'Your transcript and recording remain saved on this device.',
         ),
       ),
     );
@@ -755,6 +896,7 @@ class _TranscriptCard extends StatelessWidget {
     required this.onPressed,
     required this.onSeek,
     required this.onSearchChanged,
+    required this.onEdit,
   });
 
   final String? transcript;
@@ -768,6 +910,7 @@ class _TranscriptCard extends StatelessWidget {
   final VoidCallback? onPressed;
   final ValueChanged<Duration> onSeek;
   final ValueChanged<String> onSearchChanged;
+  final VoidCallback? onEdit;
 
   @override
   Widget build(BuildContext context) {
@@ -793,6 +936,15 @@ class _TranscriptCard extends StatelessWidget {
               icon: Icons.article_outlined,
               title: 'Transcript',
             ),
+            const SizedBox(height: 12),
+            Align(
+                alignment: Alignment.centerRight,
+                child: OutlinedButton.icon(
+                  onPressed: onEdit,
+                  icon: const Icon(Icons.edit_outlined),
+                  label: Text(
+                      hasTranscript ? 'Edit Transcript' : 'Add Transcript'),
+                )),
             const SizedBox(height: 12),
             if (hasSegments) ...[
               TextField(
@@ -833,15 +985,17 @@ class _TranscriptCard extends StatelessWidget {
                   height: 1.5,
                 ),
               ),
-            const SizedBox(height: 14),
-            Align(
-              alignment: Alignment.centerRight,
-              child: FilledButton.tonalIcon(
-                onPressed: onPressed,
-                icon: const Icon(Icons.auto_awesome),
-                label: Text(buttonText),
+            if (transcriptionAvailable || isTranscribing) ...[
+              const SizedBox(height: 14),
+              Align(
+                alignment: Alignment.centerRight,
+                child: FilledButton.tonalIcon(
+                  onPressed: onPressed,
+                  icon: const Icon(Icons.auto_awesome),
+                  label: Text(buttonText),
+                ),
               ),
-            ),
+            ],
           ],
         ),
       ),

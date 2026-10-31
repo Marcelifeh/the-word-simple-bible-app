@@ -111,7 +111,7 @@ class TractImageCard extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'The Word App',
+                          'The Word Bible App',
                           style: TextStyle(
                             fontSize: 32,
                             fontWeight: FontWeight.bold,

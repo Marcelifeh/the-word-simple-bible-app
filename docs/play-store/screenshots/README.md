@@ -27,7 +27,7 @@ Finished assets are written to `docs/play-store/screenshots/final/`.
 
 ## Play Console descriptions
 
-1. The Word App home dashboard showing Daily Verse, Today's Promise, Bible,
+1. The Word Bible App home dashboard showing Daily Verse, Today's Promise, Bible,
    Search, and Reading Plan.
 2. Luke 15 in the Bible reader with KJV translation controls and numbered
    verses.

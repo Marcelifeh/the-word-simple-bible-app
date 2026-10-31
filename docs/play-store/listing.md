@@ -1,8 +1,8 @@
-# The Word App - Google Play Listing
+# The Word Bible App - Google Play Listing
 
 ## Store identity
 
-- **App name:** The Word App
+- **App name:** The Word Bible App
 - **Package:** `org.thewordapp.mobile`
 - **Category:** Books & Reference
 - **Support email:** `support.thewordapp@gmail.com`
@@ -18,7 +18,7 @@ Character count: 77 of 80.
 
 **Read. Reflect. Remember. Live the Word.**
 
-The Word App is a Scripture-centered Bible companion designed to help you move beyond simply reading the Bible and build a consistent life in God's Word.
+The Word Bible App is a Scripture-centered Bible companion designed to help you move beyond simply reading the Bible and build a consistent life in God's Word.
 
 Read Scripture with offline-first access, follow a daily reading plan, and return each day for a verse, promise, and devotional reflection. Save meaningful passages, strengthen Scripture Memory, capture sermon notes and recordings, and create designs that make God's Word easy to share.
 
@@ -61,11 +61,11 @@ Read Scripture with offline-first access, follow a daily reading plan, and retur
 
 Most personal content remains on your device. No account is required, and local reminders continue to work offline.
 
-The Word App helps you read Scripture, reflect on truth, remember God's Word, and carry it into everyday life.
+The Word Bible App helps you read Scripture, reflect on truth, remember God's Word, and carry it into everyday life.
 
 ## Initial release notes
 
-Initial internal-testing release of The Word App.
+Initial internal-testing release of The Word Bible App.
 
 Includes Bible reading, daily verses, devotionals, reading plans, LOGOS Notes, Scripture Memory, Gospel Tracts, Word Studio, local reminders, narration, search, and offline personal progress.
 

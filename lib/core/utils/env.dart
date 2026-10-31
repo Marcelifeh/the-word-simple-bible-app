@@ -33,6 +33,15 @@ class Env {
     defaultValue: false,
   );
 
+  /// The local development fallback is not an available cloud service.
+  static bool get hasConfiguredSermonBackend {
+    const explicit = String.fromEnvironment('SERMON_API_URL');
+    final uri = Uri.tryParse(explicit.trim());
+    return uri != null &&
+        (uri.scheme == 'https' || uri.scheme == 'http') &&
+        uri.host.isNotEmpty;
+  }
+
   static bool get hasBackendApiUrl {
     final uri = Uri.tryParse(sermonApiUrl.trim());
     return uri != null && uri.hasScheme && uri.host.isNotEmpty;

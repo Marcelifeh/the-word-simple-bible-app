@@ -48,7 +48,7 @@ The app does not request Android's broad photo/video-library permissions. `image
 | Scripture Memory and review history | Yes | No | None |
 | Prayer reflections | Yes | Only through user-directed sharing | Destination selected by user |
 | Notification preferences/inbox | Yes | No | Local notification engine; no FCM token |
-| Sermon notes/timestamps | Yes | Transcript text only on explicit summary/outline action | The Word App backend on Render |
+| Sermon notes/timestamps | Yes | Transcript text only on explicit summary/outline action | The Word Bible App backend on Render |
 | Sermon recordings | Yes | No | Cloud transcription disabled in app and server release configuration |
 | Word Studio source images | Yes | No | Finished export leaves only when user shares it |
 | Generated exports | Yes or temporary | Only through user-directed sharing | Destination selected by user |
@@ -79,7 +79,7 @@ The app does not request Android's broad photo/video-library permissions. `image
 ## Submission blockers to resolve in Play Console
 
 - Verify operational log retention in the active Render service.
-- Confirm the legal/developer name entered in Play Console matches the identity represented by The Word App policy.
+- Confirm the legal/developer name entered in Play Console matches the identity represented by The Word Bible App policy.
 - Select the intended target age groups based on actual product marketing; do not infer a child-directed audience merely from religious content.
 - Rebuild the AAB after the in-app policy and launcher-name update, then repeat the merged-manifest check.
 

@@ -9,6 +9,7 @@ import io.flutter.plugin.common.MethodChannel
 class MainActivity : FlutterActivity() {
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
+        OfflineWhisperChannel(flutterEngine, applicationContext)
         MethodChannel(
             flutterEngine.dartExecutor.binaryMessenger,
             "the_word/notification_settings",

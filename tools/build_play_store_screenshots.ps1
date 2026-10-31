@@ -170,7 +170,7 @@ foreach ($item in $screenshots) {
             $headlineFormat.FormatFlags = [System.Drawing.StringFormatFlags]::NoWrap
             try {
                 $graphics.DrawString(
-                    "THE WORD APP",
+                    "THE WORD BIBLE APP",
                     $brandFont,
                     [System.Drawing.SolidBrush]::new($accent),
                     [System.Drawing.RectangleF]::new(72, 42, 936, 38)

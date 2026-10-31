@@ -26,7 +26,8 @@ class SermonEditorScreen extends StatefulWidget {
   State<SermonEditorScreen> createState() => _SermonEditorScreenState();
 }
 
-class _SermonEditorScreenState extends State<SermonEditorScreen> {
+class _SermonEditorScreenState extends State<SermonEditorScreen>
+    with WidgetsBindingObserver {
   late final TextEditingController _titleController;
   late final TextEditingController _preacherController;
   late final _SermonContentController _contentController;
@@ -44,6 +45,8 @@ class _SermonEditorScreenState extends State<SermonEditorScreen> {
   bool _didCheckDraft = false;
   bool _skipDraftPersistOnDispose = false;
   bool _isRecording = false;
+  bool _isStartingRecording = false;
+  bool _isStoppingRecording = false;
   bool _isPlayingAudio = false;
   bool _isSaving = false;
   bool _isDisposing = false;
@@ -97,6 +100,7 @@ class _SermonEditorScreenState extends State<SermonEditorScreen> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     _workingNote = widget.note ?? SermonNote();
     _titleController = TextEditingController(text: _workingNote.title);
     _preacherController = TextEditingController(text: _workingNote.preacher);
@@ -157,6 +161,7 @@ class _SermonEditorScreenState extends State<SermonEditorScreen> {
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     _isDisposing = true;
     _draftAutosaveTimer?.cancel();
     _recordingTimer?.cancel();
@@ -375,14 +380,17 @@ class _SermonEditorScreenState extends State<SermonEditorScreen> {
   }
 
   Future<void> _startRecording() async {
-    final hasPermission = await _recordingService.hasPermission();
-    if (!hasPermission) {
-      if (!mounted) return;
-      await _showMicrophonePermissionDialog();
-      return;
-    }
-
+    if (_isStartingRecording || _isStoppingRecording) return;
+    _isStartingRecording = true;
     try {
+      final hasPermission = await _recordingService.hasPermission();
+      if (!mounted) return;
+      if (!hasPermission) {
+        if (!mounted) return;
+        await _showMicrophonePermissionDialog();
+        return;
+      }
+
       final nextSequence = nextSermonRecordingClipSequence(
         _workingNote.recordingClips,
       );
@@ -400,6 +408,10 @@ class _SermonEditorScreenState extends State<SermonEditorScreen> {
       _pendingRecordingClip = tempClip;
 
       final path = await _recordingService.start(sermonId: _workingNote.id);
+      if (!mounted) {
+        await _recordingService.stop();
+        return;
+      }
       if (path.isEmpty) {
         _pendingRecordingClip = null;
         throw StateError('Recorder returned an empty file path');
@@ -425,17 +437,34 @@ class _SermonEditorScreenState extends State<SermonEditorScreen> {
       await _persistDraft(clearIfEmpty: false);
       _scheduleDraftAutosave();
     } catch (e) {
+      debugPrint('Recording unavailable: $e');
       _pendingRecordingClip = null;
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Recording could not start: $e')),
+        const SnackBar(
+            content: Text(
+          'Microphone unavailable. End your call or close other recording apps, then try again. You can still read and write notes.',
+        )),
       );
+    } finally {
+      _isStartingRecording = false;
+    }
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state != AppLifecycleState.resumed && _isRecording) {
+      // Finalize the current clip when a call or another app takes over.
+      // Recording resumes only through an explicit user action.
+      unawaited(_stopRecording());
     }
   }
 
   Future<void> _stopRecording() async {
+    if (_isStoppingRecording) return;
     final pending = _pendingRecordingClip;
     if (pending == null) return;
+    _isStoppingRecording = true;
     final startedAt = _recordingStartedAt;
     final elapsed = startedAt == null
         ? _recordingElapsed
@@ -511,6 +540,8 @@ class _SermonEditorScreenState extends State<SermonEditorScreen> {
         );
       }
       _scheduleDraftAutosave();
+    } finally {
+      _isStoppingRecording = false;
     }
   }
 
@@ -529,7 +560,7 @@ class _SermonEditorScreenState extends State<SermonEditorScreen> {
         return AlertDialog(
           title: const Text('Microphone access needed'),
           content: const Text(
-            'The Word needs microphone access to record sermon audio. '
+            'The Word Bible App needs microphone access to record sermon audio. '
             'Allow microphone access in your browser or device settings, then try again.',
           ),
           actions: [

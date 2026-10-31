@@ -54,8 +54,8 @@ class NotificationPermissionCard extends StatelessWidget {
           const SizedBox(height: 10),
           Text(
             blocked
-                ? 'Open device settings to allow reminders from The Word App.'
-                : 'Allow The Word App to remind you about Scripture, '
+                ? 'Open device settings to allow reminders from The Word Bible App.'
+                : 'Allow The Word Bible App to remind you about Scripture, '
                     'devotionals, prayer, and memory reviews.',
             style: theme.textTheme.bodyMedium?.copyWith(
               color: scheme.onSurfaceVariant,

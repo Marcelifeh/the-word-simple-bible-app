@@ -1,4 +1,4 @@
-# The Word App — Play Console Final Answers
+# The Word Bible App — Play Console Final Answers
 
 Applies to package `org.thewordapp.mobile`, release candidate `1.0.3+4`.
 

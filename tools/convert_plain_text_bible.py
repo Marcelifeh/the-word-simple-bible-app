@@ -2,7 +2,7 @@
 convert_plain_text_bible.py
 ============================
 Converts a plain-text Bible download (eBible.org UTF-8 format) into
-the chapter-split JSON structure used by The Word app.
+the chapter-split JSON structure used by The Word Bible App.
 
 Supported input formats (auto-detected):
   1. "Genesis 1:1  Text here..."     ← eBible plain-text
@@ -196,7 +196,7 @@ def main() -> int:
     import argparse
 
     parser = argparse.ArgumentParser(
-        description="Convert a plain-text Bible (eBible.org) into chapter-split JSON for The Word app."
+        description="Convert a plain-text Bible (eBible.org) into chapter-split JSON for The Word Bible App."
     )
     parser.add_argument("input", help="Path to the plain-text Bible file (.txt)")
     parser.add_argument(

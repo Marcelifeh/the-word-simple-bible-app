@@ -519,10 +519,6 @@ class AppState extends ChangeNotifier with WidgetsBindingObserver {
   Timer? _dailyDevotionalRolloverTimer;
 
   Future<void> init() async {
-    await narrationService.initialize();
-    await narrationPreferencesService.init();
-    await narrationController.hydratePreferences();
-    narrationLifecycleObserver.attach();
     await favoritesRepo.init();
     await notesRepo.init();
     await sermonNoteRepo.init();
@@ -544,7 +540,26 @@ class AppState extends ChangeNotifier with WidgetsBindingObserver {
     }
     _loadSettings();
     _scheduleDailyDevotionalRollover();
-    await initializeNotificationsForStartup();
+  }
+
+  /// Optional platform services must never hold the reading interface hostage.
+  void initializeOptionalServices() {
+    unawaited(_initializeNarrationForStartup());
+    unawaited(initializeNotificationsForStartup());
+  }
+
+  Future<void> _initializeNarrationForStartup() async {
+    try {
+      narrationLifecycleObserver.attach();
+      await narrationPreferencesService.init();
+      await narrationService.initialize().timeout(const Duration(seconds: 8));
+      await narrationController
+          .hydratePreferences()
+          .timeout(const Duration(seconds: 8));
+    } catch (error, stackTrace) {
+      debugPrint('Startup narration unavailable: $error');
+      debugPrintStack(stackTrace: stackTrace);
+    }
   }
 
   @visibleForTesting

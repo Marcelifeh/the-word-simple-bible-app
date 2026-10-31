@@ -83,6 +83,7 @@ android {
     namespace = "org.thewordapp.mobile"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
+    externalNativeBuild { cmake { path = file("src/main/cpp/CMakeLists.txt") } }
 
     compileOptions {
         isCoreLibraryDesugaringEnabled = true
@@ -117,6 +118,11 @@ android {
     }
 
     buildTypes {
+        getByName("debug") {
+            // Install alongside the Play Store app without a signing conflict.
+            applicationIdSuffix = ".debug"
+            versionNameSuffix = "-debug"
+        }
         release {
             if (keystorePropertiesFile.exists()) {
                 signingConfig = signingConfigs.getByName("release")

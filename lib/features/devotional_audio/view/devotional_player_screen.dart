@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../../../core/narration/models/narration_state.dart';
+import '../../../core/narration/services/narration_controller.dart';
 import '../../../shared/state/app_state.dart';
 import '../../devotional/model/devotional_model.dart';
 import '../models/devotional_audio_session.dart';
@@ -21,6 +22,7 @@ class DevotionalPlayerScreen extends StatefulWidget {
 
 class _DevotionalPlayerScreenState extends State<DevotionalPlayerScreen> {
   late DevotionalAudioService _audioService;
+  late NarrationController _narrationController;
   bool _initialized = false;
 
   static const _stageGradients = {
@@ -51,11 +53,17 @@ class _DevotionalPlayerScreenState extends State<DevotionalPlayerScreen> {
           stage: DevotionalResumeStage.audio,
         );
       });
-      _audioService = DevotionalAudioService(state.narrationController);
+      _narrationController = state.narrationController;
+      _narrationController.addListener(_onPlaybackChange);
+      _audioService = DevotionalAudioService(_narrationController);
       _audioService.startDevotional(widget.devotional);
       _audioService.addListener(_onServiceChange);
       _initialized = true;
     }
+  }
+
+  void _onPlaybackChange() {
+    if (mounted) setState(() {});
   }
 
   void _onServiceChange() {
@@ -82,6 +90,7 @@ class _DevotionalPlayerScreenState extends State<DevotionalPlayerScreen> {
   void dispose() {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark);
     _audioService.removeListener(_onServiceChange);
+    _narrationController.removeListener(_onPlaybackChange);
     _audioService.dispose();
     super.dispose();
   }
@@ -168,8 +177,8 @@ class _DevotionalPlayerScreenState extends State<DevotionalPlayerScreen> {
                 child: Stack(
                   alignment: Alignment.center,
                   children: [
-                    const Positioned.fill(
-                      child: DevotionalWaveform(isPlaying: true),
+                    Positioned.fill(
+                      child: DevotionalWaveform(isPlaying: isPlaying),
                     ),
                     Padding(
                       padding: const EdgeInsets.fromLTRB(28, 18, 28, 24),
@@ -380,35 +389,41 @@ class _PlayButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkResponse(
-      onTap: isLoading ? null : onPressed,
-      radius: 40,
-      child: Container(
-        width: 64,
-        height: 64,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          border: Border.all(
-            color: Colors.white.withValues(alpha: 0.28),
-            width: 1.5,
-          ),
-          color: Colors.white.withValues(alpha: 0.13),
-        ),
-        child: isLoading
-            ? const Padding(
-                padding: EdgeInsets.all(20),
-                child: CircularProgressIndicator(
-                  strokeWidth: 2,
-                  color: Colors.white,
-                ),
-              )
-            : Icon(
-                isPlaying ? Icons.pause_rounded : Icons.play_arrow_rounded,
-                color: Colors.white,
-                size: 34,
+    return Tooltip(
+        message: isLoading
+            ? 'Loading narration'
+            : isPlaying
+                ? 'Pause narration'
+                : 'Play narration',
+        child: InkResponse(
+          onTap: isLoading ? null : onPressed,
+          radius: 40,
+          child: Container(
+            width: 64,
+            height: 64,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              border: Border.all(
+                color: Colors.white.withValues(alpha: 0.28),
+                width: 1.5,
               ),
-      ),
-    );
+              color: Colors.white.withValues(alpha: 0.13),
+            ),
+            child: isLoading
+                ? const Padding(
+                    padding: EdgeInsets.all(20),
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      color: Colors.white,
+                    ),
+                  )
+                : Icon(
+                    isPlaying ? Icons.pause_rounded : Icons.play_arrow_rounded,
+                    color: Colors.white,
+                    size: 34,
+                  ),
+          ),
+        ));
   }
 }
 

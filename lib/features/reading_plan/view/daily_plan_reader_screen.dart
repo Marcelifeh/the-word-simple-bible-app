@@ -18,11 +18,13 @@ class DailyPlanReaderScreen extends StatefulWidget {
     required this.passages,
     required this.translation,
     this.onMarkComplete,
+    this.readingDate,
   });
 
   final List<DailyPlanPassage> passages;
   final BibleTranslation translation;
   final Future<void> Function()? onMarkComplete;
+  final DateTime? readingDate;
 
   @override
   State<DailyPlanReaderScreen> createState() => _DailyPlanReaderScreenState();
@@ -33,6 +35,9 @@ class _DailyPlanReaderScreenState extends State<DailyPlanReaderScreen> {
   late Future<List<DailyPlanChapterContent>> _chaptersFuture;
   bool _didInit = false;
   bool _markedComplete = false;
+  bool get _isToday =>
+      widget.readingDate == null ||
+      DateUtils.isSameDay(widget.readingDate, DateTime.now());
 
   @override
   void initState() {
@@ -135,7 +140,10 @@ class _DailyPlanReaderScreenState extends State<DailyPlanReaderScreen> {
     if (!mounted) return;
 
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text("Today's reading marked complete.")),
+      SnackBar(
+          content: Text(_isToday
+              ? "Today's reading marked complete."
+              : 'Reading marked complete.')),
     );
 
     Navigator.of(context).maybePop();
@@ -147,7 +155,12 @@ class _DailyPlanReaderScreenState extends State<DailyPlanReaderScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Today's Reading"),
+        title: Text(
+            _isToday
+                ? "Today's Reading"
+                : 'Reading · ${MaterialLocalizations.of(context).formatMediumDate(widget.readingDate!)}',
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis),
         actions: [
           FutureBuilder<List<DailyPlanChapterContent>>(
             future: _chaptersFuture,
@@ -180,7 +193,7 @@ class _DailyPlanReaderScreenState extends State<DailyPlanReaderScreen> {
                   return Padding(
                     padding: const EdgeInsets.all(24),
                     child: Text(
-                      'Could not load today\'s reading.\n${snapshot.error}',
+                      'Could not load this reading.\n${snapshot.error}',
                       style: theme.textTheme.bodyLarge,
                     ),
                   );
@@ -190,7 +203,7 @@ class _DailyPlanReaderScreenState extends State<DailyPlanReaderScreen> {
                     snapshot.data ?? const <DailyPlanChapterContent>[];
                 if (chapters.isEmpty) {
                   return const Center(
-                    child: Text('No reading passages found for today.'),
+                    child: Text('No passages found for this reading.'),
                   );
                 }
 
@@ -201,6 +214,7 @@ class _DailyPlanReaderScreenState extends State<DailyPlanReaderScreen> {
                     if (index == chapters.length) {
                       return _MarkCompleteSection(
                         markedComplete: _markedComplete,
+                        isToday: _isToday,
                         onPressed:
                             _markedComplete ? null : () => _markComplete(),
                       );
@@ -583,10 +597,12 @@ class _MarkCompleteSection extends StatelessWidget {
   const _MarkCompleteSection({
     required this.markedComplete,
     required this.onPressed,
+    required this.isToday,
   });
 
   final bool markedComplete;
   final VoidCallback? onPressed;
+  final bool isToday;
 
   @override
   Widget build(BuildContext context) {
@@ -615,8 +631,12 @@ class _MarkCompleteSection extends StatelessWidget {
           const SizedBox(height: 12),
           Text(
             markedComplete
-                ? 'Today\'s reading is complete'
-                : 'Finished today\'s reading?',
+                ? (isToday
+                    ? 'Today\'s reading is complete'
+                    : 'This reading is complete')
+                : (isToday
+                    ? 'Finished today\'s reading?'
+                    : 'Finished this reading?'),
             textAlign: TextAlign.center,
             style: theme.textTheme.titleMedium?.copyWith(
               fontWeight: FontWeight.w800,
@@ -643,7 +663,11 @@ class _MarkCompleteSection extends StatelessWidget {
                     ? Icons.check_rounded
                     : Icons.check_circle_outline_rounded,
               ),
-              label: Text(markedComplete ? 'Completed' : 'Mark Today Complete'),
+              label: Text(markedComplete
+                  ? 'Completed'
+                  : isToday
+                      ? 'Mark Today Complete'
+                      : 'Mark Day Complete'),
             ),
           ),
         ],

@@ -7,7 +7,7 @@ class LegalDocuments {
 Effective Date: August 23, 2026
 Last Updated: August 23, 2026
 
-The Word App (package org.thewordapp.mobile) is published by The Word App. This policy describes the corrected production release and its optional online services.
+The Word Bible App (package org.thewordapp.mobile) is published by The Word Bible App. This policy describes the corrected production release and its optional online services.
 
 Public policy: https://marcelifeh.github.io/the-word-simple-bible-app/privacy/
 
@@ -27,7 +27,7 @@ When requested commentary is not bundled or cached, the app may send Scripture r
 
 Recording is started only when you choose it and grant microphone permission. Recordings are stored locally and may be included in a portable backup. Cloud audio transcription is disabled in this production release, so sermon recordings are not uploaded for transcription.
 
-If an existing transcript is available, you may explicitly request a summary or outline. Immediately before submission, the app explains that the transcript text will be sent over HTTPS to The Word App backend; nothing is sent if you cancel. Summary and outline processing is optional. The current server processes the request to return the result and does not intentionally store the transcript body in its application database.
+If an existing transcript is available, you may explicitly request a summary or outline. Immediately before submission, the app explains that the transcript text will be sent over HTTPS to The Word Bible App backend; nothing is sent if you cancel. Summary and outline processing is optional. The current server processes the request to return the result and does not intentionally store the transcript body in its application database.
 
 5. Photos and Word Studio
 
@@ -73,7 +73,7 @@ Optional online processing may occur where Render and the configured service pro
 
 15. Children's Privacy
 
-The Word App is a general teen and adult Bible-study and reference product and is not specifically designed for young children. It has no child account system and no account-based collection.
+The Word Bible App is a general teen and adult Bible-study and reference product and is not specifically designed for young children. It has no child account system and no account-based collection.
 
 16. Changes
 
@@ -91,11 +91,11 @@ support.thewordapp@gmail.com
     content: '''
 Last Updated: August 2026
 
-By using The Word App, you agree to the following terms:
+By using The Word Bible App, you agree to the following terms:
 
 1. Purpose of the App
 
-The Word App exists to help users engage with Scripture, devotionals, prayer tools, sermon notes, and Gospel resources.
+The Word Bible App exists to help users engage with Scripture, devotionals, prayer tools, sermon notes, and Gospel resources.
 
 2. Spiritual Content
 
@@ -126,7 +126,7 @@ Users must not:
 
 5. Intellectual Property
 
-The app design, branding, and original content belong to The Word App unless otherwise stated.
+The app design, branding, and original content belong to The Word Bible App unless otherwise stated.
 
 Bible translations may be subject to separate licensing terms.
 
@@ -145,15 +145,15 @@ Continued use of the app constitutes agreement to these terms.
   );
 
   static const about = LegalDocument(
-    title: 'About The Word App',
+    title: 'About The Word Bible App',
     content: '''
-The Word App
+The Word Bible App
 
 Experience the Living Word
 
 Powered by LOGOS
 
-The Word App is a modern spiritual platform designed to help people engage deeply with Scripture through technology, reflection, and daily spiritual growth.
+The Word Bible App is a modern spiritual platform designed to help people engage deeply with Scripture through technology, reflection, and daily spiritual growth.
 
 Features include:
 • Bible reading

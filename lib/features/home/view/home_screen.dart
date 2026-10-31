@@ -91,13 +91,11 @@ class WeeklyHomeStats {
   final bool todayScriptureMemory;
 
   /// The inclusive last day of the week (Saturday 00:00), for display only.
-  DateTime get weekEndDate =>
-      nextWeekStart.subtract(const Duration(days: 1));
+  DateTime get weekEndDate => nextWeekStart.subtract(const Duration(days: 1));
 
   /// Fraction of days with Bible reading completed this week.
   /// Kept separate so a dedicated reading-consistency screen can use it.
-  double get readingConsistency =>
-      (readingDays / 7.0).clamp(0.0, 1.0);
+  double get readingConsistency => (readingDays / 7.0).clamp(0.0, 1.0);
 }
 
 class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
@@ -260,13 +258,16 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     await _loadWeeklyStats();
   }
 
-  Future<void> _openTodayCombinedReading(DailyReading reading) async {
+  Future<void> _openCombinedReading(DailyReading reading,
+      {DateTime? planDate}) async {
+    final selectedDate = planDate ?? _todayOnly;
     final passages = _dailyPlanPassages(reading);
     if (passages.isEmpty) return;
 
     final state = AppScope.of(context);
     if (reading.passages.isNotEmpty) {
-      await state.markReadingPlanPassageOpened(reading.passages.first);
+      await state.markReadingPlanPassageOpened(reading.passages.first,
+          openedAt: selectedDate);
     }
     if (!mounted) return;
 
@@ -275,8 +276,10 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
       DailyPlanReaderScreen(
         passages: passages,
         translation: state.translation,
+        readingDate: selectedDate,
         onMarkComplete: () async {
-          await state.markReadingPlanCompleted(passages: reading.passages);
+          await state.markReadingPlanCompleted(
+              planDate: selectedDate, passages: reading.passages);
           await _loadWeeklyStats();
         },
       ),
@@ -792,11 +795,17 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     );
     final readingPlanIndicator =
         _readingPlanIndicator(state, readingPlanService);
-    final resumeDevotional = state.currentDevotional;
+    // Prefer the active unfinished reflection, including today's devotional.
+    // The dashboard and continuation card must not disagree about what to resume.
+    final resumeDevotional =
+        state.currentDevotional?.id == todayDevotional.id &&
+                todayDevotionalProgress > 0 &&
+                todayDevotionalProgress < 0.999
+            ? todayDevotional
+            : state.currentDevotional;
     final resumeDate = state.currentDevotionalDate ?? _todayOnly;
     final resumeProgress = state.devotionalProgressForDate(resumeDate);
     final showContinueDevotional = resumeDevotional != null &&
-        resumeDevotional.id != todayDevotional.id &&
         resumeProgress > 0 &&
         resumeProgress < 0.999;
     final todayEncouragement = _todayEncouragementFor(
@@ -874,7 +883,15 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                   devotionalProgress: todayDevotionalProgress,
                   isContinuingDevotional: todayDevotionalProgress > 0 &&
                       todayDevotionalProgress < 0.999,
-                  onOpenReading: () => _openTodayCombinedReading(todayReading),
+                  onOpenReading: () => _openCombinedReading(todayReading),
+                  onOpenMissedReading: readingPlanIndicator?.missedDate == null
+                      ? null
+                      : () {
+                          final date = readingPlanIndicator!.missedDate!;
+                          _openCombinedReading(
+                              readingPlanService.getReadingForDate(date),
+                              planDate: date);
+                        },
                   onOpenVerse: _openDailyVerse,
                   onOpenDevotional: () => _openDevotional(
                     todayDevotional,
@@ -1433,8 +1450,18 @@ class _WeeklyInsightsCard extends StatelessWidget {
   /// Formats a DateTime as e.g. "Aug 2".
   String _shortDate(DateTime d) {
     const months = [
-      'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-      'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec',
     ];
     return '${months[d.month - 1]} ${d.day}';
   }
@@ -1453,8 +1480,7 @@ class _WeeklyInsightsCard extends StatelessWidget {
     final dividerColor = accent.withValues(alpha: isLight ? 0.20 : 0.15);
 
     // Date-range label: "Aug 2–8"
-    final dateRange =
-        '${_shortDate(stats.weekStart)}–${stats.weekEndDate.day}';
+    final dateRange = '${_shortDate(stats.weekStart)}–${stats.weekEndDate.day}';
 
     // Percentage label inside the ring
     final progressLabel = '${(activityProgress * 100).round()}%';
@@ -1628,8 +1654,7 @@ class _WeeklyInsightsCard extends StatelessWidget {
               ),
               _WeekMetricChip(
                 icon: Icons.mic_rounded,
-                label:
-                    _countLabel(stats.sermonsCreated, 'Sermon', 'Sermons'),
+                label: _countLabel(stats.sermonsCreated, 'Sermon', 'Sermons'),
                 accent: accent,
                 onTap: onOpenSermons,
               ),
@@ -1689,8 +1714,6 @@ class _WeeklyInsightsCard extends StatelessWidget {
     );
   }
 }
-
-
 
 class _WeekMetricChip extends StatelessWidget {
   const _WeekMetricChip({
@@ -1858,6 +1881,7 @@ class _SpiritualDashboardPager extends StatelessWidget {
     required this.devotionalProgress,
     required this.isContinuingDevotional,
     required this.onOpenReading,
+    required this.onOpenMissedReading,
     required this.onOpenVerse,
     required this.onOpenDevotional,
     required this.onPageChanged,
@@ -1874,6 +1898,7 @@ class _SpiritualDashboardPager extends StatelessWidget {
   final double devotionalProgress;
   final bool isContinuingDevotional;
   final VoidCallback onOpenReading;
+  final VoidCallback? onOpenMissedReading;
   final VoidCallback onOpenVerse;
   final VoidCallback onOpenDevotional;
   final ValueChanged<int> onPageChanged;
@@ -1906,6 +1931,7 @@ class _SpiritualDashboardPager extends StatelessWidget {
                   readingDay: readingDay,
                   planStatus: planStatus,
                   onOpenReading: onOpenReading,
+                  onOpenMissedReading: onOpenMissedReading,
                 ),
               ),
               Padding(
@@ -2076,12 +2102,14 @@ class _ReadingPlanDashboardCard extends StatelessWidget {
     required this.readingDay,
     required this.planStatus,
     required this.onOpenReading,
+    required this.onOpenMissedReading,
   });
 
   final DailyReading reading;
   final int readingDay;
   final _ReadingPlanIndicator? planStatus;
   final VoidCallback onOpenReading;
+  final VoidCallback? onOpenMissedReading;
 
   @override
   Widget build(BuildContext context) {
@@ -2124,6 +2152,7 @@ class _ReadingPlanDashboardCard extends StatelessWidget {
                 _StatusPill(
                   text: 'Missed D${planStatus!.missedDayNumber}',
                   color: const Color(0xFFFF6B8A),
+                  onTap: onOpenMissedReading,
                 ),
               ],
             ],
@@ -2688,30 +2717,37 @@ class _StatusPill extends StatelessWidget {
   const _StatusPill({
     required this.text,
     required this.color,
+    this.onTap,
   });
 
   final String text;
   final Color color;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 5),
-      decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.12),
-        borderRadius: BorderRadius.circular(999),
-        border: Border.all(color: color.withValues(alpha: 0.26)),
-      ),
-      child: Text(
-        text,
-        style: TextStyle(
-          color: color,
-          fontSize: 12,
-          fontWeight: FontWeight.w800,
-          fontFamily: 'Poppins',
-        ),
-      ),
-    );
+    return Semantics(
+        button: onTap != null,
+        child: InkWell(
+            onTap: onTap,
+            borderRadius: BorderRadius.circular(999),
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 5),
+              decoration: BoxDecoration(
+                color: color.withValues(alpha: 0.12),
+                borderRadius: BorderRadius.circular(999),
+                border: Border.all(color: color.withValues(alpha: 0.26)),
+              ),
+              child: Text(
+                text,
+                style: TextStyle(
+                  color: color,
+                  fontSize: 12,
+                  fontWeight: FontWeight.w800,
+                  fontFamily: 'Poppins',
+                ),
+              ),
+            )));
   }
 }
 

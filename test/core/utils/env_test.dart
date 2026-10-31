@@ -2,6 +2,10 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:simple_bible_app/core/utils/env.dart';
 
 void main() {
+  test('default localhost fallback does not advertise an online sermon service',
+      () {
+    expect(Env.hasConfiguredSermonBackend, isFalse);
+  });
   group('release API URL validation', () {
     test('accepts the production Render HTTPS endpoint', () {
       expect(

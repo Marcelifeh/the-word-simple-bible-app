@@ -1667,7 +1667,7 @@ class _TractImageDesignerScreenState extends State<TractImageDesignerScreen> {
             await Share.shareXFiles(
               [file],
               subject: widget.title,
-              text: 'Shared from The Word App ✨',
+              text: 'Shared from The Word Bible App ✨',
             );
           } catch (e) {
             // Fallback to download if Web Share is unsupported or fails
@@ -1694,7 +1694,7 @@ class _TractImageDesignerScreenState extends State<TractImageDesignerScreen> {
           await Share.shareXFiles(
             [XFile(file.path, mimeType: 'image/png')],
             subject: widget.title,
-            text: 'Shared from The Word App ✨',
+            text: 'Shared from The Word Bible App ✨',
           );
         } else {
           // Non-web download / save to temp + notification
@@ -1710,7 +1710,7 @@ class _TractImageDesignerScreenState extends State<TractImageDesignerScreen> {
                     Share.shareXFiles(
                       [XFile(file.path, mimeType: 'image/png')],
                       subject: widget.title,
-                      text: 'Shared from The Word App ✨',
+                      text: 'Shared from The Word Bible App ✨',
                     );
                   },
                 ),

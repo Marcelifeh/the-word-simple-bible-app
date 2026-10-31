@@ -36,7 +36,7 @@ Package: `org.thewordapp.mobile`
 
 ## Store listing
 
-- [x] App name prepared: The Word App.
+- [x] App name prepared: The Word Bible App.
 - [x] Short description prepared and under 80 characters.
 - [x] Full description prepared.
 - [x] 512x512 32-bit Play icon prepared.

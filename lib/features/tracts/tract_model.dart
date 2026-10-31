@@ -69,7 +69,7 @@ What must you do?
 
 This is your moment. The door is open.''',
       shareText:
-          'Have you heard the most important message ever? 🙏\n\n"For God so loved the world that he gave his one and only Son, that whoever believes in him shall not perish but have eternal life." — John 3:16\n\nGod loves you and has a plan for your life.\n\nRead the full Good News in The Word app 👇\n[your app link]',
+          'Have you heard the most important message ever? 🙏\n\n"For God so loved the world that he gave his one and only Son, that whoever believes in him shall not perish but have eternal life." — John 3:16\n\nGod loves you and has a plan for your life.\n\nRead the full Good News in The Word Bible App 👇\n[your app link]',
     ),
     TractModel(
       id: 'gods_love',
@@ -96,7 +96,7 @@ The Father ran to the prodigal son before he finished his sentence (Luke 15:20).
 
 Come home.''',
       shareText:
-          'You are not too broken to be loved. ❤️\n\n"But God demonstrates his own love for us in this: While we were still sinners, Christ died for us." — Romans 5:8\n\nShare this with someone who needs to hear it today.\n\nRead more in The Word app 👇\n[your app link]',
+          'You are not too broken to be loved. ❤️\n\n"But God demonstrates his own love for us in this: While we were still sinners, Christ died for us." — Romans 5:8\n\nShare this with someone who needs to hear it today.\n\nRead more in The Word Bible App 👇\n[your app link]',
     ),
     TractModel(
       id: 'how_to_be_saved',
@@ -135,7 +135,7 @@ Pray this now:
 
 Welcome to the family.''',
       shareText:
-          'What if four truths could change your life forever? 📖\n\n"Everyone who calls on the name of the Lord will be saved." — Romans 10:13\n\nSalvation is a free gift. Here\'s how to receive it:\n\nRead in The Word app 👇\n[your app link]',
+          'What if four truths could change your life forever? 📖\n\n"Everyone who calls on the name of the Lord will be saved." — Romans 10:13\n\nSalvation is a free gift. Here\'s how to receive it:\n\nRead in The Word Bible App 👇\n[your app link]',
     ),
   ];
 }

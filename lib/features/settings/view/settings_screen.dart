@@ -273,7 +273,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 ),
                 _SettingsTile(
                   icon: Icons.info_outline,
-                  title: 'About The Word App',
+                  title: 'About The Word Bible App',
                   onTap: () {
                     Navigator.push(
                       context,
@@ -291,7 +291,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           const SizedBox(height: 32),
           Center(
             child: Text(
-              'The Word App • Powered by LOGOS',
+              'The Word Bible App • Powered by LOGOS',
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
                     color: Colors.white54,
                   ),

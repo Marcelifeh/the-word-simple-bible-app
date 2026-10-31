@@ -143,7 +143,7 @@ ${d.finalRevelation}
 ${d.prayer}
 
 —————
-📖 The Word – The Word App
+📖 The Word – The Word Bible App
 https://play.google.com/store/apps/details?id=com.theword.simplebible''';
     Share.share(text, subject: d.title);
   }

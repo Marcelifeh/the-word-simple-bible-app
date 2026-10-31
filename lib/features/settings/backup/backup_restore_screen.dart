@@ -36,8 +36,8 @@ class _BackupRestoreScreenState extends State<BackupRestoreScreen> {
       setState(() => _status = 'Backup created. Choose where to save it.');
       await Share.shareXFiles(
         [XFile(file.path, mimeType: 'application/zip')],
-        subject: 'The Word App Backup',
-        text: 'Portable backup of my The Word App data.',
+        subject: 'The Word Bible App Backup',
+        text: 'Portable backup of my The Word Bible App data.',
       );
     } on AppBackupException catch (error) {
       if (mounted) setState(() => _status = error.message);
@@ -98,7 +98,7 @@ class _BackupRestoreScreenState extends State<BackupRestoreScreen> {
         builder: (context) => AlertDialog(
           title: const Text('Restore complete'),
           content: const Text(
-            'Your backup has been restored successfully. The Word App will now '
+            'Your backup has been restored successfully. The Word Bible App will now '
             'close so all restored data can be loaded cleanly. Open it again '
             'from your Home screen or Google Play.',
           ),
@@ -168,7 +168,7 @@ class _BackupRestoreScreenState extends State<BackupRestoreScreen> {
               leading: const Icon(Icons.restore_rounded),
               title: const Text('Restore Backup'),
               subtitle: const Text(
-                'Validate and restore a previous The Word App backup. A safety '
+                'Validate and restore a previous The Word Bible App backup. A safety '
                 'snapshot is created automatically before replacement.',
               ),
               trailing: const Icon(Icons.chevron_right),

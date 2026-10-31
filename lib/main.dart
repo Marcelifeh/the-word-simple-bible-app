@@ -12,7 +12,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   Env.validateCurrentBuild();
   assert(() {
-    debugPrint('The Word App API: ${Env.sermonApiUrl}');
+    debugPrint('The Word Bible App API: ${Env.sermonApiUrl}');
     return true;
   }());
   await Hive.initFlutter();
@@ -24,4 +24,7 @@ Future<void> main() async {
   await appState.init();
 
   runApp(AppScope(state: appState, child: const SimpleBibleApp()));
+  WidgetsBinding.instance.addPostFrameCallback((_) {
+    appState.initializeOptionalServices();
+  });
 }
