@@ -1,3 +1,4 @@
+export 'services/daily_altar_return_policy.dart';
 export 'persistence/daily_altar_repository.dart';
 export 'persistence/daily_altar_storage_codec.dart';
 export 'persistence/daily_altar_storage_exception.dart';

@@ -18,6 +18,7 @@ import '../persistence/daily_altar_repository.dart';
 import '../persistence/daily_altar_stored_record.dart';
 import '../persistence/hive_daily_altar_repository.dart';
 import '../services/daily_altar_journey_engine.dart';
+import '../services/daily_altar_return_policy.dart';
 
 /// Internal end-to-end experience for My Daily Altar.
 ///
@@ -33,6 +34,7 @@ class DailyAltarExperienceScreen extends StatefulWidget {
     this.accessPolicy = const OpenDailyAltarAccessPolicy(),
     this.journeyEngine = const DailyAltarJourneyEngine(),
     this.repository = const HiveDailyAltarRepository(),
+    this.returnPolicy = const DailyAltarReturnPolicy(),
     this.now,
   });
 
@@ -40,6 +42,7 @@ class DailyAltarExperienceScreen extends StatefulWidget {
   final DailyAltarAccessPolicy accessPolicy;
   final DailyAltarJourneyEngine journeyEngine;
   final DailyAltarRepository repository;
+  final DailyAltarReturnPolicy returnPolicy;
 
   /// Optional deterministic clock used by tests.
   final DateTime Function()? now;
@@ -671,6 +674,17 @@ class _DailyAltarExperienceScreenState
         return _buildCarry(content);
 
       case DailyAltarStage.returnToAltar:
+        final session = _session!;
+
+        final decision = widget.returnPolicy.evaluate(
+          session: session,
+          now: _now(),
+        );
+
+        if (!decision.isAllowed) {
+          return _buildReturnLocked(decision);
+        }
+
         return _buildReturn(content);
 
       case DailyAltarStage.completed:
@@ -693,7 +707,7 @@ class _DailyAltarExperienceScreenState
         ),
         const SizedBox(height: 6),
         Text(
-          'Scripture • '
+          'Scripture ΓÇó '
           '${content.scripture.translationId.toUpperCase()}',
           style: const TextStyle(
             fontSize: 13,
@@ -848,7 +862,7 @@ class _DailyAltarExperienceScreenState
           decoration: const InputDecoration(
             border: OutlineInputBorder(),
             labelText: 'My obedience step',
-            hintText: 'What will I do differently because of today’s Word?',
+            hintText: 'What will I do differently because of todayΓÇÖs Word?',
             alignLabelWithHint: true,
           ),
         ),
@@ -894,12 +908,80 @@ class _DailyAltarExperienceScreenState
     );
   }
 
+  Widget _buildReturnLocked(
+    DailyAltarReturnDecision decision,
+  ) {
+    return Column(
+      key: const Key('dailyAltarReturnLocked'),
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Icon(
+          Icons.wb_sunny_outlined,
+          size: 48,
+        ),
+        const SizedBox(height: 18),
+        const Text(
+          'Morning Altar Complete',
+          style: TextStyle(
+            fontSize: 22,
+            fontWeight: FontWeight.w700,
+          ),
+        ),
+        const SizedBox(height: 12),
+        const Text(
+          'Do not rush into the evening reflection. Carry today\'s Scripture '
+          'with you. Let the Word meet your work, conversations, decisions, '
+          'temptations, joys, and pressures before you return.',
+          style: TextStyle(
+            fontSize: 16,
+            height: 1.5,
+          ),
+        ),
+        const SizedBox(height: 20),
+        Text(
+          decision.reason,
+          style: const TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        if (decision.earliestReturnAt != null) ...[
+          const SizedBox(height: 10),
+          Text(
+            'Your evening return opens after '
+            '${_formatReturnTime(decision.earliestReturnAt!)}.',
+            key: const Key(
+              'dailyAltarEarliestReturnTime',
+            ),
+            style: const TextStyle(
+              fontSize: 14,
+            ),
+          ),
+        ],
+      ],
+    );
+  }
+
+  String _formatReturnTime(
+    DateTime value,
+  ) {
+    final twelveHour = value.hour % 12;
+    final hour = twelveHour == 0 ? 12 : twelveHour;
+
+    final minute = value.minute.toString().padLeft(2, '0');
+
+    final period = value.hour < 12 ? 'AM' : 'PM';
+
+    return '$hour:$minute $period';
+  }
+
   Widget _buildReturn(
     DailyAltarContent content,
   ) {
     final prompts = content.eveningReflection;
 
     return Column(
+      key: const Key('dailyAltarReturnForm'),
       children: [
         CheckboxListTile(
           key: const Key(
@@ -958,7 +1040,7 @@ class _DailyAltarExperienceScreenState
         ),
         const SizedBox(height: 18),
         const Text(
-          'Today’s Altar Is Complete',
+          'TodayΓÇÖs Altar Is Complete',
           key: Key(
             'dailyAltarCompletedTitle',
           ),
@@ -1048,16 +1130,26 @@ class _DailyAltarExperienceScreenState
   Widget _buildPrimaryAction() {
     final session = _session;
 
+    final returnDecision = session?.stage == DailyAltarStage.returnToAltar
+        ? widget.returnPolicy.evaluate(
+            session: session!,
+            now: _now(),
+          )
+        : null;
+
+    final returnLocked = returnDecision != null && !returnDecision.isAllowed;
+
     final label = switch (session?.stage) {
-      null => 'Begin Today’s Altar',
-      DailyAltarStage.come => 'Begin Today’s Altar',
+      null => 'Begin Today\'s Altar',
+      DailyAltarStage.come => 'Begin Today\'s Altar',
       DailyAltarStage.receive => 'Continue',
       DailyAltarStage.understand => 'Continue to Reflection',
       DailyAltarStage.abide => 'Continue to Prayer',
       DailyAltarStage.pray => 'Continue to Obedience',
       DailyAltarStage.obey => 'Carry the Word',
-      DailyAltarStage.carry => 'Open Evening Return',
-      DailyAltarStage.returnToAltar => 'Complete Today’s Altar',
+      DailyAltarStage.carry => 'Finish Morning Altar',
+      DailyAltarStage.returnToAltar =>
+        returnLocked ? 'Check Evening Return' : 'Complete Today\'s Altar',
       DailyAltarStage.completed => 'Completed',
     };
 
@@ -1078,7 +1170,13 @@ class _DailyAltarExperienceScreenState
             key: const Key(
               'dailyAltarPrimaryAction',
             ),
-            onPressed: enabled ? _advance : null,
+            onPressed: !enabled
+                ? null
+                : returnLocked
+                    ? () {
+                        setState(() {});
+                      }
+                    : _advance,
             child: Padding(
               padding: const EdgeInsets.symmetric(
                 vertical: 14,

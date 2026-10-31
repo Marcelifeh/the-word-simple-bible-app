@@ -57,12 +57,17 @@ void main() {
   Future<void> loadScreen(
     WidgetTester tester, {
     required DailyAltarRepository repository,
+    DailyAltarReturnPolicy returnPolicy = const DailyAltarReturnPolicy(
+      eveningHour: 0,
+      minimumReturnDelay: Duration.zero,
+    ),
   }) async {
     await tester.pumpWidget(
       MaterialApp(
         home: DailyAltarExperienceScreen(
           now: fixedNow,
           repository: repository,
+          returnPolicy: returnPolicy,
         ),
       ),
     );
