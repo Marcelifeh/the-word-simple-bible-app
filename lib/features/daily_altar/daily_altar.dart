@@ -1,3 +1,6 @@
+export 'access/daily_altar_access_decision.dart';
+export 'access/daily_altar_access_policy.dart';
+export 'access/open_daily_altar_access_policy.dart';
 export 'config/daily_altar_feature_flags.dart';
 export 'model/daily_altar_content.dart';
 export 'model/daily_altar_evening_reflection.dart';
