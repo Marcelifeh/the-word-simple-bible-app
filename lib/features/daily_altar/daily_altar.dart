@@ -1,3 +1,7 @@
+export 'data/curated_daily_altar_content_provider.dart';
+export 'data/daily_altar_content_not_found_exception.dart';
+export 'data/daily_altar_content_provider.dart';
+export 'data/daily_altar_curated_library.dart';
 export 'access/daily_altar_access_decision.dart';
 export 'access/daily_altar_access_policy.dart';
 export 'access/open_daily_altar_access_policy.dart';
