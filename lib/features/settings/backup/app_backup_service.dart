@@ -142,6 +142,7 @@ class AppBackupService {
     'memory_session_draft',
     'user_tracts',
     'devotional_journal',
+    'daily_altar_sessions',
     'notification_preferences',
     'notification_inbox',
     'scheduled_notifications',

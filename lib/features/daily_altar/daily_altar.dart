@@ -1,3 +1,8 @@
+export 'persistence/daily_altar_repository.dart';
+export 'persistence/daily_altar_storage_codec.dart';
+export 'persistence/daily_altar_storage_exception.dart';
+export 'persistence/daily_altar_stored_record.dart';
+export 'persistence/hive_daily_altar_repository.dart';
 export 'view/daily_altar_experience_screen.dart';
 export 'data/curated_daily_altar_content_provider.dart';
 export 'data/daily_altar_content_not_found_exception.dart';
