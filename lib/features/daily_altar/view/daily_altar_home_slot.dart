@@ -8,25 +8,24 @@ import 'daily_altar_home_card.dart';
 
 typedef DailyAltarHomeOpenCallback = Future<void> Function();
 
-/// Guarded bridge between an app surface and My Daily Altar.
+/// Isolated bridge between Home and My Daily Altar.
 ///
-/// The slot owns status loading and refresh behavior so the production Home
-/// screen does not need to understand persistence, lifecycle calculations,
-/// or Daily Altar stages.
-///
-/// When disabled, or when local status cannot be read safely, this widget
-/// renders nothing and does not interfere with the host screen.
+/// No Home-owned persistence, billing, or lifecycle calculation is required.
 class DailyAltarHomeSlot extends StatefulWidget {
   const DailyAltarHomeSlot({
     super.key,
     required this.enabled,
     required this.onOpen,
     this.todayService = const DailyAltarTodayService(),
+    this.now,
   });
 
   final bool enabled;
   final DailyAltarHomeOpenCallback onOpen;
   final DailyAltarTodayService todayService;
+
+  /// Optional clock for deterministic lifecycle and timing tests.
+  final DateTime Function()? now;
 
   @override
   State<DailyAltarHomeSlot> createState() => _DailyAltarHomeSlotState();
@@ -35,8 +34,14 @@ class DailyAltarHomeSlot extends StatefulWidget {
 class _DailyAltarHomeSlotState extends State<DailyAltarHomeSlot>
     with WidgetsBindingObserver {
   DailyAltarTodaySnapshot? _snapshot;
+
   bool _loading = false;
+  bool _opening = false;
   int _requestGeneration = 0;
+
+  Timer? _clockCheckTimer;
+
+  DateTime get _now => widget.now?.call() ?? DateTime.now();
 
   @override
   void initState() {
@@ -49,12 +54,11 @@ class _DailyAltarHomeSlotState extends State<DailyAltarHomeSlot>
   }
 
   @override
-  void didUpdateWidget(
-    DailyAltarHomeSlot oldWidget,
-  ) {
+  void didUpdateWidget(DailyAltarHomeSlot oldWidget) {
     super.didUpdateWidget(oldWidget);
 
     if (!widget.enabled) {
+      _clockCheckTimer?.cancel();
       _requestGeneration++;
 
       if (_snapshot != null || _loading) {
@@ -63,19 +67,18 @@ class _DailyAltarHomeSlotState extends State<DailyAltarHomeSlot>
           _loading = false;
         });
       }
-
       return;
     }
 
-    if (!oldWidget.enabled || oldWidget.todayService != widget.todayService) {
+    if (!oldWidget.enabled ||
+        oldWidget.todayService != widget.todayService ||
+        oldWidget.now != widget.now) {
       unawaited(_load());
     }
   }
 
   @override
-  void didChangeAppLifecycleState(
-    AppLifecycleState state,
-  ) {
+  void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed && widget.enabled) {
       unawaited(_load());
     }
@@ -84,27 +87,25 @@ class _DailyAltarHomeSlotState extends State<DailyAltarHomeSlot>
   @override
   void dispose() {
     _requestGeneration++;
+    _clockCheckTimer?.cancel();
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
 
   Future<void> _load() async {
-    if (!widget.enabled) {
-      return;
-    }
+    if (!widget.enabled) return;
 
+    _clockCheckTimer?.cancel();
     final generation = ++_requestGeneration;
 
     if (mounted) {
-      setState(() {
-        _loading = true;
-      });
+      setState(() => _loading = true);
     }
 
     try {
-      final snapshot = await widget.todayService.getToday();
+      final snapshot = await widget.todayService.getToday(now: _now);
 
-      if (!mounted || generation != _requestGeneration || !widget.enabled) {
+      if (!mounted || !widget.enabled || generation != _requestGeneration) {
         return;
       }
 
@@ -112,11 +113,11 @@ class _DailyAltarHomeSlotState extends State<DailyAltarHomeSlot>
         _snapshot = snapshot;
         _loading = false;
       });
+
+      _scheduleClockCheck();
     } catch (_) {
-      // MDA status must never make the host Home screen unavailable.
-      if (!mounted || generation != _requestGeneration) {
-        return;
-      }
+      // An MDA storage failure must never make Home unavailable.
+      if (!mounted || generation != _requestGeneration) return;
 
       setState(() {
         _snapshot = null;
@@ -125,18 +126,75 @@ class _DailyAltarHomeSlotState extends State<DailyAltarHomeSlot>
     }
   }
 
+  /// Checks the clock without reading storage unnecessarily.
+  ///
+  /// This avoids a permanent "waiting for evening" card when the app
+  /// stays open, and detects local-day rollover within roughly one minute.
+  void _scheduleClockCheck() {
+    _clockCheckTimer?.cancel();
+
+    if (!mounted || !widget.enabled || _snapshot == null) return;
+
+    _clockCheckTimer = Timer(
+      const Duration(minutes: 1),
+      _checkClock,
+    );
+  }
+
+  void _checkClock() {
+    if (!mounted || !widget.enabled) return;
+
+    final snapshot = _snapshot;
+    if (snapshot == null) return;
+
+    final current = _now;
+    final storedDay = snapshot.localDate;
+
+    final newLocalDay = current.year != storedDay.year ||
+        current.month != storedDay.month ||
+        current.day != storedDay.day;
+
+    final returnAt = snapshot.earliestReturnAt;
+
+    final eveningUnlocked =
+        snapshot.status == DailyAltarTodayStatus.waitingForEvening &&
+            returnAt != null &&
+            !current.isBefore(returnAt);
+
+    if (newLocalDay || eveningUnlocked) {
+      unawaited(_load());
+    } else {
+      _scheduleClockCheck();
+    }
+  }
+
   Future<void> _open() async {
-    if (!widget.enabled) {
-      return;
+    if (!widget.enabled || _opening) return;
+
+    _opening = true;
+
+    try {
+      await widget.onOpen();
+    } catch (_) {
+      // Navigation errors must not propagate into Home.
+      if (mounted && widget.enabled) {
+        ScaffoldMessenger.maybeOf(context)?.showSnackBar(
+          const SnackBar(
+            content: Text(
+              'Unable to open My Daily Altar. Please try again.',
+            ),
+          ),
+        );
+      }
+    } finally {
+      try {
+        if (mounted && widget.enabled) {
+          await _load();
+        }
+      } finally {
+        _opening = false;
+      }
     }
-
-    await widget.onOpen();
-
-    if (!mounted || !widget.enabled) {
-      return;
-    }
-
-    await _load();
   }
 
   @override
