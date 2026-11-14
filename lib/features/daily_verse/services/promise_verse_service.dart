@@ -12,9 +12,11 @@ import 'promise_rotation.dart';
 
 class PromiseVerseService {
   final BibleRepository bibleRepository;
+  final BibleRepository? fallbackBibleRepository;
 
   const PromiseVerseService({
     required this.bibleRepository,
+    this.fallbackBibleRepository,
   });
 
   Future<PromiseVerse> getTodayPromise({
@@ -55,22 +57,49 @@ class PromiseVerseService {
     enriched.putIfAbsent('reflection', () => _reflectionFor(theme));
 
     var effectiveTranslation = translation;
-    var verses = await bibleRepository.loadChapter(
-      translation: translation,
-      bookId: enriched['bookId'].toString(),
-      chapter: int.parse(enriched['chapter'].toString()),
-    );
+    final bookId = enriched['bookId'].toString();
+    final chapter = int.parse(enriched['chapter'].toString());
     final verseNumber = int.parse(enriched['verse'].toString());
+
+    var verses = await _safeLoadChapter(
+      bibleRepository,
+      translation: translation,
+      bookId: bookId,
+      chapter: chapter,
+    );
     var verse = _findUsableVerse(verses, verseNumber);
-    if (verse == null && translation != BibleTranslation.kjv) {
-      effectiveTranslation = BibleTranslation.kjv;
-      verses = await bibleRepository.loadChapter(
-        translation: effectiveTranslation,
-        bookId: enriched['bookId'].toString(),
-        chapter: int.parse(enriched['chapter'].toString()),
+
+    if (verse == null && fallbackBibleRepository != null) {
+      verses = await _safeLoadChapter(
+        fallbackBibleRepository!,
+        translation: translation,
+        bookId: bookId,
+        chapter: chapter,
       );
       verse = _findUsableVerse(verses, verseNumber);
     }
+
+    if (verse == null && translation != BibleTranslation.kjv) {
+      effectiveTranslation = BibleTranslation.kjv;
+      verses = await _safeLoadChapter(
+        bibleRepository,
+        translation: effectiveTranslation,
+        bookId: bookId,
+        chapter: chapter,
+      );
+      verse = _findUsableVerse(verses, verseNumber);
+
+      if (verse == null && fallbackBibleRepository != null) {
+        verses = await _safeLoadChapter(
+          fallbackBibleRepository!,
+          translation: effectiveTranslation,
+          bookId: bookId,
+          chapter: chapter,
+        );
+        verse = _findUsableVerse(verses, verseNumber);
+      }
+    }
+
     if (verse == null) {
       throw StateError('Promise verse text is unavailable');
     }
@@ -80,6 +109,23 @@ class PromiseVerseService {
       text: BibleTextSanitizer.clean(verse.text),
       translation: effectiveTranslation,
     );
+  }
+
+  Future<List<Verse>> _safeLoadChapter(
+    BibleRepository repo, {
+    required BibleTranslation translation,
+    required String bookId,
+    required int chapter,
+  }) async {
+    try {
+      return await repo.loadChapter(
+        translation: translation,
+        bookId: bookId,
+        chapter: chapter,
+      );
+    } catch (_) {
+      return const [];
+    }
   }
 
   Verse? _findUsableVerse(List<Verse> verses, int verseNumber) {

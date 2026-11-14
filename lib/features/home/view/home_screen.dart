@@ -8,6 +8,7 @@ import '../../../core/navigation/app_router.dart';
 import '../../../core/navigation/page_transition_type.dart';
 import '../../../data/bible/book_catalog.dart';
 import '../../../core/utils/bible_text_sanitizer.dart';
+import '../../../domain/entities/bible_translation.dart';
 import '../../../domain/entities/verse.dart';
 import '../../../shared/state/app_state.dart';
 import '../../../shared/widgets/home_text_scale.dart';
@@ -126,6 +127,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
 
   bool _initDone = false;
   DateTime? _loadedDailyContentDate;
+  BibleTranslation? _loadedDailyContentTranslation;
   Timer? _dateRefreshTimer;
   static const _encouragementService = DailyEncouragementService();
 
@@ -142,10 +144,14 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     super.didChangeDependencies();
     _loadWeeklyStats();
     final today = _todayOnly;
-    if (!_initDone || _loadedDailyContentDate != today) {
+    final translation = AppScope.of(context).translation;
+    if (!_initDone ||
+        _loadedDailyContentDate != today ||
+        _loadedDailyContentTranslation != translation) {
       _initDone = true;
       _loadedDailyContentDate = today;
-      _loadDailyVerse();
+      _loadedDailyContentTranslation = translation;
+      _loadDailyContent();
     }
   }
 
@@ -179,11 +185,19 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
 
   void _refreshForCurrentDate() {
     final today = _todayOnly;
-    if (_loadedDailyContentDate != today) {
+    final translation = AppScope.of(context).translation;
+    if (_loadedDailyContentDate != today ||
+        _loadedDailyContentTranslation != translation) {
       _loadedDailyContentDate = today;
-      unawaited(_loadDailyVerse());
+      _loadedDailyContentTranslation = translation;
+      _loadDailyContent();
     }
     unawaited(_loadWeeklyStats());
+  }
+
+  void _loadDailyContent() {
+    unawaited(_loadDailyVerse());
+    unawaited(_loadPromiseVerse());
   }
 
   Future<void> _loadDailyVerse() async {
@@ -192,7 +206,6 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     try {
       final v = await state.dailyVerseService
           .getDailyVerse(translation: state.translation);
-      await _loadPromiseVerse();
       if (mounted) {
         setState(() {
           _dailyVerse = v;
@@ -209,6 +222,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
 
     final service = PromiseVerseService(
       bibleRepository: state.bibleRepo,
+      fallbackBibleRepository: state.assetBibleRepo,
     );
 
     try {
@@ -216,16 +230,20 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
         translation: state.translation,
         history: state.promiseHistory,
       );
-      await state.recordPromiseShown(
-        promiseId: promise.id,
-        theme: promise.tag,
-      );
       if (mounted) {
         setState(() {
           _promiseVerse = promise;
         });
       }
-    } catch (_) {}
+      unawaited(
+        state.recordPromiseShown(
+          promiseId: promise.id,
+          theme: promise.tag,
+        ),
+      );
+    } catch (e) {
+      debugPrint("Failed to load today's promise: $e");
+    }
   }
 
   DateTime get _todayOnly {
