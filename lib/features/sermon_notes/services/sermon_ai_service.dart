@@ -8,6 +8,15 @@ import '../model/sermon_note.dart';
 import '../model/sermon_outline.dart';
 import 'sermon_audio_multipart_file.dart';
 
+// ---------------------------------------------------------------------------
+// Timeout constants
+// ---------------------------------------------------------------------------
+//
+// Short-form text requests (summary, outline) finish quickly.
+// Audio transcription can take several minutes for long sermons; we give
+// the server up to 15 minutes before we surface a user-friendly error.
+// Both values can be overridden in tests by passing a custom [http.Client].
+
 class SermonTranscriptionResult {
   const SermonTranscriptionResult({
     required this.transcript,
@@ -48,11 +57,22 @@ class SermonCloudUnavailableException extends SermonApiException {
 class SermonAiService {
   SermonAiService({
     http.Client? client,
-  }) : _client = client ?? http.Client();
+    Duration? transcriptionTimeout,
+    Duration? requestTimeout,
+  })  : _client = client ?? http.Client(),
+        _transcriptionTimeout =
+            transcriptionTimeout ?? const Duration(minutes: 15),
+        _requestTimeout = requestTimeout ?? const Duration(seconds: 90);
 
   final http.Client _client;
 
-  static const Duration _requestTimeout = Duration(seconds: 90);
+  /// Timeout for the short text-generation requests (summary, outline).
+  final Duration _requestTimeout;
+
+  /// Timeout for the audio-upload + transcription request.
+  /// Long sermons can take several minutes to process on the server, so this
+  /// is intentionally much longer than [_requestTimeout].
+  final Duration _transcriptionTimeout;
 
   Future<SermonTranscriptionResult> transcribeAudio(String audioPath) async {
     final uri = Env.apiUri('/sermon/transcribe');
@@ -62,8 +82,16 @@ class SermonAiService {
     try {
       final request = http.MultipartRequest('POST', uri)
         ..files.add(await sermonAudioMultipartFile(audioPath));
-      response = await request.send();
-      body = await response.stream.bytesToString();
+      response = await request.send().timeout(_transcriptionTimeout);
+      body = await response.stream
+          .bytesToString()
+          .timeout(_transcriptionTimeout);
+    } on TimeoutException {
+      throw const SermonCloudUnavailableException(
+        'Transcription is taking longer than expected. '
+        'Your recording is safely stored — please try again with a shorter clip, '
+        'or use the Cloud Transcribe button once a stable connection is available.',
+      );
     } catch (e) {
       throw const SermonCloudUnavailableException(
         'Cloud services are temporarily unavailable. '

@@ -165,9 +165,25 @@ class _SermonEditorScreenState extends State<SermonEditorScreen>
     _isDisposing = true;
     _draftAutosaveTimer?.cancel();
     _recordingTimer?.cancel();
-    if (_isRecording) {
+
+    // If a recording is still active when the widget is torn down (e.g. the
+    // user navigated away without pressing Stop), stamp the pending clip with
+    // the elapsed duration and mark it as interrupted so the draft contains a
+    // recoverable reference to the in-progress audio file.
+    if (_isRecording && _pendingRecordingClip != null) {
+      final startedAt = _recordingStartedAt;
+      final elapsed = startedAt != null
+          ? DateTime.now().difference(startedAt)
+          : _recordingElapsed;
+      _pendingRecordingClip = _pendingRecordingClip!.copyWith(
+        durationMs: elapsed.inMilliseconds,
+        status: SermonRecordingClipStatus.interrupted,
+      );
+      unawaited(_recordingService.stop());
+    } else if (_isRecording) {
       unawaited(_recordingService.stop());
     }
+
     unawaited(_recordingService.dispose());
     unawaited(_audioPlayer.dispose());
     if (_didBindRepositories && !_skipDraftPersistOnDispose) {
@@ -960,12 +976,18 @@ class _SermonEditorScreenState extends State<SermonEditorScreen>
 
             return SafeArea(
               top: false,
-              child: Column(
-                children: [
+              child: LayoutBuilder(
+                builder: (context, constraints) {
+                  // In landscape with the keyboard open the available height can
+                  // drop below ~160 px. Hide the recording bar in that case so
+                  // the text field and toolbar still fit without overflowing.
+                  final tightHeight = constraints.maxHeight < 180;
+                  return Column(
+                    children: [
                   AnimatedSize(
                     duration: const Duration(milliseconds: 180),
                     curve: Curves.easeOut,
-                    child: _isRecording
+                    child: (_isRecording && !tightHeight)
                         ? Padding(
                             padding: const EdgeInsets.fromLTRB(16, 8, 16, 4),
                             child: _buildActiveRecordingBar(theme),
@@ -1026,7 +1048,9 @@ class _SermonEditorScreenState extends State<SermonEditorScreen>
                     theme,
                     keyboardVisible: keyboardVisible,
                   ),
-                ],
+                    ],
+                  );
+                },
               ),
             );
           },
