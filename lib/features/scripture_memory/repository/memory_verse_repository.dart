@@ -200,7 +200,7 @@ class MemoryVerseRepository extends ChangeNotifier {
           verse = verse.copyWith(
             schedule: verse.schedule.copyWith(
               dueLocalDate: MemoryScheduler.formatLocalDate(
-                today.add(Duration(days: dayOffset)),
+                MemoryScheduler.addDays(today, dayOffset),
               ),
             ),
             updatedAtUtc: DateTime.now().toUtc(),

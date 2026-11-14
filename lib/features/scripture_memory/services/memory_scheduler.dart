@@ -60,7 +60,7 @@ class MemoryScheduler {
     return MemorySchedule(
       status: status,
       stage: nextStage,
-      dueLocalDate: formatLocalDate(today.add(Duration(days: dueOffset))),
+      dueLocalDate: formatLocalDate(addDays(today, dueOffset)),
       lastReviewedLocalDate: formatLocalDate(today),
       reviewCount: current.reviewCount + 1,
       lapseCount: current.lapseCount + lapseIncrement,
@@ -79,6 +79,11 @@ class MemoryScheduler {
   static DateTime localDay(DateTime value) {
     final local = value.toLocal();
     return DateTime(local.year, local.month, local.day);
+  }
+
+  static DateTime addDays(DateTime value, int days) {
+    final local = localDay(value);
+    return DateTime(local.year, local.month, local.day + days);
   }
 
   static String formatLocalDate(DateTime value) {

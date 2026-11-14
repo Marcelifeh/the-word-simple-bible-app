@@ -76,7 +76,20 @@ class ScriptureParser {
     _collectSpokenCompactMatches(text, results);
 
     results.sort((a, b) => a.start.compareTo(b.start));
-    return _deduplicateMatches(results);
+    final primary = _deduplicateMatches(results);
+
+    // After resolving primary matches, collect continuation references that
+    // follow each anchor (same book, additional chapter:verse tokens separated
+    // by commas or semicolons on the same logical line).
+    final continuation = <ResolvedScriptureMatch>[];
+    for (final anchor in primary) {
+      _collectContinuationMatches(text, anchor, primary, continuation);
+    }
+
+    if (continuation.isEmpty) return primary;
+    final all = [...primary, ...continuation];
+    all.sort((a, b) => a.start.compareTo(b.start));
+    return _deduplicateMatches(all);
   }
 
   /// Scan a string and extract all scriptures parsed with proper context.
@@ -94,6 +107,110 @@ class ScriptureParser {
       if (offset >= match.start && offset < match.end) return match;
     }
     return null;
+  }
+
+  /// Given a resolved [anchor] match (e.g. `Prov. 22:3`), scan the text
+  /// immediately after it for continuation references: bare verse numbers or
+  /// new chapter:verse pairs belonging to the same book, separated by commas
+  /// or semicolons.
+  ///
+  /// Example:  `Prov. 22:3, 29; 24:3-4; 28:20, 22`
+  ///           anchor = `Prov. 22:3`
+  ///           continuations → 22:29, 24:3-4, 28:20, 28:22
+  static void _collectContinuationMatches(
+    String text,
+    ResolvedScriptureMatch anchor,
+    List<ResolvedScriptureMatch> primary,
+    List<ResolvedScriptureMatch> output,
+  ) {
+    final book = BookCatalog.byId(anchor.scripture.bookId);
+    var chapterContext = anchor.scripture.chapter;
+
+    // Walk forward from the end of the anchor, consuming separator+token pairs.
+    var cursor = anchor.end;
+
+    while (cursor < text.length) {
+      // Must be immediately followed by a separator (comma, semicolon, space).
+      final sepMatch =
+          RegExp(r'^[\s,;]+').firstMatch(text.substring(cursor));
+      if (sepMatch == null) break;
+
+      // If the separator includes a newline, stop — new line = new context.
+      if (sepMatch.group(0)!.contains('\n')) break;
+
+      final tokenStart = cursor + sepMatch.end;
+      if (tokenStart >= text.length) break;
+
+      // Peek ahead up to 10 characters for a valid token
+      final peek = text.substring(tokenStart, (tokenStart + 12).clamp(0, text.length));
+      final tokMatch = RegExp(
+        r'^(\d{1,3})(?::(\d{1,3})(?:\s*[-\u2013]\s*(\d{1,3}))?)?(?:\s*[-\u2013]\s*(\d{1,3}))?',
+      ).firstMatch(peek);
+      if (tokMatch == null) break;
+
+      // Skip this token if it is already covered by another primary match.
+      final tokenEnd = tokenStart + tokMatch.end;
+      final coveredByPrimary = primary.any(
+        (m) => m.start < tokenEnd && m.end > tokenStart,
+      );
+      if (coveredByPrimary) {
+        // Advance past this token but keep looking.
+        cursor = tokenEnd;
+        continue;
+      }
+
+      final firstNum = int.tryParse(tokMatch.group(1) ?? '');
+      if (firstNum == null) break;
+
+      int chapter;
+      int? startVerse;
+      int? endVerse;
+
+      if (tokMatch.group(2) != null) {
+        // ch:v[-v] form
+        chapter = firstNum;
+        startVerse = int.tryParse(tokMatch.group(2)!);
+        endVerse = tokMatch.group(3) != null
+            ? int.tryParse(tokMatch.group(3)!)
+            : null;
+      } else if (tokMatch.group(4) != null) {
+        // bare v-v form (range without colon)
+        chapter = chapterContext;
+        startVerse = firstNum;
+        endVerse = int.tryParse(tokMatch.group(4)!);
+      } else {
+        // Ambiguous single number: treat as bare verse if ≤ verse-count range,
+        // otherwise treat as chapter (e.g. `16` after `31:10-11`).
+        if (firstNum > 0 && firstNum <= 176) {
+          chapter = chapterContext;
+          startVerse = firstNum;
+        } else {
+          break;
+        }
+      }
+
+      if (chapter <= 0 || chapter > book.chapterCount) break;
+
+      final rawToken = text.substring(tokenStart, tokenEnd);
+      output.add(
+        ResolvedScriptureMatch(
+          scripture: LinkedScripture(
+            rawText: rawToken,
+            matchText: '${book.name} $chapter',
+            bookId: book.id,
+            chapter: chapter,
+            startVerse: startVerse,
+            endVerse: endVerse,
+          ),
+          start: tokenStart,
+          end: tokenEnd,
+        ),
+      );
+
+      // Update context for the next token.
+      chapterContext = chapter;
+      cursor = tokenEnd;
+    }
   }
 
   static void _collectNumericMatches(

@@ -180,6 +180,41 @@ void main() {
       expect(scripture.rawText, 'John 7');
     });
 
+    test('highlights continuation references after an anchor (semicolons)', () {
+      // Mirrors real sermon note: "Prov. 22:3, 29; 24:3-4; 28:20, 22"
+      final matches = ScriptureParser.findMatches(
+        'PROV. 22:3, 29; 24:3-4; 28:20, 22',
+      );
+      final titles = matches.map((m) => m.scripture.displayTitle).toList();
+      expect(titles, contains('Proverbs 22:3'));
+      expect(titles, contains('Proverbs 22:29'));
+      expect(titles, contains('Proverbs 24:3-4'));
+      expect(titles, contains('Proverbs 28:20'));
+      expect(titles, contains('Proverbs 28:22'));
+    });
+
+    test('highlights continuation verse-only tokens after chapter:verse anchor',
+        () {
+      // "PROV. 31:10-11, 16; 21:20; 22:17-21"
+      final matches = ScriptureParser.findMatches(
+        'PROV. 31:10-11, 16; 21:20; 22:17-21',
+      );
+      final titles = matches.map((m) => m.scripture.displayTitle).toList();
+      expect(titles, contains('Proverbs 31:10-11'));
+      expect(titles, contains('Proverbs 31:16'));
+      expect(titles, contains('Proverbs 21:20'));
+      expect(titles, contains('Proverbs 22:17-21'));
+    });
+
+    test('continuation stops at a newline', () {
+      final matches = ScriptureParser.findMatches(
+        'Prov. 10:4\nsome other text 99',
+      );
+      // Only the anchor should be matched; the second line is unrelated.
+      expect(matches, hasLength(1));
+      expect(matches.single.scripture.displayTitle, 'Proverbs 10:4');
+    });
+
     test('matches taps only inside a scripture character range', () {
       const text = 'Before John 3:16 after';
       final matches = ScriptureParser.findMatches(text);
